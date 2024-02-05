@@ -1,0 +1,30 @@
+// 默认主题色
+:root {
+  --baseMainTheme: #ECECECFF;
+  --baseLeftTheme: rgba(0, 0, 0, 0.0);
+  --baseTopTheme: #ECECECFF;
+  --baseSearchDialogTheme: rgba(255, 255, 255, 0.3);
+  --baseTextColor: rgba(40, 40, 40, 0.82);
+  --loginTheme:rgb(255 255 255 / 57.5%);
+}
+
+// 主题背景色
+$baseMainTheme: var(--baseMainTheme);
+$baseLeftTheme: var(--baseLeftTheme);
+$baseTopTheme: var(--baseTopTheme);
+
+// 左侧菜单宽度
+$baseMenuWidth: 200px;
+// 右键菜单宽度
+$baseContextMenuWidth: 100px;
+
+// 左侧logo样式
+$baseLogoFontWeight: 600;
+$baseLogoFontSize: 15px;
+
+$baseTextColor: var(--baseTextColor);
+
+$baseSearchDialogTheme: var(--baseSearchDialogTheme);
+
+$svgTheme: var(--color);
+$loginTheme: var(--loginTheme);

@@ -1,0 +1,49 @@
+/**
+ * @author: gaoweixuan
+ * @since: 2023-11-12
+ */
+import request from '@/utils/request'
+import { AxiosPromise } from 'axios'
+import { UserLoginForm, PermissionResponseData } from './type'
+import { GrantType } from '@/types/types.ts'
+
+enum API {
+  LOGIN_URL = '/oauth2/token',
+  LIST_PERMISSION_URL = '/menu/listTreeMenu',
+  LOGOUT_URL = '/logout',
+}
+
+/**
+ * 获取菜单权限
+ *
+ * @param i18n 国际化标志
+ */
+export function listPermission(i18n: string): AxiosPromise<PermissionResponseData> {
+  return request({
+    url: API.LIST_PERMISSION_URL + `?platformCode=pc&i18n=${i18n}`,
+    method: 'get',
+  })
+}
+
+/**
+ * 用户登录
+ *
+ * @param userLoginForm 用户登录提交参数
+ * @param grantType     登录类型
+ */
+export const userLogin = (userLoginForm: UserLoginForm, grantType: GrantType) =>
+  request.post<any, any>(
+    API.LOGIN_URL +
+      `?grant_type=${grantType}&username=${userLoginForm.username}&password=${userLoginForm.password}&scope=user_info`,
+    {},
+    {
+      headers: {
+        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+      },
+    },
+  )
+
+/**
+ * 退出登录
+ */
+export const logout = () => request.get<any, any>(API.LOGOUT_URL)

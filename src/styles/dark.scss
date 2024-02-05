@@ -1,0 +1,9 @@
+html.dark {
+  // 主题背景色
+  --baseMainTheme: var(--el-color-black);
+  --baseLeftTheme: var(--el-color-black);
+  --baseTopTheme: var(--el-color-black);
+  --baseSearchDialogTheme: rgba(0, 0 0, 0.3);
+  --baseTextColor: rgba(255, 255, 255, 0.88);
+  --loginTheme: (--el-color-black);
+}
