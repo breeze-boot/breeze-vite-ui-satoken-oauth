@@ -73,3 +73,12 @@ export const REMOVE_STORAGES = (names: StorageName[]) => {
     localStorage.removeItem(item)
   })
 }
+
+/**
+ * 删除所有数据
+ *
+ * @constructor
+ */
+export const CLEAR_STORAGE = () => {
+  localStorage.clear()
+}

@@ -15,7 +15,7 @@ const menuStore = useMenuStore(pinia)
  * 全局前置守卫
  */
 router.beforeEach(async (to, from, next) => {
-  document.title = to.meta.title + ` | ${setting.title}`
+  document.title = to.meta.title + ` | ${setting.title}` || ''
   nprogress.start()
   const token: string = userStore.accessToken as string
   const initMenu: boolean = menuStore.initMenu as boolean

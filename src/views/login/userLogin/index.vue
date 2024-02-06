@@ -9,8 +9,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
-import { REMOVE_STORAGES } from '@/utils/storage'
-import { StorageName } from '@/types/types'
+import { CLEAR_STORAGE } from '@/utils/storage'
 import useSettingStore from '@/store/modules/setting.ts'
 import { storeToRefs } from 'pinia'
 
@@ -109,14 +108,7 @@ const rules = {
  * 销毁时清除缓存
  */
 onBeforeMount(() => {
-  REMOVE_STORAGES([
-    StorageName.AccessToken,
-    StorageName.Authorization,
-    StorageName.Buttons,
-    StorageName.RoleCodes,
-    StorageName.UserInfo,
-    StorageName.XTenantId,
-  ])
+  CLEAR_STORAGE()
 })
 
 /**
@@ -178,6 +170,7 @@ const login = async () => {
                 <el-input
                   :prefix-icon="User"
                   v-model="loginFormData.username"
+                  size="large"
                   clearable
                   placeholder="Username"
                 ></el-input>
@@ -188,6 +181,7 @@ const login = async () => {
                   :prefix-icon="Lock"
                   show-password
                   v-model="loginFormData.password"
+                  size="large"
                   placeholder="Password"
                   clearable
                 ></el-input>

@@ -4,18 +4,18 @@
  */
 
 import type { RouteRecordRaw } from 'vue-router'
-import type { AuthorizationData, StoreDict, Tab, UserInfoData, Tabs, Settings } from '@/types/types'
+import type { StoreDict, Tab, UserInfoData, Tabs, Settings } from '@/types/types'
 import { Theme } from '@/types/types'
 
 /**
  * 用户保存类型
  */
 export interface UserState {
-  authorization: AuthorizationData | object
-  accessToken: string | ''
   userInfo: UserInfoData
-  buttons: string[]
+  refreshToken: string
+  accessToken: string
   roleCodes: string[]
+  permissions: string[]
 }
 
 /**

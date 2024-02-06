@@ -79,17 +79,6 @@ export interface UserInfoData {
 }
 
 /**
- * 登录权限回参数
- */
-export interface AuthorizationData {
-  access_token: string
-  refresh_token: string
-  scope: string
-  token_type: string
-  expires_in: number
-}
-
-/**
  * 权限数据类型
  */
 export interface PermissionData {
@@ -122,6 +111,7 @@ export type PermissionDatas = PermissionData[]
  */
 export enum GrantType {
   PASSWORD = 'password',
+  REFRESH_TOKEN = 'refresh_token',
   SMS = 'sms',
   EMAIL = 'email',
 }
@@ -136,9 +126,9 @@ export const SALES: string = '1234567890123456'
  */
 export enum StorageName {
   AccessToken = 'ACCESS_TOKEN',
-  Authorization = 'AUTHORIZATION',
-  Buttons = 'BUTTONS',
+  RefreshToken = 'REFRESH_TOKEN',
   RoleCodes = 'ROLE_CODES',
+  Permissions = 'PERMISSIONS',
   UserInfo = 'USER_INFO',
   XTenantId = 'X-TENANT-ID',
   mixMenuRoutes = 'MIX_MENU_ROUTES',

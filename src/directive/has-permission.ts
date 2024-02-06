@@ -23,7 +23,7 @@ export const isHasPermission = (app: any) => {
 
 const filterOptions = (el: any, options: any) => {
   options.value.forEach((item: string) => {
-    if (!userStore.roleCodes.includes(item) && !userStore.buttons.includes(item)) {
+    if (!userStore.roleCodes.includes(item) && !userStore.permissions.includes(item)) {
       // 删除DOM元素
       el.parentNode.removeChild(el)
     }

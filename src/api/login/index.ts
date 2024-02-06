@@ -8,7 +8,7 @@ import { UserLoginForm, PermissionResponseData } from './type'
 import { GrantType } from '@/types/types.ts'
 
 enum API {
-  LOGIN_URL = '/oauth2/token',
+  AUTH_URL = '/oauth2/token',
   LIST_PERMISSION_URL = '/menu/listTreeMenu',
   LOGOUT_URL = '/logout',
 }
@@ -33,8 +33,25 @@ export function listPermission(i18n: string): AxiosPromise<PermissionResponseDat
  */
 export const userLogin = (userLoginForm: UserLoginForm, grantType: GrantType) =>
   request.post<any, any>(
-    API.LOGIN_URL +
+    API.AUTH_URL +
       `?grant_type=${grantType}&username=${userLoginForm.username}&password=${userLoginForm.password}&scope=user_info`,
+    {},
+    {
+      headers: {
+        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+      },
+    },
+  )
+
+/**
+ * TOKEN刷新
+ *
+ * @param refreshToken 刷新token
+ * @param grantType    登录类型
+ */
+export const refreshToken = (refreshToken: string, grantType: GrantType) =>
+  request.post<any, any>(
+    API.AUTH_URL + `?grant_type=${grantType}&refresh_token=${refreshToken}`,
     {},
     {
       headers: {
