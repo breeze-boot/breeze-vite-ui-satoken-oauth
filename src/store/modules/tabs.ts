@@ -15,6 +15,7 @@ const constantTab: Tab = {
   fullPath: '/home',
   query: {},
   params: {},
+  keepAlive: false,
 }
 
 const useTabsStore = defineStore('Tabs', {
@@ -35,9 +36,6 @@ const useTabsStore = defineStore('Tabs', {
      * @param tab
      */
     setTab(tab: RouteLocationNormalizedLoaded): void {
-      if (tab.name === constantTab.name) {
-        return
-      }
       const _tab: Tab = {
         title: tab.meta.title as string,
         name: tab.name as string,
@@ -45,6 +43,7 @@ const useTabsStore = defineStore('Tabs', {
         fullPath: tab.fullPath,
         query: tab.query,
         params: tab.params,
+        keepAlive: tab.meta.hidden as boolean,
       }
       if (!this.tabs.some((_t: Tab) => _t.name === _tab.name)) {
         this.tabs.push(_tab)

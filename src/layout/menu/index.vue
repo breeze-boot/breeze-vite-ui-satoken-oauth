@@ -4,31 +4,14 @@
 -->
 <script setup lang="ts" name="Menu">
 import MenuIcon from './menuIcon/index.vue'
+
 const props = defineProps(['menuList', 'layout'])
 </script>
 
 <template>
   <template v-for="item in menuList" :key="item.path">
-    <!-- HOME -->
-    <template v-if="item.path === '/'">
-      <el-menu-item v-if="!item.children[0].meta.hidden" :index="item.children[0].path">
-        <menu-icon :icon="item.children[0].meta.icon" />
-        <template #title>
-          <span>{{ item.children[0].meta.title }}</span>
-        </template>
-      </el-menu-item>
-    </template>
-
-    <!-- 没有子路由 -->
-    <template v-if="item.meta.type === 1 && item.path !== '/'">
-      <el-menu-item v-if="!item.meta.hidden" :index="item.path">
-        <menu-icon :icon="item.meta.icon" />
-        <template #title>
-          <span>{{ item.meta.title }}</span>
-        </template>
-      </el-menu-item>
-    </template>
-    <template v-else-if="props.layout === 'mix' && item.meta.type === 0 && item.path !== '/'">
+    <!-- 递归的菜单项 情况1：菜单链接在第二级 -->
+    <template v-if="item.meta.type === 1 && item.meta.href === 0">
       <el-menu-item v-if="!item.meta.hidden" :index="item.path">
         <menu-icon :icon="item.meta.icon" />
         <template #title>
@@ -37,8 +20,30 @@ const props = defineProps(['menuList', 'layout'])
       </el-menu-item>
     </template>
 
-    <!-- 有子路由且大于0 子菜单 -->
-    <el-sub-menu v-if="item.path !== '/' && item.meta.type === 0 && props.layout !== 'mix'" :index="item.path">
+    <!-- 递归的菜单项 情况2：菜单是个外部链接-->
+    <template v-if="item.meta.type === 1 && item.path && item.meta.href === 1">
+      <el-menu-item v-if="!item.meta.hidden" :index="item.path">
+        <menu-icon :icon="item.meta.icon" />
+        <template #title>
+          <el-link :href="item.path" target="_blank">
+            <span>{{ item.meta.title }}</span>
+          </el-link>
+        </template>
+      </el-menu-item>
+    </template>
+
+    <!-- 横向混合菜单时 -->
+    <template v-else-if="props.layout === 'mix' && item.meta.type === 0">
+      <el-menu-item v-if="!item.meta.hidden" :index="item.path">
+        <menu-icon :icon="item.meta.icon" />
+        <template #title>
+          <span>{{ item.meta.title }}</span>
+        </template>
+      </el-menu-item>
+    </template>
+
+    <!-- 含有子菜单时且不是混合菜单 -->
+    <el-sub-menu v-if="props.layout !== 'mix' && item.meta.type === 0" :index="item.path">
       <template #title>
         <menu-icon :icon="item.meta.icon" />
         <span>{{ item.meta.title }}</span>
@@ -48,4 +53,7 @@ const props = defineProps(['menuList', 'layout'])
   </template>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-link {
+}
+</style>

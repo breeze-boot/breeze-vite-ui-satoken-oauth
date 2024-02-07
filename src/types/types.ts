@@ -205,6 +205,7 @@ export interface Tab {
   fullPath: string
   query?: object
   params?: object
+  keepAlive: boolean
 }
 
 /**

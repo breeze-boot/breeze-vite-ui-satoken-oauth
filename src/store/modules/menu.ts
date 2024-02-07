@@ -7,7 +7,7 @@ import { defineStore } from 'pinia'
 import router from '@/router'
 import { listPermission } from '@/api/login'
 import type { MenuState } from './types/types'
-import { anyRoute, constantRoutes } from '@/router/routes'
+import { anyRoute, constantChildRoutes } from '@/router/routes'
 import type { RouteRecordRaw } from 'vue-router'
 import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
@@ -28,8 +28,8 @@ const formatRouters = ({ pPath, menus }: { pPath: string; menus: any }): RouteRe
   }
 
   const fmtRouters = [] as RouteRecordRaw[]
-  menus.forEach((menu: PermissionData) => {
-    const { name, path, component } = menu
+  menus.forEach((menu: PermissionData): void => {
+    const { name, path, component, href } = menu
     let { children } = menu
     // 递归格式化children路由
     if (children) {
@@ -37,12 +37,13 @@ const formatRouters = ({ pPath, menus }: { pPath: string; menus: any }): RouteRe
     }
     const fmtRouter = {
       name: name as string,
-      path: ((pPath as string) + path) as string,
+      path: (href === 1 ? path : (pPath as string) + path) as string,
       meta: {
         icon: menu.icon as string,
         title: menu.title as string,
         type: menu.type as number,
         hidden: (menu.hidden as number) != 0,
+        href: menu.href as number,
       },
       // component: () => import(/* @vite-ignore */`@/views${component}.vue`),
       component: modules[`/src/views${component}.vue`],
@@ -62,7 +63,7 @@ const useMenuStore = defineStore('Menu', {
   state: (): MenuState => {
     return {
       initMenu: false,
-      menuRoutes: constantRoutes,
+      menuRoutes: constantChildRoutes,
       mixMenuRoutes: GET_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
     }
   },
@@ -80,7 +81,6 @@ const useMenuStore = defineStore('Menu', {
       if (response) {
         // 动态路由请求成功后，将路由格式化成vue能识别的路由形式
         const fmtRouters: RouteRecordRaw[] = formatRouters({ pPath: '', menus: response.data })
-        console.debug(fmtRouters)
         // 将格式化好的路由添加到router中
         fmtRouters.forEach((fmtRouter: RouteRecordRaw) => {
           router.addRoute('Layout', fmtRouter)

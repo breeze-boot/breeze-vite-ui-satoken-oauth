@@ -56,7 +56,7 @@ const openSubMenu = (index: string) => {
  */
 const selectMenu = (index: string) => {
   menuStore.setMenuChildren(index)
-  if (menuLayout.value !== 'mix' || index === '/home') {
+  if (menuLayout.value !== '' && $route.meta.type === 1) {
     $router.push({ path: index, query: {} }).then((r) => {
       console.debug(r)
       tabsStore.setTab($route)

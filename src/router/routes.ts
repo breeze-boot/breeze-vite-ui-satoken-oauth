@@ -2,55 +2,13 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-export const constantRoutes = [
+export const loginRoutes = [
   {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/userLogin/index.vue'),
     meta: {
       title: 'login',
-      hidden: true,
-    },
-  },
-  {
-    path: '/',
-    name: 'Layout',
-    component: () => import('@/layout/index.vue'),
-    meta: {
-      title: '',
-      hidden: false,
-      icon: '',
-    },
-    redirect: '/home',
-    children: [
-      {
-        path: '/home',
-        name: 'Home',
-        component: () => import('@/views/home/index.vue'),
-        meta: {
-          title: '主页',
-          hidden: false,
-          icon: 'home',
-        },
-      },
-    ],
-  },
-  {
-    path: '/screen',
-    name: 'Screen',
-    component: () => import('@/views/screen/index.vue'),
-    meta: {
-      title: 'Screen',
-      hidden: false,
-      icon: 'Platform',
-    },
-  },
-  {
-    path: '/404',
-    name: '404',
-    component: () => import('@/views/404/index.vue'),
-    meta: {
-      title: '404',
       hidden: true,
     },
   },
@@ -65,3 +23,57 @@ export const anyRoute = {
     hidden: true,
   },
 }
+
+export const constantChildRoutes = [
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/views/home/index.vue'),
+    meta: {
+      title: '主页',
+      icon: 'home',
+      hidden: false,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
+    path: '/screen',
+    name: 'Screen',
+    component: () => import('@/views/screen/index.vue'),
+    meta: {
+      title: 'Screen',
+      icon: 'Platform',
+      hidden: false,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/404/index.vue'),
+    meta: {
+      title: '404',
+      hidden: true,
+      type: 1,
+      href: 0,
+    },
+  },
+]
+
+export const constantRoutes = [
+  {
+    path: '/',
+    name: 'Layout',
+    component: () => import('@/layout/index.vue'),
+    meta: {
+      title: '',
+      hidden: false,
+      type: 0,
+      href: 0,
+    },
+    redirect: '/home',
+    children: constantChildRoutes,
+  },
+]

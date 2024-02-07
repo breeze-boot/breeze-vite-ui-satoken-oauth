@@ -10,8 +10,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ButtonSvgIcon: typeof import('./src/components/ButtonSvgIcon/index.vue')['default']
-    ContainerBox: (typeof import('./src/components/SearchContainerBox/index.vue'))['default']
-    DemoAddOrEdit: (typeof import('./src/views/demo/components/DemoAddOrEdit.vue'))['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -33,13 +31,12 @@ declare module '@vue/runtime-core' {
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
+    ElLink: typeof import('element-plus/es')['ElLink']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElRadio: typeof import('element-plus/es')['ElRadio']
-    ElRadioButton: (typeof import('element-plus/es'))['ElRadioButton']
-    ElRadioGroup: (typeof import('element-plus/es'))['ElRadioGroup']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
