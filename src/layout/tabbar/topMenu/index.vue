@@ -7,7 +7,7 @@ import Menu from '@/layout/menu/index.vue'
 import Logo from '@/layout/logo/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
-import { useRoute, useRouter } from 'vue-router'
+import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import { computed } from 'vue'
 
@@ -41,26 +41,16 @@ const menuRoutes = computed(() => {
 })
 
 /**
- * 打开子菜单
- *
- * @param index
- */
-const openSubMenu = (index: string) => {
-  menuStore.setMenuChildren(index)
-}
-
-/**
  * 菜单点击回调
  *
  * @param index
  */
-const selectMenu = (index: string) => {
-  menuStore.setMenuChildren(index)
-  if (menuLayout.value !== '' && $route.meta.type === 1) {
-    $router.push({ path: index, query: {} }).then((r) => {
-      console.debug(r)
-      tabsStore.setTab($route)
-    })
+const selectMenu = async (index: string) => {
+  const menuInfo = menuStore.getOneLevelMenuInfo('path', index)
+  await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
+  if (menuLayout.value !== '' && menuInfo?.meta?.type === 1) {
+    await $router.push({ path: index, query: {} })
+    tabsStore.setTab($route)
   }
 }
 </script>
@@ -74,7 +64,6 @@ const selectMenu = (index: string) => {
       background-color="transparent"
       :collapse="isCollapse"
       @select="selectMenu"
-      @open="openSubMenu"
     >
       <Logo v-if="menuLayout !== 'mix'" />
       <Menu :layout="menuLayout" :menuList="menuRoutes" />

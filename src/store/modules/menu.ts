@@ -16,6 +16,17 @@ import { GET_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
 const modules = import.meta.glob('@/views/**')
 const settings = useSettingStore().settings
 
+const findRouteByName = (routes: RouteRecordRaw[], attr: keyof RouteRecordRaw, name: string): RouteRecordRaw => {
+  return routes.find((route: RouteRecordRaw) => {
+    if (route[attr] === name) {
+      return true
+    }
+    if (route.children) {
+      return findRouteByName(route.children, attr, name)
+    }
+  }) as RouteRecordRaw
+}
+
 /**
  * 格式化动态路由
  *
@@ -89,33 +100,41 @@ const useMenuStore = defineStore('Menu', {
         })
         router.addRoute('Layout', anyRoute)
         this.initMenu = true
-      } else {
-        return Promise.reject(new Error(response))
+        return Promise.resolve()
       }
+      return Promise.reject(new Error(response))
     },
     /**
      * 设置子节点的菜单
      *
-     * @param parentPath
+     * @param fmtRouter
      */
-    setMenuChildren(parentPath: string) {
-      this.menuRoutes.forEach((fmtRouter: RouteRecordRaw) => {
-        if (fmtRouter.path === parentPath) {
-          // 子菜单路由信息
-          this.mixMenuRoutes = fmtRouter.children as RouteRecordRaw[]
-          SET_STORAGE(StorageName.mixMenuRoutes, this.mixMenuRoutes)
-        }
+    setMenuChildren(fmtRouter: RouteRecordRaw[]) {
+      // 子菜单路由信息
+      return new Promise((resolve) => {
+        this.mixMenuRoutes = fmtRouter as RouteRecordRaw[]
+        SET_STORAGE(StorageName.mixMenuRoutes, this.mixMenuRoutes)
+        resolve(this.mixMenuRoutes)
       })
     },
   },
   getters: {
     /**
-     * 获取子节点菜单
+     * 获取菜单信息
      *
      * @param state
      */
-    getOtherMenu: (state: MenuState) => {
-      return state.mixMenuRoutes
+    getOneLevelMenuInfo: (state: MenuState) => {
+      return (attr: keyof RouteRecordRaw, value: string) =>
+        state.menuRoutes.find((item: RouteRecordRaw): boolean => item[attr] === value)
+    },
+    /**
+     * 递归获取菜单信息
+     *
+     * @param state
+     */
+    getMenuInfo: (state: MenuState) => {
+      return (attr: keyof RouteRecordRaw, value: string) => findRouteByName(state.menuRoutes, attr, value)
     },
   },
 })

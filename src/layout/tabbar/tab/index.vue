@@ -5,10 +5,12 @@
 
 <script lang="ts" setup>
 import useTabStore from '@/store/modules/tabs.ts'
-import { LocationQueryRaw, RouteParamsRaw, useRouter } from 'vue-router'
+import { LocationQueryRaw, RouteParamsRaw, RouteRecordRaw, useRouter } from 'vue-router'
+import useMenuStore from '@/store/modules/menu.ts'
 
 let $router = useRouter()
 let tabsStore = useTabStore()
+let menuStore = useMenuStore()
 
 /**
  * 移除tab
@@ -33,18 +35,16 @@ const removeTab = (targetName: string) => {
  *
  * @param pane
  */
-const handleSwitchTab = (pane: any) => {
+const handleSwitchTab = async (pane: any) => {
   const routeName: string = pane.paneName
+  const menuInfo = menuStore.getMenuInfo('name', routeName)
+  await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
   tabsStore.currentTab = tabsStore.getCurrentTab(routeName)
-  $router
-    .push({
-      path: tabsStore.currentTab.fullPath,
-      query: tabsStore.currentTab.query as LocationQueryRaw,
-      params: tabsStore.currentTab.params as RouteParamsRaw,
-    })
-    .then((r) => {
-      console.debug(r)
-    })
+  await $router.push({
+    path: tabsStore.currentTab.fullPath,
+    query: tabsStore.currentTab.query as LocationQueryRaw,
+    params: tabsStore.currentTab.params as RouteParamsRaw,
+  })
 }
 </script>
 

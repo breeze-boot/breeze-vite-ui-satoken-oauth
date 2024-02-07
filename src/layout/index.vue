@@ -10,7 +10,7 @@ import Tab from './tabbar/tab/index.vue'
 import Main from './main/index.vue'
 import useSettingStore from '@/store/modules/setting'
 import useMenuStore from '@/store/modules/menu'
-import { useRoute, useRouter } from 'vue-router'
+import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import { watch, onMounted, computed } from 'vue'
 import variables from '@/styles/variables.module.scss'
 import useTabsStore from '@/store/modules/tabs.ts'
@@ -22,12 +22,12 @@ let menuStore = useMenuStore()
 let tabStore = useTabsStore()
 let { theme, settings } = useSettingStore()
 
-onMounted(() => {
-  menuStore.setMenuChildren(tabStore.currentTab.path)
-  $router.push({ path: tabStore.currentTab.path }).then((r) => {
-    console.debug(r)
-    tabStore.setTab($route)
-  })
+onMounted(async () => {
+  await menuStore.setMenuChildren(
+    menuStore.getOneLevelMenuInfo('path', tabStore.currentTab.path)?.children as RouteRecordRaw[],
+  )
+  await $router.push({ path: tabStore.currentTab.path })
+  tabStore.setTab($route)
 })
 
 /**
