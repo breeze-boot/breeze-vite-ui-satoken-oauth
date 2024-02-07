@@ -17,7 +17,10 @@ defineProps({
     default: '#icon-',
   },
   //svg矢量图的名字
-  name: String,
+  name: {
+    type: String,
+    default: '',
+  },
   //svg图标的颜色
   color: {
     type: String,
@@ -26,12 +29,12 @@ defineProps({
   //svg宽度
   width: {
     type: String,
-    default: '24px',
+    default: '1rem',
   },
   //svg高度
   height: {
     type: String,
-    default: '24px',
+    default: '1rem',
   },
 })
 </script>

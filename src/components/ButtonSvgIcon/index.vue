@@ -7,18 +7,22 @@ defineOptions({
   name: 'ButtonSvgIcon',
   inheritAttrs: false,
 })
+
 const props = defineProps({
   //svg矢量图的名字
-  icon: String,
+  icon: {
+    type: String,
+    default: '',
+  },
   //svg宽度
   width: {
     type: String,
-    default: '24px',
+    default: '1rem',
   },
   //svg高度
   height: {
     type: String,
-    default: '24px',
+    default: '1rem',
   },
   //类型
   type: {

@@ -3,6 +3,7 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts" name="Menu">
+import MenuIcon from './menuIcon/index.vue'
 const props = defineProps(['menuList', 'layout'])
 </script>
 
@@ -11,9 +12,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- HOME -->
     <template v-if="item.path === '/'">
       <el-menu-item v-if="!item.children[0].meta.hidden" :index="item.children[0].path">
-        <el-icon>
-          <component :is="item.children[0].meta.icon"></component>
-        </el-icon>
+        <menu-icon :icon="item.children[0].meta.icon" />
         <template #title>
           <span>{{ item.children[0].meta.title }}</span>
         </template>
@@ -23,9 +22,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 没有子路由 -->
     <template v-if="item.meta.type === 1 && item.path !== '/'">
       <el-menu-item v-if="!item.meta.hidden" :index="item.path">
-        <el-icon>
-          <component :is="item.meta.icon"></component>
-        </el-icon>
+        <menu-icon :icon="item.meta.icon" />
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
@@ -33,9 +30,7 @@ const props = defineProps(['menuList', 'layout'])
     </template>
     <template v-else-if="props.layout === 'mix' && item.meta.type === 0 && item.path !== '/'">
       <el-menu-item v-if="!item.meta.hidden" :index="item.path">
-        <el-icon>
-          <component :is="item.meta.icon"></component>
-        </el-icon>
+        <menu-icon :icon="item.meta.icon" />
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
@@ -45,9 +40,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 有子路由且大于0 子菜单 -->
     <el-sub-menu v-if="item.path !== '/' && item.meta.type === 0 && props.layout !== 'mix'" :index="item.path">
       <template #title>
-        <el-icon>
-          <component :is="item.meta.icon"></component>
-        </el-icon>
+        <menu-icon :icon="item.meta.icon" />
         <span>{{ item.meta.title }}</span>
       </template>
       <Menu :menu-list="item.children"></Menu>

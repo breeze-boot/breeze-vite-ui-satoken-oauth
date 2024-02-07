@@ -30,7 +30,7 @@ export const constantRoutes = [
         meta: {
           title: '主页',
           hidden: false,
-          icon: 'HomeFilled',
+          icon: 'home',
         },
       },
     ],
