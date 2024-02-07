@@ -4,12 +4,11 @@
 -->
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
-import { reactive, computed, ref, onBeforeUnmount, onMounted } from 'vue'
+import { reactive, computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
-import { CLEAR_STORAGE } from '@/utils/storage'
 import useSettingStore from '@/store/modules/setting.ts'
 import { storeToRefs } from 'pinia'
 
@@ -103,13 +102,6 @@ const rules = {
     },
   ],
 }
-
-/**
- * 销毁时清除缓存
- */
-onBeforeUnmount(() => {
-  CLEAR_STORAGE()
-})
 
 /**
  * 登录请求

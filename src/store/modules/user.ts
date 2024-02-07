@@ -74,7 +74,6 @@ const useUserStore = defineStore('User', {
      * token刷新方法
      */
     async toRefreshToken(): Promise<LoginResponseData> {
-      // this.accessToken = '401'
       const response: LoginResponseData = await refreshToken(this.refreshToken, GrantType.REFRESH_TOKEN)
       if (response) {
         // 持久化
