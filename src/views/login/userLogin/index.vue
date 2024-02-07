@@ -4,7 +4,7 @@
 -->
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
-import { reactive, computed, ref, onBeforeMount, onMounted } from 'vue'
+import { reactive, computed, ref, onBeforeUnmount, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
@@ -107,7 +107,7 @@ const rules = {
 /**
  * 销毁时清除缓存
  */
-onBeforeMount(() => {
+onBeforeUnmount(() => {
   CLEAR_STORAGE()
 })
 
@@ -121,7 +121,6 @@ const login = async () => {
     await useStore.userLogin(loginFormData)
     let redirect: string = $route.query.redirect as string
     await $router.push({ path: redirect || '/' })
-    await $router.push('/')
     ElNotification({
       type: 'success',
       message: '登录成功',

@@ -131,6 +131,7 @@ export enum StorageName {
   Permissions = 'PERMISSIONS',
   UserInfo = 'USER_INFO',
   XTenantId = 'X-TENANT-ID',
+  Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
   menuRoutes = 'MENU_ROUTES',
 }
