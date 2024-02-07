@@ -22,7 +22,7 @@ const props = defineProps(['menuList', 'layout'])
 
     <!-- 递归的菜单项 情况2：菜单是个外部链接-->
     <template v-if="item.meta.type === 1 && item.path && item.meta.href === 1">
-      <el-menu-item v-if="!item.meta.hidden" :index="item.path">
+      <el-menu-item v-if="!item.meta.hidden" :index="''">
         <menu-icon :icon="item.meta.icon" />
         <template #title>
           <el-link :href="item.path" target="_blank">
@@ -55,5 +55,9 @@ const props = defineProps(['menuList', 'layout'])
 
 <style lang="scss" scoped>
 .el-link {
+  border: none !important;
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
 }
 </style>
