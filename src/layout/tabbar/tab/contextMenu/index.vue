@@ -93,8 +93,8 @@ const handleMenuItemClick = (event: string) => {
       cursor: pointer;
       width: inherit;
       background: rgba(255, 255, 255, 0.8);
-      font-size: 100%;
-      color: var(--el-text-color) !important;
+      font-size: 80%;
+      color: rgba(50, 50, 50, 0.9);
     }
 
     .context-menu-item:hover {

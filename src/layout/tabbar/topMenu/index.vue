@@ -46,7 +46,7 @@ const menuRoutes = computed(() => {
  * @param index
  */
 const selectMenu = async (index: string) => {
-  const menuInfo = menuStore.getOneLevelMenuInfo('path', index)
+  const menuInfo = menuStore.getMenuInfo('path', index)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
   if (menuLayout.value !== '' && menuInfo?.meta?.type === 1) {
     await $router.push({ path: index, query: {} })

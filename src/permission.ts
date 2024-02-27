@@ -8,6 +8,7 @@ import useMenuStore from '@/store/modules/menu'
 
 nprogress.configure({ showSpinner: false })
 
+const whiteRoute: string[] = ['/redirect']
 const userStore = useUserStore(pinia)
 const menuStore = useMenuStore(pinia)
 
@@ -15,8 +16,9 @@ const menuStore = useMenuStore(pinia)
  * 全局前置守卫
  */
 router.beforeEach(async (to, from, next) => {
-  document.title = to.meta.title + ` | ${setting.title}` || ''
+  document.title = (to.meta.title || '') + ` | ${setting.title}`
   nprogress.start()
+
   const token: string = userStore.accessToken as string
   const initMenu: boolean = menuStore.initMenu as boolean
   if (token) {
@@ -36,7 +38,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    if (to.path == '/login') {
+    if (whiteRoute.includes(to.path) || to.path == '/login') {
       next()
     } else {
       next({ path: '/login', query: { redirect: to.path } })

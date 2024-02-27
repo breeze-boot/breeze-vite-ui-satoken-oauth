@@ -29,12 +29,12 @@ defineProps({
   //svg宽度
   width: {
     type: String,
-    default: '1rem',
+    default: '1em',
   },
   //svg高度
   height: {
     type: String,
-    default: '1rem',
+    default: '1em',
   },
 })
 </script>

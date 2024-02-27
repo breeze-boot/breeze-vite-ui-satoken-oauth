@@ -2,21 +2,33 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { PageQuery, ResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 /**
  * 菜单列表实体类型
  */
-export interface Menu {
-  id: number
-  createTime: string
-  updateTime: string
+export interface MenuRecord {
+  id?: number | string
+  platformId?: number
+  platformName?: string
+  name?: string
+  title?: string
+  icon?: string
+  sort: number
+  parentId?: number | string
+  permission?: string
+  component?: string
+  href: number
+  keepAlive: number
+  hidden: number
+  type: number
+  path?: string
 }
 
 /**
  * 菜单列表数组类型
  */
-export type MenuRecords = Menu[]
+export type MenuRecords = MenuRecord[]
 
 /**
  * 菜单响应返回类型
@@ -32,11 +44,30 @@ export interface MenuResponseData extends ResponseData {
 }
 
 /**
+ * 平台响应返回类型
+ */
+export interface PlatformSelectData extends ResponseData {
+  data: {
+    value: number
+    label: string
+  }
+}
+
+/**
+ * 菜单下拉框响应返回类型
+ */
+export interface MenuSelectData extends ResponseData {
+  data: {
+    value: number
+    label: string
+    children?: SelectResponseData
+  }
+}
+
+/**
  * 菜单列表查询类型
  */
-export interface MenuQuery extends PageQuery {
-  keywords?: string
-  status?: number
-  startTime?: string
-  endTime?: string
+export interface MenuQuery {
+  name?: string
+  title?: string
 }

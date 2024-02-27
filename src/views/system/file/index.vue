@@ -9,15 +9,17 @@ import { reactive, ref, onMounted } from 'vue'
 import AddOrUpdate from './components/FileAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { FileRecords } from '@/api/system/file/type.ts'
-import { File, FileQuery } from '@/api/system/file/type.ts'
+import { FileRecord, FileQuery } from '@/api/system/file/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
   name: 'File',
   inheritAttrs: false,
 })
 
+const { t } = useI18n()
 const fileQueryFormRef = ref(ElForm)
 const fileAddOrUpdateRef = ref()
 
@@ -32,68 +34,113 @@ const queryParams = reactive<FileQuery>({
   size: 10,
 })
 
+let checkedRows = reactive<FileRecords>([])
+let currentRows = reactive<FileRecords>([])
+
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
   refresh: 1,
-  // 是否时单选框
-  selection: true,
+  tableIndex: true,
+  // 选择框类型
+  select: 'single',
   // 表格顶部按钮
-  tableBtnGroup: [
+  tbHeaderBtn: [
     {
       type: 'primary',
-      label: '添加',
+      label: t('common.upload'),
       permission: ['sys:file:upload'],
       event: 'add',
+      icon: 'add',
     },
     {
       type: 'danger',
-      label: '删除',
+      label: t('common.delete'),
       permission: ['sys:file:delete'],
       event: 'del',
+      icon: 'delete',
+    },
+    {
+      type: 'default',
+      label: t('common.export'),
+      permission: ['auth:file:export'],
+      event: 'exportCurrentPage',
+      icon: 'export',
+    },
+    {
+      type: 'default',
+      label: t('common.exportAll'),
+      permission: ['auth:file:export'],
+      event: 'exportAll',
+      icon: 'excel',
     },
   ],
   // 表格字段配置
   fieldList: [
     {
       prop: 'title',
-      label: '标题',
       showOverflowTooltip: true,
+      label: t('file.fields.title'),
     },
     {
       prop: 'bucket',
       showOverflowTooltip: true,
-      label: '桶',
+      label: t('file.fields.bucket'),
     },
     {
       prop: 'contentType',
       showOverflowTooltip: true,
-      label: '上下文',
+      label: t('file.fields.contentType'),
     },
     {
       prop: 'fileName',
       showOverflowTooltip: true,
-      label: '文件名称',
+      label: t('file.fields.fileName'),
     },
     {
       prop: 'fileFormat',
-      label: '文件格式',
-      showOverflowTooltip: true,
       type: 'tag',
+      showOverflowTooltip: true,
+      label: t('file.fields.fileFormat'),
     },
     {
       prop: 'objectName',
-      label: '对象',
       showOverflowTooltip: true,
+      label: t('file.fields.objectName'),
     },
     {
       prop: 'path',
-      label: '路径',
       showOverflowTooltip: true,
+      label: t('file.fields.path'),
+    },
+    {
+      prop: 'bizId',
+      showOverflowTooltip: true,
+      label: t('file.fields.bizId'),
+    },
+    {
+      prop: 'bizType',
+      showOverflowTooltip: true,
+      label: t('file.fields.bizType'),
+    },
+    {
+      prop: 'storeType',
+      showOverflowTooltip: true,
+      label: t('file.fields.storeType'),
+    },
+    {
+      prop: 'createBy',
+      showOverflowTooltip: true,
+      label: t('file.fields.createBy'),
+    },
+    {
+      prop: 'createName',
+      showOverflowTooltip: true,
+      label: t('file.fields.createName'),
     },
     {
       prop: 'objectName',
-      label: '文件',
       type: 'upload',
+      label: t('file.fields.objectName'),
       width: '300px',
       upload: {
         msg: '只能上传一个文件',
@@ -104,34 +151,33 @@ const tableInfo = reactive<TableInfo>({
       },
     },
   ],
-  tableIndex: true,
-  handle: {
+  handleBtn: {
     minWidth: 200,
-    label: '操作',
+    label: t('common.operate'),
     fixed: 'right',
     link: true,
     btList: [
       // 查看
       {
-        label: '查看',
+        label: t('common.info'),
         type: 'warning',
-        icon: 'View',
+        icon: 'view',
         event: 'view',
-        permission: ['sys:file:preview'],
+        permission: ['sys:file:info'],
       },
       // 删除
       {
-        label: '下载',
+        label: t('common.download'),
         type: 'primary',
-        icon: 'Download',
+        icon: 'download',
         event: 'download',
         permission: ['sys:file:download'],
       },
       // 删除
       {
-        label: '删除',
+        label: t('common.delete'),
         type: 'danger',
-        icon: 'Delete',
+        icon: 'delete',
         event: 'delete',
         permission: ['sys:file:delete'],
       },
@@ -222,10 +268,10 @@ const handleTableHeaderBtnClick = (event: string, rows: FileRecords) => {
 /**
  * 详情
  *
- * @param data 参数
+ * @param row 参数
  */
-const handleView = (data: File) => {
-  alert(data + '查询')
+const handleView = (row: FileRecord) => {
+  alert(row + '查询')
 }
 
 /**
@@ -241,11 +287,11 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = (rows: FileRecords) => {
-  const userIds = rows.map((item: any) => item.id)
-  deleteFile(userIds)
+  const fileIds = rows.map((item: any) => item.id)
+  deleteFile(fileIds)
     .then(() => {
       ElMessage.success({
-        message: '成功',
+        message: t('common.success'),
         duration: 500,
         onClose: () => {},
       })
@@ -258,23 +304,20 @@ const handleDelete = (rows: FileRecords) => {
 /**
  * 修改
  *
- * @param data 修改参数
+ * @param row 修改参数
  */
-const handleUpdate = (data: any) => {
-  addOrUpdateHandle(data.id)
+const handleUpdate = (row: any) => {
+  addOrUpdateHandle(row.id)
 }
-
-let currentRow = reactive<File>({} as File)
-let currentRows = reactive<FileRecords>([])
 
 /**
  * 选中行，设置当前行currentRow
  *
  * @param row 选择的行数据
  */
-function handleRowClick(row: File) {
-  currentRow = row
-  console.log(currentRow)
+function handleRowClick(row: FileRecord) {
+  currentRows = [row]
+  console.log(currentRows)
 }
 
 /**
@@ -284,7 +327,6 @@ function handleRowClick(row: File) {
  */
 const handleSelectionChange = (rows: FileRecords) => {
   currentRows = rows
-  console.log(currentRows)
 }
 </script>
 
@@ -292,38 +334,43 @@ const handleSelectionChange = (rows: FileRecords) => {
   <search-container-box>
     <el-form ref="fileQueryFormRef" :model="queryParams" :inline="true">
       <!-- 用户名 -->
-      <el-form-item label="用户名" prop="userCode">
-        <el-input @keyup.enter="handleQuery" style="width: 200px" placeholder="文件名" v-model="queryParams.fileName" />
+      <el-form-item :label="t('file.fields.fileName')" prop="fileName">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('file.fields.fileName')"
+          v-model="queryParams.fileName"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" :icon="Search" @click="handleQuery">
+          {{ $t('common.search') }}
+        </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          <Refresh />
-          重置
+          {{ $t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
   </search-container-box>
 
   <b-table
-    ref="userTable"
+    ref="fileTable"
     :list-api="page"
     :export-api="exportExcel"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"
     :field-list="tableInfo.fieldList"
-    :table-header-btn="tableInfo.tableBtnGroup"
-    :singleSelect="false"
-    :selection="true"
-    :checked-list="currentRows"
-    :handle="tableInfo.handle"
+    :tb-header-btn="tableInfo.tbHeaderBtn"
+    :select="tableInfo.select"
+    :checked-rows="checkedRows"
+    :handle-btn="tableInfo.handleBtn"
     @handle-table-row-btn-click="handleTableRowBtnClick"
     @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />
 
-  <!-- 弹窗, 新增 / 修改 -->
+  <!-- 新增 / 修改 Dialog -->
   <add-or-update ref="fileAddOrUpdateRef" @reload-data-list="reloadList">确定</add-or-update>
 </template>

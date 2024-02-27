@@ -6,87 +6,91 @@
 /**
  * 按钮类型
  */
-export interface btn {
+export interface Btn {
   type?: 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
-  label?: string
   icon?: string
+  label?: string
   disabled?: boolean
   slot?: string
   slotName?: string
   permission?: string[]
-  event: event
+  link?: boolean
+  event: Event
 }
 
 /**
  * 事件类型
  */
-export type event = 'exportAll' | 'export' | 'del' | 'add' | string
+export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
 
 /**
  * 表格类型
  */
 export interface TableInfo {
-  refresh: number
+  refresh?: number
+  dict?: string[]
   pager?: boolean
-  selection: boolean
-  tableBtnGroup: btn[]
-  fieldList: field[]
-  tableIndex: boolean
-  handle: handle
+  select?: 'multi' | 'single'
+  tbHeaderBtn?: Btn[]
+  fieldList?: Field[]
+  tableIndex?: boolean
+  handleBtn?: HandleBtn
 }
 
 /**
  * 操作类型
  */
-export interface handle {
+export interface HandleBtn {
   minWidth: number | 200
   label: string | '操作'
   fixed: 'right' | 'left'
   align?: string
   width?: string
   link?: boolean
-  btList?: btn[]
+  btList?: Btn[]
 }
 
 /**
  * 表格字段类型
  */
-export interface field {
+export interface Field {
+  key?: number
+  disabled?: boolean
   type?: string | 'tag' | 'link' | 'image' | 'customLink' | 'switch' | 'input' | 'upload' | 'dialogUpload'
   prop: string
   label: string
-  switch?: switchOption
-  input?: inputOption
-  upload?: uploadOption
+  switch?: SwitchOption
+  input?: InputOption
+  upload?: UploadOption
   linkName?: string
-  dictCode?: string
+  dict?: string
   showOverflowTooltip?: boolean
   hidden?: boolean
-  linkInfo?: linkInfo
-  tagOptions?: tagOptions
+  linkInfo?: LinkInfo
+  tagOptions?: TagOptions
   align?: 'center' | 'right' | 'left'
   width?: string
   minWidth?: string
   fixed?: boolean
-  children?: children
+  children?: Children
 }
 
 /**
  * 表格嵌套类型
  */
-export type children = field[]
+export type Children = Field[]
 
 /**
  * tag类型
  */
-export interface tagOptions {
-  [idx: number | string]: tagOption
+export interface TagOptions {
+  [idx: number | string]: TagOption
 }
 
 /**
  * 文件上传类型
  */
-export interface uploadOption {
+export interface UploadOption {
   msg: string
   limit: number
   pk: string
@@ -97,7 +101,7 @@ export interface uploadOption {
 /**
  * switch类型
  */
-export interface switchOption {
+export interface SwitchOption {
   activeValue?: string | number
   inactiveValue?: string | number
   style?: string
@@ -109,21 +113,21 @@ export interface switchOption {
 /**
  * input类型
  */
-export interface inputOption {
+export interface InputOption {
   readonly?: boolean
 }
 
 /**
  * 表格查询参数类型
  */
-export interface queryParams {
-  [idx: number | string]: tagOption
+export interface QueryParams {
+  [idx: number | string]: TagOption
 }
 
 /**
  * tag类型
  */
-export interface tagOption {
+export interface TagOption {
   type?: '' | 'success' | 'warning' | 'info' | 'danger'
   name?: string
 }
@@ -131,16 +135,16 @@ export interface tagOption {
 /**
  * 链接字段属性类型
  */
-export interface linkInfo {
+export interface LinkInfo {
   routeName: string
   pkName?: string
   rowParam?: string[]
-  query: query
+  query: Query
 }
 
 /**
  * 链接字段属性查询类型
  */
-export interface query {
+export interface Query {
   [idx: string]: number | string
 }

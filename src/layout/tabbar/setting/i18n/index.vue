@@ -22,7 +22,7 @@ const changeI18nSetting = (language: string) => {
 
 <template>
   <el-dropdown style="margin: 0 5px" :show-timeout="70" :hide-timeout="50" trigger="click" @command="changeI18nSetting">
-    <button-svg-icon icon="i18n" :circle="true" />
+    <svg-button icon="i18n" :circle="true" />
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="zhCn" :disabled="false">简体中文</el-dropdown-item>

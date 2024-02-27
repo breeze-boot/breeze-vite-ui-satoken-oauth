@@ -7,16 +7,16 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
 /**
  * 角色列表实体类型
  */
-export interface Role {
+export interface RoleRecord {
   id?: number
-  createTime?: string
-  updateTime?: string
+  roleName?: string
+  roleCode?: string
 }
 
 /**
  * 角色列表数组类型
  */
-export type RoleRecords = Role[]
+export type RoleRecords = RoleRecord[]
 
 /**
  * 角色响应返回类型
@@ -35,8 +35,6 @@ export interface RoleResponseData extends ResponseData {
  * 角色列表查询类型
  */
 export interface RoleQuery extends PageQuery {
-  keywords?: string
-  status?: number
-  startTime?: string
-  endTime?: string
+  roleCode: string
+  roleName: string
 }

@@ -4,46 +4,37 @@
  */
 import pinia from '@/store'
 import { listDict } from '@/api/system/dict'
-import { DictHook, StoreDictItem } from '@/types/types.ts'
+import { Dict, DictItem, Dicts } from '@/types/types.ts'
 
 import useDictStore from '@/store/modules/dict.ts'
 
 const dictStore = useDictStore(pinia)
 
 /**
- * 获取字典数据
+ * 加载字典
+ *
+ * @param args
  */
-export function useDict(): any {
-  /**
-   * 加载字典
-   *
-   * @param args
-   */
-  const initDict = (args: any): any => {
-    return new Promise((resolve) => {
-      const dict = ref<DictHook>({})
-      args.forEach((code: string) => {
-        const dictList: StoreDictItem[] = dictStore.getDict(code)
-        if (dictList.length > 0) {
-          dict.value[code] = dictList
-          return resolve(dict)
-        }
+export function useDict(...args: any[]): any {
+  const dict = ref<Dicts>({})
+  return ((): any => {
+    args.forEach((code: string) => {
+      dict.value[code] = {}
+      const _dict: Dict = dictStore.getDict(code)
+      if (_dict) {
+        dict.value[code] = _dict
+      } else {
         // 远程获取
         listDict(code).then((response: any) => {
-          dict.value[code] = response.data.map(
-            (item: StoreDictItem): StoreDictItem => ({
-              label: item.label,
-              value: item.value,
-            }),
-          )
+          const result: Dict = {}
+          response.data.forEach((item: DictItem): void => {
+            result[item.value as number] = { label: item.label, value: item.value }
+          })
+          dict.value[code] = result
           dictStore.setDict(code, dict.value[code])
         })
-      })
-      return resolve(dict)
+      }
     })
-  }
-
-  return {
-    initDict,
-  }
+    return toRefs(dict.value)
+  })()
 }

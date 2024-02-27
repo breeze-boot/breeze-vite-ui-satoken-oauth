@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { FileResponseData, FileQuery, File } from './type'
+import { FileResponseData, FileQuery, FileRecord } from './type'
 
 enum API {
   FILE_RESTFUL_URL = '/file',
@@ -41,7 +41,7 @@ export function getFile(id: number): AxiosPromise<FileResponseData> {
  *
  * @param data 文件实体
  */
-export function addFile(data: File): AxiosPromise<FileResponseData> {
+export function addFile(data: FileRecord): AxiosPromise<FileResponseData> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'post',
@@ -54,7 +54,7 @@ export function addFile(data: File): AxiosPromise<FileResponseData> {
  *
  * @param data 文件实体
  */
-export function editFile(data: File): AxiosPromise<FileResponseData> {
+export function editFile(data: FileRecord): AxiosPromise<FileResponseData> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'put',

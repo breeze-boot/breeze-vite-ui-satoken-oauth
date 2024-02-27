@@ -3,7 +3,8 @@
  * @since: 2023-11-12
  */
 
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
+import pinia from '@/store'
 import router from '@/router'
 import { listPermission } from '@/api/login'
 import type { MenuState } from './types/types'
@@ -11,20 +12,28 @@ import { anyRoute, constantChildRoutes } from '@/router/routes'
 import type { RouteRecordRaw } from 'vue-router'
 import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
-import { GET_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
+import { GET_OBJ_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
 
 const modules = import.meta.glob('@/views/**')
-const settings = useSettingStore().settings
+const { settings } = storeToRefs(useSettingStore(pinia))
 
-const findRouteByName = (routes: RouteRecordRaw[], attr: keyof RouteRecordRaw, name: string): RouteRecordRaw => {
-  return routes.find((route: RouteRecordRaw) => {
-    if (route[attr] === name) {
-      return true
+const findRouteByName = (
+  routes: RouteRecordRaw[],
+  attr: keyof RouteRecordRaw,
+  value: string,
+): RouteRecordRaw | undefined => {
+  for (const route of routes) {
+    if (route[attr] === value) {
+      return route
     }
     if (route.children) {
-      return findRouteByName(route.children, attr, name)
+      const found: RouteRecordRaw | undefined = findRouteByName(route.children, attr, value)
+      if (found) {
+        return found
+      }
     }
-  }) as RouteRecordRaw
+  }
+  return undefined
 }
 
 /**
@@ -75,7 +84,7 @@ const useMenuStore = defineStore('Menu', {
     return {
       initMenu: false,
       menuRoutes: constantChildRoutes,
-      mixMenuRoutes: GET_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
+      mixMenuRoutes: GET_OBJ_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
     }
   },
   /**
@@ -88,7 +97,7 @@ const useMenuStore = defineStore('Menu', {
      * @returns
      */
     listPermission: async function () {
-      const response = await listPermission(<string>settings.language)
+      const response = await listPermission(<string>settings.value.language)
       if (response) {
         // 动态路由请求成功后，将路由格式化成vue能识别的路由形式
         const fmtRouters: RouteRecordRaw[] = formatRouters({ pPath: '', menus: response.data })

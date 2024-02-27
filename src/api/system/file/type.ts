@@ -7,7 +7,7 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
 /**
  * 文件列表实体类型
  */
-export interface File {
+export interface FileRecord {
   id?: number | undefined
   title: string
   fileName: string
@@ -26,7 +26,7 @@ export interface File {
 /**
  * 文件列表数组类型
  */
-export type FileRecords = File[]
+export type FileRecords = FileRecord[]
 
 /**
  * 文件响应返回类型

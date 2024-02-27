@@ -7,7 +7,14 @@ import { encrypt } from '@/utils/common'
 import type { LoginResponseData, UserLoginForm } from '@/api/login/type'
 import { type UserState } from './types/types'
 import { refreshToken, userLogin } from '@/api/login'
-import { CLEAR_STORAGE, GET_STORAGE, GET_STRING_STORAGE, SET_STORAGE, SET_STRING_STORAGE } from '@/utils/storage'
+import {
+  CLEAR_STORAGE,
+  GET_ARRAY_STORAGE,
+  GET_OBJ_STORAGE,
+  GET_STRING_STORAGE,
+  SET_STORAGE,
+  SET_STRING_STORAGE,
+} from '@/utils/storage'
 import { AuthoritiesData, AuthoritiesDatas, GrantType, SALES, StorageName, UserInfoData } from '@/types/types'
 
 /**
@@ -30,11 +37,12 @@ const filterPermissions = (userInfo: UserInfoData): string[] => {
 const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
-      userInfo: GET_STORAGE(StorageName.UserInfo) as UserInfoData,
+      userInfo: GET_OBJ_STORAGE(StorageName.UserInfo) as UserInfoData,
       refreshToken: GET_STRING_STORAGE(StorageName.RefreshToken) as string,
       accessToken: GET_STRING_STORAGE(StorageName.AccessToken) as string,
-      roleCodes: GET_STORAGE(StorageName.RoleCodes) as string[],
-      permissions: GET_STORAGE(StorageName.Permissions) as string[],
+      roleCodes: GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[],
+      permissions: GET_ARRAY_STORAGE(StorageName.Permissions) as string[],
+      excludeColumn: GET_ARRAY_STORAGE(StorageName.ExcludeColumn) as string[],
     }
   },
   actions: {
@@ -62,6 +70,9 @@ const useUserStore = defineStore('User', {
 
         this.roleCodes = response.user_info.userRoleCodes as string[]
         SET_STORAGE(StorageName.RoleCodes, this.roleCodes as string[])
+
+        this.excludeColumn = response.user_info.excludeColumn as string[]
+        SET_STORAGE(StorageName.ExcludeColumn, this.excludeColumn as string[])
 
         this.permissions = filterPermissions(this.userInfo as UserInfoData) as string[]
         SET_STORAGE(StorageName.Permissions, this.permissions as string[])
@@ -95,10 +106,24 @@ const useUserStore = defineStore('User', {
       this.refreshToken = '' as string
       this.permissions = [] as string[]
       this.roleCodes = [] as string[]
+      this.excludeColumn = [] as string[]
       CLEAR_STORAGE()
     },
   },
-  getters: {},
+  getters: {
+    /**
+     * 获取权限信息
+     *
+     * @param state
+     */
+    getPermissions: (state: UserState) => {
+      return async (): Promise<string[]> => {
+        return (
+          state.permissions.length > 0 ? state.permissions : (GET_ARRAY_STORAGE(StorageName.Permissions) as string[])
+        ) as string[]
+      }
+    },
+  },
 })
 
 export default useUserStore

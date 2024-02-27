@@ -2,16 +2,18 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
 -->
+
+<!-- 文件添加修改弹出框 -->
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addFile, getFile, editFile } from '@/api/system/file'
-import { File } from '@/api/system/file/type.ts'
+import { FileRecord } from '@/api/system/file/type.ts'
 
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const fileDataFormRef = ref()
-const fileDataForm = reactive<File>({
+const fileDataForm = reactive<FileRecord>({
   id: undefined,
   bizId: '',
   bizType: '',
@@ -51,7 +53,7 @@ const init = (id?: number) => {
  */
 const getInfo = (id: number) => {
   getFile(id).then((response: any) => {
-    if (response.code === '00000') {
+    if (response.code === '0000') {
       Object.assign(fileDataForm, response.data)
     }
   })

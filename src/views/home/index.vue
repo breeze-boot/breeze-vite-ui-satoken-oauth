@@ -6,12 +6,9 @@
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting.ts'
-import { useI18n } from 'vue-i18n'
-let settings = useSettingStore().settings
-const { t } = useI18n()
 
+let settings = useSettingStore().settings
 let userStore = useUserStore()
-console.log(t('common.title'))
 </script>
 
 <template>
@@ -24,7 +21,6 @@ console.log(t('common.title'))
           <span class="gradient">{{ userStore.userInfo?.username }}</span>
         </h3>
         <p class="subtitle" v-has="['ROLE_ADMIN1']">{{ settings.title }}</p>
-        <p class="subtitle">{{ $t('common.title') }}</p>
       </div>
     </div>
   </el-card>

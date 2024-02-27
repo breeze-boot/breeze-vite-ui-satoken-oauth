@@ -1,22 +1,21 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios'
 import pinia from '@/store'
 import { ElMessage } from 'element-plus'
-import { CLEAR_STORAGE, GET_STRING_STORAGE } from './storage'
-import JSONBig from 'json-bigint'
+import JSONBigInt from 'json-bigint'
 import { StorageName } from '@/types/types'
 import router from '@/router'
 import useUserStore from '@/store/modules/user'
 import { LoginResponseData } from '@/api/login/type.ts'
+import { convertBigNumberToString } from '@/utils/common.ts'
 
-const userStore = useUserStore(pinia)
-
-let isRefreshing = false // 标记是否正在刷新token
+let isRefreshing: boolean = false // 标记是否正在刷新token
 let requests: any[] = [] // 存储待重发的请求
+let userStore: any = undefined
 
 /**
  * 创建axios实例
  */
-const request = axios.create({
+const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 5000,
 })
@@ -27,7 +26,7 @@ const request = axios.create({
 request.defaults.transformResponse = [
   (data: any) => {
     // 此处是使用json-bigint进行json格式化
-    return JSONBig.parse(data)
+    return convertBigNumberToString(JSONBigInt.parse(data))
   },
 ]
 
@@ -35,18 +34,21 @@ request.defaults.transformResponse = [
  * 请求拦截器
  */
 request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const accessToken = GET_STRING_STORAGE(StorageName.AccessToken)
+  if (!userStore) {
+    userStore = useUserStore(pinia)
+  }
+  const accessToken: string = userStore.accessToken
   /**
    * 如果存在token，请求携带token
    */
   if (accessToken && !config.headers[StorageName.Authorization]) {
     config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
   }
-  config.headers[StorageName.XTenantId] = GET_STRING_STORAGE(StorageName.XTenantId) || '1'
+  config.headers[StorageName.XTenantId] = userStore.userInfo.tenantId || '1'
   return config
 })
 
-const handleNetworkError = (error: any) => {
+const handleNetworkError = (error: any): void => {
   let message = '网络错误'
   if (error.response) {
     switch (error.response.status) {
@@ -72,14 +74,20 @@ const handleNetworkError = (error: any) => {
   ElMessage.error(message)
 }
 
-const redirectToLogin = (): void => {
-  router.push({ path: '/login' }).then((): void => {
-    ElMessage.error('刷新失败，请重新登录')
-    CLEAR_STORAGE()
-  })
+/**
+ * 重定向到登录页
+ */
+const redirectToLogin = async (): Promise<void> => {
+  await userStore.logout()
+  await router.push({ path: '/login' }).then((): void => {})
 }
 
-const handle401Error = async (error: any) => {
+/**
+ * 重定向到登录页
+ *
+ * @param error
+ */
+const handleRefreshToken = async (error: any) => {
   if (!error.config._retry && !isRefreshing) {
     error.config._retry = true
     isRefreshing = true
@@ -90,9 +98,9 @@ const handle401Error = async (error: any) => {
       error.config.headers['Authorization'] = `Bearer ${token}`
       requests.forEach((cb) => cb(token))
       requests = []
-      return request(error.config)
+      return Promise.resolve(request(error.config))
     } catch (e) {
-      redirectToLogin()
+      await redirectToLogin()
       return Promise.reject(e)
     } finally {
       isRefreshing = false
@@ -105,6 +113,20 @@ const handle401Error = async (error: any) => {
       })
     })
   }
+}
+
+/**
+ * 401处理逻辑
+ *
+ * @param error
+ */
+const handle401Error = async (error: any) => {
+  if (isRefreshing && error.response.data.code === 'A103') {
+    await redirectToLogin()
+    ElMessage.error('刷新失败，请重新登录')
+    return Promise.reject(error.response.data)
+  }
+  return await handleRefreshToken(error)
 }
 
 /**
@@ -131,18 +153,30 @@ request.interceptors.response.use(
   },
   async (error: any) => {
     if (axios.isAxiosError(error)) {
-      if (error.response) {
-        switch (error.response.status) {
-          case 401:
-            return handle401Error(error)
+      if (!error.response) {
+        switch (error.code) {
+          case 'ECONNABORTED':
+            ElMessage.error(`连接超时 ${error.message}`)
+            return Promise.reject(error)
           default:
-            handleNetworkError(error)
+            ElMessage.error(`连接异常`)
+            console.error(`${error.message}`)
+            return Promise.reject(error)
         }
-      } else {
-        ElMessage.error('网络错误')
       }
+      switch (error.response.status) {
+        case 401:
+          return handle401Error(error)
+        default:
+          handleNetworkError(error)
+      }
+      return Promise.reject(error)
     }
-    return Promise.reject(error)
+    if (error.name.concat('SyntaxError')) {
+      ElMessage.error(`连接异常 ${error.message}`)
+      return Promise.reject(error)
+    }
   },
 )
+
 export default request

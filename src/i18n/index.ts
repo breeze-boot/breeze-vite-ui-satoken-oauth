@@ -16,12 +16,12 @@ const getImports = (pages: Record<string, any>): any => {
   const importsEn: Record<string, any> = {}
 
   for (const key in pages) {
-    if (key.indexOf('en') > 0) {
+    if (key.indexOf('en.ts') > 0) {
       const module = pages[key]
       const moduleContent = module.default || module
       Object.assign(importsEn, moduleContent)
     }
-    if (key.indexOf('zh-cn') > 0) {
+    if (key.indexOf('zh-cn.ts') > 0) {
       const module = pages[key]
       const moduleContent = module.default || module
       Object.assign(importsZh, moduleContent)
@@ -43,9 +43,8 @@ const getImports = (pages: Record<string, any>): any => {
 const modules = getImports(pages)
 
 const i18n = createI18n({
-  // 获取浏览器的语言
-  locale: settings.language || navigator.language.toLocaleLowerCase().split('-')[0] || 'en',
-  fallbackLocale: 'zh', // 设置备用语言
+  locale: settings.language,
+  fallbackLocale: 'zhCn', // 设置备用语言
   messages: {
     zhCn: modules['zhCn'],
     en: modules['en'],

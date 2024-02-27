@@ -17,6 +17,15 @@ export interface PageQuery {
 }
 
 /**
+ * 下拉框公共参数
+ */
+export interface SelectResponseData {
+  value: number | string
+  label: string
+  children: SelectResponseData[]
+}
+
+/**
  * 公共返回参数
  */
 export interface ResponseData {
@@ -76,6 +85,7 @@ export interface UserInfoData {
   email: string
   userRoleCodes: string[]
   userRoleIds: number[]
+  excludeColumn: string[]
 }
 
 /**
@@ -130,6 +140,7 @@ export enum StorageName {
   RoleCodes = 'ROLE_CODES',
   Permissions = 'PERMISSIONS',
   UserInfo = 'USER_INFO',
+  ExcludeColumn = 'EXCLUDE_COLUMN',
   XTenantId = 'X-TENANT-ID',
   Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
@@ -137,37 +148,34 @@ export enum StorageName {
 }
 
 /**
- * 字典保存参数
+ * pinia 字典保存参数
  *
  * [
  *   {
- *     code:dictName,
- *     dict:[
- *       {},
- *       {}
- *     ]
+ *     code  : dictName,
+ *     value :
+ *        {
+ *            label?: string
+ *            value?: string
+ *            type?: string
+ *        },
  *   }
  * ]
  */
-export interface StoreDict {
-  code: string
-  dictItem: StoreDictItem[]
+export interface Dict {
+  [idx: number]: DictItem
+}
+export interface Dicts {
+  [idx: string]: Dict
 }
 
 /**
  * 字典项保存参数
  */
-export interface StoreDictItem {
+export interface DictItem {
+  value?: number
   label?: string
-  value?: string
   type?: string
-}
-
-/**
- * 字典项保存参数 HOOK 使用
- */
-export interface DictHook {
-  [idx: string]: StoreDictItem[]
 }
 
 /**

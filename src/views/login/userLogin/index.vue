@@ -28,6 +28,7 @@ let loginFormRef = ref()
 onMounted(() => {
   changeDark()
   changeThemeColor()
+  useStore.logout()
 })
 
 /**
@@ -138,18 +139,18 @@ const login = async () => {
       <el-row :gutter="24" style="margin: 0">
         <el-col
           :span="8"
-          :xs="{ span: 9 }"
-          :sm="{ span: 8 }"
-          :md="{ span: 8 }"
+          :xs="{ span: 1 }"
+          :sm="{ span: 1 }"
+          :md="{ span: 6 }"
           :lg="{ span: 8 }"
           :xl="{ span: 8 }"
           class="layout"
         ></el-col>
         <el-col
           :span="8"
-          :xs="{ span: 9 }"
-          :sm="{ span: 8 }"
-          :md="{ span: 8 }"
+          :xs="{ span: 22 }"
+          :sm="{ span: 22 }"
+          :md="{ span: 12 }"
           :lg="{ span: 8 }"
           :xl="{ span: 8 }"
           class="layout"
@@ -187,9 +188,9 @@ const login = async () => {
         </el-col>
         <el-col
           :span="8"
-          :xs="{ span: 9 }"
-          :sm="{ span: 8 }"
-          :md="{ span: 8 }"
+          :xs="{ span: 1 }"
+          :sm="{ span: 1 }"
+          :md="{ span: 6 }"
           :lg="{ span: 8 }"
           :xl="{ span: 8 }"
           class="layout"
@@ -211,6 +212,7 @@ const login = async () => {
     height: 100vh;
 
     .login-form-card {
+      border: none;
       position: absolute;
       top: 25vh;
       left: 50%;

@@ -2,7 +2,7 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { PageQuery, ResponseData } from '@/types/types.ts'
+import { PageQuery, ResponseData, SelectResponseData } from '@/types/types.ts'
 
 /**
  * 用户switch锁定开启参数类型
@@ -15,13 +15,20 @@ export interface UserSwitchForm {
 /**
  * 用户列表实体类型
  */
-export interface User {
-  id?: number | undefined
-  createTime?: string
-  updateTime?: string
+export interface UserRecord {
+  id?: number
   username?: string
+  userCode?: string
+  email?: string
+  amountName?: string
+  deptId?: number[]
+  postId?: number[]
+  idCard?: string
+  roleIds?: number[]
+  confirmPassword?: string
+  sex?: number
+  isLock?: number
   password?: string
-  name?: string
   phone?: string
   roleName?: string
 }
@@ -29,7 +36,7 @@ export interface User {
 /**
  * 用户列表数组类型
  */
-export type UserRecords = User[]
+export type UserRecords = UserRecord[]
 
 /**
  * 用户响应返回类型
@@ -45,10 +52,45 @@ export interface UserResponseData extends ResponseData {
 }
 
 /**
+ * 部门响应返回类型
+ */
+export interface DeptSelectData extends ResponseData {
+  data: {
+    value: number
+    label: string
+    children?: SelectResponseData
+  }
+}
+
+/**
+ * 角色响应返回类型
+ */
+export interface RoleSelectData extends ResponseData {
+  data: {
+    value: number
+    label: string
+    children?: SelectResponseData
+  }
+}
+
+/**
+ * 职位响应返回类型
+ */
+export interface PostSelectData extends ResponseData {
+  data: {
+    value: number
+    label: string
+    children?: SelectResponseData
+  }
+}
+
+/**
  * 用户列表查询类型
  */
 export interface UserQuery extends PageQuery {
-  keywords?: string
+  userCode: string
+  username: string
+  isLock: string
   status?: number
   startTime?: string
   endTime?: string

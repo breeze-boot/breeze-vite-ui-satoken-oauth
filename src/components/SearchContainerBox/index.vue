@@ -12,7 +12,15 @@ defineProps({})
 
 <template>
   <el-card shadow="never">
-    <slot></slot>
+    <el-row :gutter="24">
+      <el-col :md="24">
+        <slot></slot>
+      </el-col>
+    </el-row>
   </el-card>
 </template>
-<style scoped></style>
+<style scoped>
+.el-card {
+  display: flex;
+}
+</style>

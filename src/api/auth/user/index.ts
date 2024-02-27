@@ -4,10 +4,22 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { UserResponseData, UserQuery, User, UserSwitchForm } from './type'
+import {
+  UserResponseData,
+  UserQuery,
+  UserRecord,
+  UserSwitchForm,
+  DeptSelectData,
+  PostSelectData,
+  RoleSelectData,
+} from './type'
 
 enum API {
   USER_RESTFUL_URL = '/user',
+  CHECK_USERNAME_URL = '/user/checkUsername',
+  SELECT_DEPT_URL = '/common/selectDept',
+  SELECT_POST_URL = '/common/selectPost',
+  SELECT_ROLE_URL = '/common/selectRole',
 }
 
 /**
@@ -43,9 +55,8 @@ export function open(data: UserSwitchForm): AxiosPromise<UserResponseData> {
  */
 export function getUser(id: number): AxiosPromise<UserResponseData> {
   return request({
-    url: API.USER_RESTFUL_URL,
+    url: `${API.USER_RESTFUL_URL}/info/${id}`,
     method: 'get',
-    params: id,
   })
 }
 
@@ -54,7 +65,7 @@ export function getUser(id: number): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function addUser(data: User): AxiosPromise<UserResponseData> {
+export function addUser(data: UserRecord): AxiosPromise<UserResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'post',
@@ -67,7 +78,7 @@ export function addUser(data: User): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function editUser(data: User): AxiosPromise<UserResponseData> {
+export function editUser(data: UserRecord): AxiosPromise<UserResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'put',
@@ -84,7 +95,7 @@ export function deleteUser(ids: number[]): AxiosPromise<UserResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'delete',
-    params: ids,
+    data: ids,
   })
 }
 
@@ -98,5 +109,52 @@ export function exportExcel(params: UserQuery): AxiosPromise<UserResponseData> {
     url: API.USER_RESTFUL_URL,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * 部门下拉框
+ */
+export function selectDept(): AxiosPromise<DeptSelectData> {
+  return request({
+    url: API.SELECT_DEPT_URL,
+    method: 'get',
+  })
+}
+
+/**
+ * 角色下拉框
+ */
+export function selectRole(): AxiosPromise<RoleSelectData> {
+  return request({
+    url: API.SELECT_ROLE_URL,
+    method: 'get',
+  })
+}
+
+/**
+ * 岗位下拉框
+ */
+export function selectPost(): Promise<AxiosPromise<PostSelectData>> {
+  return request({
+    url: API.SELECT_POST_URL,
+    method: 'get',
+  })
+}
+
+/**
+ * 校验用户名是否重复
+ *
+ *  @param username
+ *  @param userId
+ */
+export function checkUsername(username: string, userId?: number): AxiosPromise<any> {
+  return request({
+    url: API.CHECK_USERNAME_URL,
+    method: 'get',
+    params: {
+      userId,
+      username,
+    },
   })
 }

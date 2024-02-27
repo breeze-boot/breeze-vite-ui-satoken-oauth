@@ -1,17 +1,26 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { btn, field, handle as handleType, queryParams } from './types/types.ts'
-import { watch } from 'vue'
+import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
+import { watch, unref } from 'vue'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
+import { ClickOutside as vClickOutside } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
-import { DictHook } from '@/types/types.ts'
+import useUserStore from '@/store/modules/user.ts'
+
+const useStore = useUserStore()
+
+type TransferKey = number
 
 defineOptions({
   name: 'BTable',
   inheritAttrs: false,
 })
+
+const { t } = useI18n()
 
 const props = defineProps({
   // 表格顶部按钮
@@ -20,7 +29,7 @@ const props = defineProps({
     default: () => [],
   },
   // 表格使用的字典
-  dicts: {
+  dict: {
     type: Array,
     default: () => [],
   },
@@ -56,22 +65,17 @@ const props = defineProps({
   // 导出数据的接口
   exportApi: {
     type: Function,
-    required: true,
+    required: false,
   },
   // 是否显示序号
   tableIndex: {
     type: Boolean,
     default: false,
   },
-  // 是否有选择框
-  selection: {
-    type: Boolean,
-    default: false,
-  },
-  // 选择框是否单选
-  singleSelect: {
-    type: Boolean,
-    default: false,
+  // 选择框样式
+  select: {
+    type: String,
+    default: 'single',
   },
   // 主键
   pk: {
@@ -79,7 +83,7 @@ const props = defineProps({
     default: 'id',
   },
   // 选中行数据
-  checkedList: {
+  checkedRows: {
     type: Array,
     default: () => [],
   },
@@ -90,7 +94,7 @@ const props = defineProps({
     default: () => [],
   },
   // 操作栏配置
-  handle: {
+  handleBtn: {
     type: Object,
   },
   // 操作按钮集合disabled
@@ -117,114 +121,112 @@ const props = defineProps({
     type: Number,
   },
 })
-
-let dict: DictHook = reactive<DictHook>({})
-const table = ref<null | any>()
+const tableRef = ref<any>()
 const $router = useRouter()
+
 const $emit = defineEmits([
   'handle-table-header-btn-click',
   'handle-row-db-click',
   'selection-change',
   'handle-table-row-btn-click',
 ])
-const { initDict } = useDict()
 const tableInfo = reactive({
-  tbHeaderBtn: [] as btn[],
-  currentRows: [] as any,
-  loading: ref(false),
-  singleSelectValue: undefined as undefined | any | number,
-  enablePager: false,
+  loading: false,
   // 分页信息
   pagerQuery: {
-    // 总条数
-    total: 0,
-    // 分页数量列表
     layout: 'total,sizes,prev,pager,next,jumper',
     pageSizes: [10, 20, 50, 100, 200, 300, 500, 600],
-    // 查询条件
+    // 分页查询条件
     query: {
+      // 总条数
+      total: 0,
       // 当前页
       current: 1,
       // 每页条数
       size: 10,
     },
   },
-  showFieldList: [] as field[],
-  handle: {} as handleType,
+  // 显示的列
+  showFieldList: [] as Field[],
+  // 表格的值
   rows: [],
 })
 
-const showColumns = computed(() =>
-  tableInfo.showFieldList.filter((item: field) => {
-    console.debug(`设置表格列的显示隐藏`)
-    return !item.hidden || false
-  }),
-)
+let hiddenColumnValue = ref<number[]>()
+let singleSelectValue = ref<undefined | any | number>()
+let currentRows = ref<any>()
 
 /**
- * 表格样式计算属性
+ * 初始化事件
  */
-const tableStyle = computed(() => {
-  console.debug(`设置表格样式`)
-  return { width: props.tableWidth }
+onMounted(() => {
+  initColumns()
 })
 
 /**
  * 更新事件
  */
 onUpdated(() => {
-  console.debug(`表格重置布局`)
-  return table.value.doLayout()
+  return tableRef.value.doLayout()
 })
 
 /**
- * 初始化事件
- */
-onMounted(() => {
-  console.debug(`表格初始化`)
-  initDict(props.dicts).then((response: any) => {
-    dict = response.value
-    initColumns()
-    initBtnGroup()
-    initHandle()
-    initPager()
-  })
-})
-
-/**
- * 初始化分页组件
- */
-const initHandle = () => {
-  tableInfo.handle = props.handle as handleType
-}
-
-/**
- * 初始化分页组件
- */
-const initPager = () => {
-  tableInfo.enablePager = props.pager
-}
-
-/**
- * 初始化列设置
+ * 初始化列
  */
 const initColumns = () => {
-  tableInfo.showFieldList = props.fieldList as field[]
+  let _columnValue: number[] = []
+  ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
+    let _item: Field = {
+      ...item,
+      key: index,
+      hidden: true,
+      disabled: false,
+    }
+    if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
+      _columnValue?.push(index)
+      _item.hidden = false
+      _item.disabled = true
+    }
+    tableInfo.showFieldList.push(_item)
+  })
+  hiddenColumnValue.value = _columnValue
 }
+
+/**
+ * 初始化操作按钮
+ */
+const initHandleBtn = reactive(props.handleBtn as handleType)
+
+/**
+ * 表格样式计算属性
+ */
+const tableField = computed(() => tableInfo.showFieldList.filter((item) => item.hidden))
+
+/**
+ * 表格样式计算属性
+ */
+const tableStyle = computed(() => ({ width: props.tableWidth }))
+
+/**
+ * 是否开启分页
+ */
+const enablePager = ref(props.pager)
+
+/**
+ * 表格渲染需要的字典
+ */
+const dict = useDict(...props.dict)
 
 /**
  * 初始化表格顶部按钮设置
  */
-const initBtnGroup = () => {
-  tableInfo.tbHeaderBtn = props.tbHeaderBtn as btn[]
-}
+const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
 
 /**
  * 处理查询条件
  */
 const handleParams = () => {
-  console.debug(`处理查询条件`)
-  const obj = {} as queryParams
+  const obj = {} as QueryParams
   for (const key in props.query) {
     if (props.query[key] || props.query[key] === 0) {
       obj[key] = props.query[key]
@@ -238,28 +240,29 @@ const handleParams = () => {
  * 获取数据
  */
 const getList = () => {
-  tableInfo.singleSelectValue = undefined
+  singleSelectValue.value = undefined
   if (!props.listApi) return
   props.listApi(handleParams()).then((response: any) => {
     if (response.code === '0000') {
       tableInfo.rows = []
       if (props.pager) {
         tableInfo.rows = response.data.records
-        tableInfo.pagerQuery.total = Number(response.data.total)
+        tableInfo.pagerQuery.query.total = Number(response.data.total)
       } else {
         tableInfo.rows = response.data.records
       }
       // 设置当前选中项
-      if (!props.checkedList) {
+      if (!props.checkedRows) {
         return
       }
-      props.checkedList.forEach((selected: any) => {
+
+      props.checkedRows.forEach((selected: any) => {
         const row = tableInfo.rows.find(
           (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected[props.pk].toString(),
         )
         nextTick(() => {
           if (!row) return
-          table.value.toggleRowSelection(row, true)
+          tableRef.value.toggleRowSelection(row, true)
         })
       })
     } else {
@@ -271,58 +274,55 @@ const getList = () => {
 /**
  * 页码改变事件
  *
- * @param val
+ * @param size
  */
-const handleSizeChange = (val: number) => {
-  tableInfo.pagerQuery.query.size = val
+const handleSizeChange = (size: number) => {
+  tableInfo.pagerQuery.query.size = size
   getList()
 }
 
 /**
  * 当前页改变事件
  *
- * @param val
+ * @param current
  */
-const handleCurrentChange = (val: number) => {
-  tableInfo.pagerQuery.query.current = val
+const handleCurrentChange = (current: number) => {
+  tableInfo.pagerQuery.query.current = current
   getList()
 }
 
 /**
- * 单选选中行数据
- *
- * @param row
- */
-const singleSelectionChange = (row: any) => {
-  $emit('selection-change', cloneDeep(row))
-  tableInfo.currentRows = [row]
-}
-
-/**
- * 多选选中行数据
+ * 选中行数据执行
  *
  * @param rows
  */
 const handleSelectionChange = (rows: any) => {
   $emit('selection-change', rows)
-  tableInfo.currentRows = rows
+  currentRows.value = rows
 }
 
 /**
- * 点击选中当前行
+ * 点击表格的行项目 选中当前行
  *
  * @param row
  */
 const handleRowClick = (row: any) => {
   const index = (tableInfo.rows as []).findIndex((item: any) => item[props.pk] === row[props.pk])
   if (index !== -1) {
-    tableInfo.singleSelectValue = index
+    singleSelectValue.value = index
   }
+  currentRows.value = [row]
   $emit('selection-change', cloneDeep(row))
+
+  if (row) {
+    tableRef.value!.toggleRowSelection(row, undefined)
+  } else {
+    tableRef.value!.clearSelection()
+  }
 }
 
 /**
- * 双击行事件
+ * 双击表格的行项目
  *
  * @param row
  */
@@ -356,7 +356,7 @@ const handleTableRowClick = (event: string, row: any, index: number) => {
  * @param func
  */
 const confirmBox = (func: any) => {
-  ElMessageBox.alert('确认删除当前选择行项目', '删除', {
+  ElMessageBox.alert(t('common.tableRowConfirmMsg'), t('common.delete'), {
     confirmButtonText: '',
     callback: () => {
       func()
@@ -396,8 +396,8 @@ const handleTableHeaderClick = (event: string, rows: any) => {
  */
 const checkBeforeClickBtn = () => {
   return new Promise((resolve, reject) => {
-    if (!tableInfo.currentRows || tableInfo.currentRows.length === 0) {
-      ElMessage.warning('请先选择操作的行项目')
+    if (!currentRows.value || currentRows.value.length === 0) {
+      ElMessage.warning(t('common.selectLineItem'))
       reject()
       return
     }
@@ -413,7 +413,7 @@ const checkBeforeClickBtn = () => {
  */
 const openLink = (item: any, row: any) => {
   // 构造参数
-  let query = {} as queryParams
+  let query = {} as QueryParams
   // 行数据上获取的参数
   if (item.linkInfo && item.linkInfo.rowParam && item.linkInfo.rowParam.length) {
     item.linkInfo.rowParam.forEach((el: string) => {
@@ -515,28 +515,116 @@ watch(
     getList()
   },
 )
+
+// 弹出
+const buttonRef = ref()
+const popoverRef = ref()
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.()
+}
+
+const filterMethod = (query: string, item: Field) => {
+  return item.label.toLowerCase().includes(query.toLowerCase())
+}
+
+const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: TransferKey[]) => {
+  if (direction === 'left') {
+    movedKeys.forEach((key: number) => {
+      tableInfo.showFieldList.forEach((item: Field) => {
+        if (tableInfo.showFieldList[key].prop === item.prop) {
+          tableInfo.showFieldList[key].hidden = true
+        }
+      })
+    })
+  } else if (direction === 'right') {
+    movedKeys.forEach((key: number) => {
+      tableInfo.showFieldList.forEach((item: Field) => {
+        if (tableInfo.showFieldList[key].prop === item.prop) {
+          tableInfo.showFieldList[key].hidden = false
+        }
+      })
+    })
+  }
+}
 </script>
 
 <template>
+  <el-popover
+    placement="left-start"
+    :popper-style="{
+      width: 1000,
+    }"
+    ref="popoverRef"
+    :virtual-ref="buttonRef"
+    trigger="click"
+    :title="t('common.tableColumn')"
+    virtual-triggering
+  >
+    <el-transfer
+      v-model="hiddenColumnValue"
+      filterable
+      style="text-align: left; display: inline-block"
+      :titles="[t('common.showTableColumn'), t('common.hiddenTableColumn')]"
+      :filter-method="filterMethod"
+      :filter-placeholder="t('common.search')"
+      :data="tableInfo.showFieldList"
+      @change="handleChangeColumn"
+    >
+      <template #default="{ option }">
+        <span>{{ option.key }} - {{ option.label }}</span>
+      </template>
+    </el-transfer>
+
+    <div class="footer">
+      <el-button>取消</el-button>
+      <el-button type="primary">确认</el-button>
+    </div>
+  </el-popover>
+
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
-      <div class="table-btn-group">
-        <el-button
-          v-for="(item, index) in tableInfo.tbHeaderBtn"
-          :key="index"
-          :type="item.type"
-          v-has="item.permission"
-          @click="handleTableHeaderClick(item.event, tableInfo.currentRows)"
-        >
-          {{ item.label }}
-        </el-button>
-        <slot name="tbHeaderBtn"></slot>
+      <div class="tools">
+        <div class="table-btn-group">
+          <!-- <el-button
+            v-for="(item, index) in initTbHeaderBtn"
+            :key="index"
+            :type="item.type"
+            v-has="item.permission"
+            @click="handleTableHeaderClick(item.event, currentRows)"
+          >
+            {{ item.label }}
+          </el-button> -->
+          <svg-button
+            v-for="(item, index) in initTbHeaderBtn"
+            :key="index"
+            :type="item.type"
+            width="0.9rem"
+            height="0.9rem"
+            :circle="false"
+            :label="item.label"
+            :icon="item.icon"
+            v-has="item.permission"
+            @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
+          />
+          <slot name="tbHeaderBtn"></slot>
+        </div>
+        <div class="tool-btn">
+          <svg-button
+            ref="buttonRef"
+            v-click-outside="onClickOutside"
+            icon="filter"
+            width="1.1rem"
+            height="1.1rem"
+            :circle="true"
+          />
+        </div>
       </div>
     </template>
 
     <div class="table">
       <el-table
-        ref="table"
+        ref="tableRef"
+        :fit="true"
         :data="tableInfo.rows"
         :max-height="tableHeight"
         :height="tableHeight"
@@ -553,27 +641,42 @@ watch(
         @row-dblclick="handleRowDbClick"
         @row-click="handleRowClick"
       >
-        <el-table-column v-if="selection" key="selection" align="center" fixed="left" type="selection" width="55" />
-        <el-table-column v-if="singleSelect" key="singleSelect" fixed="left" align="center" width="55">
+        <el-table-column
+          v-if="props.select === 'multi'"
+          key="selection"
+          fixed="left"
+          align="center"
+          type="selection"
+          width="50"
+        />
+        <el-table-column
+          v-else-if="props.select === 'single'"
+          key="singleSelect"
+          fixed="left"
+          type="index"
+          align="center"
+          width="50"
+        >
           <template #default="scope">
-            <el-radio
-              v-model="tableInfo.singleSelectValue"
-              :label="scope.$index"
-              @change="singleSelectionChange(scope.row)"
-            >
-              {{}}
-            </el-radio>
+            <el-radio v-model="singleSelectValue" :label="scope.$index">{{}}</el-radio>
           </template>
         </el-table-column>
-        <el-table-column label="序号" v-if="tableIndex" type="index" :width="fieldList.length === 0 ? '' : 80" />
+        <el-table-column
+          :label="t('common.no')"
+          fixed
+          align="center"
+          v-if="props.tableIndex"
+          type="index"
+          :width="tableField.length === 0 ? '' : 66"
+        />
 
         <el-table-column
-          v-for="(item, index) in showColumns"
+          v-for="(item, index) in tableField"
           :key="index"
-          v-show="item.hidden"
           :prop="item.prop"
           :label="item.label"
           :align="item.align || 'center'"
+          :header-align="item.align || 'center'"
           :width="item.width"
           :min-width="item.minWidth || '100px'"
           :show-overflow-tooltip="item.showOverflowTooltip"
@@ -653,9 +756,9 @@ watch(
               </el-tag>
             </template>
 
-            <div v-else-if="item.type === 'tag' && item.dictCode">
-              <el-tag :type="dict[item.dictCode]?.[scope.row?.[item.prop]]?.type || 'success'">
-                {{ dict[item.dictCode]?.[scope.row?.[item.prop]]?.label }}
+            <div v-else-if="item.type === 'dict' && item.dict">
+              <el-tag :type="dict[item.dict]?.[scope.row?.[item.prop]]?.type || 'success'">
+                {{ dict[item.dict].value?.[scope.row?.[item.prop]]?.label }}
               </el-tag>
             </div>
 
@@ -674,43 +777,55 @@ watch(
         </el-table-column>
 
         <el-table-column
-          v-if="tableInfo.handle"
           key="handle"
-          :fixed="tableInfo.handle.fixed"
-          :align="tableInfo.handle.align || 'center'"
-          :label="tableInfo.handle.label || '操作'"
-          :width="tableInfo.handle.width"
-          :min-width="tableInfo.handle.minWidth"
+          :fixed="initHandleBtn.fixed"
+          :align="initHandleBtn.align || 'center'"
+          :label="initHandleBtn.label || t('common.operate')"
+          :width="initHandleBtn.width"
+          :min-width="initHandleBtn.minWidth"
         >
           <template #default="scope">
-            <template v-for="(item, index) in tableInfo.handle.btList" :key="index">
+            <template v-for="(item, index) in initHandleBtn.btList" :key="index">
               <!-- 自定义操作类型 -->
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
-              <el-button
+              <!-- <el-button
                 v-has="item.permission"
                 style="padding: 0 5px !important; margin: 1px !important"
-                :link="tableInfo.handle.link"
+                :link="initHandleBtn.link"
                 :icon="item.icon"
                 :type="item.type"
-                :disabled="item.disabled || btnDisableSets(item.event, scope.row)"
+                :disabled="item.disabled"
                 @click="handleTableRowClick(item.event, scope.row, scope.$index)"
               >
                 {{ item.label }}
-              </el-button>
+              </el-button> -->
+
+              <svg-button
+                width="0.9rem"
+                height="0.9rem"
+                :circle="false"
+                v-has="item.permission"
+                :link="initHandleBtn.link || item.link"
+                :icon="item.icon"
+                :type="item.type"
+                :label="item.label"
+                :disabled="item.disabled || btnDisableSets(item.event, scope.row)"
+                @svg-btn-click="handleTableRowClick(item.event, scope.row, scope.$index)"
+              />
             </template>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <template v-if="tableInfo.enablePager">
+    <template v-if="enablePager">
       <div class="table-pagination">
         <el-pagination
           v-model:current-page="tableInfo.pagerQuery.query.current"
           :page-size="tableInfo.pagerQuery.query.size"
+          :total="tableInfo.pagerQuery.query.total"
           :page-sizes="tableInfo.pagerQuery.pageSizes"
           :layout="tableInfo.pagerQuery.layout"
-          :total="tableInfo.pagerQuery.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -720,10 +835,29 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.table-btn-group {
+.footer {
   display: flex;
-  justify-content: flex-start;
-  padding: 0 20px;
+  justify-content: flex-end;
+  align-content: center;
+  width: 100%;
+  padding: 30px;
+  height: 20px;
+}
+
+.tools {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+
+  .table-btn-group {
+    height: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    padding: 0 5px;
+  }
 }
 
 .table-pagination {

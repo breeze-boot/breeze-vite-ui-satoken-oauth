@@ -64,6 +64,18 @@ export const constantChildRoutes = [
 
 export const constantRoutes = [
   {
+    path: '/redirect',
+    name: 'Redirect',
+    component: () => import('@/views/login/redirect/index.vue'),
+    meta: {
+      title: '重定向',
+      icon: 'redirect',
+      hidden: true,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
     path: '/',
     name: 'Layout',
     component: () => import('@/layout/index.vue'),

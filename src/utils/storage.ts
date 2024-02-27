@@ -32,7 +32,7 @@ export const SET_STORAGE = (name: StorageName, data: object): void => {
  * @param name 键名
  * @constructor
  */
-export const GET_STORAGE = (name: StorageName): object => {
+export const GET_OBJ_STORAGE = (name: StorageName): object => {
   let storage: string = ''
   try {
     storage = localStorage.getItem(name)!
@@ -40,6 +40,22 @@ export const GET_STORAGE = (name: StorageName): object => {
     localStorage.clear()
   }
   return !storage ? {} : JSON.parse(storage)
+}
+
+/**
+ * 获取数组类型类型的数据
+ *
+ * @param name 键名
+ * @constructor
+ */
+export const GET_ARRAY_STORAGE = (name: StorageName): string[] => {
+  let storage: string = ''
+  try {
+    storage = localStorage.getItem(name)!
+  } catch (e) {
+    localStorage.clear()
+  }
+  return !storage ? ([] as string[]) : (JSON.parse(storage) as string[])
 }
 
 /**

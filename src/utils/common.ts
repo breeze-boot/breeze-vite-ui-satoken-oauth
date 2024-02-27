@@ -4,6 +4,42 @@
  */
 import * as CryptoJS from 'crypto-js'
 
+export const ROOT = {
+  value: '1111111111111111111',
+  label: '根节点',
+}
+
+export enum DIALOG_FLAG {
+  ADD = 'add',
+  ADD_SUB = 'ADD_SUB',
+  EDIT = 'EDIT',
+}
+
+export const camelCaseToUnderscore = (val: string) => {
+  return val.replace(/[A-Z]/g, (letter: string) => `_${letter.toLowerCase()}`)
+}
+
+/**
+ * 定义一个递归函数，用于将对象中的 BigNumber 类型的值转换为字符串类型
+ */
+export const convertBigNumberToString = (obj: any): any => {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj
+  }
+
+  if (obj._isBigNumber) {
+    return obj.toString()
+  }
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      obj[key] = convertBigNumberToString(obj[key])
+    }
+  }
+
+  return obj
+}
+
 /**
  * 加密
  *

@@ -7,16 +7,17 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
 /**
  * 字典列表实体类型
  */
-export interface Dict {
+export interface DictRecord {
   id?: number
   label: string
   value: string
+  type: string
 }
 
 /**
  * 字典列表数组类型
  */
-export type DictRecords = Dict[]
+export type DictRecords = DictRecord[]
 
 /**
  * 字典响应返回类型

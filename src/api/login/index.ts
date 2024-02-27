@@ -20,8 +20,12 @@ enum API {
  */
 export function listPermission(i18n: string): AxiosPromise<PermissionResponseData> {
   return request({
-    url: API.LIST_PERMISSION_URL + `?platformCode=pc&i18n=${i18n}`,
+    url: API.LIST_PERMISSION_URL,
     method: 'get',
+    params: {
+      platformCode: 'pc',
+      i18n: i18n,
+    },
   })
 }
 

@@ -5,12 +5,12 @@
 
 import { defineStore } from 'pinia'
 import { DictState } from '@/store/modules/types/types.ts'
-import { StoreDict, StoreDictItem } from '@/types/types.ts'
+import { Dict, Dicts } from '@/types/types.ts'
 
 const useDictStore = defineStore('Dict', {
   state: (): DictState => {
     return {
-      dict: [] as StoreDict[],
+      dict: {} as Dicts,
     }
   },
   actions: {
@@ -19,36 +19,20 @@ const useDictStore = defineStore('Dict', {
      *
      * @param code
      */
-    getDict(code: string): StoreDictItem[] {
-      const item = this.dict.find((item: StoreDict): boolean => item.code === code)
-      return item ? item.dictItem : []
+    getDict(code: string): Dict {
+      return this.dict[code]
     },
     /**
      * 设置字典
      *
      * @param code
-     * @param dictItem
+     * @param dict
      */
-    setDict(code: string, dictItem: StoreDictItem[]): void {
+    setDict(code: string, dict: Dict): void {
       if (!code) {
         return
       }
-
-      const _dict = { code, dictItem }
-      this.dict.push(_dict)
-    },
-    /**
-     * 删除字典
-     *
-     * @param code
-     */
-    removeDict(code: string): boolean {
-      const index = this.dict.findIndex((item: StoreDict): boolean => item.code === code)
-      if (index !== -1) {
-        this.dict.splice(index, 1)
-        return true
-      }
-      return false
+      this.dict[code] = dict
     },
   },
 })

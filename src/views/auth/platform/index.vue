@@ -1,9 +1,327 @@
 <!--
  * @author: gaoweixuan
- * @since: 2023-11-12
+ * @since: 2023-02-25
 -->
-<script setup lang="ts"></script>
+<!-- 平台管理 -->
+<script setup lang="ts">
+import { reactive, ref, onMounted } from 'vue'
+import { page, exportExcel, deletePlatform } from '@/api/auth/platform'
+import AddOrUpdate from './components/PlatformAddOrEdit.vue'
+import { ElForm, ElMessage } from 'element-plus'
+import type { PlatformRecords } from '@/api/auth/platform/type.ts'
+import type { PlatformRecord, PlatformQuery } from '@/api/auth/platform/type.ts'
+import { TableInfo } from '@/components/Table/types/types.ts'
+import { Refresh, Search } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 
-<template>平台</template>
+defineOptions({
+  name: 'Platform',
+  inheritAttrs: false,
+})
 
-<style lang="scss" scoped></style>
+const { t } = useI18n()
+const platformQueryFormRef = ref(ElForm)
+const platformAddOrUpdateRef = ref()
+/**
+ * 初始化
+ */
+onMounted(() => {
+  reloadList()
+})
+
+// 查询条件
+const queryParams = reactive<PlatformQuery>({
+  platformCode: '',
+  platformName: '',
+  current: 1,
+  size: 10,
+})
+
+let checkedRows = reactive<PlatformRecords>([])
+let currentRows = reactive<PlatformRecords>([])
+
+const tableInfo = reactive<TableInfo>({
+  // 刷新标识
+  refresh: 1,
+  tableIndex: true,
+  // 选择框类型
+  select: 'single',
+  // 字典
+  dict: [],
+  // 表格顶部按钮
+  tbHeaderBtn: [
+    {
+      type: 'primary',
+      label: t('common.add'),
+      permission: ['auth:platform:create'],
+      event: 'add',
+      icon: 'add',
+    },
+    {
+      type: 'danger',
+      label: t('common.delete'),
+      permission: ['auth:platform:delete'],
+      event: 'del',
+      icon: 'delete',
+    },
+    {
+      type: 'default',
+      label: t('common.export'),
+      permission: ['auth:platform:export'],
+      event: 'exportCurrentPage',
+      icon: 'export',
+    },
+    {
+      type: 'default',
+      label: t('common.exportAll'),
+      permission: ['auth:platform:export'],
+      event: 'exportAll',
+      icon: 'excel',
+    },
+  ],
+  // 表格字段配置
+  fieldList: [
+    {
+      prop: 'platformName',
+      showOverflowTooltip: true,
+      label: t('platform.fields.platformName'),
+    },
+    {
+      prop: 'platformCode',
+      showOverflowTooltip: true,
+      label: t('platform.fields.platformCode'),
+    },
+    {
+      prop: 'description',
+      showOverflowTooltip: true,
+      label: t('platform.fields.description'),
+    },
+  ],
+  handleBtn: {
+    minWidth: 400,
+    label: t('common.operate'),
+    fixed: 'right',
+    link: true,
+    btList: [
+      // 编辑
+      {
+        label: t('common.edit'),
+        type: 'success',
+        icon: 'edit',
+        event: 'edit',
+        permission: ['auth:platform:modify'],
+      },
+      // 查看
+      {
+        label: t('common.info'),
+        type: 'warning',
+        icon: 'view',
+        event: 'view',
+        permission: ['auth:platform:info'],
+      },
+      // 删除
+      {
+        label: t('common.delete'),
+        type: 'danger',
+        icon: 'delete',
+        event: 'delete',
+        permission: ['auth:platform:delete'],
+      },
+    ],
+  },
+})
+
+/**
+ * 刷新表格
+ */
+const reloadList = () => {
+  tableInfo.refresh = Math.random()
+}
+
+/**
+ * 重置查询
+ */
+const resetQuery = () => {
+  platformQueryFormRef.value.resetFields()
+  handleQuery()
+}
+
+/**
+ * 查询
+ */
+const handleQuery = () => {
+  reloadList()
+}
+
+/**
+ * 添加或者修改
+ *
+ * @param id 主键
+ */
+const addOrUpdateHandle = (id?: number) => {
+  platformAddOrUpdateRef.value.init(id)
+}
+
+/**
+ * 表格组件事件分发
+ *
+ * @param event
+ * @param row
+ */
+const handleTableRowBtnClick = (event: any, row: any) => {
+  switch (event) {
+    case 'edit':
+      handleUpdate(row)
+      break
+    case 'view':
+      handleView(row)
+      break
+    case 'delete':
+      handleDelete([row])
+      break
+    default:
+      break
+  }
+}
+
+/**
+ * 表格组件头部按钮事件分发
+ *
+ * @param event 事件
+ * @param rows  行数据
+ */
+const handleTableHeaderBtnClick = (event: string, rows: any) => {
+  switch (event) {
+    case 'add':
+      handleAdd()
+      break
+    case 'del':
+      handleDelete(rows)
+      break
+    default:
+      break
+  }
+}
+
+/**
+ * 详情
+ *
+ * @param row 参数
+ */
+const handleView = (row: any) => {
+  alert('查询')
+  console.log(row)
+}
+
+/**
+ * 添加
+ */
+const handleAdd = () => {
+  addOrUpdateHandle()
+}
+
+/**
+ * 删除
+ *
+ * @param rows 行数据
+ */
+const handleDelete = (rows: PlatformRecords) => {
+  const platformIds = rows.map((item: any) => item.id)
+  deletePlatform(platformIds)
+    .then(() => {
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {},
+      })
+    })
+    .finally(() => {
+      reloadList()
+    })
+}
+
+/**
+ * 修改
+ *
+ * @param row 修改参数
+ */
+const handleUpdate = (row: any) => {
+  addOrUpdateHandle(row.id)
+}
+
+/**
+ * 选中行，设置当前行currentRow
+ *
+ * @param row 选择的行数据
+ */
+function handleRowClick(row: PlatformRecord) {
+  currentRows = [row]
+  console.log(currentRows)
+}
+
+/**
+ * 选中行，设置当前行currentRow
+ *
+ * @param rows 选择的行数据
+ */
+const handleSelectionChange = (rows: PlatformRecords) => {
+  currentRows = rows
+}
+</script>
+
+<template>
+  <search-container-box>
+    <el-form ref="platformQueryFormRef" :model="queryParams" :inline="true">
+      <!-- 平台名 -->
+      <el-form-item :label="t('platform.fields.platformName')" prop="platformName">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('platform.fields.platformCode')"
+          v-model="queryParams.platformName"
+        />
+      </el-form-item>
+
+      <!-- 平台编码 -->
+      <el-form-item :label="t('platform.fields.platformCode')" prop="platformCode">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('platform.fields.platformCode')"
+          v-model="queryParams.platformCode"
+        />
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" :icon="Search" @click="handleQuery">
+          {{ $t('common.search') }}
+        </el-button>
+        <el-button type="success" :icon="Refresh" @click="resetQuery">
+          {{ $t('common.reset') }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </search-container-box>
+
+  <b-table
+    ref="platformTableRef"
+    :export-api="exportExcel"
+    :list-api="page"
+    :dict="tableInfo.dict"
+    :tableIndex="tableInfo.tableIndex"
+    :query="queryParams"
+    :refresh="tableInfo.refresh"
+    :field-list="tableInfo.fieldList"
+    :tb-header-btn="tableInfo.tbHeaderBtn"
+    :select="tableInfo.select"
+    :checked-rows="checkedRows"
+    :handle-btn="tableInfo.handleBtn"
+    @handle-table-row-btn-click="handleTableRowBtnClick"
+    @handle-table-header-btn-click="handleTableHeaderBtnClick"
+    @selection-change="handleSelectionChange"
+    @handle-row-click="handleRowClick"
+  />
+
+  <!-- 新增 / 修改 Dialog -->
+  <add-or-update ref="platformAddOrUpdateRef" @reload-data-list="reloadList" />
+</template>

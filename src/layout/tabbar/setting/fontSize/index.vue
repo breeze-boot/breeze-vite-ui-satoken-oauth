@@ -19,7 +19,7 @@ const changeSizeSetting = (size: string) => {
 
 <template>
   <el-dropdown style="margin: 0 5px" :show-timeout="70" :hide-timeout="50" trigger="click" @command="changeSizeSetting">
-    <button-svg-icon icon="size" :circle="true" />
+    <svg-button icon="size" :circle="true" />
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="default">默认</el-dropdown-item>

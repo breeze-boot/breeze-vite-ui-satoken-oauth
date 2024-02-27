@@ -4,95 +4,160 @@
 -->
 <!-- 用户管理 -->
 <script setup lang="ts">
-import { page, open, exportExcel, deleteUser } from '@/api/auth/user'
 import { reactive, ref, onMounted } from 'vue'
+import { page, open, exportExcel, deleteUser } from '@/api/auth/user'
 import AddOrUpdate from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
-import { User, UserQuery } from '@/api/auth/user/type.ts'
+import { UserRecord, UserQuery } from '@/api/auth/user/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
+import { useDict } from '@/hooks/dict'
 
 defineOptions({
   name: 'User',
   inheritAttrs: false,
 })
 
+const { t } = useI18n()
 const userQueryFormRef = ref(ElForm)
 const userAddOrUpdateRef = ref()
+const { IS_LOCK } = useDict('IS_LOCK')
 
-// 查询条件
+/**
+ * 初始化
+ */
+onMounted(() => {
+  reloadList()
+})
+
+/**
+ * 查询条件
+ */
 const queryParams = reactive<UserQuery>({
   endTime: '',
-  keywords: '',
+  userCode: '',
+  username: '',
+  isLock: '',
   startTime: '',
-  status: 0,
   current: 1,
   size: 10,
 })
 
+let checkedRows = reactive<UserRecords>([])
+let currentRows = reactive<UserRecords>([])
+
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
   refresh: 1,
-  // 是否时单选框
-  selection: true,
+  tableIndex: true,
+  // 选择框类型
+  select: 'single',
+  // 字典
+  dict: ['IS_LOCK', 'SEX'],
   // 表格顶部按钮
-  tableBtnGroup: [
+  tbHeaderBtn: [
     {
       type: 'primary',
-      label: '添加',
+      label: t('common.add'),
       permission: ['auth:user:create'],
       event: 'add',
+      icon: 'add',
     },
     {
       type: 'danger',
-      label: '删除',
+      label: t('common.delete'),
       permission: ['auth:user:delete'],
       event: 'del',
+      icon: 'delete',
     },
     {
-      type: 'info',
-      label: '导出',
+      type: 'default',
+      label: t('common.export'),
       permission: ['auth:user:export'],
       event: 'exportCurrentPage',
+      icon: 'export',
     },
     {
-      type: 'info',
-      label: '导出全部',
+      type: 'default',
+      label: t('common.exportAll'),
       permission: ['auth:user:export'],
       event: 'exportAll',
+      icon: 'excel',
     },
   ],
   // 表格字段配置
   fieldList: [
     {
-      prop: 'userCode',
-      label: '用户编码',
+      prop: 'avatar',
       showOverflowTooltip: true,
-      hidden: false,
+      label: t('user.fields.avatar'),
     },
     {
       prop: 'username',
       showOverflowTooltip: true,
-      label: '用户名',
-      hidden: false,
+      label: t('user.fields.username'),
+    },
+    {
+      prop: 'userCode',
+      showOverflowTooltip: true,
+      label: t('user.fields.userCode'),
     },
     {
       prop: 'amountName',
       showOverflowTooltip: true,
-      label: '展示名称',
-      hidden: false,
+      label: t('user.fields.amountName'),
     },
     {
-      prop: 'isLock',
-      label: '状态',
+      prop: 'idCard',
+      showOverflowTooltip: true,
+      label: t('user.fields.idCard'),
+    },
+    {
+      prop: 'postName',
+      showOverflowTooltip: true,
+      label: t('user.fields.postName'),
+    },
+    {
+      prop: 'deptName',
+      showOverflowTooltip: true,
+      label: t('user.fields.deptName'),
+    },
+    {
+      prop: 'sex',
+      label: t('user.fields.sex'),
+      type: 'dict',
+      dict: 'SEX',
+    },
+    {
+      prop: 'sex',
+      label: t('user.fields.sex'),
       type: 'tag',
-      dictCode: 'IS_LOCK',
-      hidden: false,
+      tagOptions: {
+        1: { name: '男', type: 'success' },
+        0: { name: '女', type: 'success' },
+      },
+    },
+    {
+      prop: 'phone',
+      showOverflowTooltip: true,
+      label: t('user.fields.phone'),
+    },
+    {
+      prop: 'email',
+      showOverflowTooltip: true,
+      label: t('user.fields.email'),
     },
     {
       prop: 'isLock',
-      label: '锁定',
+      label: t('user.fields.isLock'),
+      type: 'dict',
+      dict: 'IS_LOCK',
+    },
+    {
+      prop: 'isLock',
+      label: t('user.fields.isLock'),
       type: 'switch',
       switch: {
         activeValue: 1,
@@ -101,50 +166,48 @@ const tableInfo = reactive<TableInfo>({
         pk: 'username',
         status: 'isLock',
       },
-      hidden: false,
     },
   ],
-  tableIndex: true,
-  handle: {
-    minWidth: 200,
-    label: '操作',
+  handleBtn: {
+    minWidth: 400,
+    label: t('common.operate'),
     fixed: 'right',
     link: true,
     btList: [
       // 编辑
       {
-        label: '编辑',
+        label: t('common.edit'),
         type: 'success',
-        icon: 'Edit',
+        icon: 'edit',
         event: 'edit',
         permission: ['auth:user:modify'],
       },
       // 查看
       {
-        label: '查看',
+        label: t('common.info'),
         type: 'warning',
-        icon: 'View',
+        icon: 'view',
+        event: 'view',
+        permission: ['auth:user:info'],
+      },
+      // 重置密码
+      {
+        label: t('common.resetPass'),
+        type: 'info',
+        icon: 'view',
         event: 'view',
         permission: ['auth:user:info'],
       },
       // 删除
       {
-        label: '删除',
+        label: t('common.delete'),
         type: 'danger',
-        icon: 'Delete',
+        icon: 'delete',
         event: 'delete',
         permission: ['auth:user:delete'],
       },
     ],
   },
-})
-
-/**
- * 初始化
- */
-onMounted(() => {
-  console.debug(`数据初始化`)
-  reloadList()
 })
 
 /**
@@ -222,10 +285,11 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
 /**
  * 详情
  *
- * @param data 参数
+ * @param row 参数
  */
-const handleView = (data: any) => {
-  alert(data + '查询')
+const handleView = (row: any) => {
+  alert('查询')
+  console.log(row)
 }
 
 /**
@@ -245,7 +309,7 @@ const handleDelete = (rows: UserRecords) => {
   deleteUser(userIds)
     .then(() => {
       ElMessage.success({
-        message: '成功',
+        message: t('common.success'),
         duration: 500,
         onClose: () => {},
       })
@@ -258,23 +322,20 @@ const handleDelete = (rows: UserRecords) => {
 /**
  * 修改
  *
- * @param data 修改参数
+ * @param row 修改参数
  */
-const handleUpdate = (data: any) => {
-  addOrUpdateHandle(data.id)
+const handleUpdate = (row: any) => {
+  addOrUpdateHandle(row.id)
 }
-
-let currentRow = reactive<User>({})
-let currentRows = reactive<UserRecords>([])
 
 /**
  * 选中行，设置当前行currentRow
  *
  * @param row 选择的行数据
  */
-function handleRowClick(row: User) {
-  currentRow = row
-  console.log(currentRow)
+function handleRowClick(row: UserRecord) {
+  currentRows = [row]
+  console.log(currentRows)
 }
 
 /**
@@ -284,47 +345,74 @@ function handleRowClick(row: User) {
  */
 const handleSelectionChange = (rows: UserRecords) => {
   currentRows = rows
-  console.log(currentRows)
 }
 </script>
 
 <template>
   <search-container-box>
     <el-form ref="userQueryFormRef" :model="queryParams" :inline="true">
+      <!-- 用户编码 -->
+      <el-form-item :label="t('user.fields.userCode')" prop="userCode">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('user.fields.userCode')"
+          v-model="queryParams.userCode"
+        />
+      </el-form-item>
+
       <!-- 用户名 -->
-      <el-form-item label="用户编码" prop="userCode">
-        <el-input @keyup.enter="handleQuery" style="width: 200px" placeholder="用户名" v-model="queryParams.keywords" />
+      <el-form-item :label="t('user.fields.username')" prop="username">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('user.fields.username')"
+          v-model="queryParams.username"
+        />
+      </el-form-item>
+
+      <!-- 是否锁定 -->
+      <el-form-item :label="t('user.fields.isLock')" prop="isLock">
+        <el-select
+          @change="handleQuery"
+          class="m-2"
+          :placeholder="$t('user.fields.isLock')"
+          style="width: 240px"
+          v-model="queryParams.isLock"
+        >
+          <el-option v-for="item in IS_LOCK" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :icon="Search" @click="handleQuery">搜索</el-button>
+        <el-button type="primary" :icon="Search" @click="handleQuery">
+          {{ $t('common.search') }}
+        </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          <Refresh />
-          重置
+          {{ $t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
   </search-container-box>
 
   <b-table
-    ref="userTable"
-    :list-api="page"
+    ref="userTableRef"
     :export-api="exportExcel"
+    :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
-    :dicts="['IS_LOCK']"
     :refresh="tableInfo.refresh"
     :field-list="tableInfo.fieldList"
-    :tb-header-btn="tableInfo.tableBtnGroup"
-    :singleSelect="false"
-    :selection="true"
-    :checked-list="currentRows"
-    :handle="tableInfo.handle"
+    :tb-header-btn="tableInfo.tbHeaderBtn"
+    :select="tableInfo.select"
+    :checked-rows="checkedRows"
+    :handle-btn="tableInfo.handleBtn"
     @handle-table-row-btn-click="handleTableRowBtnClick"
     @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />
 
-  <!-- 弹窗, 新增 / 修改 -->
-  <add-or-update ref="userAddOrUpdateRef" @reload-data-list="reloadList">确定</add-or-update>
+  <!-- 新增 / 修改 Dialog -->
+  <add-or-update ref="userAddOrUpdateRef" @reload-data-list="reloadList" />
 </template>

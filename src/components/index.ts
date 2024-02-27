@@ -2,14 +2,21 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import SvgIcon from './SvgIcon/index.vue'
-import BTable from './Table/index.vue'
-import ButtonSvgIcon from './Table/index.vue'
-import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import type { App, Component } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import SvgIcon from '@/components/SvgIcon/index.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import BTreeTable from '@/components/Table/BTreeTable/index.vue'
+import SvgButton from '@/components//SvgButton/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 
-const components: { [name: string]: Component } = { SvgIcon, BTable, SearchContainerBox, ButtonSvgIcon }
+const components: { [name: string]: Component } = {
+  SvgIcon,
+  BTable,
+  BTreeTable,
+  SearchContainerBox,
+  SvgButton,
+}
 
 export default {
   install(app: App) {

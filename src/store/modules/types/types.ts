@@ -4,7 +4,7 @@
  */
 
 import type { RouteRecordRaw } from 'vue-router'
-import type { StoreDict, Tab, UserInfoData, Tabs, Settings } from '@/types/types'
+import type { Tab, UserInfoData, Tabs, Settings, Dicts } from '@/types/types'
 import { Theme } from '@/types/types'
 
 /**
@@ -16,6 +16,7 @@ export interface UserState {
   accessToken: string
   roleCodes: string[]
   permissions: string[]
+  excludeColumn: string[]
 }
 
 /**
@@ -31,7 +32,7 @@ export interface MenuState {
  * 字典保存类型
  */
 export interface DictState {
-  dict: StoreDict[]
+  dict: Dicts
 }
 
 /**
