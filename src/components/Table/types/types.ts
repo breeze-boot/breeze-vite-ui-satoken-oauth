@@ -28,6 +28,7 @@ export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
  */
 export interface TableInfo {
   refresh?: number
+  mountedRefresh?: boolean
   dict?: string[]
   pager?: boolean
   select?: 'multi' | 'single'
@@ -72,13 +73,8 @@ export interface Field {
   width?: string
   minWidth?: string
   fixed?: boolean
-  children?: Children
+  children?: Field[]
 }
-
-/**
- * 表格嵌套类型
- */
-export type Children = Field[]
 
 /**
  * tag类型

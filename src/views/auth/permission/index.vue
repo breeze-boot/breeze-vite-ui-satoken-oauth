@@ -53,7 +53,7 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'single',
   // 字典
-  dict: ['IS_LOCK', 'SEX'],
+  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -96,6 +96,17 @@ const tableInfo = reactive<TableInfo>({
       prop: 'permissionCode',
       showOverflowTooltip: true,
       label: t('permission.fields.permissionCode'),
+    },
+    {
+      prop: 'permissions',
+      showOverflowTooltip: true,
+      label: t('permission.fields.permissions'),
+      type: 'tag',
+    },
+    {
+      prop: 'createName',
+      showOverflowTooltip: true,
+      label: t('permission.fields.createName'),
     },
   ],
   handleBtn: {

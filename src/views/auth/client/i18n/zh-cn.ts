@@ -1,8 +1,27 @@
 export default {
   client: {
     fields: {
-      clientCode: '客户端编码',
+      clientId: '客户端标识',
       clientName: '客户端名',
+      clientSecret: '客户端访问密钥',
+      clientIdIssuedAt: '发布日期',
+      redirectUris: '重定向URI',
+      scopes: '权限范围',
+      authorizationGrantTypes: '授权许可类型',
+      clientAuthenticationMethods: '身份验证方法',
+      clientSecretExpiresAt: '密钥到期时间',
+      clientSettings: 'clientSettings设置',
+      requireProofKey: 'PKCE',
+      requireAuthorizationConsent: '授权同意页面',
+      jwkSetUrl: 'jwk-url',
+      tokenEndpointAuthenticationSigningAlgorithm: '令牌端点认证签名算法',
+      tokenSettings: 'tokenSettings设置',
+      idTokenSignatureAlgorithm: '标识牌签名算法',
+      accessTokenFormat: '访问令牌格式',
+      authorizationCodeTimeToLive: '授权代码有效时间',
+      accessTokenTimeToLive: '访问令牌时间有效时间',
+      reuseRefreshTokens: '使用刷新令牌',
+      refreshTokenTimeToLive: '刷新令牌有效时间',
     },
     rules: {
       clientCode: '请输入客户端编码',

@@ -6,6 +6,7 @@ import type { App, Component } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import BTable from '@/components/Table/BTable/index.vue'
+import TableItem from '@/components/Table/TableItem/TableItem.vue'
 import BTreeTable from '@/components/Table/BTreeTable/index.vue'
 import SvgButton from '@/components//SvgButton/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
@@ -16,6 +17,7 @@ const components: { [name: string]: Component } = {
   BTreeTable,
   SearchContainerBox,
   SvgButton,
+  TableItem,
 }
 
 export default {

@@ -43,7 +43,7 @@ export const constantChildRoutes = [
     component: () => import('@/views/screen/index.vue'),
     meta: {
       title: 'Screen',
-      icon: 'Platform',
+      icon: 'screen',
       hidden: false,
       type: 1,
       href: 0,

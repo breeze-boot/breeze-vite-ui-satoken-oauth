@@ -56,28 +56,28 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'primary',
       label: t('common.add'),
-      permission: ['sys:client:create'],
+      permission: ['auth:client:create'],
       event: 'add',
       icon: 'add',
     },
     {
       type: 'danger',
       label: t('common.delete'),
-      permission: ['sys:client:delete'],
+      permission: ['auth:client:delete'],
       event: 'del',
       icon: 'delete',
     },
     {
       type: 'default',
       label: t('common.export'),
-      permission: ['sys:client:export'],
+      permission: ['auth:client:export'],
       event: 'exportCurrentPage',
       icon: 'export',
     },
     {
       type: 'default',
       label: t('common.exportAll'),
-      permission: ['sys:client:export'],
+      permission: ['auth:client:export'],
       event: 'exportAll',
       icon: 'excel',
     },
@@ -85,14 +85,113 @@ const tableInfo = reactive<TableInfo>({
   // 表格字段配置
   fieldList: [
     {
+      prop: 'clientId',
+      showOverflowTooltip: true,
+      label: t('client.fields.clientId'),
+    },
+    {
       prop: 'clientName',
       showOverflowTooltip: true,
       label: t('client.fields.clientName'),
     },
     {
-      prop: 'clientCode',
+      prop: 'clientSecret',
       showOverflowTooltip: true,
-      label: t('client.fields.clientCode'),
+      label: t('client.fields.clientSecret'),
+    },
+    {
+      prop: 'clientIdIssuedAt',
+      showOverflowTooltip: true,
+      label: t('client.fields.clientIdIssuedAt'),
+    },
+    {
+      prop: 'redirectUris',
+      showOverflowTooltip: true,
+      label: t('client.fields.redirectUris'),
+    },
+    {
+      prop: 'scopes',
+      showOverflowTooltip: true,
+      label: t('client.fields.scopes'),
+    },
+    {
+      prop: 'authorizationGrantTypes',
+      showOverflowTooltip: true,
+      label: t('client.fields.authorizationGrantTypes'),
+    },
+    {
+      prop: 'clientAuthenticationMethods',
+      showOverflowTooltip: true,
+      label: t('client.fields.clientAuthenticationMethods'),
+    },
+    {
+      prop: 'clientSecretExpiresAt',
+      showOverflowTooltip: true,
+      label: t('client.fields.clientSecretExpiresAt'),
+    },
+    {
+      prop: 'clientSettings',
+      showOverflowTooltip: true,
+      label: t('client.fields.clientSettings'),
+      children: [
+        {
+          prop: 'requireProofKey',
+          showOverflowTooltip: true,
+          label: t('client.fields.requireProofKey'),
+        },
+        {
+          prop: 'requireAuthorizationConsent',
+          showOverflowTooltip: true,
+          label: t('client.fields.requireAuthorizationConsent'),
+        },
+        {
+          prop: 'jwkSetUrl',
+          showOverflowTooltip: true,
+          label: t('client.fields.jwkSetUrl'),
+        },
+        {
+          prop: 'tokenEndpointAuthenticationSigningAlgorithm',
+          showOverflowTooltip: true,
+          label: t('client.fields.tokenEndpointAuthenticationSigningAlgorithm'),
+        },
+      ],
+    },
+    {
+      prop: 'tokenSettings',
+      showOverflowTooltip: true,
+      label: t('client.fields.tokenSettings'),
+      children: [
+        {
+          prop: 'idTokenSignatureAlgorithm',
+          showOverflowTooltip: true,
+          label: t('client.fields.idTokenSignatureAlgorithm'),
+        },
+        {
+          prop: 'accessTokenFormat',
+          showOverflowTooltip: true,
+          label: t('client.fields.accessTokenFormat'),
+        },
+        {
+          prop: 'authorizationCodeTimeToLive',
+          showOverflowTooltip: true,
+          label: t('client.fields.authorizationCodeTimeToLive'),
+        },
+        {
+          prop: 'accessTokenTimeToLive',
+          showOverflowTooltip: true,
+          label: t('client.fields.accessTokenTimeToLive'),
+        },
+        {
+          prop: 'reuseRefreshTokens',
+          showOverflowTooltip: true,
+          label: t('client.fields.reuseRefreshTokens'),
+        },
+        {
+          prop: 'refreshTokenTimeToLive',
+          showOverflowTooltip: true,
+          label: t('client.fields.refreshTokenTimeToLive'),
+        },
+      ],
     },
   ],
   handleBtn: {
@@ -107,7 +206,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'success',
         icon: 'edit',
         event: 'edit',
-        permission: ['sys:client:modify'],
+        permission: ['auth:client:modify'],
       },
       // 查看
       {
@@ -115,7 +214,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['sys:client:info'],
+        permission: ['auth:client:info'],
       },
       // 删除
       {
@@ -123,7 +222,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'danger',
         icon: 'delete',
         event: 'delete',
-        permission: ['sys:client:delete'],
+        permission: ['auth:client:delete'],
       },
     ],
   },
@@ -269,16 +368,6 @@ const handleSelectionChange = (rows: ClientRecords) => {
 <template>
   <search-container-box>
     <el-form ref="clientQueryFormRef" :model="queryParams" :inline="true">
-      <!-- 客户端编码 -->
-      <el-form-item :label="t('client.fields.clientCode')" prop="clientCode">
-        <el-input
-          @keyup.enter="handleQuery"
-          style="width: 200px"
-          :placeholder="t('client.fields.clientCode')"
-          v-model="queryParams.clientCode"
-        />
-      </el-form-item>
-
       <!-- 客户端名称 -->
       <el-form-item :label="t('client.fields.clientName')" prop="clientName">
         <el-input

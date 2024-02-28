@@ -9,8 +9,30 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  */
 export interface ClientRecord {
   id?: number
-  clientName?: string
-  clientCode?: string
+  clientId: string
+  clientName: string
+  clientSecret: string
+  confirmClientSecret: string
+  redirectUris: string[]
+  scopes: string[]
+  authorizationGrantTypes: string[]
+  clientAuthenticationMethods: string[]
+  clientSecretExpiresAt: string
+  clientIdIssuedAt: string
+  clientSettings: {
+    requireProofKey: boolean
+    requireAuthorizationConsent: boolean
+    jwkSetUrl: string
+    tokenEndpointAuthenticationSigningAlgorithm: string
+  }
+  tokenSettings: {
+    reuseRefreshTokens: boolean
+    idTokenSignatureAlgorithm: string
+    accessTokenFormat: string
+    refreshTokenTimeToLive: number
+    authorizationCodeTimeToLive: number
+    accessTokenTimeToLive: number
+  }
 }
 
 /**

@@ -21,7 +21,6 @@ export default {
     exportAll: '导出全部',
     delete: '删除',
     info: '查看',
-    resetPass: '重置密码',
     no: '序号',
     tableColumn: '表格字段',
     showTableColumn: '展示字段',

@@ -14,6 +14,7 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
+import RoleSettings from '@/views/auth/user/components/RoleSettings.vue'
 
 defineOptions({
   name: 'User',
@@ -23,6 +24,7 @@ defineOptions({
 const { t } = useI18n()
 const userQueryFormRef = ref(ElForm)
 const userAddOrUpdateRef = ref()
+const roleSettingsRef = ref()
 const { IS_LOCK } = useDict('IS_LOCK')
 
 /**
@@ -192,10 +194,18 @@ const tableInfo = reactive<TableInfo>({
       },
       // 重置密码
       {
-        label: t('common.resetPass'),
+        label: t('user.commons.resetPass'),
         type: 'info',
-        icon: 'view',
-        event: 'view',
+        icon: 'reset_password',
+        event: 'reset_password',
+        permission: ['auth:user:info'],
+      },
+      // 角色设置
+      {
+        label: t('user.commons.roleSettings'),
+        type: 'info',
+        icon: 'role_settings',
+        event: 'role_settings',
         permission: ['auth:user:info'],
       },
       // 删除
@@ -255,6 +265,12 @@ const handleTableRowBtnClick = (event: any, row: any) => {
     case 'view':
       handleView(row)
       break
+    case 'reset_password':
+      handleRestPassword(row)
+      break
+    case 'role_settings':
+      handleRoleSettings(row)
+      break
     case 'delete':
       handleDelete([row])
       break
@@ -288,8 +304,25 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
  * @param row 参数
  */
 const handleView = (row: any) => {
-  alert('查询')
   console.log(row)
+}
+
+/**
+ * 密码重置
+ *
+ * @param row 参数
+ */
+const handleRestPassword = (row: any) => {
+  console.log(row)
+}
+
+/**
+ * 角色设置
+ *
+ * @param row 参数
+ */
+const handleRoleSettings = (row: any) => {
+  roleSettingsRef.value.init(row.id)
 }
 
 /**
@@ -415,4 +448,7 @@ const handleSelectionChange = (rows: UserRecords) => {
 
   <!-- 新增 / 修改 Dialog -->
   <add-or-update ref="userAddOrUpdateRef" @reload-data-list="reloadList" />
+
+  <!-- 角色设置 抽屉 -->
+  <role-settings ref="roleSettingsRef" />
 </template>

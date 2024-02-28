@@ -1,8 +1,10 @@
 export default {
   permission: {
     fields: {
-      permissionCode: 'permission code',
       permissionName: 'permission name',
+      permissionCode: 'permission code',
+      permissions: 'permissions',
+      createName: 'create name',
     },
     rules: {
       permissionCode: 'Please enter your permission code',

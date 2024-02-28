@@ -21,7 +21,6 @@ export default {
     exportAll: 'export all',
     delete: 'delete',
     info: 'info',
-    resetPass: 'reset password',
     no: 'no',
     tableColumn: 'table column',
     showTableColumn: 'show column',

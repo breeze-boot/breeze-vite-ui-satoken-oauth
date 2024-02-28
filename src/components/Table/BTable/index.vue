@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, makeList } from 'element-plus'
 import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
 import { ClickOutside as vClickOutside } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
 import useUserStore from '@/store/modules/user.ts'
+import TableItem from '../TableItem/TableItem.vue'
 
 const useStore = useUserStore()
 
@@ -96,6 +96,7 @@ const props = defineProps({
   // 操作栏配置
   handleBtn: {
     type: Object,
+    default: () => {},
   },
   // 操作按钮集合disabled
   btnDisableSets: {
@@ -114,15 +115,19 @@ const props = defineProps({
   // 查询条件
   query: {
     type: Object,
-    default: () => ({}),
+    default: () => {},
   },
   // 刷新
   refresh: {
     type: Number,
   },
+  // 开启初始化后自动刷新
+  mountedRefresh: {
+    type: Boolean,
+    default: true,
+  },
 })
 const tableRef = ref<any>()
-const $router = useRouter()
 
 const $emit = defineEmits([
   'handle-table-header-btn-click',
@@ -161,6 +166,7 @@ let currentRows = ref<any>()
  */
 onMounted(() => {
   initColumns()
+  refreshData()
 })
 
 /**
@@ -193,9 +199,19 @@ const initColumns = () => {
 }
 
 /**
+ * 刷新数据
+ */
+const refreshData = () => {
+  if (props.mountedRefresh) {
+    getList()
+  }
+}
+
+/**
  * 初始化操作按钮
  */
-const initHandleBtn = reactive(props.handleBtn as handleType)
+const initHandleBtn = reactive((props.handleBtn as handleType) || ({} as handleType))
+const handleBtnOperate = props.handleBtn || false
 
 /**
  * 表格样式计算属性
@@ -404,84 +420,6 @@ const checkBeforeClickBtn = () => {
     resolve({})
   })
 }
-
-/**
- * 打开链接
- *
- * @param item
- * @param row
- */
-const openLink = (item: any, row: any) => {
-  // 构造参数
-  let query = {} as QueryParams
-  // 行数据上获取的参数
-  if (item.linkInfo && item.linkInfo.rowParam && item.linkInfo.rowParam.length) {
-    item.linkInfo.rowParam.forEach((el: string) => {
-      query[el] = row[el]
-    })
-  }
-  if (item.linkInfo && item.linkInfo.query) {
-    item.linkInfo.query = {
-      ...item.linkInfo.query,
-      ...query,
-    }
-  }
-  if (item.linkInfo.routeName.startsWith('http')) {
-    item.linkInfo.routeName = objToQueryString(item.linkInfo.query)
-    window.open(item.linkInfo.routeName)
-  } else {
-    $router.push({
-      name: item.linkInfo.routeName,
-      query: {
-        ...item.linkInfo.query,
-      },
-    })
-  }
-}
-const objToQueryString = (obj: any) => {
-  let pairs = []
-  for (let key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      pairs.push(`${key}=${obj[key]}`)
-    }
-  }
-  return `?${pairs.join('&')}`
-}
-
-interface switchType {
-  switchStatus: boolean
-}
-
-let switchState = reactive<switchType>({
-  switchStatus: false,
-})
-
-const switchLoading = ref(false)
-
-const beforeSwitchChange = () => {
-  ElMessage.info('点击按钮...')
-  switchState.switchStatus = true
-  switchLoading.value = false
-  return switchState.switchStatus
-}
-
-/**
- * switch切换事件
- */
-const handleChangeSwitch = (row: any, item: any) => {
-  if (switchState.switchStatus) {
-    switchLoading.value = true
-    if (!item.api) return
-    const _data: any = {}
-    _data[item.pk] = row[item.pk]
-    _data[item.status] = row[item.status]
-    item.api(_data).then((response: any) => {
-      switchLoading.value = false
-      ElMessage.success(response.message)
-    })
-  }
-}
-
 /**
  * 后台请求导出数据，处理数据
  *
@@ -584,16 +522,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
       <div class="tools">
-        <div class="table-btn-group">
-          <!-- <el-button
-            v-for="(item, index) in initTbHeaderBtn"
-            :key="index"
-            :type="item.type"
-            v-has="item.permission"
-            @click="handleTableHeaderClick(item.event, currentRows)"
-          >
-            {{ item.label }}
-          </el-button> -->
+        <div v-if="initTbHeaderBtn" class="table-btn-group">
           <svg-button
             v-for="(item, index) in initTbHeaderBtn"
             :key="index"
@@ -683,100 +612,39 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           :fixed="item.fixed"
         >
           <template #default="scope">
-            <!-- slot自定义列 -->
-            <template v-if="item.type === 'slot'">
-              <slot :name="`col-${item.prop}`" :row="scope.row"></slot>
-            </template>
-
-            <!-- 长文本 -->
-            <template v-else-if="item.type === 'longText'">
-              <el-tooltip effect="light" placement="top">
-                <template #content>
-                  <el-input type="textarea" rows="10" v-model="scope.row[item.prop]" readonly />
-                </template>
-                <el-button icon="view" :link="true" v-if="scope.row[item.prop]" type="success" />
-              </el-tooltip>
-            </template>
-
-            <!-- 链接 -->
-            <template v-else-if="item.type === 'link'">
-              <a style="cursor: pointer; color: #00b8fa" @click="openLink(item, scope.row)">
-                {{ scope?.row?.[item.prop] }}
-              </a>
-            </template>
-
-            <!-- 自定义链接名称-->
-            <template v-else-if="item.type === 'customLink'">
-              <a style="cursor: pointer; color: #00b8fa" @click="openLink(item, scope.row)">{{ item.linkName }}</a>
-            </template>
-
-            <!-- input-->
-            <template v-else-if="item.type === 'input'">
-              <el-input type="text" rows="10" v-model="scope.row[item.prop]" :readonly="item.input?.readonly" />
-            </template>
-
-            <!-- upload-->
-            <template v-else-if="item.type === 'dialogUpload'">
-              <el-button>上传</el-button>
-            </template>
-
-            <!-- switch-->
-            <template v-else-if="item.type === 'switch'">
-              <el-tooltip :content="'switch value: ' + scope.row[item.prop]" placement="top">
-                <el-switch
-                  :loading="switchLoading"
-                  v-model="scope.row[item.prop]"
-                  :style="item.switch?.style || '--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949'"
-                  :active-value="item.switch?.activeValue || 1"
-                  :inactive-value="item.switch?.inactiveValue || 0"
-                  :before-change="beforeSwitchChange"
-                  @change="handleChangeSwitch(scope.row, item.switch)"
-                />
-              </el-tooltip>
-            </template>
-
-            <!-- 嵌套表格 -->
-            <template v-else-if="item.children">
+            <!-- 多级表头 -->
+            <template v-if="item.children">
               <el-table-column
-                v-for="(childItem, childIndex) in item.children"
-                :key="childIndex"
-                :prop="childItem.prop"
-                :label="childItem.label"
-                :align="childItem.align || 'center'"
-                :width="childItem.width"
-                :min-width="childItem.minWidth || '85px'"
-                :show-overflow-tooltip="childItem.showOverflowTooltip"
-                :fixed="childItem.fixed"
-              />
+                v-for="(_item, _index) in item.children"
+                :key="_index"
+                :label="_item.label"
+                :align="_item.align || 'center'"
+                :header-align="_item.align || 'center'"
+                :width="_item.width"
+                :min-width="_item.minWidth || '100px'"
+                :show-overflow-tooltip="_item.showOverflowTooltip"
+                :fixed="_item.fixed"
+              >
+                <template #default="_">
+                  <TableItem
+                    :scope="{
+                      row: _.row[item.prop],
+                      $index: _.$index,
+                      column: _.column,
+                    }"
+                    :table-field="_item"
+                    :dict="dict"
+                    :key="_index"
+                  />
+                </template>
+              </el-table-column>
             </template>
-
-            <template v-else-if="item.type === 'tag' && item.tagOptions">
-              <el-tag :type="item.tagOptions[scope.row?.[item.prop]]?.type || 'success'">
-                {{ item.tagOptions?.[scope.row?.[item.prop]]?.name }}
-              </el-tag>
-            </template>
-
-            <div v-else-if="item.type === 'dict' && item.dict">
-              <el-tag :type="dict[item.dict]?.[scope.row?.[item.prop]]?.type || 'success'">
-                {{ dict[item.dict].value?.[scope.row?.[item.prop]]?.label }}
-              </el-tag>
-            </div>
-
-            <!-- 简单标签 -->
-            <template v-else-if="item.type === 'tag' && !item.tagOptions">
-              <el-tag>
-                {{ scope.row[item.prop] }}
-              </el-tag>
-            </template>
-
-            <!-- 图片 -->
-            <template v-else-if="item.type === 'image' && scope.row?.[item.prop]">
-              <el-image height="50px" :src="scope.row?.[item.prop]" />
-            </template>
+            <TableItem :scope="scope" :table-field="item" :dict="dict" :key="index" />
           </template>
         </el-table-column>
 
         <el-table-column
+          v-if="handleBtnOperate"
           key="handle"
           :fixed="initHandleBtn.fixed"
           :align="initHandleBtn.align || 'center'"
@@ -785,22 +653,10 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           :min-width="initHandleBtn.minWidth"
         >
           <template #default="scope">
-            <template v-for="(item, index) in initHandleBtn.btList" :key="index">
+            <template v-for="item in initHandleBtn.btList" :key="item.event">
               <!-- 自定义操作类型 -->
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
-              <!-- <el-button
-                v-has="item.permission"
-                style="padding: 0 5px !important; margin: 1px !important"
-                :link="initHandleBtn.link"
-                :icon="item.icon"
-                :type="item.type"
-                :disabled="item.disabled"
-                @click="handleTableRowClick(item.event, scope.row, scope.$index)"
-              >
-                {{ item.label }}
-              </el-button> -->
-
               <svg-button
                 width="0.9rem"
                 height="0.9rem"

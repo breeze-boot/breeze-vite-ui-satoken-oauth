@@ -22,6 +22,10 @@ export default {
       email: '邮箱',
       isLock: '锁定',
     },
+    commons: {
+      resetPass: '重置密码',
+      roleSettings: '角色设置',
+    },
     rules: {
       userCode: '请输入用户编码',
       username: '请输入用户名称',

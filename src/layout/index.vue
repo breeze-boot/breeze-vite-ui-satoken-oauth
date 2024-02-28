@@ -98,7 +98,21 @@ watch(
       <TabBar style="width: 100%" />
       <Tab style="width: 100%" />
       <el-main :style="tabStyle">
-        <el-scrollbar style="height: auto">
+        <el-scrollbar class="scrollbar">
+          <el-backtop :visibility-height="100" target=".scrollbar .el-scrollbar__wrap" :bottom="100">
+            <div
+              style="{
+                  height: 100%;
+                  width: 100%;
+                  background-color: transparent;
+                  text-align: center;
+                  line-height: 40px;
+                  color: #1989fa;
+                }"
+            >
+              <svg-icon name="backtop" width="1.5rem" height="1.5rem" />
+            </div>
+          </el-backtop>
           <Main />
         </el-scrollbar>
       </el-main>
@@ -122,6 +136,7 @@ watch(
 
   // 内容区域
   --el-main-top-height: 90px;
+
   .el-main {
     position: absolute;
     top: var(--el-main-top-height);

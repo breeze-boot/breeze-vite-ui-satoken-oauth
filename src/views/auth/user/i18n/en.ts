@@ -22,6 +22,10 @@ export default {
       email: 'email',
       isLock: 'is lock',
     },
+    commons: {
+      resetPass: 'reset password',
+      roleSettings: 'role settings',
+    },
     rules: {
       userCode: 'Please enter your user code',
       username: 'Please enter your user name',

@@ -1,8 +1,27 @@
 export default {
   client: {
     fields: {
-      clientCode: 'client code',
+      clientId: 'client id',
       clientName: 'client name',
+      clientSecret: 'client secret',
+      clientIdIssuedAt: 'clientIdIssuedAt',
+      redirectUris: 'redirectUris',
+      scopes: 'scopes',
+      authorizationGrantTypes: 'authorizationGrantTypes',
+      clientAuthenticationMethods: 'clientAuthenticationMethods',
+      clientSecretExpiresAt: 'clientSecretExpiresAt',
+      clientSettings: 'client settings',
+      requireProofKey: 'requireProofKey',
+      requireAuthorizationConsent: 'requireAuthorizationConsent',
+      jwkSetUrl: 'jwk set url',
+      tokenEndpointAuthenticationSigningAlgorithm: 'tokenEndpointAuthenticationSigningAlgorithm',
+      tokenSettings: 'tokenSettings settings',
+      idTokenSignatureAlgorithm: 'idTokenSignatureAlgorithm',
+      accessTokenFormat: 'accessTokenFormat',
+      authorizationCodeTimeToLive: 'authorizationCodeTimeToLive',
+      accessTokenTimeToLive: 'accessTokenTimeToLive',
+      reuseRefreshTokens: 'reuseRefreshTokens',
+      refreshTokenTimeToLive: 'refreshTokenTimeToLive',
     },
     rules: {
       clientCode: 'Please enter your client code',

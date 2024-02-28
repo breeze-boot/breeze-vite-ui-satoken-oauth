@@ -50,7 +50,7 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'single',
   // 字典
-  dict: ['IS_LOCK', 'SEX'],
+  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
