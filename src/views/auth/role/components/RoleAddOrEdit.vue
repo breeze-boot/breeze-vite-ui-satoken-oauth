@@ -12,6 +12,11 @@ import { RoleRecord } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'RoleAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -48,6 +53,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   roleDataForm.value.id = undefined
@@ -80,8 +90,8 @@ const handleRoleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = roleDataForm.value.id
-    if (bankId) {
+    const id = roleDataForm.value.id
+    if (id) {
       editRole(roleDataForm.value)
         .then(() => {
           ElMessage.success({

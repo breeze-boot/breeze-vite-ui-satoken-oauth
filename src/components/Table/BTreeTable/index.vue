@@ -260,7 +260,7 @@ const getList = () => {
 
       props.checkedRows.forEach((selected: any) => {
         const row = tableInfo.rows.find(
-          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected[props.pk].toString(),
+          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
         )
         nextTick(() => {
           if (!row) return
@@ -545,6 +545,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         v-loading="tableInfo.loading"
         border
         stripe
+        :key="Math.random()"
         row-key="id"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :style="tableStyle"
@@ -560,7 +561,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           fixed="left"
           align="center"
           type="selection"
-          width="50"
+          width="60"
         />
         <el-table-column
           v-else-if="props.select === 'single'"
@@ -568,7 +569,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           fixed="left"
           type="index"
           align="center"
-          width="50"
+          width="60"
         >
           <template #default="scope">
             <el-radio v-model="singleSelectValue" :label="scope.$index">{{}}</el-radio>

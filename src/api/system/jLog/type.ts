@@ -1,0 +1,44 @@
+/**
+ * @author: gaoweixuan
+ * @since: 2024-02-28
+ */
+import { PageQuery, ResponseData } from '@/types/types.ts'
+
+/**
+ * 任务日志列表实体类型
+ */
+export interface JLogRecord {
+  id?: number
+  jLogName?: string
+  jLogGroupName?: string
+  cronExpression?: string
+  clazzName?: string
+  concurrent: number
+  status: number
+  misfirePolicy: number
+}
+
+/**
+ * 任务日志列表数组类型
+ */
+export type JLogRecords = JLogRecord[]
+
+/**
+ * 任务日志响应返回类型
+ */
+export interface JLogResponseData extends ResponseData {
+  data: {
+    records: JLogRecords
+    total: number
+    size: number
+    current: number
+    pages: number
+  }
+}
+
+/**
+ * 任务日志列表查询类型
+ */
+export interface JLogQuery extends PageQuery {
+  jobId?: number
+}

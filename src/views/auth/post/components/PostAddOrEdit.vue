@@ -12,6 +12,11 @@ import { PostRecord } from '@/api/auth/post/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'PostAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -48,6 +53,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   postDataForm.value.id = undefined
@@ -80,8 +90,8 @@ const handlePostDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = postDataForm.value.id
-    if (bankId) {
+    const id = postDataForm.value.id
+    if (id) {
       editPost(postDataForm.value)
         .then(() => {
           ElMessage.success({

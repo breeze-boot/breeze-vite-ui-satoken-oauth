@@ -13,7 +13,7 @@ export interface Btn {
   disabled?: boolean
   slot?: string
   slotName?: string
-  permission?: string[]
+  permission: string[]
   link?: boolean
   event: Event
 }
@@ -35,6 +35,7 @@ export interface TableInfo {
   tbHeaderBtn?: Btn[]
   fieldList?: Field[]
   tableIndex?: boolean
+  checkedRows?: object[] | number[] | string[]
   handleBtn?: HandleBtn
 }
 

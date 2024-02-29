@@ -13,6 +13,23 @@ export interface UserSwitchForm {
 }
 
 /**
+ * 用户密码重置表单类型
+ */
+export interface UserResetPasswordForm {
+  id?: number
+  password?: string
+  confirmPassword?: string
+}
+
+/**
+ *用户角色设置表单类型
+ */
+export interface UserSetRoleForm {
+  id?: number
+  roleIds?: number[]
+}
+
+/**
  * 用户列表实体类型
  */
 export interface UserRecord {

@@ -12,6 +12,8 @@ import {
   DeptSelectData,
   PostSelectData,
   RoleSelectData,
+  UserResetPasswordForm,
+  UserSetRoleForm,
 } from './type'
 
 enum API {
@@ -156,5 +158,31 @@ export function checkUsername(username: string, userId?: number): AxiosPromise<a
       userId,
       username,
     },
+  })
+}
+
+/**
+ * 用户重置密码
+ *
+ * @param data
+ */
+export function userResetPassword(data: UserResetPasswordForm): AxiosPromise<any> {
+  return request({
+    url: `${API.USER_RESTFUL_URL}/reset`,
+    method: 'put',
+    data,
+  })
+}
+
+/**
+ * 设置用户角色
+ *
+ * @param data
+ */
+export function userSetRole(data: UserSetRoleForm): AxiosPromise<any> {
+  return request({
+    url: `${API.USER_RESTFUL_URL}/setRole`,
+    method: 'put',
+    data,
   })
 }

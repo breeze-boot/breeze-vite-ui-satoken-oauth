@@ -16,6 +16,11 @@ import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'MenuAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { KEEPALIVE, HIDDEN, HREF, MENU_TYPE } = useDict('KEEPALIVE', 'HIDDEN', 'HREF', 'MENU_TYPE')
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
@@ -70,6 +75,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number, flag: DIALOG_FLAG) => {
   visible.value = true
   menuDataForm.value.id = undefined
@@ -146,8 +156,8 @@ const handleMenuDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = menuDataForm.value.id
-    if (bankId) {
+    const id = menuDataForm.value.id
+    if (id) {
       editMenu(menuDataForm.value)
         .then(() => {
           ElMessage.success({

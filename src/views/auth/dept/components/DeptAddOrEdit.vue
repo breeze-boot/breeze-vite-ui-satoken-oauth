@@ -14,6 +14,11 @@ import type { SelectResponseData } from '@/types/types.ts'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'DeptAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -58,6 +63,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number, flag: DIALOG_FLAG) => {
   visible.value = true
   deptDataForm.value.id = undefined

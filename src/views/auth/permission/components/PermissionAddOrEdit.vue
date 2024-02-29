@@ -12,6 +12,11 @@ import { PermissionRecord } from '@/api/auth/permission/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'PermissionAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -49,6 +54,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   permissionDataForm.value.id = undefined
@@ -81,8 +91,8 @@ const handlePermissionDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = permissionDataForm.value.id
-    if (bankId) {
+    const id = permissionDataForm.value.id
+    if (id) {
       editPermission(permissionDataForm.value)
         .then(() => {
           ElMessage.success({

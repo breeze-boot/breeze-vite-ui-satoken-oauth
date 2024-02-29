@@ -9,11 +9,30 @@ export default {
       concurrent: 'concurrent',
       status: 'status',
     },
+    common: {
+      jobRunSuccess: 'job tun successfully',
+      jobRunImmediately: 'job run immediately',
+    },
     rules: {
-      jobName: '请输入任务名称',
-      jobGroupName: '请选择任务组名',
-      cronExpression: '请设置cron表达式',
-      clazzName: '请输入执行类名.方法(参数)',
+      jobName: 'Please enter the task name',
+      jobGroupName: 'Please select a task group name',
+      cronExpression: 'Please set the cron expression',
+      clazzName: 'Please enter the execution class name. Method (parameter)',
+    },
+  },
+  jLog: {
+    fields: {
+      jobName: 'job name',
+      jobGroupName: 'job group name',
+      cronExpression: 'cron expression',
+      clazzName: 'clazz name',
+      jobMessage: 'job message',
+      exceptionInfo: 'exception info',
+      jobStatus: 'job status',
+      endTime: 'end time',
+    },
+    common: {
+      jLogViewing: 'job log viewing',
     },
   },
 }

@@ -3,25 +3,30 @@
  * @since: 2023-11-12
 -->
 
-<!-- 用户角色配置抽屉 -->
+<!-- 任务日志查看抽屉 -->
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { page } from '@/api/auth/role'
+import { page } from '@/api/system/jLog'
 import { TableInfo } from '@/components/Table/types/types.ts'
-import { RoleQuery, RoleRecord, RoleRecords } from '@/api/auth/role/type.ts'
+import { JLogQuery, JLogRecords } from '@/api/system/jLog/type.ts'
+
+defineOptions({
+  name: 'JLog',
+  inheritAttrs: false,
+})
 
 const direction = ref('rtl')
 const { t } = useI18n()
 const visible = ref(false)
-const roleTableRef = ref()
+const jLogTableRef = ref()
+
+let currentRows = reactive<JLogRecords>([])
 
 /**
  * 查询条件
  */
-const queryParams = reactive<RoleQuery>({
-  roleCode: '',
-  roleName: '',
+const queryParams = reactive<JLogQuery>({
   current: 1,
   size: 10,
 })
@@ -33,18 +38,50 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'multi',
   // 字典
-  dict: [],
+  dict: ['JOB_STATUS'],
   // 表格字段配置
   fieldList: [
     {
-      prop: 'roleName',
+      prop: 'jobName',
       showOverflowTooltip: true,
-      label: t('role.fields.roleName'),
+      label: t('jLog.fields.jobName'),
     },
     {
-      prop: 'roleCode',
+      prop: 'jobGroupName',
       showOverflowTooltip: true,
-      label: t('role.fields.roleCode'),
+      label: t('jLog.fields.jobGroupName'),
+    },
+    {
+      prop: 'clazzName',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.clazzName'),
+    },
+    {
+      prop: 'cronExpression',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.cronExpression'),
+    },
+    {
+      prop: 'jLogMessage',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.jobMessage'),
+    },
+    {
+      prop: 'exceptionInfo',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.exceptionInfo'),
+    },
+    {
+      prop: 'jLogStatus',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.jobStatus'),
+      type: 'dict',
+      dict: 'JOB_STATUS',
+    },
+    {
+      prop: 'endTime',
+      showOverflowTooltip: true,
+      label: t('jLog.fields.endTime'),
     },
   ],
 })
@@ -58,14 +95,20 @@ const tableInfo = reactive<TableInfo>({
 const handleTableRowBtnClick = (event: any, row: any) => {
   console.log(row)
   switch (event) {
-    case 'edit':
+    case 'view':
       break
     default:
       break
   }
 }
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
+  debugger
   visible.value = true
   if (id) {
     await getInfo(id)
@@ -73,42 +116,23 @@ const init = async (id: number) => {
 }
 
 /**
- * 选中行，设置当前行currentRow
+ * 初始化任务的日志
  *
- * @param id 初始化用户的角色
+ * @param id
  */
 const getInfo = async (id: number) => {
-  console.log(id)
+  queryParams.jobId = id
   tableInfo.refresh = Math.random()
 }
-
-let currentRows = reactive<RoleRecords>([])
 
 /**
  * 选中行，设置当前行currentRow
  *
  * @param rows 选择的行数据
  */
-const handleSelectionChange = (rows: RoleRecords) => {
+const handleSelectionChange = (rows: JLogRecords) => {
   currentRows = rows
-}
-
-/**
- * 选中行，设置当前行currentRow
- *
- * @param row 选择的行数据
- */
-function handleRowClick(row: RoleRecord) {
-  currentRows = [row]
   console.log(currentRows)
-}
-
-/**
- * 表单提交
- */
-const handleUserRoleSettingsDataFormSubmit = () => {}
-const handleClose = (done: () => void) => {
-  done()
 }
 
 defineExpose({
@@ -117,19 +141,13 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer
-    width="80%"
-    v-model="visible"
-    :title="t('user.commons.roleSettings')"
-    :direction="direction"
-    :before-close="handleClose"
-  >
+  <el-drawer size="80%" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
     <template #header>
-      <h4>{{ $t('user.commons.roleSettings') }}</h4>
+      <h4>{{ $t('jLog.common.jLogViewing') }}</h4>
     </template>
     <template #default>
       <b-table
-        ref="roleTableRef"
+        ref="jLogTableRef"
         :list-api="page"
         :dict="tableInfo.dict"
         :tableIndex="tableInfo.tableIndex"
@@ -139,15 +157,15 @@ defineExpose({
         :field-list="tableInfo.fieldList"
         :select="tableInfo.select"
         :handle-btn="tableInfo.handleBtn"
+        table-height="80%"
         @handle-table-row-btn-click="handleTableRowBtnClick"
+        c
         @selection-change="handleSelectionChange"
-        @handle-row-click="handleRowClick"
       />
     </template>
     <template #footer>
       <div style="flex: auto">
         <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleUserRoleSettingsDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-drawer>

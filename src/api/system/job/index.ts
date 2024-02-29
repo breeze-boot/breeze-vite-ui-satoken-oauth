@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { JobResponseData, JobQuery, JobRecord } from './type'
+import { JobResponseData, JobQuery, JobRecord, JobSwitchForm } from './type'
 
 enum API {
   JOB_RESTFUL_URL = '/job',
@@ -84,5 +84,33 @@ export function exportExcel(params: JobQuery): AxiosPromise<JobResponseData> {
     url: API.JOB_RESTFUL_URL,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * 运行一次
+ *
+ * @param jobId
+ */
+export function runJobNow(jobId: number): AxiosPromise<JobResponseData> {
+  return request({
+    url: `${API.JOB_RESTFUL_URL}/runJobNow`,
+    method: 'get',
+    params: {
+      jobId,
+    },
+  })
+}
+
+/**
+ * 开启暂停
+ *
+ * @param data
+ */
+export function open(data: JobSwitchForm): AxiosPromise<JobResponseData> {
+  return request({
+    url: `${API.JOB_RESTFUL_URL}/open`,
+    method: 'put',
+    data: data,
   })
 }

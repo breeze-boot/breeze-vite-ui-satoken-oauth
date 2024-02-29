@@ -13,6 +13,11 @@ import { useI18n } from 'vue-i18n'
 import { SelectResponseData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'UserAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -139,6 +144,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   userDataForm.value.id = undefined
@@ -146,12 +156,13 @@ const init = async (id: number) => {
   if (userDataFormRef.value) {
     userDataFormRef.value.resetFields()
   }
-  await initSelectDept()
-  await initSelectPost()
-  await initSelectRole()
+
   if (id) {
     await getInfo(id)
   }
+  await initSelectDept()
+  await initSelectPost()
+  await initSelectRole()
 }
 
 /**
@@ -204,8 +215,8 @@ const handleUserDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = userDataForm.value.id
-    if (bankId) {
+    const id = userDataForm.value.id
+    if (id) {
       editUser(userDataForm.value)
         .then(() => {
           ElMessage.success({

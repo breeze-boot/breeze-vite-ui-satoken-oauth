@@ -20,6 +20,8 @@ export const isHasPermission = (app: any) => {
 }
 
 const filterOptions = async (el: any, options: any) => {
+  console.log(options.value)
+  if (!options.value) return
   for (const item of options.value) {
     const permissions: string[] = await userStore.getPermissions()
     if (!permissions.includes(item)) {

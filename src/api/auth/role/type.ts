@@ -35,6 +35,7 @@ export interface RoleResponseData extends ResponseData {
  * 角色列表查询类型
  */
 export interface RoleQuery extends PageQuery {
+  id?: number
   roleCode: string
   roleName: string
 }

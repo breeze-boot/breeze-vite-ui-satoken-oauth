@@ -5,6 +5,14 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
+ * 任务switch锁定开启参数类型
+ */
+export interface JobSwitchForm {
+  id?: number
+  status?: number
+}
+
+/**
  * 任务列表实体类型
  */
 export interface JobRecord {

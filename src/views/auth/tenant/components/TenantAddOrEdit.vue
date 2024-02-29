@@ -12,6 +12,11 @@ import { TenantRecord } from '@/api/auth/tenant/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'TenantAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -48,6 +53,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   tenantDataForm.value.id = undefined
@@ -80,8 +90,8 @@ const handleTenantDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = tenantDataForm.value.id
-    if (bankId) {
+    const id = tenantDataForm.value.id
+    if (id) {
       editTenant(tenantDataForm.value)
         .then(() => {
           ElMessage.success({

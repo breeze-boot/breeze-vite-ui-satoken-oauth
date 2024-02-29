@@ -22,8 +22,8 @@ export default {
       email: 'email',
       isLock: 'is lock',
     },
-    commons: {
-      resetPass: 'reset password',
+    common: {
+      resetPassword: 'reset password',
       roleSettings: 'role settings',
     },
     rules: {

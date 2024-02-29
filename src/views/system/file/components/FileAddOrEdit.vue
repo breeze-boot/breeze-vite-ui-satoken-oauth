@@ -32,7 +32,9 @@ const fileDataForm = reactive<FileRecord>({
 const rules = ref({})
 
 /**
- * 编辑初始化表单
+ * 初始化
+ *
+ * @param id
  */
 const init = (id?: number) => {
   visible.value = true

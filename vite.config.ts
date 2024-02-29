@@ -1,8 +1,6 @@
 import { ConfigEnv, UserConfigExport, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import path from 'path'
@@ -10,7 +8,7 @@ import path from 'path'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vitejs.dev/config/
-export default ({ command, mode }: ConfigEnv): UserConfigExport => {
+export default ({ mode }: ConfigEnv): UserConfigExport => {
   // 获取各种环境下对应的变量
   const env = loadEnv(mode, process.cwd())
   return {
@@ -19,13 +17,9 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       vue(),
       AutoImport({
         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-        imports: ['vue', '@vueuse/core'],
-        resolvers: [ElementPlusResolver()],
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()],
-        // 指定自定义组件位置(默认:src/components)
-        dirs: ['src/components', 'src/**/components'],
+        imports: ['vue', '@vueuse/core', 'pinia', 'vue-router'],
+        // 自动导入类型定义文件路径
+        dts: './auto-imports.d.ts',
       }),
       VueSetupExtend(),
       DefineOptions(),

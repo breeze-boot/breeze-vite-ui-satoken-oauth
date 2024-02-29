@@ -117,14 +117,6 @@ const tableInfo = reactive<TableInfo>({
         event: 'view',
         permission: ['auth:tenant:info'],
       },
-      // 重置密码
-      {
-        label: t('common.resetPass'),
-        type: 'info',
-        icon: 'view',
-        event: 'view',
-        permission: ['auth:tenant:info'],
-      },
       // 删除
       {
         label: t('common.delete'),

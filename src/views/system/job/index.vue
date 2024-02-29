@@ -5,8 +5,9 @@
 <!-- 任务管理 -->
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
-import { page, exportExcel, deleteJob } from '@/api/system/job'
+import { page, exportExcel, deleteJob, runJobNow, open } from '@/api/system/job'
 import AddOrUpdate from './components/JobAddOrEdit.vue'
+import JLog from './components/JLog.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { JobRecords } from '@/api/system/job/type.ts'
 import { JobRecord, JobQuery } from '@/api/system/job/type.ts'
@@ -14,6 +15,7 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
+import JSONBigInt from 'json-bigint'
 
 defineOptions({
   name: 'Job',
@@ -23,6 +25,7 @@ defineOptions({
 const { t } = useI18n()
 const jobQueryFormRef = ref(ElForm)
 const jobAddOrUpdateRef = ref()
+const jLogRef = ref()
 const { JOB_STATUS } = useDict('JOB_STATUS')
 
 /**
@@ -127,9 +130,22 @@ const tableInfo = reactive<TableInfo>({
       type: 'dict',
       dict: 'JOB_STATUS',
     },
+    {
+      prop: 'status',
+      showOverflowTooltip: true,
+      label: t('job.fields.status'),
+      type: 'switch',
+      switch: {
+        activeValue: 1,
+        inactiveValue: 0,
+        api: open,
+        pk: 'id',
+        status: 'status',
+      },
+    },
   ],
   handleBtn: {
-    minWidth: 400,
+    minWidth: 350,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -152,11 +168,19 @@ const tableInfo = reactive<TableInfo>({
       },
       // 查看日志
       {
-        label: t('common.showLog'),
+        label: t('jLog.common.jLogViewing'),
         type: 'info',
-        icon: 'view',
-        event: 'view',
-        permission: ['sys:job:info'],
+        icon: 'job_view_log',
+        event: 'job_view_log',
+        permission: ['sys:jLog:list'],
+      },
+      // 立即运行
+      {
+        label: t('job.common.jobRunImmediately'),
+        type: 'info',
+        icon: 'job_run_immediately',
+        event: 'job_run_immediately',
+        permission: [],
       },
       // 删除
       {
@@ -218,6 +242,12 @@ const handleTableRowBtnClick = (event: any, row: any) => {
     case 'delete':
       handleDelete([row])
       break
+    case 'job_view_log':
+      handleJobViewLog(row)
+      break
+    case 'job_run_immediately':
+      handleJobRunImmediately(row)
+      break
     default:
       break
   }
@@ -277,6 +307,27 @@ const handleDelete = (rows: JobRecords) => {
     .finally(() => {
       reloadList()
     })
+}
+
+/**
+ * 查看日志
+ *
+ * @param row 行数据
+ */
+const handleJobViewLog = (row: JobRecord) => {
+  jLogRef.value.init(row.id)
+}
+
+/**
+ * 运行一次
+ *
+ * @param row 行数据
+ */
+const handleJobRunImmediately = async (row: JobRecord) => {
+  const response: any = await runJobNow(JSONBigInt.parse(row.id))
+  if (response.code === '0000') {
+    ElMessage.success(t('job.common.jobRunSuccess'))
+  }
 }
 
 /**
@@ -365,4 +416,7 @@ const handleSelectionChange = (rows: JobRecords) => {
 
   <!-- 新增 / 修改 Dialog -->
   <add-or-update ref="jobAddOrUpdateRef" @reload-data-list="reloadList" />
+
+  <!-- 任务日志抽屉 -->
+  <j-log ref="jLogRef" />
 </template>

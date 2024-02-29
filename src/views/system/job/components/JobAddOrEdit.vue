@@ -13,6 +13,11 @@ import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
 
+defineOptions({
+  name: 'JobAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const { JOB_GROUP, MISFIRE_POLICY } = useDict('JOB_GROUP', 'MISFIRE_POLICY')
 const $emit = defineEmits(['reloadDataList'])
@@ -23,6 +28,7 @@ const jobDataForm = ref<JobRecord>({
   misfirePolicy: -1,
   status: 0,
 })
+
 const rules = ref({
   jobName: [
     {
@@ -54,6 +60,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   jobDataForm.value.id = undefined
@@ -86,8 +97,8 @@ const handleJobDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = jobDataForm.value.id
-    if (bankId) {
+    const id = jobDataForm.value.id
+    if (id) {
       editJob(jobDataForm.value)
         .then(() => {
           ElMessage.success({

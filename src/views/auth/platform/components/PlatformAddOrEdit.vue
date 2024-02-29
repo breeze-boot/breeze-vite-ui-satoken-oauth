@@ -12,6 +12,11 @@ import type { PlatformRecord } from '@/api/auth/platform/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
+defineOptions({
+  name: 'PlatformAddOrEdit',
+  inheritAttrs: false,
+})
+
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
@@ -49,6 +54,11 @@ const rules = ref({
   ],
 })
 
+/**
+ * 初始化
+ *
+ * @param id
+ */
 const init = async (id: number) => {
   visible.value = true
   platformDataForm.value.id = undefined
@@ -81,8 +91,8 @@ const handleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const bankId = platformDataForm.value.id
-    if (bankId) {
+    const id = platformDataForm.value.id
+    if (id) {
       editPlatform(platformDataForm.value)
         .then(() => {
           ElMessage.success({

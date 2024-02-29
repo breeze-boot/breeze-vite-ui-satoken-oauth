@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox, makeList } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
-import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
+import { onUpdated, onMounted, reactive, ref, computed, nextTick, toRefs } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { ClickOutside as vClickOutside } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -273,8 +273,9 @@ const getList = () => {
       }
 
       props.checkedRows.forEach((selected: any) => {
+        // 传来的值去匹配表格数据
         const row = tableInfo.rows.find(
-          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected[props.pk].toString(),
+          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
         )
         nextTick(() => {
           if (!row) return
@@ -560,6 +561,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         v-loading="tableInfo.loading"
         border
         stripe
+        :key="Math.random()"
         :summary-method="summaryMethod"
         :span-method="spanMethod"
         :style="tableStyle"
@@ -576,7 +578,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           fixed="left"
           align="center"
           type="selection"
-          width="50"
+          width="60"
         />
         <el-table-column
           v-else-if="props.select === 'single'"
@@ -584,7 +586,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           fixed="left"
           type="index"
           align="center"
-          width="50"
+          width="60"
         >
           <template #default="scope">
             <el-radio v-model="singleSelectValue" :label="scope.$index">{{}}</el-radio>
@@ -653,7 +655,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           :min-width="initHandleBtn.minWidth"
         >
           <template #default="scope">
-            <template v-for="item in initHandleBtn.btList" :key="item.event">
+            <template v-for="(item, index) in initHandleBtn.btList" :key="index">
               <!-- 自定义操作类型 -->
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->

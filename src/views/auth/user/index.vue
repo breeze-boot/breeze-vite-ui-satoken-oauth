@@ -14,7 +14,8 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
-import RoleSettings from '@/views/auth/user/components/RoleSettings.vue'
+import UserRoleSettings from '@/views/auth/user/components/UserRoleSettings.vue'
+import UserPasswordReset from '@/views/auth/user/components/UserPasswordReset.vue'
 
 defineOptions({
   name: 'User',
@@ -25,6 +26,7 @@ const { t } = useI18n()
 const userQueryFormRef = ref(ElForm)
 const userAddOrUpdateRef = ref()
 const roleSettingsRef = ref()
+const restPasswordRef = ref()
 const { IS_LOCK } = useDict('IS_LOCK')
 
 /**
@@ -171,7 +173,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    minWidth: 400,
+    minWidth: 510,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -194,19 +196,19 @@ const tableInfo = reactive<TableInfo>({
       },
       // 重置密码
       {
-        label: t('user.commons.resetPass'),
+        label: t('user.common.resetPassword'),
         type: 'info',
-        icon: 'reset_password',
-        event: 'reset_password',
-        permission: ['auth:user:info'],
+        icon: 'user_reset_password',
+        event: 'user_reset_password',
+        permission: ['auth:user:reset'],
       },
       // 角色设置
       {
-        label: t('user.commons.roleSettings'),
+        label: t('user.common.roleSettings'),
         type: 'info',
-        icon: 'role_settings',
-        event: 'role_settings',
-        permission: ['auth:user:info'],
+        icon: 'user_role_settings',
+        event: 'user_role_settings',
+        permission: ['auth:user:setRole'],
       },
       // 删除
       {
@@ -265,11 +267,11 @@ const handleTableRowBtnClick = (event: any, row: any) => {
     case 'view':
       handleView(row)
       break
-    case 'reset_password':
-      handleRestPassword(row)
+    case 'user_reset_password':
+      handleUserRestPassword(row)
       break
-    case 'role_settings':
-      handleRoleSettings(row)
+    case 'user_role_settings':
+      handleUserRoleSettings(row)
       break
     case 'delete':
       handleDelete([row])
@@ -312,8 +314,8 @@ const handleView = (row: any) => {
  *
  * @param row 参数
  */
-const handleRestPassword = (row: any) => {
-  console.log(row)
+const handleUserRestPassword = (row: any) => {
+  restPasswordRef.value.init(row.id)
 }
 
 /**
@@ -321,7 +323,7 @@ const handleRestPassword = (row: any) => {
  *
  * @param row 参数
  */
-const handleRoleSettings = (row: any) => {
+const handleUserRoleSettings = (row: any) => {
   roleSettingsRef.value.init(row.id)
 }
 
@@ -450,5 +452,8 @@ const handleSelectionChange = (rows: UserRecords) => {
   <add-or-update ref="userAddOrUpdateRef" @reload-data-list="reloadList" />
 
   <!-- 角色设置 抽屉 -->
-  <role-settings ref="roleSettingsRef" />
+  <user-role-settings ref="roleSettingsRef" />
+
+  <!-- 密码重置 Dialog -->
+  <user-password-reset ref="restPasswordRef" />
 </template>

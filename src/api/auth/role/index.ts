@@ -104,3 +104,18 @@ export function checkRoleCode(roleCode: string, roleId?: number): AxiosPromise<a
     },
   })
 }
+
+/**
+ * 查询用户角色
+ *
+ * @param id
+ */
+export function listUserRoles(id: number): AxiosPromise<any> {
+  return request({
+    url: `${API.ROLE_RESTFUL_URL}/listUserRoles`,
+    method: 'get',
+    params: {
+      id,
+    },
+  })
+}
