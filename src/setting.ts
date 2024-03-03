@@ -7,6 +7,7 @@ import { reactive } from 'vue'
 export default {
   title: 'Breeze-Vite-UI',
   defaultIsCollapse: false,
+  defaultShowAvatar: false,
   defaultLogoUrl: logoUrl,
   defaultEnableWatermark: true,
   defaultLogoHidden: true,

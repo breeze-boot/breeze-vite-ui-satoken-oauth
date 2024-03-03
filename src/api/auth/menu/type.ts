@@ -2,10 +2,10 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { ResponseData, SelectResponseData } from '@/types/types.ts'
+import { ResponseData } from '@/types/types.ts'
 
 /**
- * 菜单列表实体类型
+ * 菜单列表类型声明
  */
 export interface MenuRecord {
   id?: number | string
@@ -26,12 +26,12 @@ export interface MenuRecord {
 }
 
 /**
- * 菜单列表数组类型
+ * 菜单列表数组类型声明
  */
 export type MenuRecords = MenuRecord[]
 
 /**
- * 菜单响应返回类型
+ * 菜单列表接口响应类型声明
  */
 export interface MenuResponseData extends ResponseData {
   data: {
@@ -44,28 +44,7 @@ export interface MenuResponseData extends ResponseData {
 }
 
 /**
- * 平台响应返回类型
- */
-export interface PlatformSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-  }
-}
-
-/**
- * 菜单下拉框响应返回类型
- */
-export interface MenuSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 菜单列表查询类型
+ * 菜单列表查询类型声明
  */
 export interface MenuQuery {
   name?: string

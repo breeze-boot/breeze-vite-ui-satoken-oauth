@@ -25,5 +25,11 @@ export default {
     tableColumn: '表格字段',
     showTableColumn: '展示字段',
     hiddenTableColumn: '隐藏字段',
+    avatar: '头像',
+  },
+  rules: {
+    fileLimit3: '不能超过3个',
+    avatarFormat: '头像图片必须时JPG格式',
+    avatarSize: '头像图片必须不能超过2M',
   },
 }

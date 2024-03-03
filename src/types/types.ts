@@ -19,10 +19,21 @@ export interface PageQuery {
 /**
  * 下拉框公共参数
  */
-export interface SelectResponseData {
+export interface SelectData {
   value: number | string
   label: string
-  children: SelectResponseData[]
+  children?: SelectData[]
+}
+
+/**
+ * 下拉框响应类型声明
+ */
+export interface SelectResponseData extends ResponseData {
+  data: {
+    value: number | string
+    label: string
+    children?: SelectData
+  }
 }
 
 /**
@@ -183,6 +194,7 @@ export interface DictItem {
  */
 export interface Settings {
   title: string
+  showAvatar: boolean
   isCollapse: boolean
   logoHidden: boolean
   logoUrl: any

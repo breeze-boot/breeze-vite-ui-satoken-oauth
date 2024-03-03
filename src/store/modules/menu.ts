@@ -65,7 +65,6 @@ const formatRouters = ({ pPath, menus }: { pPath: string; menus: any }): RouteRe
         hidden: (menu.hidden as number) != 0,
         href: menu.href as number,
       },
-      // component: () => import(/* @vite-ignore */`@/views${component}.vue`),
       component: modules[`/src/views${component}.vue`],
       children: children as RouteRecordRaw[],
     }

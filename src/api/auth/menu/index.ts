@@ -5,7 +5,8 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import JSONBigInt from 'json-bigint'
-import type { MenuResponseData, MenuQuery, MenuRecord, PlatformSelectData, MenuSelectData } from './type'
+import type { MenuResponseData, MenuQuery, MenuRecord } from './type'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   MENU_RESTFUL_URL = '/menu',
@@ -98,7 +99,7 @@ export function exportExcel(params: MenuQuery): AxiosPromise<MenuResponseData> {
  *
  * @param id
  */
-export function selectMenu(id: number): AxiosPromise<MenuSelectData> {
+export function selectMenu(id: number): AxiosPromise<SelectResponseData> {
   return request({
     url: API.MENU_SELECT_URL,
     method: 'get',
@@ -110,7 +111,7 @@ export function selectMenu(id: number): AxiosPromise<MenuSelectData> {
  * 平台下拉框
  *
  */
-export function selectPlatform(): AxiosPromise<PlatformSelectData> {
+export function selectPlatform(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.PLATFORM_SELECT_URL,
     method: 'get',

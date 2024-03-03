@@ -10,7 +10,8 @@ export interface Btn {
   type?: 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
   icon?: string
   label?: string
-  disabled?: boolean
+  disabled?: (event: string, row: any) => boolean
+  hidden?: (event: string, row: any) => boolean
   slot?: string
   slotName?: string
   permission: string[]
@@ -64,6 +65,7 @@ export interface Field {
   switch?: SwitchOption
   input?: InputOption
   upload?: UploadOption
+  textarea?: TextareaOption
   linkName?: string
   dict?: string
   showOverflowTooltip?: boolean
@@ -93,6 +95,14 @@ export interface UploadOption {
   pk: string
   types: string[]
   api: string
+}
+
+/**
+ * 长文本类型
+ */
+export interface TextareaOption {
+  autosize?: { minRow?: number; maxRows?: number }
+  width?: string
 }
 
 /**

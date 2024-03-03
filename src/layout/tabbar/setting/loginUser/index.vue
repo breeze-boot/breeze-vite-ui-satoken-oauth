@@ -5,12 +5,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import useUserStore from '@/store/modules/user.ts'
-import { ArrowDown } from '@element-plus/icons-vue'
+import useSettingStore from '@/store/modules/setting.ts'
 import { useRoute, useRouter } from 'vue-router'
 
 let $router = useRouter()
 let $route = useRoute()
 let userStore = useUserStore()
+let settingStore = useSettingStore()
 
 /**
  *退出登录
@@ -33,16 +34,24 @@ const avatar = computed(() => {
 const username = computed(() => {
   return userStore.userInfo.username
 })
+
+/**
+ * 是否显示登录人头像
+ */
+const showAvatar = computed(() => {
+  return settingStore.settings.showAvatar
+})
 </script>
 
 <template>
-  <img class="avatar" :src="avatar" alt="" />
-  <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click">
+  <el-dropdown style="margin: 0 10px" :show-timeout="70" :hide-timeout="50" trigger="click">
     <span class="el-dropdown-link" style="cursor: pointer">
-      {{ username }}
-      <el-icon class="el-icon--right">
-        <arrow-down />
-      </el-icon>
+      <el-avatar v-if="showAvatar" :src="showAvatar ? avatar : '#'">
+        <span v-if="!showAvatar">{{ username }}</span>
+      </el-avatar>
+      <el-avatar v-else>
+        <span>{{ username }}</span>
+      </el-avatar>
     </span>
     <template #dropdown>
       <el-dropdown-menu>

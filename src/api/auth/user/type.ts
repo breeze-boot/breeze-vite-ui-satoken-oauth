@@ -2,38 +2,15 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { PageQuery, ResponseData, SelectResponseData } from '@/types/types.ts'
+import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 用户switch锁定开启参数类型
- */
-export interface UserSwitchForm {
-  username?: string
-  isLock?: number
-}
-
-/**
- * 用户密码重置表单类型
- */
-export interface UserResetPasswordForm {
-  id?: number
-  password?: string
-  confirmPassword?: string
-}
-
-/**
- *用户角色设置表单类型
- */
-export interface UserSetRoleForm {
-  id?: number
-  roleIds?: number[]
-}
-
-/**
- * 用户列表实体类型
+ * 用户列表类型声明
  */
 export interface UserRecord {
   id?: number
+  avatar?: string
+  avatarName?: string
   username?: string
   userCode?: string
   email?: string
@@ -51,12 +28,12 @@ export interface UserRecord {
 }
 
 /**
- * 用户列表数组类型
+ * 用户列表数组类型声明
  */
 export type UserRecords = UserRecord[]
 
 /**
- * 用户响应返回类型
+ * 用户列表接口响应类型声明
  */
 export interface UserResponseData extends ResponseData {
   data: {
@@ -69,40 +46,7 @@ export interface UserResponseData extends ResponseData {
 }
 
 /**
- * 部门响应返回类型
- */
-export interface DeptSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 角色响应返回类型
- */
-export interface RoleSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 职位响应返回类型
- */
-export interface PostSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 用户列表查询类型
+ * 用户列表查询类型声明
  */
 export interface UserQuery extends PageQuery {
   userCode: string
@@ -111,4 +55,38 @@ export interface UserQuery extends PageQuery {
   status?: number
   startTime?: string
   endTime?: string
+}
+
+/**
+ * 用户角色列表查询类型声明
+ */
+export interface UserRoleQuery extends PageQuery {
+  userId: number
+  roleCode: string
+  roleName: string
+}
+
+/**
+ * 用户switch锁定开启参数类型声明
+ */
+export interface UserSwitchParam {
+  username?: string
+  isLock?: number
+}
+
+/**
+ * 用户密码重置表单类型声明
+ */
+export interface UserResetPasswordParam {
+  id?: number
+  password?: string
+  confirmPassword?: string
+}
+
+/**
+ *用户角色设置表单类型声明
+ */
+export interface UserSetRoleParam {
+  userId: number
+  roleIds: number[]
 }

@@ -3,8 +3,6 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { computed } from 'vue'
-
 defineOptions({
   name: 'SvgButton',
   inheritAttrs: false,
@@ -19,12 +17,12 @@ const props = defineProps({
   //svg宽度
   width: {
     type: String,
-    default: '1em',
+    default: '0.9rem',
   },
   //svg高度
   height: {
     type: String,
-    default: '1em',
+    default: '0.9rem',
   },
   //类型
   type: {
@@ -53,13 +51,6 @@ const props = defineProps({
   },
 })
 
-const iconStyle = computed(() => {
-  return {
-    width: props.width,
-    height: props.height,
-  }
-})
-
 const $emit = defineEmits(['svg-btn-click'])
 const handleChick = () => {
   $emit('svg-btn-click')
@@ -74,9 +65,7 @@ const handleChick = () => {
     :link="props.link"
     :type="props.type"
   >
-    <i class="el-icon" :style="iconStyle">
-      <svg-icon :name="props.icon" :width="props.width" :height="props.height" />
-    </i>
+    <svg-icon :name="props.icon" :width="props.width" :height="props.height" />
     <span v-if="props.label !== ''" style="margin: 5px">{{ props.label }}</span>
   </el-button>
 </template>

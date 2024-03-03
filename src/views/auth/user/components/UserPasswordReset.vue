@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { userResetPassword } from '@/api/auth/user'
-import { UserResetPasswordForm } from '@/api/auth/user/type.ts'
+import { UserResetPasswordParam } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
@@ -19,7 +19,7 @@ defineOptions({
 const { t } = useI18n()
 const visible = ref(false)
 const restUserPasswordDataFormRef = ref()
-const userRestPasswordDataForm = ref<UserResetPasswordForm>({})
+const userRestPasswordDataForm = ref<UserResetPasswordParam>({})
 const rules = ref({
   password: [
     {

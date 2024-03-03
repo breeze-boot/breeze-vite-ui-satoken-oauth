@@ -25,5 +25,11 @@ export default {
     tableColumn: 'table column',
     showTableColumn: 'show column',
     hiddenTableColumn: 'hidden column',
+    avatar: 'avatar',
+  },
+  rules: {
+    fileLimit3: 'The limit is 3',
+    avatarFormat: 'Avatar picture must be JPG format!',
+    avatarSize: 'Avatar picture size can not exceed 2MB!',
   },
 }

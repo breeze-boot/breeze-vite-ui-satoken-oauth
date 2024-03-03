@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 角色列表实体类型
+ * 角色列表类型声明
  */
 export interface RoleRecord {
   id?: number
@@ -14,12 +14,12 @@ export interface RoleRecord {
 }
 
 /**
- * 角色列表数组类型
+ * 角色列表数组类型声明
  */
 export type RoleRecords = RoleRecord[]
 
 /**
- * 角色响应返回类型
+ * 角色列表接口响应类型声明
  */
 export interface RoleResponseData extends ResponseData {
   data: {
@@ -32,10 +32,10 @@ export interface RoleResponseData extends ResponseData {
 }
 
 /**
- * 角色列表查询类型
+ * 角色列表查询类型声明
  */
 export interface RoleQuery extends PageQuery {
-  id?: number
+  userId?: number
   roleCode: string
   roleName: string
 }

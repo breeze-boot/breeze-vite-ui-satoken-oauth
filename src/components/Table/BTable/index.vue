@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
 import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
-import { onUpdated, onMounted, reactive, ref, computed, nextTick, toRefs } from 'vue'
+import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { ClickOutside as vClickOutside } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
@@ -98,8 +97,13 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  // 操作按钮集合disabled
-  btnDisableSets: {
+  // 操作按钮是否不可点击
+  btnDisable: {
+    type: Function,
+    default: () => false,
+  },
+  // 操作按钮是否隐藏
+  btnHidden: {
     type: Function,
     default: () => false,
   },
@@ -265,7 +269,7 @@ const getList = () => {
         tableInfo.rows = response.data.records
         tableInfo.pagerQuery.query.total = Number(response.data.total)
       } else {
-        tableInfo.rows = response.data.records
+        tableInfo.rows = response.data
       }
       // 设置当前选中项
       if (!props.checkedRows) {
@@ -528,8 +532,6 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             v-for="(item, index) in initTbHeaderBtn"
             :key="index"
             :type="item.type"
-            width="0.9rem"
-            height="0.9rem"
             :circle="false"
             :label="item.label"
             :icon="item.icon"
@@ -543,8 +545,8 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             ref="buttonRef"
             v-click-outside="onClickOutside"
             icon="filter"
-            width="1.1rem"
-            height="1.1rem"
+            width="1.5rem"
+            height="1.5rem"
             :circle="true"
           />
         </div>
@@ -660,15 +662,13 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
               <svg-button
-                width="0.9rem"
-                height="0.9rem"
                 :circle="false"
                 v-has="item.permission"
                 :link="initHandleBtn.link || item.link"
                 :icon="item.icon"
                 :type="item.type"
                 :label="item.label"
-                :disabled="item.disabled || btnDisableSets(item.event, scope.row)"
+                :disabled="item.disabled || btnDisable(item.event, scope.row)"
                 @svg-btn-click="handleTableRowClick(item.event, scope.row, scope.$index)"
               />
             </template>

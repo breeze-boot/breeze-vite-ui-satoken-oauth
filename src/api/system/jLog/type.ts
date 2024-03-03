@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 任务日志列表实体类型
+ * 任务日志列表类型声明
  */
 export interface JLogRecord {
   id?: number
@@ -19,12 +19,12 @@ export interface JLogRecord {
 }
 
 /**
- * 任务日志列表数组类型
+ * 任务日志列表数组类型声明
  */
 export type JLogRecords = JLogRecord[]
 
 /**
- * 任务日志响应返回类型
+ * 任务日志列表接口响应类型声明
  */
 export interface JLogResponseData extends ResponseData {
   data: {
@@ -37,7 +37,7 @@ export interface JLogResponseData extends ResponseData {
 }
 
 /**
- * 任务日志列表查询类型
+ * 任务日志列表查询类型声明
  */
 export interface JLogQuery extends PageQuery {
   jobId?: number

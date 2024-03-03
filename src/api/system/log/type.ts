@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 任务列表实体类型
+ * 日志列表类型声明
  */
 export interface LogRecord {
   id?: number
@@ -22,12 +22,12 @@ export interface LogRecord {
 }
 
 /**
- * 任务列表数组类型
+ * 日志列表数组类型声明
  */
 export type LogRecords = LogRecord[]
 
 /**
- * 任务响应返回类型
+ * 日志列表接口响应类型声明
  */
 export interface LogResponseData extends ResponseData {
   data: {
@@ -40,7 +40,7 @@ export interface LogResponseData extends ResponseData {
 }
 
 /**
- * 任务列表查询类型
+ * 日志列表查询类型声明
  */
 export interface LogQuery extends PageQuery {
   doType?: number

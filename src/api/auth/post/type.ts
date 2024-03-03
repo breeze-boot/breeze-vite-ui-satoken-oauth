@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 职位列表实体类型
+ * 职位列表类型声明
  */
 export interface PostRecord {
   id?: number
@@ -14,12 +14,12 @@ export interface PostRecord {
 }
 
 /**
- * 职位列表数组类型
+ * 职位列表数组类型声明
  */
 export type PostRecords = PostRecord[]
 
 /**
- * 职位响应返回类型
+ * 职位列表接口响应类型声明
  */
 export interface PostResponseData extends ResponseData {
   data: {
@@ -32,7 +32,7 @@ export interface PostResponseData extends ResponseData {
 }
 
 /**
- * 职位列表查询类型
+ * 职位列表查询类型声明
  */
 export interface PostQuery extends PageQuery {
   postCode: string

@@ -10,7 +10,7 @@ import { ElMessage } from 'element-plus'
 import { addDept, getDept, editDept, selectDept, checkDeptCode } from '@/api/auth/dept'
 import type { DeptRecord } from '@/api/auth/dept/type.ts'
 import { useI18n } from 'vue-i18n'
-import type { SelectResponseData } from '@/types/types.ts'
+import type { SelectData } from '@/types/types.ts'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import JSONBigInt from 'json-bigint'
 
@@ -22,7 +22,7 @@ defineOptions({
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
-const deptOption = ref<SelectResponseData[]>()
+const deptOption = ref<SelectData[]>()
 const deptDataFormRef = ref()
 const deptDataForm = ref<DeptRecord>({})
 const rules = ref({

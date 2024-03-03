@@ -112,7 +112,13 @@ const openLink = (item: any, row: any) => {
   <template v-else-if="tableField.type === 'longText'">
     <el-tooltip effect="light" placement="top">
       <template #content>
-        <el-input type="textarea" rows="10" v-model="scope.row[tableField.prop]" readonly />
+        <el-input
+          :autosize="{ minRows: tableField.textarea?.minRows || 12, maxRows: tableField.textarea?.maxRows || 24 }"
+          :style="{ width: tableField.textarea?.width || '1000px' }"
+          type="textarea"
+          v-model="scope.row[tableField.prop]"
+          readonly
+        />
       </template>
       <el-button icon="view" :link="true" v-if="scope.row[tableField.prop]" type="success" />
     </el-tooltip>
@@ -134,7 +140,7 @@ const openLink = (item: any, row: any) => {
 
   <!-- input-->
   <template v-else-if="tableField.type === 'input'">
-    <el-input type="text" rows="10" v-model="scope.row[tableField.prop]" :readonly="tableField.input?.readonly" />
+    <el-input type="text" v-model="scope.row[tableField.prop]" :readonly="tableField.input?.readonly" />
   </template>
 
   <!-- upload-->
@@ -178,12 +184,26 @@ const openLink = (item: any, row: any) => {
 
   <!-- 图片 -->
   <template v-else-if="tableField.type === 'image' && scope.row?.[tableField.prop]">
-    <el-image height="50px" :src="scope.row?.[tableField.prop]" />
+    <el-popover placement="top-start" :width="200" trigger="hover">
+      <template #default>
+        <div style="display: flex; gap: 16px; flex-direction: column">
+          <el-image
+            :close-on-press-escape="true"
+            :preview-src-list="[scope.row?.[tableField.prop]]"
+            :src="scope.row?.[tableField.prop]"
+            fit="contain"
+          />
+        </div>
+      </template>
+      <template #reference>
+        <el-button icon="view" :link="true" v-if="scope.row[tableField.prop]" type="success" />
+      </template>
+    </el-popover>
   </template>
 
   <!-- icon -->
   <template v-else-if="tableField.type === 'icon'">
-    <svg-icon :name="scope.row[tableField.prop]" width="1rem" height="1rem" />
+    <svg-icon :name="scope.row[tableField.prop]" />
   </template>
 
   <!-- 数组文本 -->

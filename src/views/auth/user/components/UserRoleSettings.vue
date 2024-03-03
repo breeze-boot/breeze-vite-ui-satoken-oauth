@@ -9,11 +9,11 @@ import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { listUserRoles, page } from '@/api/auth/role'
 import { TableInfo } from '@/components/Table/types/types.ts'
-import { RoleQuery, RoleRecords } from '@/api/auth/role/type.ts'
+import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { userSetRole } from '@/api/auth/user'
-import { UserSetRoleForm } from '@/api/auth/user/type.ts'
+import { UserSetRoleParam, UserRoleQuery } from '@/api/auth/user/type.ts'
 import { ElMessage } from 'element-plus'
 
 defineOptions({
@@ -26,14 +26,15 @@ const { t } = useI18n()
 const visible = ref(false)
 const userRoleTableRef = ref()
 const roleQueryFormRef = ref()
-const userSetRoleDataForm = ref<UserSetRoleForm>({})
+const userSetRoleDataForm = ref<UserSetRoleParam>({ userId: 0, roleIds: [] })
 
 let currentRows = reactive<RoleRecords>([])
 
 /**
  * 查询条件
  */
-const queryParams = reactive<RoleQuery>({
+const queryParams = reactive<UserRoleQuery>({
+  userId: 0,
   roleCode: '',
   roleName: '',
   current: 1,
@@ -69,7 +70,7 @@ const tableInfo = reactive<TableInfo>({
  * 查询
  */
 const handleQuery = () => {
-  getInfo(queryParams.id)
+  getInfo(queryParams.userId)
 }
 
 /**
@@ -87,7 +88,10 @@ const resetQuery = () => {
  */
 const init = async (id: number) => {
   visible.value = true
+
   if (id) {
+    userSetRoleDataForm.value.userId = id
+    queryParams.userId = id
     await getInfo(id)
   }
 }
@@ -98,7 +102,6 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  userSetRoleDataForm.value.id = id
   const response: any = await listUserRoles(JSONBigInt.parse(id))
   if (response.code === '0000') {
     tableInfo.checkedRows = response.data
@@ -119,7 +122,6 @@ const handleSelectionChange = (rows: RoleRecords) => {
  * 表单提交
  */
 const handleUserRoleSettingsDataFormSubmit = async () => {
-  debugger
   userSetRoleDataForm.value.roleIds = currentRows.map((item: any) => item.id)
   const response: any = await userSetRole(userSetRoleDataForm.value)
   if (response.code === '0000') {

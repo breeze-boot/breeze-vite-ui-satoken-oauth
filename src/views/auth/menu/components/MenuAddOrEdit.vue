@@ -10,7 +10,7 @@ import { ElMessage } from 'element-plus'
 import { addMenu, editMenu, getMenu, selectMenu, selectPlatform } from '@/api/auth/menu'
 import { MenuRecord } from '@/api/auth/menu/type.ts'
 import { useI18n } from 'vue-i18n'
-import { SelectResponseData } from '@/types/types.ts'
+import { SelectData } from '@/types/types.ts'
 import { useDict } from '@/hooks/dict'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
@@ -25,8 +25,8 @@ const { KEEPALIVE, HIDDEN, HREF, MENU_TYPE } = useDict('KEEPALIVE', 'HIDDEN', 'H
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
-const platformOptions = ref<SelectResponseData[]>()
-const menuOptions = ref<SelectResponseData[]>()
+const platformOptions = ref<SelectData[]>()
+const menuOptions = ref<SelectData[]>()
 const menuDataFormRef = ref()
 const menuDataForm = ref<MenuRecord>({ hidden: 0, href: 0, keepAlive: 0, sort: 0, type: 0 })
 

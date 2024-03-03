@@ -2,10 +2,10 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { ResponseData, SelectResponseData } from '@/types/types.ts'
+import { ResponseData } from '@/types/types.ts'
 
 /**
- * 部门列表实体类型
+ * 部门列表类型声明
  */
 export interface DeptRecord {
   id?: number | string
@@ -15,12 +15,12 @@ export interface DeptRecord {
 }
 
 /**
- * 部门列表数组类型
+ * 部门列表数组类型声明
  */
 export type DeptRecords = DeptRecord[]
 
 /**
- * 部门响应返回类型
+ * 部门列表接口响应类型声明
  */
 export interface DeptResponseData extends ResponseData {
   data: {
@@ -33,40 +33,7 @@ export interface DeptResponseData extends ResponseData {
 }
 
 /**
- * 部门响应返回类型
- */
-export interface DeptSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 角色响应返回类型
- */
-export interface RoleSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 职位响应返回类型
- */
-export interface PostSelectData extends ResponseData {
-  data: {
-    value: number
-    label: string
-    children?: SelectResponseData
-  }
-}
-
-/**
- * 部门列表查询类型
+ * 部门列表查询类型声明
  */
 export interface DeptQuery {
   deptName?: string

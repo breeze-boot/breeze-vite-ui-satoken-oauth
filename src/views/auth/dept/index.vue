@@ -46,7 +46,7 @@ const tableInfo = reactive<TableInfo>({
   refresh: 1,
   tableIndex: true,
   // 选择框类型
-  select: 'single',
+  select: 'multi',
   // 字典
   dict: [],
   // 表格顶部按钮
@@ -307,7 +307,7 @@ const handleSelectionChange = (rows: DeptRecords) => {
     :refresh="tableInfo.refresh"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :singleSelect="tableInfo.singleSelect"
+    :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @handle-table-row-btn-click="handleTableRowBtnClick"

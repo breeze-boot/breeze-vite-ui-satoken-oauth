@@ -4,8 +4,9 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import type { DeptResponseData, DeptQuery, DeptRecord, DeptSelectData, PostSelectData } from './type'
+import type { DeptResponseData, DeptQuery, DeptRecord } from './type'
 import JSONBigInt from 'json-bigint'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   MENU_RESTFUL_URL = '/dept',
@@ -96,7 +97,7 @@ export function exportExcel(params: DeptQuery): AxiosPromise<DeptResponseData> {
 /**
  * 部门下拉框
  */
-export function selectDept(id: number): AxiosPromise<DeptSelectData> {
+export function selectDept(id: number): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_DEPT_URL,
     method: 'get',
@@ -112,7 +113,7 @@ export function selectDept(id: number): AxiosPromise<DeptSelectData> {
  * @param deptCode
  * @param deptId
  */
-export function checkDeptCode(deptCode: string, deptId: number): Promise<AxiosPromise<PostSelectData>> {
+export function checkDeptCode(deptCode: string, deptId: number): Promise<AxiosPromise<SelectResponseData>> {
   return request({
     url: API.CHECK_DEPT_CODE_URL,
     method: 'get',

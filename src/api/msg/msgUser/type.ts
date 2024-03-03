@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 消息模板列表实体类型
+ * 消息模板列表类型声明
  */
 export interface MsgTemplate {
   id: number
@@ -14,12 +14,12 @@ export interface MsgTemplate {
 }
 
 /**
- * 消息模板列表数组类型
+ * 消息模板列表数组类型声明
  */
 export type MsgTemplateRecords = MsgTemplate[]
 
 /**
- * 消息模板响应返回类型
+ * 消息模板响应返回类型声明
  */
 export interface MsgTemplateResponseData extends ResponseData {
   data: {
@@ -32,7 +32,7 @@ export interface MsgTemplateResponseData extends ResponseData {
 }
 
 /**
- * 消息模板列表查询类型
+ * 消息模板列表查询类型声明
  */
 export interface MsgTemplateQuery extends PageQuery {
   keywords?: string

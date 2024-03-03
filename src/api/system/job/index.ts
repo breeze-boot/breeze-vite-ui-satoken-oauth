@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { JobResponseData, JobQuery, JobRecord, JobSwitchForm } from './type'
+import { JobResponseData, JobQuery, JobRecord, JobSwitchParam } from './type'
 
 enum API {
   JOB_RESTFUL_URL = '/job',
@@ -107,7 +107,7 @@ export function runJobNow(jobId: number): AxiosPromise<JobResponseData> {
  *
  * @param data
  */
-export function open(data: JobSwitchForm): AxiosPromise<JobResponseData> {
+export function open(data: JobSwitchParam): AxiosPromise<JobResponseData> {
   return request({
     url: `${API.JOB_RESTFUL_URL}/open`,
     method: 'put',

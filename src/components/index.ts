@@ -10,6 +10,7 @@ import TableItem from '@/components/Table/TableItem/TableItem.vue'
 import BTreeTable from '@/components/Table/BTreeTable/index.vue'
 import SvgButton from '@/components//SvgButton/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
+import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
@@ -18,6 +19,7 @@ const components: { [name: string]: Component } = {
   SearchContainerBox,
   SvgButton,
   TableItem,
+  AvatarUpload,
 }
 
 export default {

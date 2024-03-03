@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 平台列表实体类型
+ * 平台列表类型声明
  */
 export interface PlatformRecord {
   id?: number
@@ -15,12 +15,12 @@ export interface PlatformRecord {
 }
 
 /**
- * 平台列表数组类型
+ * 平台列表数组类型声明
  */
 export type PlatformRecords = PlatformRecord[]
 
 /**
- * 平台响应返回类型
+ * 平台列表接口响应类型声明
  */
 export interface PlatformResponseData extends ResponseData {
   data: {
@@ -33,7 +33,7 @@ export interface PlatformResponseData extends ResponseData {
 }
 
 /**
- * 平台列表查询类型
+ * 平台列表查询类型声明
  */
 export interface PlatformQuery extends PageQuery {
   platformCode: string

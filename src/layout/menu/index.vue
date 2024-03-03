@@ -3,8 +3,6 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts" name="Menu">
-import MenuIcon from './menuIcon/index.vue'
-
 const props = defineProps(['menuList', 'layout'])
 </script>
 
@@ -13,7 +11,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 递归的菜单项 情况1：菜单链接在第二级 -->
     <template v-if="item.meta.type === 1 && item.meta.href === 0">
       <el-menu-item v-if="!item.meta.hidden" :index="item.path">
-        <menu-icon :icon="item.meta.icon" />
+        <svg-icon :name="item.meta.icon" />
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
@@ -23,7 +21,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 递归的菜单项 情况2：菜单是个外部链接-->
     <template v-if="item.meta.type === 1 && item.path && item.meta.href === 1">
       <el-menu-item v-if="!item.meta.hidden" :index="''">
-        <menu-icon :icon="item.meta.icon" />
+        <svg-icon :name="item.meta.icon" />
         <template #title>
           <el-link :href="item.path" target="_blank">
             <span>{{ item.meta.title }}</span>
@@ -35,7 +33,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 横向混合菜单时 -->
     <template v-else-if="props.layout === 'mix' && item.meta.type === 0">
       <el-menu-item v-if="!item.meta.hidden" :index="item.path">
-        <menu-icon :icon="item.meta.icon" />
+        <svg-icon :name="item.meta.icon" />
         <template #title>
           <span>{{ item.meta.title }}</span>
         </template>
@@ -45,7 +43,7 @@ const props = defineProps(['menuList', 'layout'])
     <!-- 含有子菜单时且不是混合菜单 -->
     <el-sub-menu v-if="props.layout !== 'mix' && item.meta.type === 0" :index="item.path">
       <template #title>
-        <menu-icon :icon="item.meta.icon" />
+        <svg-icon :name="item.meta.icon" />
         <span>{{ item.meta.title }}</span>
       </template>
       <Menu :menu-list="item.children"></Menu>

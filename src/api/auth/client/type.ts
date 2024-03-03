@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 客户端列表实体类型
+ * 客户端列表类型声明
  */
 export interface ClientRecord {
   id?: number
@@ -36,12 +36,12 @@ export interface ClientRecord {
 }
 
 /**
- * 客户端列表数组类型
+ * 客户端列表数组类型声明
  */
 export type ClientRecords = ClientRecord[]
 
 /**
- * 客户端响应返回类型
+ * 客户端列表接口响应类型声明
  */
 export interface ClientResponseData extends ResponseData {
   data: {
@@ -54,7 +54,7 @@ export interface ClientResponseData extends ResponseData {
 }
 
 /**
- * 客户端列表查询类型
+ * 客户端列表查询类型声明
  */
 export interface ClientQuery extends PageQuery {
   clientCode: string

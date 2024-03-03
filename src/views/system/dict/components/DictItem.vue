@@ -1,34 +1,35 @@
 <!--
  * @author: gaoweixuan
- * @since: 2023-11-12
+ * @since: 2024-03-02
 -->
 
-<!-- 任务日志查看抽屉 -->
+<!-- 字典项查看抽屉 -->
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { page } from '@/api/system/jLog'
+import { list } from '@/api/system/dictItem/index.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
-import { JLogQuery, JLogRecords } from '@/api/system/jLog/type.ts'
+import { DictItemQuery, DictItemRecords } from '@/api/system/dictItem/type.ts'
 
 defineOptions({
-  name: 'JLog',
+  name: 'DictItem',
   inheritAttrs: false,
 })
 
 const direction = ref('rtl')
 const { t } = useI18n()
 const visible = ref(false)
-const jLogTableRef = ref()
+const dictItemTableRef = ref()
 
-let currentRows = reactive<JLogRecords>([])
+let currentRows = reactive<DictItemRecords>([])
 
 /**
  * 查询条件
  */
-const queryParams = reactive<JLogQuery>({
-  current: 1,
-  size: 10,
+const queryParams = reactive<DictItemQuery>({
+  dictId: 0,
+  dictCode: '',
+  dictName: '',
 })
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
@@ -38,51 +39,18 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'multi',
   // 字典
-  dict: ['JOB_STATUS'],
+  dict: [],
   // 表格字段配置
   fieldList: [
     {
-      prop: 'jobName',
+      prop: 'label',
       showOverflowTooltip: true,
-      label: t('jLog.fields.jobName'),
+      label: t('dictItem.fields.label'),
     },
     {
-      prop: 'jobGroupName',
+      prop: 'value',
       showOverflowTooltip: true,
-      label: t('jLog.fields.jobGroupName'),
-    },
-    {
-      prop: 'clazzName',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.clazzName'),
-    },
-    {
-      prop: 'cronExpression',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.cronExpression'),
-    },
-    {
-      prop: 'jLogMessage',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.jobMessage'),
-    },
-    {
-      prop: 'exceptionInfo',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.exceptionInfo'),
-      type: 'longText',
-    },
-    {
-      prop: 'jLogStatus',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.jobStatus'),
-      type: 'dict',
-      dict: 'JOB_STATUS',
-    },
-    {
-      prop: 'endTime',
-      showOverflowTooltip: true,
-      label: t('jLog.fields.endTime'),
+      label: t('dictItem.fields.value'),
     },
   ],
 })
@@ -121,7 +89,7 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  queryParams.jobId = id
+  queryParams.dictId = id
   tableInfo.refresh = Math.random()
 }
 
@@ -130,7 +98,7 @@ const getInfo = async (id: number) => {
  *
  * @param rows 选择的行数据
  */
-const handleSelectionChange = (rows: JLogRecords) => {
+const handleSelectionChange = (rows: DictItemRecords) => {
   currentRows = rows
   console.log(currentRows)
 }
@@ -141,14 +109,15 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer size="80%" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
+  <el-drawer size="50%" v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
     <template #header>
-      <h4>{{ $t('jLog.common.jLogViewing') }}</h4>
+      <h4>{{ $t('dictItem.common.dictItemViewing') }}</h4>
     </template>
     <template #default>
       <b-table
-        ref="jLogTableRef"
-        :list-api="page"
+        ref="dictItemTableRef"
+        :pager="false"
+        :list-api="list"
         :dict="tableInfo.dict"
         :tableIndex="tableInfo.tableIndex"
         :query="queryParams"
@@ -159,7 +128,6 @@ defineExpose({
         :handle-btn="tableInfo.handleBtn"
         table-height="80%"
         @handle-table-row-btn-click="handleTableRowBtnClick"
-        c
         @selection-change="handleSelectionChange"
       />
     </template>

@@ -10,7 +10,7 @@ import { ElMessage } from 'element-plus'
 import { addUser, getUser, editUser, selectDept, checkUsername, selectRole, selectPost } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
-import { SelectResponseData } from '@/types/types.ts'
+import { SelectData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
 
 defineOptions({
@@ -21,9 +21,9 @@ defineOptions({
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
-const deptOption = ref<SelectResponseData[]>()
-const roleOption = ref<SelectResponseData[]>()
-const postOption = ref<SelectResponseData[]>()
+const deptOption = ref<SelectData[]>()
+const roleOption = ref<SelectData[]>()
+const postOption = ref<SelectData[]>()
 const userDataFormRef = ref()
 const userDataForm = ref<UserRecord>({})
 const rules = ref({
@@ -154,6 +154,7 @@ const init = async (id: number) => {
   userDataForm.value.id = undefined
   // 重置表单数据
   if (userDataFormRef.value) {
+    // TODO
     userDataFormRef.value.resetFields()
   }
 
@@ -266,7 +267,9 @@ defineExpose({
       @keyup.enter="handleUserDataFormSubmit()"
       label-width="125px"
     >
-      <el-form-item style="text-align: center"></el-form-item>
+      <el-form-item label-width="0px" prop="avatar">
+        <avatar-upload v-model:imageUrl="userDataForm.avatar" v-model:imageName="userDataForm.avatarName" />
+      </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.username')" prop="username">
         <el-input
           v-model="userDataForm.username"

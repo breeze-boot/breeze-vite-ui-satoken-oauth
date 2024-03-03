@@ -25,6 +25,7 @@ const useSettingStore = defineStore('SettingStore', {
       } as Theme,
       settings: {
         title: setting.title,
+        showAvatar: setting.defaultShowAvatar,
         isCollapse: setting.defaultIsCollapse,
         logoHidden: setting.defaultLogoHidden,
         logoUrl: setting.defaultLogoUrl,

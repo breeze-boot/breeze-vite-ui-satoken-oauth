@@ -1,15 +1,111 @@
 /**
  * @author: gaoweixuan
- * @since: 2023-11-12
+ * @since: 2024-03-01
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import type { DictResponseData } from './type'
+import { DictQuery, DictRecord, DictResponseData } from '@/api/system/dict/type.ts'
+import { UserResponseData, UserSwitchParam } from '@/api/auth/user/type.ts'
 
 enum API {
   DICT_RESTFUL_URL = '/dict/',
 }
 
+/**
+ * 列表
+ *
+ * @param params
+ */
+export function page(params: DictQuery): AxiosPromise<DictResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL,
+    method: 'get',
+    params: params,
+  })
+}
+
+/**
+ * switch激活
+ *
+ * @param data
+ */
+export function open(data: UserSwitchParam): AxiosPromise<UserResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL + `/open`,
+    method: 'put',
+    data: data,
+  })
+}
+
+/**
+ * 获取详情
+ *
+ * @param id
+ */
+export function getDict(id: number): AxiosPromise<DictResponseData> {
+  return request({
+    url: `${API.DICT_RESTFUL_URL}/info/${id}`,
+    method: 'get',
+  })
+}
+
+/**
+ * 添加
+ *
+ * @param data
+ */
+export function addDict(data: DictRecord): AxiosPromise<DictResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL,
+    method: 'post',
+    data: data,
+  })
+}
+
+/**
+ * 编辑
+ *
+ * @param data
+ */
+export function editDict(data: DictRecord): AxiosPromise<DictResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL,
+    method: 'put',
+    data: data,
+  })
+}
+
+/**
+ * 删除
+ *
+ * @param ids
+ */
+export function deleteDict(ids: number[]): AxiosPromise<DictResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL,
+    method: 'delete',
+    data: ids,
+  })
+}
+
+/**
+ * 导出
+ *
+ * @param params
+ */
+export function exportExcel(params: DictQuery): AxiosPromise<DictResponseData> {
+  return request({
+    url: API.DICT_RESTFUL_URL,
+    method: 'post',
+    data: params,
+  })
+}
+
+/**
+ * 查询字典信息
+ *
+ * @param dictCode
+ */
 export function listDict(dictCode: string): AxiosPromise<DictResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL + `/v2/listDict/${dictCode}`,

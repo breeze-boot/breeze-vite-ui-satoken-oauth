@@ -8,13 +8,11 @@ import {
   UserResponseData,
   UserQuery,
   UserRecord,
-  UserSwitchForm,
-  DeptSelectData,
-  PostSelectData,
-  RoleSelectData,
-  UserResetPasswordForm,
-  UserSetRoleForm,
+  UserSwitchParam,
+  UserResetPasswordParam,
+  UserSetRoleParam,
 } from './type'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   USER_RESTFUL_URL = '/user',
@@ -42,7 +40,7 @@ export function page(params: UserQuery): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function open(data: UserSwitchForm): AxiosPromise<UserResponseData> {
+export function open(data: UserSwitchParam): AxiosPromise<UserResponseData> {
   return request({
     url: API.USER_RESTFUL_URL + `/open`,
     method: 'put',
@@ -117,7 +115,7 @@ export function exportExcel(params: UserQuery): AxiosPromise<UserResponseData> {
 /**
  * 部门下拉框
  */
-export function selectDept(): AxiosPromise<DeptSelectData> {
+export function selectDept(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_DEPT_URL,
     method: 'get',
@@ -127,7 +125,7 @@ export function selectDept(): AxiosPromise<DeptSelectData> {
 /**
  * 角色下拉框
  */
-export function selectRole(): AxiosPromise<RoleSelectData> {
+export function selectRole(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_ROLE_URL,
     method: 'get',
@@ -137,7 +135,7 @@ export function selectRole(): AxiosPromise<RoleSelectData> {
 /**
  * 岗位下拉框
  */
-export function selectPost(): Promise<AxiosPromise<PostSelectData>> {
+export function selectPost(): Promise<AxiosPromise<SelectResponseData>> {
   return request({
     url: API.SELECT_POST_URL,
     method: 'get',
@@ -166,7 +164,7 @@ export function checkUsername(username: string, userId?: number): AxiosPromise<a
  *
  * @param data
  */
-export function userResetPassword(data: UserResetPasswordForm): AxiosPromise<any> {
+export function userResetPassword(data: UserResetPasswordParam): AxiosPromise<any> {
   return request({
     url: `${API.USER_RESTFUL_URL}/reset`,
     method: 'put',
@@ -179,7 +177,7 @@ export function userResetPassword(data: UserResetPasswordForm): AxiosPromise<any
  *
  * @param data
  */
-export function userSetRole(data: UserSetRoleForm): AxiosPromise<any> {
+export function userSetRole(data: UserSetRoleParam): AxiosPromise<any> {
   return request({
     url: `${API.USER_RESTFUL_URL}/setRole`,
     method: 'put',

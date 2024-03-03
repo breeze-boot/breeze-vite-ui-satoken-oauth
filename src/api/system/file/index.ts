@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { FileResponseData, FileQuery, FileRecord } from './type'
+import { FileResponseData, FileQuery, FileRecord, FileUploadResponseData, FileParam } from './type'
 
 enum API {
   FILE_RESTFUL_URL = '/file',
@@ -39,7 +39,7 @@ export function getFile(id: number): AxiosPromise<FileResponseData> {
 /**
  * 添加
  *
- * @param data 文件实体
+ * @param data 文件
  */
 export function addFile(data: FileRecord): AxiosPromise<FileResponseData> {
   return request({
@@ -52,7 +52,7 @@ export function addFile(data: FileRecord): AxiosPromise<FileResponseData> {
 /**
  * 编辑
  *
- * @param data 文件实体
+ * @param data 文件
  */
 export function editFile(data: FileRecord): AxiosPromise<FileResponseData> {
   return request({
@@ -85,5 +85,28 @@ export function exportExcel(params: FileQuery): AxiosPromise<FileResponseData> {
     url: API.FILE_RESTFUL_URL,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * 上传文件
+ *
+ * @param file
+ * @param fileParam
+ */
+export function uploadMinioS3(file: File, fileParam: FileParam): AxiosPromise<FileUploadResponseData> {
+  const formData: FormData = new FormData()
+  formData.append('file', file)
+  formData.append('bizType', fileParam.bizType)
+  formData.append('title', fileParam.title)
+  fileParam.bizId ? formData.append('bizId', fileParam.bizId as string) : () => {}
+
+  return request({
+    url: `${API.FILE_RESTFUL_URL}/uploadMinioS3`,
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   })
 }

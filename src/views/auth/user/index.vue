@@ -16,6 +16,7 @@ import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
 import UserRoleSettings from '@/views/auth/user/components/UserRoleSettings.vue'
 import UserPasswordReset from '@/views/auth/user/components/UserPasswordReset.vue'
+import user from '../../../store/modules/user.ts'
 
 defineOptions({
   name: 'User',
@@ -97,6 +98,7 @@ const tableInfo = reactive<TableInfo>({
       prop: 'avatar',
       showOverflowTooltip: true,
       label: t('user.fields.avatar'),
+      type: 'image',
     },
     {
       prop: 'username',

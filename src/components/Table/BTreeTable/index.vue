@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
 import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { ClickOutside as vClickOutside } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
@@ -512,8 +511,6 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             v-for="(item, index) in initTbHeaderBtn"
             :key="index"
             :type="item.type"
-            width="0.9rem"
-            height="0.9rem"
             :circle="false"
             :label="item.label"
             :icon="item.icon"
@@ -527,8 +524,8 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             ref="buttonRef"
             v-click-outside="onClickOutside"
             icon="filter"
-            width="1.1rem"
-            height="1.1rem"
+            width="1.5rem"
+            height="1.5rem"
             :circle="true"
           />
         </div>
@@ -643,8 +640,6 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
               <svg-button
-                width="0.9rem"
-                height="0.9rem"
                 :circle="false"
                 v-has="item.permission"
                 :link="initHandleBtn.link || item.link"

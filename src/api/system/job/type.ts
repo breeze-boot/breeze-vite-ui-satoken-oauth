@@ -5,15 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 任务switch锁定开启参数类型
- */
-export interface JobSwitchForm {
-  id?: number
-  status?: number
-}
-
-/**
- * 任务列表实体类型
+ * 任务列表类型声明
  */
 export interface JobRecord {
   id?: number
@@ -27,12 +19,12 @@ export interface JobRecord {
 }
 
 /**
- * 任务列表数组类型
+ * 任务列表数组类型声明
  */
 export type JobRecords = JobRecord[]
 
 /**
- * 任务响应返回类型
+ * 任务列表接口响应类型声明
  */
 export interface JobResponseData extends ResponseData {
   data: {
@@ -45,9 +37,17 @@ export interface JobResponseData extends ResponseData {
 }
 
 /**
- * 任务列表查询类型
+ * 任务列表查询类型声明
  */
 export interface JobQuery extends PageQuery {
   jobName?: string
+  status?: number
+}
+
+/**
+ * 任务switch锁定开启参数类型声明
+ */
+export interface JobSwitchParam {
+  id?: number
   status?: number
 }

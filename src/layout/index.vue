@@ -26,7 +26,6 @@ onMounted(async () => {
   await menuStore.setMenuChildren(
     menuStore.getOneLevelMenuInfo('path', tabStore.currentTab.path)?.children as RouteRecordRaw[],
   )
-  await $router.push({ path: tabStore.currentTab.path })
   tabStore.setTab($route)
 })
 

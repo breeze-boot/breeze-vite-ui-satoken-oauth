@@ -5,7 +5,7 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 租户列表实体类型
+ * 租户列表类型声明
  */
 export interface TenantRecord {
   id?: number
@@ -14,12 +14,12 @@ export interface TenantRecord {
 }
 
 /**
- * 租户列表数组类型
+ * 租户列表数组类型声明
  */
 export type TenantRecords = TenantRecord[]
 
 /**
- * 租户响应返回类型
+ * 租户列表接口响应类型声明
  */
 export interface TenantResponseData extends ResponseData {
   data: {
@@ -32,7 +32,7 @@ export interface TenantResponseData extends ResponseData {
 }
 
 /**
- * 租户列表查询类型
+ * 租户列表查询类型声明
  */
 export interface TenantQuery extends PageQuery {
   tenantCode: string
