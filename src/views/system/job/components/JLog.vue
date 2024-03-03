@@ -62,7 +62,7 @@ const tableInfo = reactive<TableInfo>({
       label: t('jLog.fields.cronExpression'),
     },
     {
-      prop: 'jLogMessage',
+      prop: 'jobMessage',
       showOverflowTooltip: true,
       label: t('jLog.fields.jobMessage'),
     },
@@ -73,7 +73,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'longText',
     },
     {
-      prop: 'jLogStatus',
+      prop: 'jobStatus',
       showOverflowTooltip: true,
       label: t('jLog.fields.jobStatus'),
       type: 'dict',

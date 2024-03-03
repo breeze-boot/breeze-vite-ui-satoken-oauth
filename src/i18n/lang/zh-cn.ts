@@ -1,6 +1,5 @@
 export default {
   common: {
-    showLog: '查看日志',
     download: '下载',
     success: '成功',
     cancel: '取消',

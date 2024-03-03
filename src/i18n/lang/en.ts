@@ -1,6 +1,5 @@
 export default {
   common: {
-    showLog: 'show log',
     download: 'download',
     success: 'success',
     confirm: 'confirm',
