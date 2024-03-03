@@ -4,6 +4,8 @@
  */
 import type { App, Component } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import NoVue3Cron from '@/components/NoVue3Cron/index.vue'
+import CronSelect from '@/components/CronSelect/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import TableItem from '@/components/Table/TableItem/TableItem.vue'
@@ -19,6 +21,8 @@ const components: { [name: string]: Component } = {
   SearchContainerBox,
   SvgButton,
   TableItem,
+  NoVue3Cron,
+  CronSelect,
   AvatarUpload,
 }
 
