@@ -87,37 +87,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handlePermissionDataFormSubmit = () => {
-  permissionDataFormRef.value.validate((valid: boolean) => {
+  permissionDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = permissionDataForm.value.id
     if (id) {
-      editPermission(permissionDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editPermission(permissionDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addPermission(permissionDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addPermission(permissionDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

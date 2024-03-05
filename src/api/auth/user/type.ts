@@ -10,6 +10,7 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
 export interface UserRecord {
   id?: number
   avatar?: string
+  avatarFileId?: string
   avatarName?: string
   username?: string
   userCode?: string

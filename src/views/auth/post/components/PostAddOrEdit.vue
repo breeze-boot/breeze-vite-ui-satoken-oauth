@@ -86,37 +86,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handlePostDataFormSubmit = () => {
-  postDataFormRef.value.validate((valid: boolean) => {
+  postDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = postDataForm.value.id
     if (id) {
-      editPost(postDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editPost(postDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addPost(postDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addPost(postDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

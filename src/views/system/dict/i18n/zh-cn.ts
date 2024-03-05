@@ -15,9 +15,15 @@ export default {
     fields: {
       label: '标签',
       value: '值',
+      type: '类型',
     },
     common: {
       dictItemViewing: '字典项查看',
+    },
+    rules: {
+      label: '请输入字典的标签',
+      value: '请输入字典的值',
+      type: '请选择字典标签类型',
     },
   },
 }

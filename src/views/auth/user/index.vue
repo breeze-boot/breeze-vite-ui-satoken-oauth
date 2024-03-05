@@ -5,7 +5,7 @@
 <!-- 用户管理 -->
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
-import { page, open, exportExcel, deleteUser } from '@/api/auth/user'
+import { page, open, exportExcel, deleteUser, editAvatar } from '@/api/auth/user'
 import AddOrUpdate from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
@@ -16,7 +16,8 @@ import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
 import UserRoleSettings from '@/views/auth/user/components/UserRoleSettings.vue'
 import UserPasswordReset from '@/views/auth/user/components/UserPasswordReset.vue'
-import user from '../../../store/modules/user.ts'
+import { editFile } from '@/api/system/file'
+import { FileRecord } from '@/api/system/file/type.ts'
 
 defineOptions({
   name: 'User',
@@ -101,6 +102,56 @@ const tableInfo = reactive<TableInfo>({
       type: 'image',
     },
     {
+      prop: 'fileUpload',
+      label: t('user.fields.fileUpload'),
+      width: '100px',
+      type: 'fileUpload',
+      upload: {
+        // 默认系统标识
+        bizType: 'system',
+        // 上传限制文件个数
+        fileLimit: 1,
+        // 上传限制文件类型
+        fileType: ['image/jpeg', 'image/png'],
+        // 上传限制文件大小 M
+        fileSize: 2,
+        // 完成上传回调保存数据的接口的主键
+        pk: 'id',
+        // 上传后是否刷新
+        uploadRefresh: false,
+        // 需要保存的字段映射 {上传返回的KEY : 提交的KEY}
+        columns: { fileId: 'avatarFileId', url: 'avatar' },
+        // 完成上传回调保存数据的接口
+        api: editAvatar,
+        // 上传完成后的回调
+        callback: (row: any) => handleUpdateBiz(row),
+      },
+    },
+    {
+      prop: 'fileUpload',
+      label: t('user.fields.customFileUpload'),
+      width: '120px',
+      type: 'fileUpload',
+      upload: {
+        // 默认系统标识
+        bizType: 'system',
+        // 上传限制文件个数
+        fileLimit: 1,
+        // 上传限制文件类型
+        fileType: ['image/jpeg', 'image/png'],
+        // 上传限制文件大小 M
+        fileSize: 2,
+        // 上传完成后的回调
+        callback: (row: any) => handleUpdateCurrentRow(row),
+      },
+    },
+    {
+      prop: 'file',
+      showOverflowTooltip: true,
+      label: t('user.fields.file'),
+      type: 'fileList',
+    },
+    {
       prop: 'username',
       showOverflowTooltip: true,
       label: t('user.fields.username'),
@@ -140,7 +191,7 @@ const tableInfo = reactive<TableInfo>({
       prop: 'sex',
       label: t('user.fields.sex'),
       type: 'tag',
-      tagOptions: {
+      tag: {
         1: { name: '男', type: 'success' },
         0: { name: '女', type: 'success' },
       },
@@ -337,23 +388,68 @@ const handleAdd = () => {
 }
 
 /**
+ * 更新头像
+ *
+ * @param row 行数据
+ */
+const handleUpdateCurrentRow = async (row: any) => {
+  let data = {}
+  row.fileUpload.forEach((column: any) => {
+    data = {
+      id: row.id,
+      avatar: column.url,
+      avatarFileId: column.fileId,
+    }
+  })
+  // 若是一对多的文件上传，可以自定义回调逻辑
+  await editAvatar(data as UserRecord)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
+      handleUpdateBiz(row)
+    },
+  })
+}
+
+/**
+ * 更新文件表的业务ID
+ *
+ * @param row 行数据
+ */
+const handleUpdateBiz = async (row: any) => {
+  let data = {}
+  row.fileUpload.forEach((column: any) => {
+    data = {
+      bizId: row.id,
+      id: column.fileId,
+    }
+  })
+  await editFile(data as FileRecord)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
+      reloadList()
+    },
+  })
+}
+
+/**
  * 删除
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: UserRecords) => {
+const handleDelete = async (rows: UserRecords) => {
   const userIds = rows.map((item: any) => item.id)
-  deleteUser(userIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteUser(userIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

@@ -2,6 +2,7 @@ export default {
   common: {
     download: 'download',
     success: 'success',
+    reloadFail: 'data reload fail',
     confirm: 'confirm',
     cancel: 'cancel',
     add: 'add',
@@ -20,15 +21,17 @@ export default {
     exportAll: 'export all',
     delete: 'delete',
     info: 'info',
+    rolePermission: 'role permission',
     no: 'no',
     tableColumn: 'table column',
     showTableColumn: 'show column',
     hiddenTableColumn: 'hidden column',
-    avatar: 'avatar',
-  },
-  rules: {
-    fileLimit3: 'The limit is 3',
-    avatarFormat: 'Avatar picture must be JPG format!',
-    avatarSize: 'Avatar picture size can not exceed 2MB!',
+    rules: {
+      fileLimit: 'The limit is ',
+      totalFileSelect: 'total select file ',
+      cancelTransfer: 'Cancel the transfer of ',
+      fileFormat: 'the file format must be !',
+      fileSize: 'the file size can not exceed !',
+    },
   },
 }

@@ -7,7 +7,7 @@ import { AxiosPromise } from 'axios'
 import { DictItemQuery, DictItemRecord, DictItemResponseData } from '@/api/system/dictItem/type.ts'
 
 enum API {
-  DICT_ITEM_RESTFUL_URL = '/dictItem/',
+  DICT_ITEM_RESTFUL_URL = '/dictItem',
 }
 
 /**

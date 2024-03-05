@@ -3,7 +3,7 @@
  * @since: 2024-03-01
 -->
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { uploadMinioS3 } from '@/api/system/file'
@@ -16,17 +16,20 @@ defineOptions({
 })
 
 const { t } = useI18n()
-const $emit = defineEmits(['update:imageUrl', 'update:imageName'])
-const url = ref<string>('')
+const $emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  imageUrl: {
+  modelValue: {
     type: String,
     default: '',
   },
-  imageName: {
-    type: String,
-    default: '',
+  fileType: {
+    type: Array,
+    default: () => ['image/jpeg', 'image/png'],
+  },
+  fileSize: {
+    type: Number,
+    default: 2,
   },
 })
 
@@ -35,23 +38,10 @@ const props = defineProps({
  */
 const imageUrl = computed({
   get: () => {
-    return props.imageUrl
+    return props.modelValue
   },
   set: (value) => {
-    url.value = value
-    $emit('update:imageUrl', value)
-  },
-})
-
-/**
- * 文件名
- */
-const imageName = computed({
-  get: () => {
-    return props.imageName
-  },
-  set: (value) => {
-    $emit('update:imageName', value)
+    $emit('update:modelValue', value)
   },
 })
 
@@ -63,12 +53,10 @@ const imageName = computed({
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
   const fileParam: FileParam = {
     bizType: 'system',
-    title: t('common.avatar'),
   } as FileParam
   const response: any = await uploadMinioS3(options.file, fileParam)
   if (response.code === '0000') {
     imageUrl.value = response.data.url
-    imageName.value = response.data.name
   }
 }
 
@@ -78,11 +66,11 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
  * @param rawFile
  */
 const beforeAvatarUpload = (rawFile: UploadRawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error(t('rules.avatarFormat'))
+  if (!props.fileType.includes(rawFile.type)) {
+    ElMessage.error(t('common.rules.fileFormat'), props.fileType?.join(','))
     return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error(t('rules.avatarSize'))
+  } else if (rawFile.size / 1024 / 1024 > props.fileSize) {
+    ElMessage.error(t('common.rules.fileSize'))
     return false
   }
   return true
@@ -98,7 +86,7 @@ const beforeAvatarUpload = (rawFile: UploadRawFile) => {
       :before-upload="beforeAvatarUpload"
       :http-request="handleUploadFile"
     >
-      <el-avatar :size="100" fit="contain" v-if="url" :src="url" />
+      <el-avatar :size="100" fit="contain" v-if="imageUrl" :src="imageUrl" />
       <svg-icon width="2rem" height="2rem" v-else name="plus" class="avatar-uploader-icon" />
     </el-upload>
   </div>

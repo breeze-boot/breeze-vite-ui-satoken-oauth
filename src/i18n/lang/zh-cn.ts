@@ -2,6 +2,7 @@ export default {
   common: {
     download: '下载',
     success: '成功',
+    reloadFail: '数据加载失败',
     cancel: '取消',
     confirm: '确认',
     add: '添加',
@@ -20,15 +21,17 @@ export default {
     exportAll: '导出全部',
     delete: '删除',
     info: '查看',
+    rolePermission: '角色权限',
     no: '序号',
     tableColumn: '表格字段',
     showTableColumn: '展示字段',
     hiddenTableColumn: '隐藏字段',
-    avatar: '头像',
-  },
-  rules: {
-    fileLimit3: '不能超过3个',
-    avatarFormat: '头像图片必须时JPG格式',
-    avatarSize: '头像图片必须不能超过2M',
+    rules: {
+      fileLimit: '不能超过 ',
+      totalFileSelect: '总共选择文件 ',
+      cancelTransfer: '取消传输 ',
+      fileFormat: '上传文件格式必须为',
+      fileSize: '上传文件大小必须不能超过',
+    },
   },
 }

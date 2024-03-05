@@ -17,17 +17,13 @@ let menuStore = useMenuStore()
  *
  * @param targetName
  */
-const removeTab = (targetName: string) => {
+const removeTab = async (targetName: string) => {
   tabsStore.removeTab(targetName)
   if (!tabsStore.currentTab.fullPath) return
-  $router
-    .push({
-      path: tabsStore.currentTab.fullPath,
-      query: { ...tabsStore.currentTab.query },
-    })
-    .then((r) => {
-      console.debug(r)
-    })
+  await $router.push({
+    path: tabsStore.currentTab.fullPath,
+    query: { ...tabsStore.currentTab.query },
+  })
 }
 
 /**

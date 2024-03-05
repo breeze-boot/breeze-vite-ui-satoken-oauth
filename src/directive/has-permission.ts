@@ -13,8 +13,8 @@ export const isHasPermission = (app: any) => {
    */
   app.directive('has', {
     // 代表使用这个全局自定义指令的DOM|组件挂载完毕的时候会执行一次
-    mounted(el: any, options: any) {
-      filterOptions(el, options).then((r: void): void => console.debug(r))
+    async mounted(el: any, options: any) {
+      await filterOptions(el, options)
     },
   })
 }

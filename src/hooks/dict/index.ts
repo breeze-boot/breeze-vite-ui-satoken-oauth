@@ -28,7 +28,7 @@ export function useDict(...args: any[]): any {
         listDict(code).then((response: any) => {
           const result: Dict = {}
           response.data.forEach((item: DictItem): void => {
-            result[item.value as number] = { label: item.label, value: item.value }
+            result[item.value as number] = { label: item.label, value: item.value, type: item.type }
           })
           dict.value[code] = result
           dictStore.setDict(code, dict.value[code])

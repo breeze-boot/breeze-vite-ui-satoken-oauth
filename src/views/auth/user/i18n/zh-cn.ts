@@ -2,6 +2,9 @@ export default {
   user: {
     fields: {
       avatar: '头像',
+      file: '文件',
+      fileUpload: '文件上传',
+      customFileUpload: '自定义文件上传',
       username: '用户名',
       password: '密码',
       confirmPassword: '确认密码',

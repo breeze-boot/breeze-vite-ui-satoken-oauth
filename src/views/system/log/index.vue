@@ -215,19 +215,16 @@ const handleView = (row: any) => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: LogRecords) => {
+const handleDelete = async (rows: LogRecords) => {
   const logIds = rows.map((item: any) => item.id)
-  deleteLog(logIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteLog(logIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

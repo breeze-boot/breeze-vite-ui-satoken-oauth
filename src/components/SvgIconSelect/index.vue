@@ -20,14 +20,14 @@ const props = defineProps({
     default: '',
   },
 })
-const $emit = defineEmits(['update:icon'])
+const $emit = defineEmits(['update:modelValue'])
 let allIcon = ref<any>([])
 const icon = computed({
   get: () => {
     return props.icon
   },
   set: (value) => {
-    $emit('update:icon', value)
+    $emit('update:modelValue', value)
   },
 })
 

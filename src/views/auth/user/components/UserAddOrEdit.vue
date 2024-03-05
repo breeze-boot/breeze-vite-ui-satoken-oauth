@@ -212,37 +212,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleUserDataFormSubmit = () => {
-  userDataFormRef.value.validate((valid: boolean) => {
+  userDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = userDataForm.value.id
     if (id) {
-      editUser(userDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editUser(userDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addUser(userDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addUser(userDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }
@@ -268,7 +262,7 @@ defineExpose({
       label-width="125px"
     >
       <el-form-item label-width="0px" prop="avatar">
-        <avatar-upload v-model:imageUrl="userDataForm.avatar" v-model:imageName="userDataForm.avatarName" />
+        <avatar-upload v-model="userDataForm.avatar" />
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.username')" prop="username">
         <el-input
@@ -355,8 +349,8 @@ defineExpose({
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
-          <el-radio :label="0">{{ $t('user.fields.sexInfo.woman') }}</el-radio>
-          <el-radio :label="1">{{ $t('user.fields.sexInfo.man') }}</el-radio>
+          <el-radio :value="0">{{ $t('user.fields.sexInfo.woman') }}</el-radio>
+          <el-radio :value="1">{{ $t('user.fields.sexInfo.man') }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.idCard')" prop="idCard">

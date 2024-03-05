@@ -45,11 +45,7 @@ export interface FileResponseData extends ResponseData {
  * 文件列表查询类型声明
  */
 export interface FileQuery extends PageQuery {
-  keywords?: string
-  status?: number
-  fileName?: string
-  startTime?: string
-  endTime?: string
+  name?: string
 }
 
 /**

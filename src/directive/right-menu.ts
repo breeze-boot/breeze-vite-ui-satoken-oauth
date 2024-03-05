@@ -30,8 +30,7 @@ export const rightMenu = (app: any) => {
    * 使用指令便于再指定位置获取dom
    */
   app.directive('right-menu', {
-    updated(el: any, options: any, vnode: any) {
-      console.debug(options, vnode)
+    updated(el: any) {
       const nodes = findAllChildrenWithClass(el, 'el-tabs__item', [])
       nodes.forEach((node: any) => {
         if (!node.oncontextmenu) {
@@ -46,16 +45,12 @@ export const rightMenu = (app: any) => {
             if (e.target.id === 'tab-home' || e.target.id === 'home') {
               return
             }
-            console.debug('当前的右击的tab', e.target.id)
             // 显示菜单
             tabsStore.contextMenuStatus = true
             tabsStore.contextMenuLocationX =
               _node.getBoundingClientRect().left +
               _node.clientWidth / -Number(variables.baseContextMenuWidth.toString().replace('px', '')) / 2
             tabsStore.contextMenuLocationY = _node.getBoundingClientRect().top + _node.clientHeight
-            console.log('当前的右击的tab', _node)
-            console.log(tabsStore.contextMenuLocationY)
-            console.log(tabsStore.contextMenuLocationX)
           }
         }
       })

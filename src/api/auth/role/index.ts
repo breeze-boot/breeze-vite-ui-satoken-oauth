@@ -5,6 +5,7 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { RoleResponseData, RoleQuery, RoleRecord } from './type'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
   ROLE_RESTFUL_URL = '/role',
@@ -117,5 +118,32 @@ export function listUserRoles(id: number): AxiosPromise<any> {
     params: {
       id,
     },
+  })
+}
+
+/**
+ * 获取角色权限
+ *
+ * @param roleId
+ * @returns {AxiosPromise}
+ */
+export function listRolesPermission(roleId: number): AxiosPromise<ResponseData> {
+  return request({
+    url: `${API.ROLE_RESTFUL_URL}/listRolesPermission`,
+    method: 'get',
+    params: { roleId },
+  })
+}
+
+/**
+ * 修改角色权限
+ *
+ * @param data
+ */
+export function modifyPermission(data: any): AxiosPromise<ResponseData> {
+  return request({
+    url: `${API.ROLE_RESTFUL_URL}/modifyPermission`,
+    method: 'put',
+    data: data,
   })
 }

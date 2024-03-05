@@ -73,37 +73,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleDictDataFormSubmit = () => {
-  dictDataFormRef.value.validate((valid: boolean) => {
+  dictDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = dictDataForm.value.id
     if (id) {
-      editDict(dictDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editDict(dictDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addDict(dictDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addDict(dictDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

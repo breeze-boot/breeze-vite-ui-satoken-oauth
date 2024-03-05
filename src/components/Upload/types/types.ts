@@ -19,7 +19,7 @@ export interface UploadProgressEvent extends ProgressEvent {
 export interface UploadRawFile extends File {
   uid: number
 }
-
+export type UploadUserFile = Omit<UploadFile, 'status' | 'uid'> & Partial<Pick<UploadFile, 'status' | 'uid'>>
 export interface UploadRequestOptions {
   action: string
   method: string

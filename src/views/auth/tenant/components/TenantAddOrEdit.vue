@@ -86,37 +86,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleTenantDataFormSubmit = () => {
-  tenantDataFormRef.value.validate((valid: boolean) => {
+  tenantDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = tenantDataForm.value.id
     if (id) {
-      editTenant(tenantDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editTenant(tenantDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addTenant(tenantDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addTenant(tenantDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

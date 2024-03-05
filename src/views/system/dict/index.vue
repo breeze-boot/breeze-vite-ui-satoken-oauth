@@ -240,7 +240,6 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
  * @param row 参数
  */
 const handleView = (row: any) => {
-  alert('查询')
   console.log(row)
 }
 
@@ -256,19 +255,16 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: DictRecords) => {
+const handleDelete = async (rows: DictRecords) => {
   const dictIds = rows.map((item: any) => item.id)
-  deleteDict(dictIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteDict(dictIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

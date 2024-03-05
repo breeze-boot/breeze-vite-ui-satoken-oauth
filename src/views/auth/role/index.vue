@@ -7,6 +7,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { page, exportExcel, deleteRole } from '@/api/auth/role'
 import AddOrUpdate from './components/RoleAddOrEdit.vue'
+import MenuPermissionList from './components/RolePermissionList.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { RoleRecords } from '@/api/auth/role/type.ts'
 import { RoleRecord, RoleQuery } from '@/api/auth/role/type.ts'
@@ -22,6 +23,7 @@ defineOptions({
 const { t } = useI18n()
 const roleQueryFormRef = ref(ElForm)
 const roleAddOrUpdateRef = ref()
+const rolePermissionListRef = ref()
 
 /**
  * 初始化
@@ -117,6 +119,14 @@ const tableInfo = reactive<TableInfo>({
         event: 'view',
         permission: ['auth:role:info'],
       },
+      // 角色权限
+      {
+        label: t('common.rolePermission'),
+        type: 'success',
+        icon: 'role_permission',
+        event: 'role_permission',
+        permission: ['auth:role:list'],
+      },
       // 删除
       {
         label: t('common.delete'),
@@ -161,6 +171,15 @@ const addOrUpdateHandle = (id?: number) => {
 }
 
 /**
+ * 设置角色的权限
+ *
+ * @param id 主键
+ */
+const setRolePermissionHandle = (id?: number) => {
+  rolePermissionListRef.value.init(id)
+}
+
+/**
  * 表格组件事件分发
  *
  * @param event
@@ -173,6 +192,9 @@ const handleTableRowBtnClick = (event: any, row: any) => {
       break
     case 'view':
       handleView(row)
+      break
+    case 'role_permission':
+      handleRolePermission(row)
       break
     case 'delete':
       handleDelete([row])
@@ -207,8 +229,16 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
  * @param row 参数
  */
 const handleView = (row: any) => {
-  alert('查询')
   console.log(row)
+}
+
+/**
+ * 设置角色的菜单权限
+ *
+ * @param row 参数
+ */
+const handleRolePermission = (row: any) => {
+  setRolePermissionHandle(row.id)
 }
 
 /**
@@ -223,19 +253,16 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: RoleRecords) => {
+const handleDelete = async (rows: RoleRecords) => {
   const roleIds = rows.map((item: any) => item.id)
-  deleteRole(roleIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteRole(roleIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**
@@ -322,4 +349,7 @@ const handleSelectionChange = (rows: RoleRecords) => {
 
   <!-- 新增 / 修改 Dialog -->
   <add-or-update ref="roleAddOrUpdateRef" @reload-data-list="reloadList" />
+
+  <!-- 菜单权限 Dialog -->
+  <menu-permission-list ref="rolePermissionListRef" @reload-data-list="reloadList" />
 </template>

@@ -15,9 +15,15 @@ export default {
     fields: {
       label: 'label',
       value: 'value',
+      type: 'type',
     },
     common: {
       dictItemViewing: 'dict item Viewing',
+    },
+    rules: {
+      label: 'Please enter the label',
+      value: 'Please enter the value',
+      type: 'Please select the type',
     },
   },
 }

@@ -25,11 +25,7 @@ const fileAddOrUpdateRef = ref()
 
 // 查询条件
 const queryParams = reactive<FileQuery>({
-  endTime: '',
-  fileName: '',
-  keywords: '',
-  status: 0,
-  startTime: '',
+  name: '',
   current: 1,
   size: 10,
 })
@@ -42,7 +38,7 @@ const tableInfo = reactive<TableInfo>({
   refresh: 1,
   tableIndex: true,
   // 选择框类型
-  select: 'single',
+  select: 'multi',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -77,11 +73,6 @@ const tableInfo = reactive<TableInfo>({
   // 表格字段配置
   fieldList: [
     {
-      prop: 'title',
-      showOverflowTooltip: true,
-      label: t('file.fields.title'),
-    },
-    {
       prop: 'bucket',
       showOverflowTooltip: true,
       label: t('file.fields.bucket'),
@@ -92,15 +83,15 @@ const tableInfo = reactive<TableInfo>({
       label: t('file.fields.contentType'),
     },
     {
-      prop: 'fileName',
+      prop: 'name',
       showOverflowTooltip: true,
-      label: t('file.fields.fileName'),
+      label: t('file.fields.name'),
     },
     {
-      prop: 'fileFormat',
-      type: 'tag',
+      prop: 'format',
       showOverflowTooltip: true,
-      label: t('file.fields.fileFormat'),
+      label: t('file.fields.format'),
+      type: 'tag',
     },
     {
       prop: 'objectName',
@@ -136,19 +127,6 @@ const tableInfo = reactive<TableInfo>({
       prop: 'createName',
       showOverflowTooltip: true,
       label: t('file.fields.createName'),
-    },
-    {
-      prop: 'objectName',
-      type: 'upload',
-      label: t('file.fields.objectName'),
-      width: '300px',
-      upload: {
-        msg: '只能上传一个文件',
-        limit: 1,
-        types: ['jpg', 'png'],
-        api: import.meta.env.VITE_APP_SERVER + import.meta.env.VITE_APP_BASE_API + '/file/uploadMinioS3',
-        pk: 'id',
-      },
     },
   ],
   handleBtn: {
@@ -189,7 +167,6 @@ const tableInfo = reactive<TableInfo>({
  * 初始化
  */
 onMounted(() => {
-  console.debug(`数据初始化`)
   reloadList()
 })
 
@@ -286,19 +263,16 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: FileRecords) => {
+const handleDelete = async (rows: FileRecords) => {
   const fileIds = rows.map((item: any) => item.id)
-  deleteFile(fileIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteFile(fileIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**
@@ -333,13 +307,13 @@ const handleSelectionChange = (rows: FileRecords) => {
 <template>
   <search-container-box>
     <el-form ref="fileQueryFormRef" :model="queryParams" :inline="true">
-      <!-- 用户名 -->
-      <el-form-item :label="t('file.fields.fileName')" prop="fileName">
+      <!-- 文件名 -->
+      <el-form-item :label="t('file.fields.name')" prop="name">
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('file.fields.fileName')"
-          v-model="queryParams.fileName"
+          :placeholder="t('file.fields.name')"
+          v-model="queryParams.name"
         />
       </el-form-item>
       <el-form-item>

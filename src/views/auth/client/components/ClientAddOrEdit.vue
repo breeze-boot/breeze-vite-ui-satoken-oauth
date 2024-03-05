@@ -131,37 +131,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleClientDataFormSubmit = () => {
-  clientDataFormRef.value.validate((valid: boolean) => {
+  clientDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = clientDataForm.value.id
     if (id) {
-      editClient(clientDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editClient(clientDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addClient(clientDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addClient(clientDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

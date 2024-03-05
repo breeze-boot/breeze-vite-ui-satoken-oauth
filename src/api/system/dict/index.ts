@@ -8,7 +8,7 @@ import { DictQuery, DictRecord, DictResponseData } from '@/api/system/dict/type.
 import { UserResponseData, UserSwitchParam } from '@/api/auth/user/type.ts'
 
 enum API {
-  DICT_RESTFUL_URL = '/dict/',
+  DICT_RESTFUL_URL = '/dict',
 }
 
 /**

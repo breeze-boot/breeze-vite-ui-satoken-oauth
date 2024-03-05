@@ -257,18 +257,15 @@ const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
  *
  * @param row 行数据
  */
-const handleDelete = (row: MenuRecord) => {
-  deleteMenu(JSONBigInt.parse(row.id))
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+const handleDelete = async (row: MenuRecord) => {
+  await deleteMenu(JSONBigInt.parse(row.id))
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

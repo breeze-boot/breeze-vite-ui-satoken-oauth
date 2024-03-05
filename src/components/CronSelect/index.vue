@@ -13,7 +13,7 @@ defineOptions({
   inheritAttrs: false,
 })
 const props = defineProps({
-  cron: {
+  modelValue: {
     type: String,
     default: '',
   },
@@ -32,13 +32,13 @@ const language = computed(() => {
   return settings.language === 'zhCn' ? 'cn' : 'en'
 })
 
-const $emit = defineEmits(['update:cron'])
+const $emit = defineEmits(['update:modelValue'])
 const cron = computed({
   get: () => {
-    return props.cron
+    return props.modelValue
   },
   set: (value) => {
-    $emit('update:cron', value)
+    $emit('update:modelValue', value)
   },
 })
 

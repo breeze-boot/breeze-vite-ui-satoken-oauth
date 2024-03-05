@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem
+import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemRecord } from '@/api/system/dictItem/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
@@ -21,7 +21,15 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const dictItemDataFormRef = ref()
-const dictItemDataForm = ref<DictItemRecord>({ label: '', value: '', id: 0 })
+const dictItemDataForm = ref<DictItemRecord>({ type: '', label: '', value: '', id: 0 })
+
+let tagTypes = ref([
+  { type: 'primary' },
+  { type: 'success' },
+  { type: 'warning' },
+  { type: 'danger' },
+  { type: 'info' },
+])
 
 const rules = ref({
   label: [
@@ -35,6 +43,13 @@ const rules = ref({
     {
       required: true,
       message: t('dictItem.rules.value'),
+      trigger: 'blur',
+    },
+  ],
+  type: [
+    {
+      required: true,
+      message: t('dictItem.rules.type'),
       trigger: 'change',
     },
   ],
@@ -47,7 +62,10 @@ const rules = ref({
  */
 const init = async (id: number) => {
   visible.value = true
+  // 添加的时候传来的是字典项ID
   dictItemDataForm.value.id = undefined
+  // 添加的时候传来的是字典ID
+  dictItemDataForm.value.dictId = id
   // 重置表单数据
   if (dictItemDataFormRef.value) {
     dictItemDataFormRef.value.resetFields()
@@ -73,37 +91,32 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleDictItemDataFormSubmit = () => {
-  dictItemDataFormRef.value.validate((valid: boolean) => {
+  dictItemDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
+    dictItemDataForm.value.value = dictItemDataForm.value.value.trim()
     const id = dictItemDataForm.value.id
     if (id) {
-      editDictItem(dictItemDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editDictItem(dictItemDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addDictItem(dictItemDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addDictItem(dictItemDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }
@@ -143,6 +156,24 @@ defineExpose({
           clearable
           :placeholder="$t('dictItem.fields.value')"
         />
+      </el-form-item>
+      <el-form-item label-width="125px" :label="$t('dictItem.fields.type')" prop="value">
+        <el-select
+          v-model="dictItemDataForm.type"
+          autocomplete="off"
+          clearable
+          :placeholder="$t('dictItem.fields.type')"
+          style="width: 240px"
+        >
+          <el-option v-for="item in tagTypes" :key="item.type" :label="item.type" :value="item.type">
+            <div class="flex items-center">
+              <el-tag :type="item.type" style="margin-right: 8px" size="small" />
+              <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">
+                {{ item.type }}
+              </span>
+            </div>
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>

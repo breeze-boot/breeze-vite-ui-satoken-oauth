@@ -71,7 +71,7 @@ export function deleteFile(ids: number[]): AxiosPromise<FileResponseData> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'delete',
-    params: ids,
+    data: ids,
   })
 }
 
@@ -98,7 +98,6 @@ export function uploadMinioS3(file: File, fileParam: FileParam): AxiosPromise<Fi
   const formData: FormData = new FormData()
   formData.append('file', file)
   formData.append('bizType', fileParam.bizType)
-  formData.append('title', fileParam.title)
   fileParam.bizId ? formData.append('bizId', fileParam.bizId as string) : () => {}
 
   return request({

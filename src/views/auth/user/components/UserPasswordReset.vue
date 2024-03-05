@@ -75,23 +75,20 @@ const init = async (id: number) => {
  * 表单提交
  */
 const handleUserRestPasswordDataFormSubmit = () => {
-  restUserPasswordDataFormRef.value.validate((valid: boolean) => {
+  restUserPasswordDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = userRestPasswordDataForm.value.id
     if (id) {
-      userResetPassword(userRestPasswordDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-            },
-          })
-        })
-        .finally(() => {})
+      await userResetPassword(userRestPasswordDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+        },
+      })
     }
   })
 }

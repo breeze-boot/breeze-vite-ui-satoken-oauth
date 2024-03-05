@@ -59,7 +59,7 @@ export interface HandleBtn {
 export interface Field {
   key?: number
   disabled?: boolean
-  type?: string | 'tag' | 'link' | 'image' | 'customLink' | 'switch' | 'input' | 'upload' | 'dialogUpload'
+  type?: string | 'tag' | 'link' | 'image' | 'customLink' | 'switch' | 'input' | 'upload' | 'file'
   prop: string
   label: string
   switch?: SwitchOption
@@ -71,7 +71,7 @@ export interface Field {
   showOverflowTooltip?: boolean
   hidden?: boolean
   linkInfo?: LinkInfo
-  tagOptions?: TagOptions
+  tag?: TagOptions
   align?: 'center' | 'right' | 'left'
   width?: string
   minWidth?: string
@@ -90,11 +90,33 @@ export interface TagOptions {
  * 文件上传类型
  */
 export interface UploadOption {
-  msg: string
-  limit: number
-  pk: string
-  types: string[]
-  api: string
+  api?: any
+  fileLimit?: number
+  callback?: (row: any) => void
+  bizType?: string | number
+  fileType?: string[]
+  fileSize?: number
+  pk?: string
+  style?: string
+  uploadRefresh?: boolean
+  status?: string
+  // key：file上传返回的的属性值
+  // value：自定义提交业务使用的key
+  columns?: {
+    fileId?: string | number
+    url?: string
+    objectName?: string
+    path?: string
+    name?: string
+    fileFormat?: string
+  }
+}
+
+/**
+ * 字段映射
+ */
+export interface Columns {
+  [idx: number | string]: string | number
 }
 
 /**
@@ -109,12 +131,12 @@ export interface TextareaOption {
  * switch类型
  */
 export interface SwitchOption {
-  activeValue?: string | number
-  inactiveValue?: string | number
+  activeValue: string | number
+  inactiveValue: string | number
   style?: string
-  api?: any
-  pk?: string
-  status?: string
+  api: any
+  pk: string
+  status: string
 }
 
 /**
@@ -135,7 +157,7 @@ export interface QueryParams {
  * tag类型
  */
 export interface TagOption {
-  type?: '' | 'success' | 'warning' | 'info' | 'danger'
+  type?: '' | 'success' | 'warning' | 'info' | 'danger' | 'primary'
   name?: string
 }
 

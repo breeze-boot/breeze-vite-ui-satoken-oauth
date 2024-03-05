@@ -2,11 +2,17 @@
  * @author: gaoweixuan
  * @since: 2024-02-28
 -->
-<script setup lang="ts" name="TableItem">
-import { Field, QueryParams } from '@/components/Table/types/types.ts'
+<script setup lang="ts">
+import { Columns, Field, QueryParams, SwitchOption, UploadOption } from '@/components/Table/types/types.ts'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import FileUploadButton from '@/components/FileUploadButton/index.vue'
+
+defineOptions({
+  name: 'TableItem',
+  inheritAttrs: false,
+})
 
 interface Scope {
   row: any
@@ -16,6 +22,7 @@ interface Scope {
 
 const props = defineProps(['tableField', 'scope', 'dict'])
 const $router = useRouter()
+const $emit = defineEmits(['reloadDataList'])
 
 /**
  * 表格字段
@@ -33,8 +40,8 @@ let switchState = reactive<switchType>({
 })
 
 const switchLoading = ref(false)
-const beforeSwitchChange = () => {
-  ElMessage.info('点击按钮...')
+const beforeSwitchChange = (): boolean => {
+  ElMessage.info('click...')
   switchState.switchStatus = true
   switchLoading.value = false
   return switchState.switchStatus
@@ -43,17 +50,16 @@ const beforeSwitchChange = () => {
 /**
  * switch切换事件
  */
-const handleChangeSwitch = (row: any, item: any) => {
+const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
   if (switchState.switchStatus) {
     switchLoading.value = true
-    if (!item.api) return
+    if (!switchOption.api) return
     const _data: any = {}
-    _data[item.pk] = row[item.pk]
-    _data[item.status] = row[item.status]
-    item.api(_data).then((response: any) => {
-      switchLoading.value = false
-      ElMessage.success(response.message)
-    })
+    _data[switchOption.pk] = row[switchOption.pk]
+    _data[switchOption.status] = row[switchOption.status]
+    const response: any = await switchOption.api(_data)
+    switchLoading.value = false
+    ElMessage.success(response.message)
   }
 }
 
@@ -100,12 +106,51 @@ const openLink = (item: any, row: any) => {
     })
   }
 }
+
+/**
+ * 上传事件完成后回调
+ */
+const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
+  if (uploadOption.callback && !uploadOption.api) {
+    uploadOption.callback(row)
+    return
+  }
+
+  if (!uploadOption.pk) {
+    console.error('ERROR: pk data')
+    return
+  }
+  if (!uploadOption.api) {
+    console.error('ERROR: api data')
+    return
+  }
+  if (uploadOption.fileLimit !== 1) {
+    console.error('ERROR: Please customize the upload method when limit > 1')
+    return
+  }
+  const _data: any = {}
+  _data[uploadOption?.pk] = row[uploadOption?.pk]
+  const columns: Columns = uploadOption?.columns || {}
+  Object.keys(columns).forEach((key: string) => {
+    const attr = columns[key] || ''
+    _data[attr] = row.fileUpload[0][key]
+  })
+
+  const response: any = await uploadOption.api(_data)
+  ElMessage.success(response.message)
+  if (uploadOption.callback) {
+    uploadOption.callback(row)
+  }
+  if (uploadOption.uploadRefresh) {
+    $emit('reloadDataList')
+  }
+}
 </script>
 
 <template>
   <!-- slot自定义列 -->
   <template v-if="tableField.type === 'slot'">
-    <slot :name="`col-${tableField.prop}`" :row="scope.row"></slot>
+    <slot :name="`col-${tableField.prop}`" :row="scope.row" />
   </template>
 
   <!-- 长文本 -->
@@ -113,6 +158,7 @@ const openLink = (item: any, row: any) => {
     <el-tooltip effect="light" placement="top">
       <template #content>
         <el-input
+          v-if="scope.row[tableField.prop]"
           :autosize="{ minRows: tableField.textarea?.minRows || 12, maxRows: tableField.textarea?.maxRows || 24 }"
           :style="{ width: tableField.textarea?.width || '1000px' }"
           type="textarea"
@@ -120,7 +166,7 @@ const openLink = (item: any, row: any) => {
           readonly
         />
       </template>
-      <el-button icon="view" :link="true" v-if="scope.row[tableField.prop]" type="success" />
+      <el-button icon="view" :link="true" :disabled="!scope.row[tableField.prop]" type="success" />
     </el-tooltip>
   </template>
 
@@ -143,13 +189,36 @@ const openLink = (item: any, row: any) => {
     <el-input type="text" v-model="scope.row[tableField.prop]" :readonly="tableField.input?.readonly" />
   </template>
 
-  <!-- upload-->
-  <template v-else-if="tableField.type === 'dialogUpload'">
-    <el-button>上传</el-button>
+  <!-- file upload -->
+  <template v-else-if="tableField.type === 'fileUpload' && tableField.upload">
+    <file-upload-button
+      :file-limit="tableField.upload?.fileLimit"
+      :biz-type="tableField.upload?.bizType"
+      :file-size="tableField.upload?.fileSize"
+      :file-type="tableField.upload?.fileType"
+      v-model="scope.row[tableField.type]"
+      @upload-callback="handleUploadCallback(scope.row, tableField.upload)"
+    />
+  </template>
+
+  <!-- file list 展示 -->
+  <template v-else-if="tableField.type === 'fileList'">
+    <el-popover placement="top-start" :width="200" trigger="hover">
+      <template #default>
+        <div v-if="scope.row[tableField.prop]" style="display: flex; gap: 16px; flex-direction: column">
+          <el-tag style="margin: 0 2px" v-for="(item, index) in scope.row['fileUpload']" :key="index">
+            {{ item.name }}
+          </el-tag>
+        </div>
+      </template>
+      <template #reference>
+        <el-button icon="view" :link="true" :disabled="!scope.row['fileUpload']" type="success" />
+      </template>
+    </el-popover>
   </template>
 
   <!-- switch-->
-  <template v-else-if="tableField.type === 'switch'">
+  <template v-else-if="tableField.type === 'switch' && tableField.switch">
     <el-tooltip :content="'switch value: ' + scope.row[tableField.prop]" placement="top">
       <el-switch
         :loading="switchLoading"
@@ -163,21 +232,26 @@ const openLink = (item: any, row: any) => {
     </el-tooltip>
   </template>
 
-  <template v-else-if="tableField.type === 'tag' && tableField.tagOptions">
-    <el-tag :type="tableField.tagOptions[scope.row?.[tableField.prop]]?.type || 'success'">
-      {{ tableField.tagOptions?.[scope.row?.[tableField.prop]]?.name }}
+  <!-- tag -->
+  <template v-else-if="tableField.type === 'tag' && tableField.tag">
+    <el-tag v-if="scope.row?.[tableField.prop]" :type="tableField.tag[scope.row?.[tableField.prop]]?.type || 'info'">
+      {{ tableField.tag?.[scope.row?.[tableField.prop]]?.name }}
     </el-tag>
   </template>
 
+  <!-- 字典 -->
   <div v-else-if="tableField.type === 'dict' && tableField.dict">
-    <el-tag :type="dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.type || 'success'">
+    <el-tag
+      v-if="scope.row?.[tableField.prop]"
+      :type="dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.type || 'info'"
+    >
       {{ dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.label }}
     </el-tag>
   </div>
 
   <!-- 简单标签 -->
-  <template v-else-if="tableField.type === 'tag' && !tableField.tagOptions && scope.row[tableField.prop]">
-    <el-tag>
+  <template v-else-if="tableField.type === 'tag' && !tableField.tag && scope.row[tableField.prop]">
+    <el-tag v-if="scope.row?.[tableField.prop]">
       {{ scope.row[tableField.prop] }}
     </el-tag>
   </template>
@@ -186,7 +260,7 @@ const openLink = (item: any, row: any) => {
   <template v-else-if="tableField.type === 'image' && scope.row?.[tableField.prop]">
     <el-popover placement="top-start" :width="200" trigger="hover">
       <template #default>
-        <div style="display: flex; gap: 16px; flex-direction: column">
+        <div v-if="scope.row[tableField.prop]" style="display: flex; gap: 16px; flex-direction: column">
           <el-image
             :close-on-press-escape="true"
             :preview-src-list="[scope.row?.[tableField.prop]]"
@@ -196,7 +270,7 @@ const openLink = (item: any, row: any) => {
         </div>
       </template>
       <template #reference>
-        <el-button icon="view" :link="true" v-if="scope.row[tableField.prop]" type="success" />
+        <el-button icon="view" :link="true" :disabled="!scope.row[tableField.prop]" type="success" />
       </template>
     </el-popover>
   </template>

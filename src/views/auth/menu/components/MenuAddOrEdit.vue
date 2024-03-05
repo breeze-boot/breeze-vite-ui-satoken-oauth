@@ -152,37 +152,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleMenuDataFormSubmit = () => {
-  menuDataFormRef.value.validate((valid: boolean) => {
+  menuDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = menuDataForm.value.id
     if (id) {
-      editMenu(menuDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editMenu(menuDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addMenu(menuDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addMenu(menuDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }
@@ -222,7 +216,7 @@ defineExpose({
           v-model="menuDataForm.type"
           @click="menuDataForm.type === 2 ? (menuDataForm.href = 0) : (menuDataForm.href = 1)"
         >
-          <el-radio-button v-for="item in MENU_TYPE" :key="item.value" :label="Number(item.value)">
+          <el-radio-button v-for="item in MENU_TYPE" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -236,7 +230,7 @@ defineExpose({
         prop="href"
       >
         <el-radio-group v-model="menuDataForm.href">
-          <el-radio-button v-for="item in HREF" :key="item.value" :label="item.value">
+          <el-radio-button v-for="item in HREF" :key="item.value" :value="item.value">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -250,7 +244,7 @@ defineExpose({
         prop="keepAlive"
       >
         <el-radio-group v-model="menuDataForm.keepAlive">
-          <el-radio-button v-for="item in KEEPALIVE" :key="item.value" :label="item.value">
+          <el-radio-button v-for="item in KEEPALIVE" :key="item.value" :value="item.value">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -264,7 +258,7 @@ defineExpose({
         prop="hidden"
       >
         <el-radio-group v-model="menuDataForm.hidden">
-          <el-radio-button v-for="item in HIDDEN" :key="item.value" :label="item.value">
+          <el-radio-button v-for="item in HIDDEN" :key="item.value" :value="item.value">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -295,7 +289,7 @@ defineExpose({
         :label="t('menu.fields.icon')"
         prop="icon"
       >
-        <svg-icon-select :placeholder="t('menu.fields.icon')" v-model:icon="menuDataForm.icon" />
+        <svg-icon-select :placeholder="t('menu.fields.icon')" v-model="menuDataForm.icon" />
       </el-form-item>
 
       <el-form-item

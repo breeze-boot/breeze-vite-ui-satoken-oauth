@@ -5,7 +5,7 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import JSONBigInt from 'json-bigint'
-import type { MenuResponseData, MenuQuery, MenuRecord } from './type'
+import type { MenuResponseData, MenuQuery, MenuRecord, MenuTreeResponseData } from './type'
 import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -114,6 +114,16 @@ export function selectMenu(id: number): AxiosPromise<SelectResponseData> {
 export function selectPlatform(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.PLATFORM_SELECT_URL,
+    method: 'get',
+  })
+}
+
+/**
+ * 权限列表
+ */
+export function listTreePermission(): AxiosPromise<MenuTreeResponseData> {
+  return request({
+    url: `${API.MENU_RESTFUL_URL}/listTreePermission`,
     method: 'get',
   })
 }

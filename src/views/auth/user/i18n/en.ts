@@ -2,6 +2,9 @@ export default {
   user: {
     fields: {
       avatar: 'avatar',
+      file: 'file',
+      fileUpload: 'file upload',
+      customFileUpload: 'custom file upload',
       username: 'username',
       password: 'password',
       confirmPassword: 'confirm password',

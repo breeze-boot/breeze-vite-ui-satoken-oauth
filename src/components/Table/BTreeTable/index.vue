@@ -356,12 +356,20 @@ const handleTableRowClick = (event: string, row: any, index: number) => {
  * @param func
  */
 const confirmBox = (func: any) => {
-  ElMessageBox.alert(t('common.tableRowConfirmMsg'), t('common.delete'), {
-    confirmButtonText: '',
-    callback: () => {
-      func()
-    },
+  ElMessageBox.confirm(t('common.tableRowConfirmMsg'), t('common.delete'), {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
   })
+    .then(() => {
+      func()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: t('common.cancel'),
+      })
+    })
 }
 
 /**
@@ -434,7 +442,6 @@ watch(
 watch(
   () => props.refresh,
   () => {
-    console.debug(props.refresh)
     getList()
   },
 )
@@ -609,6 +616,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
               >
                 <template #default="_">
                   <TableItem
+                    @reload-data-list="getList"
                     :scope="{
                       row: _.row[item.prop],
                       $index: _.$index,
@@ -621,7 +629,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
                 </template>
               </el-table-column>
             </template>
-            <TableItem :scope="scope" :table-field="item" :dict="dict" :key="index" />
+            <TableItem @reload-data-list="getList" :scope="scope" :table-field="item" :dict="dict" :key="index" />
           </template>
         </el-table-column>
 

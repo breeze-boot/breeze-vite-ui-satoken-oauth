@@ -207,7 +207,6 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
  * @param row 参数
  */
 const handleView = (row: any) => {
-  alert('查询')
   console.log(row)
 }
 
@@ -223,19 +222,16 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: PostRecords) => {
+const handleDelete = async (rows: PostRecords) => {
   const postIds = rows.map((item: any) => item.id)
-  deletePost(postIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deletePost(postIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

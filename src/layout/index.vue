@@ -50,12 +50,10 @@ const isCollapse = computed(() => {
   return settings.isCollapse
 })
 
-const selectMenu = (index: string) => {
+const selectMenu = async (index: string) => {
   if (menuLayout.value !== 'top') {
-    $router.push({ path: index }).then((r) => {
-      console.debug(r)
-      tabStore.setTab($route)
-    })
+    await $router.push({ path: index })
+    tabStore.setTab($route)
   }
 }
 
@@ -73,7 +71,7 @@ const tabStyle = computed(() => {
 watch(
   () => theme.menuLayout,
   () => {
-    $router.push({ path: $route.path, query: {} }).then((r) => console.debug(r))
+    $router.push({ path: $route.path, query: {} })
   },
 )
 </script>

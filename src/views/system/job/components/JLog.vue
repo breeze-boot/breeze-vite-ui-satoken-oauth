@@ -159,7 +159,6 @@ defineExpose({
         :handle-btn="tableInfo.handleBtn"
         table-height="80%"
         @handle-table-row-btn-click="handleTableRowBtnClick"
-        c
         @selection-change="handleSelectionChange"
       />
     </template>

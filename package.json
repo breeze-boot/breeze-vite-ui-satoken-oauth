@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --open",
+    "dev": "vite",
     "build:test": "vue-tsc && vite build --mode test",
     "build:pro": "vue-tsc && vite build --mode production",
     "preview": "vite preview",
@@ -28,13 +28,13 @@
     "management-system"
   ],
   "dependencies": {
-    "@element-plus/icons-vue": "^2.1.0",
+    "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^10.7.2",
     "axios": "^1.4.0",
     "crypto-js": "4.2.0",
     "echarts": "^5.4.2",
     "echarts-liquidfill": "^3.1.0",
-    "element-plus": "^2.3.4",
+    "element-plus": "^2.6.0",
     "js-cookie": "^3.0.1",
     "json-bigint": "^1.0.0",
     "lodash-es": "^4.17.21",

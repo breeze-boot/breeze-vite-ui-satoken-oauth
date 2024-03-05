@@ -129,37 +129,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleDeptDataFormSubmit = () => {
-  deptDataFormRef.value.validate((valid: boolean) => {
+  deptDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = deptDataForm.value.id
     if (id) {
-      editDept(deptDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editDept(deptDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addDept(deptDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addDept(deptDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

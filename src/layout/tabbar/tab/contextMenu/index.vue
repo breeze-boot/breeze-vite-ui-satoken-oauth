@@ -28,7 +28,7 @@ const contextMenuPositionStyle = computed(() => {
   }
 })
 
-const handleMenuItemClick = (event: string) => {
+const handleMenuItemClick = async (event: string) => {
   tabsStore.contextMenuStatus = false
   switch (event) {
     case 'all':
@@ -49,15 +49,10 @@ const handleMenuItemClick = (event: string) => {
     default:
       tabsStore.contextMenuStatus = false
   }
-  $router
-    .push({
-      path: tabsStore.currentTab.fullPath,
-      query: tabsStore.currentTab.query as LocationQueryRaw,
-      params: tabsStore.currentTab.params as RouteParamsRaw,
-    })
-    .then((r) => {
-      console.debug(r)
-    })
+  await $router.push({
+    path: tabsStore.currentTab.fullPath,
+    query: tabsStore.currentTab.query as LocationQueryRaw,
+  })
 }
 </script>
 

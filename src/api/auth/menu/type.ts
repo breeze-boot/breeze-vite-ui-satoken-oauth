@@ -50,3 +50,25 @@ export interface MenuQuery {
   name?: string
   title?: string
 }
+
+/**
+ * 菜单树形列表类型声明
+ */
+export interface MenuTreeRecord {
+  id: number | string
+  title: string
+  children?: MenuTreeRecord[]
+}
+
+/**
+ * 菜单树形列表响应类型声明
+ */
+export interface MenuTreeResponseData extends ResponseData {
+  data: {
+    records: MenuTreeRecord
+    total: number
+    size: number
+    current: number
+    pages: number
+  }
+}

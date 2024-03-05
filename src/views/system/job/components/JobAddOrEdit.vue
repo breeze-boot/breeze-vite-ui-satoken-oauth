@@ -93,37 +93,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleJobDataFormSubmit = () => {
-  jobDataFormRef.value.validate((valid: boolean) => {
+  jobDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = jobDataForm.value.id
     if (id) {
-      editJob(jobDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editJob(jobDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addJob(jobDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addJob(jobDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }
@@ -162,7 +156,7 @@ defineExpose({
         </el-select>
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('job.fields.cronExpression')" prop="cronExpression">
-        <cron-select v-model:cron="jobDataForm.cronExpression" :placeholder="$t('job.fields.cronExpression')" />
+        <cron-select v-model="jobDataForm.cronExpression" :placeholder="$t('job.fields.cronExpression')" />
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('job.fields.clazzName')" prop="clazzName">
         <el-input
@@ -178,7 +172,9 @@ defineExpose({
 
       <el-form-item label-width="125px" :label="$t('job.fields.misfirePolicy')" prop="misfirePolicy">
         <el-radio-group v-model="jobDataForm.misfirePolicy">
-          <el-radio v-for="item in MISFIRE_POLICY" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+          <el-radio v-for="item in MISFIRE_POLICY" :key="item.value" :value="item.value">
+            {{ item.label }}
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('job.fields.concurrent')" prop="concurrent">

@@ -321,19 +321,16 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: ClientRecords) => {
+const handleDelete = async (rows: ClientRecords) => {
   const clientIds = rows.map((item: any) => item.id)
-  deleteClient(clientIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteClient(clientIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**

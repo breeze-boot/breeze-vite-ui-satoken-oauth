@@ -3,8 +3,9 @@
  * @since: 2023-11-12
  */
 import * as CryptoJS from 'crypto-js'
+import { SelectData } from '@/types/types.ts'
 
-export const ROOT = {
+export const ROOT: SelectData = {
   value: '1111111111111111111',
   label: '根节点',
 }

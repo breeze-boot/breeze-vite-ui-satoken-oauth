@@ -86,37 +86,31 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleRoleDataFormSubmit = () => {
-  roleDataFormRef.value.validate((valid: boolean) => {
+  roleDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
     const id = roleDataForm.value.id
     if (id) {
-      editRole(roleDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await editRole(roleDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     } else {
-      addRole(roleDataForm.value)
-        .then(() => {
-          ElMessage.success({
-            message: t('common.success'),
-            duration: 500,
-            onClose: () => {
-              visible.value = false
-              $emit('reloadDataList')
-            },
-          })
-        })
-        .finally(() => {})
+      await addRole(roleDataForm.value)
+      ElMessage.success({
+        message: t('common.success'),
+        duration: 500,
+        onClose: () => {
+          visible.value = false
+          $emit('reloadDataList')
+        },
+      })
     }
   })
 }

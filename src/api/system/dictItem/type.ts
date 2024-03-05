@@ -9,6 +9,7 @@ import { ResponseData } from '@/types/types.ts'
  */
 export interface DictItemRecord {
   id?: number
+  dictId?: number
   label: string
   value: string
   type: string

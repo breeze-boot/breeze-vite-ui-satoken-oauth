@@ -87,6 +87,19 @@ export function editUser(data: UserRecord): AxiosPromise<UserResponseData> {
 }
 
 /**
+ * 编辑头像
+ *
+ * @param data
+ */
+export function editAvatar(data: UserRecord): AxiosPromise<UserResponseData> {
+  return request({
+    url: `${API.USER_RESTFUL_URL}/modifyAvatar`,
+    method: 'put',
+    data: data,
+  })
+}
+
+/**
  * 删除
  *
  * @param ids

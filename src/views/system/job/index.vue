@@ -278,7 +278,6 @@ const handleTableHeaderBtnClick = (event: string, rows: any) => {
  * @param row 参数
  */
 const handleView = (row: any) => {
-  alert('查询')
   console.log(row)
 }
 
@@ -290,23 +289,29 @@ const handleAdd = () => {
 }
 
 /**
+ * 修改
+ *
+ * @param row 修改参数
+ */
+const handleUpdate = (row: any) => {
+  addOrUpdateHandle(row.id)
+}
+
+/**
  * 删除
  *
  * @param rows 行数据
  */
-const handleDelete = (rows: JobRecords) => {
+const handleDelete = async (rows: JobRecords) => {
   const jobIds = rows.map((item: any) => item.id)
-  deleteJob(jobIds)
-    .then(() => {
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {},
-      })
-    })
-    .finally(() => {
+  await deleteJob(jobIds)
+  ElMessage.success({
+    message: t('common.success'),
+    duration: 500,
+    onClose: () => {
       reloadList()
-    })
+    },
+  })
 }
 
 /**
@@ -328,15 +333,6 @@ const handleJobRunImmediately = async (row: JobRecord) => {
   if (response.code === '0000') {
     ElMessage.success(t('job.common.jobRunSuccess'))
   }
-}
-
-/**
- * 修改
- *
- * @param row 修改参数
- */
-const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
 }
 
 /**
