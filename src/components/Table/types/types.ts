@@ -93,7 +93,7 @@ export interface UploadOption {
   api?: any
   fileLimit?: number
   callback?: (row: any) => void
-  bizType?: string | number
+  bizType: string
   fileType?: string[]
   fileSize?: number
   pk?: string
@@ -123,6 +123,8 @@ export interface Columns {
  * 长文本类型
  */
 export interface TextareaOption {
+  minRows: number
+  maxRows: number
   autosize?: { minRow?: number; maxRows?: number }
   width?: string
 }

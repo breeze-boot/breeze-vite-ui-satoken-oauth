@@ -14,7 +14,7 @@ import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
 import { GET_OBJ_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
 
-const modules = import.meta.glob('@/views/**')
+const modules = import.meta.glob('@/views/**/**.vue')
 const { settings } = storeToRefs(useSettingStore(pinia))
 
 const findRouteByName = (

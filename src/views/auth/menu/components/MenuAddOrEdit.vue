@@ -79,6 +79,7 @@ const rules = ref({
  * 初始化
  *
  * @param id
+ * @param flag
  */
 const init = async (id: number, flag: DIALOG_FLAG) => {
   visible.value = true

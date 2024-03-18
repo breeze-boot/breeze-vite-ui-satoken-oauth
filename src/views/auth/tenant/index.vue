@@ -4,9 +4,9 @@
 -->
 <!-- 租户管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteTenant } from '@/api/auth/tenant'
-import AddOrUpdate from './components/TenantAddOrEdit.vue'
+import AddOrEdit from './components/TenantAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { TenantRecords } from '@/api/auth/tenant/type.ts'
 import { TenantRecord, TenantQuery } from '@/api/auth/tenant/type.ts'
@@ -21,14 +21,7 @@ defineOptions({
 
 const { t } = useI18n()
 const tenantQueryFormRef = ref(ElForm)
-const tenantAddOrUpdateRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
+const tenantAddOrEditRef = ref()
 
 /**
  * 查询条件
@@ -156,8 +149,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  tenantAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  tenantAddOrEditRef.value.init(id)
 }
 
 /**
@@ -214,7 +207,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -240,7 +233,7 @@ const handleDelete = async (rows: TenantRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -317,5 +310,5 @@ const handleSelectionChange = (rows: TenantRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="tenantAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="tenantAddOrEditRef" @reload-data-list="reloadList" />
 </template>

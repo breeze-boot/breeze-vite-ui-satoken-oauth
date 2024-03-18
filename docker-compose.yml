@@ -1,0 +1,26 @@
+version: '3'
+services:
+  breeze-nginx:
+    container_name: breeze-nginx
+    image: breeze-nginx
+    build:
+      context: .
+      dockerfile: ./nginx.dockerfile
+    ports:
+      - "443:443"
+      - "80:80"
+    expose:
+      - "443"
+      - "80"
+    volumes:
+      - ./dist:/usr/local/breeze/breeze-ui
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - breeze-boot_breeze-net
+
+networks:
+  breeze-boot_breeze-net:
+    external: true

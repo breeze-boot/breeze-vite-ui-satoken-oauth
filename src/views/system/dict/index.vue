@@ -4,9 +4,9 @@
 -->
 <!-- 字典管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, open, exportExcel, deleteDict } from '@/api/system/dict'
-import AddOrUpdate from './components/DictAddOrEdit.vue'
+import AddOrEdit from './components/DictAddOrEdit.vue'
 import DictItem from './components/DictItem.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { DictRecords } from '@/api/system/dict/type.ts'
@@ -22,15 +22,8 @@ defineOptions({
 
 const { t } = useI18n()
 const dictQueryFormRef = ref(ElForm)
-const dictAddOrUpdateRef = ref()
+const dictAddOrEditRef = ref()
 const dictItemRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
 
 /**
  * 查询条件
@@ -186,8 +179,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  dictAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  dictAddOrEditRef.value.init(id)
 }
 
 /**
@@ -247,7 +240,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -282,7 +275,7 @@ const handleDictItemViewLog = (row: DictRecord) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -358,7 +351,7 @@ const handleSelectionChange = (rows: DictRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="dictAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="dictAddOrEditRef" @reload-data-list="reloadList" />
 
   <!-- 字典项抽屉 -->
   <dict-item ref="dictItemRef" />

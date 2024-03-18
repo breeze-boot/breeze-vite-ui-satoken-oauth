@@ -34,13 +34,15 @@ request.defaults.transformResponse = [
  * 请求拦截器
  */
 request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (config.responseType === 'blob') {
+    config.transformResponse = []
+  }
+
   if (!userStore) {
     userStore = useUserStore(pinia)
   }
+  // 如果存在token，请求携带token
   const accessToken: string = userStore.accessToken
-  /**
-   * 如果存在token，请求携带token
-   */
   if (accessToken && !config.headers[StorageName.Authorization]) {
     config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
   }

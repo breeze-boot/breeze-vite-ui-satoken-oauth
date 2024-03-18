@@ -138,6 +138,8 @@ const tableInfo = reactive({
   },
   // 显示的列
   showFieldList: [] as Field[],
+  // 是否展开
+  expandAll: false,
   // 表格的值
   rows: [],
 })
@@ -202,6 +204,18 @@ const handleBtnOperate = props.handleBtn || false
  * 表格样式计算属性
  */
 const tableField = computed(() => tableInfo.showFieldList.filter((item) => item.hidden))
+
+/**
+ * 表格展开
+ */
+const expandAll = computed({
+  get: () => {
+    return tableInfo.expandAll
+  },
+  set: (value) => {
+    tableInfo.expandAll = value
+  },
+})
 
 /**
  * 表格样式计算属性
@@ -524,6 +538,13 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             v-has="item.permission"
             @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
           />
+          <svg-button
+            icon="expend"
+            type="success"
+            :circle="false"
+            label="全部展开"
+            @svg-btn-click="() => (expandAll = !expandAll)"
+          />
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
@@ -548,6 +569,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         :height="tableHeight"
         v-loading="tableInfo.loading"
         border
+        :default-expand-all="expandAll"
         stripe
         :key="Math.random()"
         row-key="id"

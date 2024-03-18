@@ -4,9 +4,9 @@
 -->
 <!-- 部门管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { list, exportExcel, deleteDept } from '@/api/auth/dept'
-import AddOrUpdate from './components/DeptAddOrEdit.vue'
+import AddOrEdit from './components/DeptAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { DeptRecords } from '@/api/auth/dept/type.ts'
 import { DeptRecord, DeptQuery } from '@/api/auth/dept/type.ts'
@@ -23,14 +23,7 @@ defineOptions({
 
 const { t } = useI18n()
 const deptQueryFormRef = ref(ElForm)
-const deptAddOrUpdateRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
+const deptAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<DeptQuery>({
@@ -155,8 +148,8 @@ const handleQuery = () => {
  * @param id   主键
  * @param flag 标识
  */
-const addOrUpdateHandle = (id?: number, flag?: DIALOG_FLAG) => {
-  deptAddOrUpdateRef.value.init(id, flag)
+const AddOrEditHandle = (id?: number, flag?: DIALOG_FLAG) => {
+  deptAddOrEditRef.value.init(id, flag)
 }
 
 /**
@@ -212,7 +205,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
-  addOrUpdateHandle(id, flag)
+  AddOrEditHandle(id, flag)
 }
 
 /**
@@ -237,7 +230,7 @@ const handleDelete = async (row: DeptRecord) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -314,5 +307,5 @@ const handleSelectionChange = (rows: DeptRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="deptAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="deptAddOrUpdateRef" @reload-data-list="reloadList" />
 </template>

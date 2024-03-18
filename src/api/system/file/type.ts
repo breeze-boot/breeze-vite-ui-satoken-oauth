@@ -8,9 +8,8 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  * 文件列表类型声明
  */
 export interface FileRecord {
-  id?: number | undefined
-  title: string
-  fileName: string
+  id?: number
+  name: string
   fileFormat: string
   contentType: string
   bucket: string

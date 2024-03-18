@@ -193,7 +193,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'fileUpload' && tableField.upload">
     <file-upload-button
       :file-limit="tableField.upload?.fileLimit"
-      :biz-type="tableField.upload?.bizType"
+      :biz-type="tableField.upload.bizType"
       :file-size="tableField.upload?.fileSize"
       :file-type="tableField.upload?.fileType"
       v-model="scope.row[tableField.type]"

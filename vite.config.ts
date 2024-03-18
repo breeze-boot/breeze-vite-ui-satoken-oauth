@@ -4,6 +4,8 @@ import AutoImport from 'unplugin-auto-import/vite'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import path from 'path'
+import viteCompression from 'vite-plugin-compression'
+
 // SVG
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
@@ -114,10 +116,15 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         'moment',
         'js-cookie',
         'json-bigint',
+        'file-saver',
+        'vuedraggable',
       ],
     },
     // 代理跨域
     server: {
+      host: '0.0.0.0', // 服务器地址
+      port: Number(env.VITE_APP_BASE_PORT), // 服务器端口号
+      open: true, // 运行是否自动打开浏览器
       proxy: {
         [env.VITE_APP_BASE_API]: {
           target: env.VITE_APP_BASE_SERVER,
@@ -131,6 +138,45 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
             const proxyURL = options.target + options.rewrite(req.url)
             console.log('proxyURL', proxyURL)
             res.setHeader('x-req-proxyURL', proxyURL) // 设置响应头可以看到
+          },
+        },
+      },
+    },
+    build: {
+      outDir: 'dist', // 打包输出目录
+      chunkSizeWarningLimit: 2000, // 代码分包阈值
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+        format: {
+          comments: false, // 删除注释
+        },
+      },
+      sourcemap: false, //生产环境一定要关闭，不然打包的产物会很大
+      rollupOptions: {
+        plugins: [
+          // build.rollupOptions.plugins[]
+          viteCompression({
+            verbose: true, // 是否在控制台中输出压缩结果
+            disable: false,
+            threshold: 2000, // 如果体积大于阈值，将被压缩，单位为b，体积过小时请不要压缩，以免适得其反
+            algorithm: 'gzip', // 压缩算法，可选['gzip'，' brotliccompress '，'deflate '，'deflateRaw']
+            ext: '.gz',
+            deleteOriginFile: true, // 源文件压缩后是否删除
+          }),
+        ],
+        output: {
+          chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
+          entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
+          assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
+          manualChunks(id: string) {
+            if (id.includes('node_modules')) {
+              // 让每个插件都打包成独立的文件
+              return 'vendor'
+            }
           },
         },
       },

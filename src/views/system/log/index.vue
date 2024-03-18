@@ -4,7 +4,7 @@
 -->
 <!-- 日志管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, deleteLog } from '@/api/system/log'
 import { ElForm, ElMessage } from 'element-plus'
 import type { LogRecords } from '@/api/system/log/type.ts'
@@ -22,13 +22,6 @@ defineOptions({
 const { t } = useI18n()
 const logQueryFormRef = ref(ElForm)
 const { RESULT, LOG_TYPE, DO_TYPE } = useDict('RESULT', 'LOG_TYPE', 'DO_TYPE')
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
 
 /**
  * 查询条件

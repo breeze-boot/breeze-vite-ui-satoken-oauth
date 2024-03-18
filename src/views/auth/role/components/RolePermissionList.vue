@@ -19,7 +19,7 @@ defineOptions({
 
 const filterText = ref('')
 const treeSetting = reactive({
-  defaultExpandAll: true,
+  expandAll: true,
   checkStrictly: false,
 })
 
@@ -129,38 +129,60 @@ defineExpose({
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
-    <el-row>
-      <el-col :span="10">
-        <el-input v-model="filterText" style="margin: 10px 0; width: 240px" placeholder="Filter keyword" />
-      </el-col>
-      <el-col :span="14">
-        <el-button
-          :type="treeSetting.checkStrictly ? 'primary' : 'default'"
-          style="margin: 10px 5px"
-          @click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
-        >
-          级联勾选
-        </el-button>
-      </el-col>
-    </el-row>
-
-    <el-tree
-      ref="rolePermissionTreeRef"
-      class="filter-tree"
-      style="max-width: 600px"
-      node-key="id"
-      show-checkbox
-      :check-strictly="treeSetting.checkStrictly"
-      :default-expand-all="treeSetting.defaultExpandAll"
-      highlight-current
-      :data="roleTreeData"
-      :props="defaultProps"
-      empty-text="无数据"
-      :filter-node-method="filterNode"
-    />
+    <div class="tree-filter-container">
+      <div class="input-line">
+        <el-input v-model="filterText" placeholder="Filter keyword" />
+      </div>
+      <div>
+        <svg-button
+          icon="strictly"
+          type="default"
+          :style="{ margin: '10px 5px' }"
+          :circle="false"
+          label="级联勾选"
+          @svg-btn-click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
+        />
+      </div>
+    </div>
+    <el-container class="tree-filter-container tree-container">
+      <el-tree
+        ref="rolePermissionTreeRef"
+        class="filter-tree"
+        style="max-width: 600px"
+        node-key="id"
+        show-checkbox
+        :check-strictly="treeSetting.checkStrictly"
+        :default-expand-all="treeSetting.expandAll"
+        highlight-current
+        :data="roleTreeData"
+        :props="defaultProps"
+        empty-text="无数据"
+        :filter-node-method="filterNode"
+      />
+    </el-container>
     <template #footer>
       <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
       <el-button type="primary" @click="handleRoleDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>
+
+<style scoped>
+.tree-filter-container {
+  width: 600px;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 auto;
+
+  .input-line {
+    width: 240px;
+    margin: 10px 0;
+  }
+}
+
+.tree-container {
+  margin: 0 auto;
+  height: 500px;
+  overflow-y: scroll;
+}
+</style>

@@ -12,9 +12,10 @@ let $route = useRoute()
 const useStore = useUserStore()
 
 onMounted(() => {
-  const accessToken = $route.query.accessToken
-  if (accessToken) {
-    useStore.accessToken = accessToken
+  const accessToken = $route.query.accessToken as string
+  const refreshToken = $route.query.refreshToken as string
+  if (accessToken && refreshToken) {
+    useStore.storeLoginInfo(accessToken, refreshToken)
     router.push('Layout')
   }
 })

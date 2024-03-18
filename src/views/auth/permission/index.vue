@@ -4,9 +4,9 @@
 -->
 <!-- 权限管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, exportExcel, deletePermission } from '@/api/auth/permission'
-import AddOrUpdate from './components/PermissionAddOrEdit.vue'
+import AddOrEdit from './components/PermissionAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { PermissionRecords } from '@/api/auth/permission/type.ts'
 import { PermissionRecord, PermissionQuery } from '@/api/auth/permission/type.ts'
@@ -21,14 +21,7 @@ defineOptions({
 
 const { t } = useI18n()
 const permissionQueryFormRef = ref(ElForm)
-const permissionAddOrUpdateRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
+const permissionAddOrEditRef = ref()
 
 /**
  * 查询条件
@@ -170,8 +163,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  permissionAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  permissionAddOrEditRef.value.init(id)
 }
 
 /**
@@ -228,7 +221,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -254,7 +247,7 @@ const handleDelete = async (rows: PermissionRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -331,5 +324,5 @@ const handleSelectionChange = (rows: PermissionRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="permissionAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="permissionAddOrEditRef" @reload-data-list="reloadList" />
 </template>

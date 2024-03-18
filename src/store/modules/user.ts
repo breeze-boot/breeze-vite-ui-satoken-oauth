@@ -109,6 +109,13 @@ const useUserStore = defineStore('User', {
       this.excludeColumn = [] as string[]
       CLEAR_STORAGE()
     },
+    /**
+     * 保存登录信息
+     */
+    storeLoginInfo(refreshToken: string, accessToken: string) {
+      this.accessToken = accessToken
+      this.refreshToken = refreshToken
+    },
   },
   getters: {
     /**

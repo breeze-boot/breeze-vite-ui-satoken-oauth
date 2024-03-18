@@ -6,8 +6,8 @@
 import useSettingStore from '@/store/modules/setting'
 import { useI18n } from 'vue-i18n'
 
-let settingStore = useSettingStore()
 const { locale } = useI18n()
+let settingStore = useSettingStore()
 
 /**
  * 全局国际化设置
@@ -17,6 +17,7 @@ const { locale } = useI18n()
 const changeI18nSetting = (language: string) => {
   locale.value = language
   settingStore.setLanguage(language)
+  settingStore.refresh = !settingStore.refresh
 }
 </script>
 

@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
 import { page, open, exportExcel, deleteUser, editAvatar } from '@/api/auth/user'
-import AddOrUpdate from './components/UserAddOrEdit.vue'
+import AddOrEdit from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
 import { UserRecord, UserQuery } from '@/api/auth/user/type.ts'
@@ -26,17 +26,10 @@ defineOptions({
 
 const { t } = useI18n()
 const userQueryFormRef = ref(ElForm)
-const userAddOrUpdateRef = ref()
+const userAddOrEditRef = ref()
 const roleSettingsRef = ref()
 const restPasswordRef = ref()
 const { IS_LOCK } = useDict('IS_LOCK')
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
 
 /**
  * 查询条件
@@ -302,8 +295,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  userAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  userAddOrEditRef.value.init(id)
 }
 
 /**
@@ -384,7 +377,7 @@ const handleUserRoleSettings = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -458,7 +451,7 @@ const handleDelete = async (rows: UserRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -547,7 +540,7 @@ const handleSelectionChange = (rows: UserRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="userAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="userAddOrEditRef" @reload-data-list="reloadList" />
 
   <!-- 角色设置 抽屉 -->
   <user-role-settings ref="roleSettingsRef" />

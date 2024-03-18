@@ -4,9 +4,9 @@
 -->
 <!-- 角色管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteRole } from '@/api/auth/role'
-import AddOrUpdate from './components/RoleAddOrEdit.vue'
+import AddOrEdit from './components/RoleAddOrEdit.vue'
 import MenuPermissionList from './components/RolePermissionList.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { RoleRecords } from '@/api/auth/role/type.ts'
@@ -22,15 +22,8 @@ defineOptions({
 
 const { t } = useI18n()
 const roleQueryFormRef = ref(ElForm)
-const roleAddOrUpdateRef = ref()
+const roleAddOrEditRef = ref()
 const rolePermissionListRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
 
 /**
  * 查询条件
@@ -166,8 +159,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  roleAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  roleAddOrEditRef.value.init(id)
 }
 
 /**
@@ -245,7 +238,7 @@ const handleRolePermission = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -271,7 +264,7 @@ const handleDelete = async (rows: RoleRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -348,7 +341,7 @@ const handleSelectionChange = (rows: RoleRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="roleAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="roleAddOrEditRef" @reload-data-list="reloadList" />
 
   <!-- 菜单权限 Dialog -->
   <menu-permission-list ref="rolePermissionListRef" @reload-data-list="reloadList" />

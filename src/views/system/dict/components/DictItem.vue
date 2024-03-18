@@ -11,7 +11,7 @@ import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { DictItemQuery, DictItemRecords } from '@/api/system/dictItem/type.ts'
 import { ElMessage } from 'element-plus'
-import AddOrUpdate from '@/views/system/dict/components/DictItemAddOrEdit.vue'
+import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
 
 defineOptions({
   name: 'DictItem',
@@ -22,7 +22,7 @@ const direction = ref('rtl')
 const { t } = useI18n()
 const visible = ref(false)
 const dictItemTableRef = ref()
-const dictItemAddOrUpdateRef = ref()
+const dictItemAddOrEditRef = ref()
 
 let currentRows = reactive<DictItemRecords>([])
 
@@ -181,7 +181,7 @@ const reloadList = () => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle(queryParams.dictId)
+  AddOrEditHandle(queryParams.dictId)
 }
 
 /**
@@ -190,7 +190,7 @@ const handleAdd = () => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -224,8 +224,8 @@ const handleSelectionChange = (rows: DictItemRecords) => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  dictItemAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  dictItemAddOrEditRef.value.init(id)
 }
 
 defineExpose({
@@ -266,5 +266,5 @@ defineExpose({
   </el-drawer>
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="dictItemAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="dictItemAddOrEditRef" @reload-data-list="reloadList" />
 </template>

@@ -5,14 +5,17 @@
 <!-- 文件管理 -->
 <script setup lang="ts">
 import { page, exportExcel, deleteFile } from '@/api/system/file'
-import { reactive, ref, onMounted } from 'vue'
-import AddOrUpdate from './components/FileAddOrEdit.vue'
+import { reactive, ref } from 'vue'
+import AddOrEdit from './components/FileAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { FileRecords } from '@/api/system/file/type.ts'
 import { FileRecord, FileQuery } from '@/api/system/file/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { download } from '@/api/common/comon.ts'
+import JSONBigInt from 'json-bigint'
+import { saveFile } from '@/utils/download.ts'
 
 defineOptions({
   name: 'File',
@@ -21,7 +24,7 @@ defineOptions({
 
 const { t } = useI18n()
 const fileQueryFormRef = ref(ElForm)
-const fileAddOrUpdateRef = ref()
+const fileAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<FileQuery>({
@@ -164,13 +167,6 @@ const tableInfo = reactive<TableInfo>({
 })
 
 /**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
-
-/**
  * 刷新表格
  */
 const reloadList = () => {
@@ -197,8 +193,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  fileAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  fileAddOrEditRef.value.init(id)
 }
 
 /**
@@ -214,6 +210,9 @@ const handleTableRowBtnClick = (event: any, row: any) => {
       break
     case 'view':
       handleView(row)
+      break
+    case 'download':
+      handleDownload(row)
       break
     case 'delete':
       handleDelete([row])
@@ -252,10 +251,21 @@ const handleView = (row: FileRecord) => {
 }
 
 /**
+ * 下载
+ *
+ * @param row 参数
+ */
+const handleDownload = (row: FileRecord) => {
+  download(JSONBigInt.parse(row.id || 0)).then((response: any) => {
+    saveFile(response.data, row.name)
+  })
+}
+
+/**
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -281,7 +291,7 @@ const handleDelete = async (rows: FileRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -346,5 +356,5 @@ const handleSelectionChange = (rows: FileRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="fileAddOrUpdateRef" @reload-data-list="reloadList">确定</add-or-update>
+  <add-or-edit ref="fileAddOrEditRef" @reload-data-list="reloadList" />
 </template>

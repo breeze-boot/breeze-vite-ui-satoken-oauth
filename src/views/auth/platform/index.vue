@@ -4,9 +4,9 @@
 -->
 <!-- 平台管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, exportExcel, deletePlatform } from '@/api/auth/platform'
-import AddOrUpdate from './components/PlatformAddOrEdit.vue'
+import AddOrEdit from './components/PlatformAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { PlatformRecords } from '@/api/auth/platform/type.ts'
 import type { PlatformRecord, PlatformQuery } from '@/api/auth/platform/type.ts'
@@ -21,13 +21,7 @@ defineOptions({
 
 const { t } = useI18n()
 const platformQueryFormRef = ref(ElForm)
-const platformAddOrUpdateRef = ref()
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
+const platformAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<PlatformQuery>({
@@ -158,8 +152,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  platformAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  platformAddOrEditRef.value.init(id)
 }
 
 /**
@@ -216,7 +210,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -242,7 +236,7 @@ const handleDelete = async (rows: PlatformRecords) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -319,5 +313,5 @@ const handleSelectionChange = (rows: PlatformRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="platformAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="platformAddOrEditRef" @reload-data-list="reloadList" />
 </template>

@@ -10,8 +10,9 @@ defineOptions({
   inheritAttrs: false,
 })
 
+const $emit = defineEmits(['update:modelValue'])
 const props = defineProps({
-  icon: {
+  modelValue: {
     type: String,
     default: '',
   },
@@ -20,11 +21,17 @@ const props = defineProps({
     default: '',
   },
 })
-const $emit = defineEmits(['update:modelValue'])
-let allIcon = ref<any>([])
+// 原始容器
+let allIcon = ref<string[]>([])
+// 临时容器存储查询到的icon
+let tempAllIcon = ref<string[]>([])
+
+/**
+ * 保持单向数据流
+ */
 const icon = computed({
   get: () => {
-    return props.icon
+    return props.modelValue
   },
   set: (value) => {
     $emit('update:modelValue', value)
@@ -41,8 +48,17 @@ onMounted(() => {
 /**
  * icon 加载
  */
-const handleCheckIcon = (_icon: string) => {
-  icon.value = _icon
+const handleCheckIcon = (value: string) => {
+  icon.value = value
+}
+
+const filterText = ref('')
+
+/**
+ * icon 查询
+ */
+const handleSearchIcon = (value: string) => {
+  tempAllIcon.value = allIcon.value.filter((item: string) => !item.indexOf(value))
 }
 
 /**
@@ -54,6 +70,7 @@ const initLoadIcons = () => {
     const iconName = icon.replace('../../assets/icons/', '').replace('.svg', '')
     allIcon.value.push(iconName)
   }
+  tempAllIcon.value = allIcon.value
 }
 </script>
 
@@ -67,8 +84,11 @@ const initLoadIcons = () => {
       </el-input>
     </template>
     <div class="icon-box">
+      <div class="input-line">
+        <el-input @input="handleSearchIcon" v-model="filterText" placeholder="Filter keyword" />
+      </div>
       <ul class="icon-list">
-        <li class="icon-item" v-for="(icon, index) in allIcon" :key="index" @click="handleCheckIcon(icon)">
+        <li class="icon-item" v-for="(icon, index) in tempAllIcon" :key="index" @click="handleCheckIcon(icon)">
           <span class="svg-icon" @click="handleCheckIcon(icon)">
             <svg-icon :name="`${icon}`" height="1.2rem" width="1.2rem" />
           </span>
@@ -85,6 +105,12 @@ const initLoadIcons = () => {
 .icon-box {
   height: 350px;
   overflow-y: scroll;
+
+  .input-line {
+    text-align: center;
+    width: 94%;
+    margin: 8px;
+  }
 
   .icon-list {
     display: flex;

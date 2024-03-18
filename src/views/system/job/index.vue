@@ -4,9 +4,9 @@
 -->
 <!-- 任务管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteJob, runJobNow, open } from '@/api/system/job'
-import AddOrUpdate from './components/JobAddOrEdit.vue'
+import AddOrEdit from './components/JobAddOrEdit.vue'
 import JLog from './components/JLog.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { JobRecords } from '@/api/system/job/type.ts'
@@ -24,16 +24,9 @@ defineOptions({
 
 const { t } = useI18n()
 const jobQueryFormRef = ref(ElForm)
-const jobAddOrUpdateRef = ref()
+const jobAddOrEditRef = ref()
 const jLogRef = ref()
 const { JOB_STATUS } = useDict('JOB_STATUS')
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
 
 /**
  * 查询条件
@@ -221,8 +214,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const addOrUpdateHandle = (id?: number) => {
-  jobAddOrUpdateRef.value.init(id)
+const AddOrEditHandle = (id?: number) => {
+  jobAddOrEditRef.value.init(id)
 }
 
 /**
@@ -285,7 +278,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  addOrUpdateHandle()
+  AddOrEditHandle()
 }
 
 /**
@@ -294,7 +287,7 @@ const handleAdd = () => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id)
+  AddOrEditHandle(row.id)
 }
 
 /**
@@ -411,7 +404,7 @@ const handleSelectionChange = (rows: JobRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="jobAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="jobAddOrEditRef" @reload-data-list="reloadList" />
 
   <!-- 任务日志抽屉 -->
   <j-log ref="jLogRef" />

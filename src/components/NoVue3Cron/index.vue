@@ -237,7 +237,7 @@
             {{ state.text.Month.name }}
           </span>
         </template>
-        <div class="tabBody myScroller" :style="{ 'max-height': maxHeight }">
+        <div class="tabBody myScroller" :style="{ maxHeight: maxHeight }">
           <el-row>
             <el-radio v-model="state.month.cronEvery" value="1">{{ state.text.Month.every }}</el-radio>
           </el-row>
@@ -319,20 +319,26 @@
     </div>
   </div>
 </template>
-<script>
-import Language from './language/index.js'
+<script lang="ts">
+import Language from './language/index.ts'
 import { watch, reactive, computed, toRefs, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'noVue3Cron',
   props: {
-    cronValue: String,
-    i18n: {},
-    maxHeight: {},
+    cronValue: {
+      type: String,
+    },
+    i18n: {
+      type: String,
+    },
+    maxHeight: {
+      type: String,
+    },
   },
   setup(props, { emit }) {
     const { i18n } = toRefs(props)
-    const state = reactive({
+    const state: any = reactive({
       language: i18n.value,
       second: {
         cronEvery: '1',
@@ -402,7 +408,9 @@ export default defineComponent({
         Week: '',
         year: '',
       },
-      text: computed(() => Language[state.language || 'cn']),
+      text: computed(() => {
+        return (Language as any)[state.language]
+      }),
       secondsText: computed(() => {
         let seconds = ''
         let cronEvery = state.second.cronEvery
@@ -414,7 +422,7 @@ export default defineComponent({
             seconds = state.second.incrementStart + '/' + state.second.incrementIncrement
             break
           case '3':
-            state.second.specificSpecific.map((val) => {
+            state.second.specificSpecific.map((val: any) => {
               seconds += val + ','
             })
             seconds = seconds.slice(0, -1)
@@ -436,7 +444,7 @@ export default defineComponent({
             minutes = state.minute.incrementStart + '/' + state.minute.incrementIncrement
             break
           case '3':
-            state.minute.specificSpecific.map((val) => {
+            state.minute.specificSpecific.map((val: any) => {
               minutes += val + ','
             })
             minutes = minutes.slice(0, -1)
@@ -458,7 +466,7 @@ export default defineComponent({
             hours = state.hour.incrementStart + '/' + state.hour.incrementIncrement
             break
           case '3':
-            state.hour.specificSpecific.map((val) => {
+            state.hour.specificSpecific.map((val: any) => {
               hours += val + ','
             })
             hours = hours.slice(0, -1)
@@ -485,7 +493,7 @@ export default defineComponent({
             days = state.day.incrementStart + '/' + state.day.incrementIncrement
             break
           case '5':
-            state.day.specificSpecific.map((val) => {
+            state.day.specificSpecific.map((val: any) => {
               days += val + ','
             })
             days = days.slice(0, -1)
@@ -518,7 +526,7 @@ export default defineComponent({
             weeks = state.week.incrementStart + '/' + state.week.incrementIncrement
             break
           case '4':
-            state.week.specificSpecific.map((val) => {
+            state.week.specificSpecific.map((val: any) => {
               weeks += val + ','
             })
             weeks = weeks.slice(0, -1)
@@ -549,7 +557,7 @@ export default defineComponent({
             months = state.month.incrementStart + '/' + state.month.incrementIncrement
             break
           case '3':
-            state.month.specificSpecific.map((val) => {
+            state.month.specificSpecific.map((val: any) => {
               months += val + ','
             })
             months = months.slice(0, -1)
@@ -571,7 +579,7 @@ export default defineComponent({
             years = state.year.incrementStart + '/' + state.year.incrementIncrement
             break
           case '3':
-            state.year.specificSpecific.map((val) => {
+            state.year.specificSpecific.map((val: any) => {
               years += val + ','
             })
             years = years.slice(0, -1)
@@ -602,7 +610,7 @@ export default defineComponent({
           let secondsTexts = secondsText.split('/')
           state.second.incrementStart = parseInt(secondsTexts[0])
           state.second.incrementIncrement = parseInt(secondsTexts[1])
-        } else if (secondsText?.includes(',') || isFinite(secondsText)) {
+        } else if (secondsText?.includes(',') || isFinite(secondsText as any)) {
           state.second.cronEvery = '3'
           state.second.specificSpecific = secondsText.split(',').map((item) => parseInt(item))
         } else if (secondsText?.includes('-')) {
@@ -620,9 +628,9 @@ export default defineComponent({
           let minutesTexts = minutesText.split('/')
           state.minute.incrementStart = parseInt(minutesTexts[0])
           state.minute.incrementIncrement = parseInt(minutesTexts[1])
-        } else if (minutesText?.includes(',') || isFinite(minutesText)) {
+        } else if (minutesText?.includes(',') || isFinite(minutesText as any)) {
           state.minute.cronEvery = '3'
-          state.minute.specificSpecific = minutesText.split(',').map((item) => parseInt(item))
+          state.minute.specificSpecific = minutesText.split(',').map((item: any) => parseInt(item))
         } else if (minutesText?.includes('-')) {
           state.minute.cronEvery = '4'
           let minutesTexts = minutesText.split('-')
@@ -638,7 +646,7 @@ export default defineComponent({
           let hoursTexts = hoursText.split('/')
           state.hour.incrementStart = parseInt(hoursTexts[0])
           state.hour.incrementIncrement = parseInt(hoursTexts[1])
-        } else if (hoursText?.includes(',') || isFinite(hoursText)) {
+        } else if (hoursText?.includes(',') || isFinite(hoursText as any)) {
           state.hour.cronEvery = '3'
           state.hour.specificSpecific = hoursText.split(',').map((item) => parseInt(item))
         } else if (hoursText?.includes('-')) {
@@ -655,7 +663,7 @@ export default defineComponent({
           let daysTexts = daysText.split('/')
           state.day.incrementStart = parseInt(daysTexts[0])
           state.day.incrementIncrement = parseInt(daysTexts[1])
-        } else if (daysText?.includes(',') || isFinite(daysText)) {
+        } else if (daysText?.includes(',') || isFinite(daysText as any)) {
           state.day.cronEvery = '5'
           state.day.specificSpecific = daysText.split(',').map((item) => parseInt(item))
         } else if (daysText === 'L') {
@@ -674,7 +682,7 @@ export default defineComponent({
             let weeksTexts = weeksText.split('/')
             state.week.incrementStart = parseInt(weeksTexts[0])
             state.week.incrementIncrement = parseInt(weeksTexts[1])
-          } else if (weeksText?.includes(',') || isFinite(weeksText)) {
+          } else if (weeksText?.includes(',') || isFinite(weeksText as any)) {
             state.day.cronEvery = '4'
             state.week.specificSpecific = weeksText.split(',').map((item) => item)
           } else if (weeksText?.includes('#')) {
@@ -699,7 +707,7 @@ export default defineComponent({
           let monthsTexts = monthsText.split('/')
           state.month.incrementStart = parseInt(monthsTexts[0])
           state.month.incrementIncrement = parseInt(monthsTexts[1])
-        } else if (monthsText?.includes(',') || isFinite(monthsText)) {
+        } else if (monthsText?.includes(',') || isFinite(monthsText as any)) {
           state.month.cronEvery = '3'
           state.month.specificSpecific = monthsText.split(',').map((item) => parseInt(item))
         } else if (monthsText?.includes('-')) {
@@ -717,7 +725,7 @@ export default defineComponent({
           let yearsTexts = yearsText.split('/')
           state.year.incrementStart = parseInt(yearsTexts[0])
           state.year.incrementIncrement = parseInt(yearsTexts[1])
-        } else if (yearsText?.includes(',') || isFinite(yearsText)) {
+        } else if (yearsText?.includes(',') || isFinite(yearsText as any)) {
           state.year.cronEvery = '3'
           state.year.specificSpecific = yearsText.split(',').map((item) => parseInt(item))
         } else if (yearsText?.includes('-')) {
@@ -741,10 +749,10 @@ export default defineComponent({
       emit('change', state.cron)
       close()
     }
-    const rest = (data) => {
+    const rest = (data: any) => {
       for (let i in data) {
         if (data[i] instanceof Object) {
-          this.rest(data[i])
+          rest(data[i])
         } else {
           switch (typeof data[i]) {
             case 'object':

@@ -45,11 +45,11 @@ const cron = computed({
 /**
  * 切换事件
  *
- * @param val
+ * @param value
  */
-const changeCron = (val: any) => {
-  if (typeof val !== 'string') return false
-  cron.value = val
+const changeCron = (value: any) => {
+  if (typeof value !== 'string') return false
+  cron.value = value
   cronPopover.value = false
 }
 </script>

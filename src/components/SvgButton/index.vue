@@ -49,6 +49,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  //按钮样式
+  style: {
+    type: Object,
+    default: () => {},
+  },
 })
 
 const $emit = defineEmits(['svg-btn-click'])
@@ -63,6 +68,7 @@ const handleChick = () => {
     @click="handleChick"
     :circle="props.circle"
     :link="props.link"
+    :style="props.style"
     :type="props.type"
   >
     <svg-icon :name="props.icon" :width="props.width" :height="props.height" />

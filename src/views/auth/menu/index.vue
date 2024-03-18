@@ -4,9 +4,9 @@
 -->
 <!-- 菜单管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { list, exportExcel, deleteMenu } from '@/api/auth/menu'
-import AddOrUpdate from './components/MenuAddOrEdit.vue'
+import AddOrEdit from './components/MenuAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { MenuRecords } from '@/api/auth/menu/type.ts'
 import { MenuRecord, MenuQuery } from '@/api/auth/menu/type.ts'
@@ -23,14 +23,7 @@ defineOptions({
 
 const { t } = useI18n()
 const menuQueryFormRef = ref(ElForm)
-const menuAddOrUpdateRef = ref()
-
-/**
- * 初始化
- */
-onMounted(() => {
-  reloadList()
-})
+const menuAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<MenuQuery>({
@@ -192,8 +185,8 @@ const handleQuery = () => {
  * @param id     主键
  * @param flag   标识
  */
-const addOrUpdateHandle = (id?: number, flag?: DIALOG_FLAG) => {
-  menuAddOrUpdateRef.value.init(id, flag)
+const AddOrEditHandle = (id?: number, flag?: DIALOG_FLAG) => {
+  menuAddOrEditRef.value.init(id, flag)
 }
 
 /**
@@ -249,7 +242,7 @@ const handleView = (row: any) => {
  * 添加
  */
 const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
-  addOrUpdateHandle(id, flag)
+  AddOrEditHandle(id, flag)
 }
 
 /**
@@ -274,7 +267,7 @@ const handleDelete = async (row: MenuRecord) => {
  * @param row 修改参数
  */
 const handleUpdate = (row: any) => {
-  addOrUpdateHandle(row.id, DIALOG_FLAG.EDIT)
+  AddOrEditHandle(row.id, DIALOG_FLAG.EDIT)
 }
 
 /**
@@ -351,5 +344,5 @@ const handleSelectionChange = (rows: MenuRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-update ref="menuAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="menuAddOrEditRef" @reload-data-list="reloadList" />
 </template>
