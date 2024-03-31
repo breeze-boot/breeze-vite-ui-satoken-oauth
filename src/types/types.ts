@@ -226,9 +226,16 @@ export interface Tab {
   query?: object
   params?: object
   keepAlive: boolean
+  hidden: boolean
 }
 
 /**
  * Tab数组类型
  */
 export type Tabs = Tab[]
+
+export interface Option {
+  key: string | number
+  label: string
+  initial: string
+}

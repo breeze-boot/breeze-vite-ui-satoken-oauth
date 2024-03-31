@@ -59,14 +59,13 @@ export interface HandleBtn {
 export interface Field {
   key?: number
   disabled?: boolean
-  type?: string | 'tag' | 'link' | 'image' | 'customLink' | 'switch' | 'input' | 'upload' | 'file'
+  type?: string | 'tag' | 'customRowLink' | 'rowLink' | 'image' | 'switch' | 'input' | 'upload' | 'file'
   prop: string
   label: string
   switch?: SwitchOption
   input?: InputOption
   upload?: UploadOption
   textarea?: TextareaOption
-  linkName?: string
   dict?: string
   showOverflowTooltip?: boolean
   hidden?: boolean
@@ -164,13 +163,21 @@ export interface TagOption {
 }
 
 /**
- * 链接字段属性类型
+ * 字段行内跳转字段属性类型
  */
 export interface LinkInfo {
-  routeName: string
-  pkName?: string
+  // 路由路径
+  routePath?: string
+  // url地址
+  linkUrlProp?: string
+  // 路由参数，行项目获取
   rowParam?: string[]
-  query: Query
+  // 路由参数
+  query?: Query
+  // 自定义显示的内容，从行项目获取
+  dyColumnName?: string
+  // 自定义显示的内容
+  fixColumnName?: string
 }
 
 /**

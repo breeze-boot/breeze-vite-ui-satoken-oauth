@@ -20,6 +20,7 @@ enum API {
   SELECT_DEPT_URL = '/common/selectDept',
   SELECT_POST_URL = '/common/selectPost',
   SELECT_ROLE_URL = '/common/selectRole',
+  SELECT_USER_LIST_URL = '/common/listUser',
 }
 
 /**
@@ -195,5 +196,20 @@ export function userSetRole(data: UserSetRoleParam): AxiosPromise<any> {
     url: `${API.USER_RESTFUL_URL}/setRole`,
     method: 'put',
     data,
+  })
+}
+
+/**
+ * 用户列表
+ *
+ * @param deptId
+ */
+export function listUser(deptId?: number): AxiosPromise<any> {
+  return request({
+    url: `${API.SELECT_USER_LIST_URL}`,
+    method: 'get',
+    params: {
+      deptId,
+    },
   })
 }

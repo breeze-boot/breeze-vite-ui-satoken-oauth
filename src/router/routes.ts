@@ -14,16 +14,6 @@ export const loginRoutes = [
   },
 ]
 
-export const anyRoute = {
-  path: '/:pathMatch(.*)*',
-  name: 'Any',
-  redirect: '/404',
-  meta: {
-    title: '任意路由',
-    hidden: true,
-  },
-}
-
 export const constantChildRoutes = [
   {
     path: '/home',
@@ -60,6 +50,15 @@ export const constantChildRoutes = [
       href: 0,
     },
   },
+  // {
+  //   path: '/:pathMatch(.*)*',
+  //   name: 'Any',
+  //   redirect: '/404',
+  //   meta: {
+  //     title: '任意路由',
+  //     hidden: true,
+  //   },
+  // },
 ]
 
 export const constantRoutes = [

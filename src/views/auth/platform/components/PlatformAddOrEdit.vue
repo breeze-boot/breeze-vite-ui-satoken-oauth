@@ -136,13 +136,13 @@ defineExpose({
       @keyup.enter="handleDataFormSubmit()"
       label-width="120px"
     >
-      <el-form-item label-width="100px" :label="t('platform.fields.platformName')" prop="platformName">
+      <el-form-item label-width="110px" :label="t('platform.fields.platformName')" prop="platformName">
         <el-input v-model="platformDataForm.platformName" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="100px" :label="t('platform.fields.platformCode')" prop="platformCode">
+      <el-form-item label-width="110px" :label="t('platform.fields.platformCode')" prop="platformCode">
         <el-input v-model="platformDataForm.platformCode" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="100px" :label="t('platform.fields.description')" prop="description">
+      <el-form-item label-width="110px" :label="t('platform.fields.description')" prop="description">
         <el-input v-model="platformDataForm.description" autocomplete="off" clearable type="textarea" />
       </el-form-item>
     </el-form>

@@ -1,5 +1,9 @@
 export default {
   user: {
+    common: {
+      resetPassword: 'reset password',
+      roleSettings: 'role settings',
+    },
     fields: {
       avatar: 'avatar',
       file: 'file',
@@ -25,10 +29,7 @@ export default {
       email: 'email',
       isLock: 'is lock',
     },
-    common: {
-      resetPassword: 'reset password',
-      roleSettings: 'role settings',
-    },
+
     rules: {
       userCode: 'Please enter your user code',
       username: 'Please enter your user name',

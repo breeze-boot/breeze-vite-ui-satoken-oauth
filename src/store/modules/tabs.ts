@@ -16,6 +16,7 @@ const constantTab: Tab = {
   query: {},
   params: {},
   keepAlive: false,
+  hidden: false,
 }
 
 const useTabsStore = defineStore('Tabs', {
@@ -27,29 +28,36 @@ const useTabsStore = defineStore('Tabs', {
       currentTabName: constantTab.name,
       currentTab: constantTab,
       tabs: [constantTab],
+      cacheTabs: [],
     }
   },
   actions: {
     /**
      * 设置选项卡
      *
-     * @param tab
+     * @param route
      */
-    setTab(tab: RouteLocationNormalizedLoaded): void {
-      const _tab: Tab = {
-        title: tab.meta.title as string,
-        name: tab.name as string,
-        path: tab.path,
-        fullPath: tab.fullPath,
-        query: tab.query,
-        params: tab.params,
-        keepAlive: tab.meta.hidden as boolean,
+    setTab(route: RouteLocationNormalizedLoaded): void {
+      const tab: Tab = {
+        title: route.meta.title as string,
+        name: route.name as string,
+        path: route.path,
+        fullPath: route.fullPath,
+        query: route.query,
+        params: route.params,
+        keepAlive: route.meta.keepAlive as boolean,
+        hidden: route.meta.hidden as boolean,
       }
-      if (!this.tabs.some((_t: Tab) => _t.name === _tab.name)) {
-        this.tabs.push(_tab)
+      if (!this.tabs.some((_t: Tab): boolean => _t.name === tab.name)) {
+        this.tabs.push(tab)
       }
-      this.currentTab = _tab
-      this.currentTabName = _tab.name
+      if (!this.cacheTabs.some((name: string): boolean => name === tab.name) && route.meta.keepAlive) {
+        console.log('123')
+        this.cacheTabs.push(tab.name)
+      }
+
+      this.currentTab = tab
+      this.currentTabName = tab.name
     },
     /**
      * 设置选项卡

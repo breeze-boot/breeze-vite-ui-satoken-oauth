@@ -11,13 +11,14 @@ import { convertBigNumberToString } from '@/utils/common.ts'
 let isRefreshing: boolean = false // 标记是否正在刷新token
 let requests: any[] = [] // 存储待重发的请求
 let userStore: any = undefined
+import i18n from '@/i18n/index'
 
 /**
  * 创建axios实例
  */
 const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
-  timeout: 5000,
+  timeout: 50000,
 })
 
 /**
@@ -51,26 +52,26 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 })
 
 const handleNetworkError = (error: any): void => {
-  let message = '网络错误'
+  let message = i18n.global.t('axios.networkError')
   if (error.response) {
     switch (error.response.status) {
       case 404:
-        message = '网络请求不存在'
+        message = i18n.global.t('axios.networkRequestNotExist')
         break
       case 503:
-        message = '服务不可用'
+        message = i18n.global.t('axios.serviceUnavailable')
         break
       case 400:
-        message = '请求参数错误'
+        message = i18n.global.t('axios.requestParameterError')
         break
       case 403:
-        message = '权限不足，请重新登录'
+        message = i18n.global.t('axios.insufficientPermissionsReLogin')
         break
       case 500:
-        message = '服务器内部错误'
+        message = i18n.global.t('axios.serverInternalError')
         break
       default:
-        message = '未知错误'
+        message = i18n.global.t('axios.unknownError')
     }
   }
   ElMessage.error(message)
@@ -123,11 +124,16 @@ const handleRefreshToken = async (error: any) => {
  * @param error
  */
 const handle401Error = async (error: any) => {
-  if (isRefreshing && error.response.data.code === 'A103') {
-    await redirectToLogin()
-    ElMessage.error('刷新失败，请重新登录')
+  if (error.response.data.code === 'SYSTEM_ERROR_0001') {
+    ElMessage.error(error.response.data.message)
     return Promise.reject(error.response.data)
   }
+  if (isRefreshing && error.response.data.code === 'A103') {
+    await redirectToLogin()
+    ElMessage.error(i18n.global.t('axios.reLogin'))
+    return Promise.reject(error.response.data)
+  }
+
   return await handleRefreshToken(error)
 }
 
@@ -141,16 +147,16 @@ request.interceptors.response.use(
       case '0000':
         return response.data
       case '0001':
-        ElMessage.warning(message || '警告')
+        ElMessage.warning(message)
         break
       case '0002':
-        ElMessage.error('系统异常')
+        ElMessage.error(i18n.global.t('axios.systemAbnormality'))
         break
       case undefined:
         // 没有code时正常返回数据
         return access_token ? response.data : response
       default:
-        ElMessage.error('服务异常')
+        ElMessage.error(i18n.global.t('axios.systemAbnormality'))
     }
   },
   async (error: any) => {
@@ -158,14 +164,15 @@ request.interceptors.response.use(
       if (!error.response) {
         switch (error.code) {
           case 'ECONNABORTED':
-            ElMessage.error(`连接超时 ${error.message}`)
+            ElMessage.error(`${i18n.global.t('axios.connectionTimedOut')} ${error.message}`)
             return Promise.reject(error)
           default:
-            ElMessage.error(`连接异常`)
+            ElMessage.error(i18n.global.t('axios.systemAbnormality'))
             console.error(`${error.message}`)
             return Promise.reject(error)
         }
       }
+      debugger
       switch (error.response.status) {
         case 401:
           return handle401Error(error)
@@ -173,10 +180,9 @@ request.interceptors.response.use(
           handleNetworkError(error)
       }
       return Promise.reject(error)
-    }
-    if (error.name.concat('SyntaxError')) {
-      ElMessage.error(`连接异常 ${error.message}`)
-      return Promise.reject(error)
+    } else {
+      ElMessage.error(i18n.global.t('axios.systemAbnormality'))
+      return Promise.reject()
     }
   },
 )

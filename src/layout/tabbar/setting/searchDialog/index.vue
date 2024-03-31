@@ -18,8 +18,8 @@ onMounted(() => {
   routeData.value = loadAll()
 })
 
-const handleSelect = (item: RouteRecordRaw) => {
-  $router.push({ path: item.path }).then((r) => console.debug(r))
+const handleSelect = async (item: RouteRecordRaw) => {
+  await $router.push({ path: item.path })
   searchDialog.value.style.display = 'none'
 }
 

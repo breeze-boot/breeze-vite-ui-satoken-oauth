@@ -8,7 +8,7 @@ import pinia from '@/store'
 import router from '@/router'
 import { listPermission } from '@/api/login'
 import type { MenuState } from './types/types'
-import { anyRoute, constantChildRoutes } from '@/router/routes'
+import { constantChildRoutes } from '@/router/routes'
 import type { RouteRecordRaw } from 'vue-router'
 import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
@@ -62,8 +62,9 @@ const formatRouters = ({ pPath, menus }: { pPath: string; menus: any }): RouteRe
         icon: menu.icon as string,
         title: menu.title as string,
         type: menu.type as number,
-        hidden: (menu.hidden as number) != 0,
+        hidden: (menu.hidden as number) === 1,
         href: menu.href as number,
+        keepAlive: (menu.keepAlive as number) === 1,
       },
       component: modules[`/src/views${component}.vue`],
       children: children as RouteRecordRaw[],
@@ -106,7 +107,6 @@ const useMenuStore = defineStore('Menu', {
           // 主菜单路由信息
           this.menuRoutes.push(fmtRouter)
         })
-        router.addRoute('Layout', anyRoute)
         this.initMenu = true
         return Promise.resolve()
       }

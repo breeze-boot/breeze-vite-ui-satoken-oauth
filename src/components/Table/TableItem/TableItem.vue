@@ -6,8 +6,9 @@
 import { Columns, Field, QueryParams, SwitchOption, UploadOption } from '@/components/Table/types/types.ts'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
+import useTabsStore from '@/store/modules/tabs.ts'
 
 defineOptions({
   name: 'TableItem',
@@ -20,8 +21,10 @@ interface Scope {
   $index: number
 }
 
-const props = defineProps(['tableField', 'scope', 'dict'])
 const $router = useRouter()
+const $route = useRoute()
+const tabStore = useTabsStore()
+const props = defineProps(['tableField', 'scope', 'dict'])
 const $emit = defineEmits(['reloadDataList'])
 
 /**
@@ -79,31 +82,33 @@ const objToQueryString = (obj: any) => {
  * @param item
  * @param row
  */
-const openLink = (item: any, row: any) => {
+const openLink = async (item: any, row: any) => {
   // 构造参数
   let query = {} as QueryParams
-  // 行数据上获取的参数
-  if (item.linkInfo && item.linkInfo.rowParam && item.linkInfo.rowParam.length) {
-    item.linkInfo.rowParam.forEach((el: string) => {
-      query[el] = row[el]
-    })
+  // 从当前行数据获取参数
+  item.linkInfo.rowParam?.forEach((paramName: string) => {
+    query[paramName] = row[paramName]
+  })
+
+  // 获取传入的参数
+  item.linkInfo.query = {
+    ...item.linkInfo.query,
+    ...query,
   }
-  if (item.linkInfo && item.linkInfo.query) {
-    item.linkInfo.query = {
-      ...item.linkInfo.query,
-      ...query,
-    }
-  }
-  if (item.linkInfo.routeName.startsWith('http')) {
-    item.linkInfo.routeName = objToQueryString(item.linkInfo.query)
-    window.open(item.linkInfo.routeName)
+
+  const httpUrl = row[item.linkInfo.linkUrlProp]
+  if (httpUrl && httpUrl.startsWith('http')) {
+    // 外部链接
+    window.open(httpUrl + objToQueryString(item.linkInfo.query))
   } else {
-    $router.push({
-      name: item.linkInfo.routeName,
+    // 路由跳转
+    await $router.push({
+      path: item.linkInfo.routePath,
       query: {
         ...item.linkInfo.query,
       },
     })
+    tabStore.setTab($route)
   }
 }
 
@@ -171,16 +176,16 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   </template>
 
   <!-- 链接 -->
-  <template v-else-if="tableField.type === 'link'">
+  <template v-else-if="tableField.type === 'rowLink'">
     <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
       {{ scope?.row?.[tableField.prop] }}
     </a>
   </template>
 
   <!-- 自定义链接名称-->
-  <template v-else-if="tableField.type === 'customLink'">
+  <template v-else-if="tableField.type === 'customRowLink'">
     <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
-      {{ tableField.linkName }}
+      {{ scope.row[tableField.linkInfo?.dyColumnName] || tableField.linkInfo?.fixColumnName }}
     </a>
   </template>
 
@@ -242,7 +247,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <!-- 字典 -->
   <div v-else-if="tableField.type === 'dict' && tableField.dict">
     <el-tag
-      v-if="scope.row?.[tableField.prop]"
+      v-if="scope.row?.[tableField.prop] !== undefined"
       :type="dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.type || 'info'"
     >
       {{ dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.label }}
@@ -250,7 +255,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   </div>
 
   <!-- 简单标签 -->
-  <template v-else-if="tableField.type === 'tag' && !tableField.tag && scope.row[tableField.prop]">
+  <template v-else-if="tableField.type === 'tag' && !tableField.tag && scope.row[tableField.prop] !== undefined">
     <el-tag v-if="scope.row?.[tableField.prop]">
       {{ scope.row[tableField.prop] }}
     </el-tag>

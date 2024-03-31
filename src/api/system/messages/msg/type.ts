@@ -11,8 +11,8 @@ export interface MsgRecord {
   id?: number
   title?: string
   code?: string
-  type?: string
-  level?: string
+  type: number
+  level: string
   content?: string
 }
 

@@ -3,35 +3,14 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { Refresh, FullScreen } from '@element-plus/icons-vue'
-import useSettingStore from '@/store/modules/setting'
-import searchDialog from './searchDialog/index.vue'
-import i18n from './i18n/index.vue'
-import loginUser from './loginUser/index.vue'
-import settingsDrawer from './settingsDrawer/index.vue'
-import fontSize from './fontSize/index.vue'
-import { storeToRefs } from 'pinia'
-
-let { refresh } = storeToRefs(useSettingStore())
-
-/**
- * 刷新
- */
-const updateRefresh = () => {
-  refresh.value = !refresh.value
-}
-
-/**
- * 切换全屏
- */
-const toggleFullScreen = () => {
-  let full = document.fullscreenElement
-  if (!full) {
-    document.documentElement.requestFullscreen()
-    return
-  }
-  document.exitFullscreen()
-}
+import SearchDialog from './searchDialog/index.vue'
+import I18n from './i18n/index.vue'
+import LoginUser from './loginUser/index.vue'
+import SettingsDrawer from './settingsDrawer/index.vue'
+import FontSize from './fontSize/index.vue'
+import Notice from './notice/index.vue'
+import FullScreen from './fullScreen/index.vue'
+import Refresh from './refresh/index.vue'
 </script>
 
 <template>
@@ -42,9 +21,11 @@ const toggleFullScreen = () => {
   <!-- 字体大小 -->
   <font-size />
   <!-- 刷新 -->
-  <el-button style="margin: 0 5px" circle :icon="Refresh" @click="updateRefresh" />
+  <refresh />
   <!-- 全屏 -->
-  <el-button style="margin: 0 5px" circle :icon="FullScreen" @click="toggleFullScreen" />
+  <full-screen />
+  <!-- 消息 -->
+  <notice />
   <!-- 设置抽屉 -->
   <settings-drawer />
   <!-- 登录人 -->

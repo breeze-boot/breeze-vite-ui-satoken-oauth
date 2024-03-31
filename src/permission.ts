@@ -26,11 +26,11 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
     } else {
       if (initMenu) {
-        next()
+        to.matched.length === 0 ? (from.name ? next({ name: from.name }) : next('/404')) : next()
       } else {
         try {
           await menuStore.listPermission()
-          next({ ...to })
+          next({ ...to, replace: true })
         } catch (error) {
           await userStore.logout()
           next({ path: '/login', query: { redirect: to.path } })

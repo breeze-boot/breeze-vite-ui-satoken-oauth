@@ -50,7 +50,7 @@ const props = defineProps({
   // 导出数据的接口
   exportApi: {
     type: Function,
-    required: true,
+    required: false,
   },
   // 是否显示序号
   tableIndex: {

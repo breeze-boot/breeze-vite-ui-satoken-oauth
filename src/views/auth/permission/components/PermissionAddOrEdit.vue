@@ -11,6 +11,10 @@ import { addPermission, getPermission, editPermission, checkPermissionCode } fro
 import { PermissionRecord } from '@/api/auth/permission/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import { selectDept } from '@/api/auth/dept'
+import { listUser } from '@/api/auth/user'
+import { UserRecord } from '@/api/auth/user/type.ts'
+import { Option, SelectData } from '@/types/types.ts'
 
 defineOptions({
   name: 'PermissionAddOrEdit',
@@ -21,7 +25,19 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const permissionDataFormRef = ref()
-const permissionDataForm = ref<PermissionRecord>({})
+const permissionDataForm = ref<PermissionRecord>({
+  customizesType: 'USER',
+})
+const deptOption = ref<SelectData[]>()
+const userList = ref<Option[]>()
+const cascaderProps = {
+  checkStrictly: true,
+  emitPath: false,
+  multiple: true,
+  value: 'value',
+  label: 'label',
+}
+
 const rules = ref({
   permissionCode: [
     {
@@ -52,6 +68,13 @@ const rules = ref({
       trigger: 'blur',
     },
   ],
+  permissions: [
+    {
+      required: true,
+      message: t('permission.rules.permissions'),
+      trigger: 'blur',
+    },
+  ],
 })
 
 /**
@@ -66,6 +89,8 @@ const init = async (id: number) => {
   if (permissionDataFormRef.value) {
     permissionDataFormRef.value.resetFields()
   }
+  await initUserTransferData()
+  await initDeptTransferData()
   if (id) {
     await getInfo(id)
   }
@@ -116,6 +141,32 @@ const handlePermissionDataFormSubmit = () => {
   })
 }
 
+const initDeptTransferData = async () => {
+  const response: any = await selectDept()
+  if (response.code === '0000') {
+    deptOption.value = response.data
+  }
+}
+
+const initUserTransferData = async () => {
+  const response: any = await listUser()
+  const data: Option[] = []
+  if (response.code === '0000') {
+    response.data.forEach((user: UserRecord) => {
+      data.push({
+        label: user.username as string,
+        key: user.id as number,
+        initial: user.userCode as string,
+      })
+    })
+  }
+  userList.value = data
+}
+
+const filterMethod = (query: string, item: Option) => {
+  return item.initial.toLowerCase().includes(query.toLowerCase())
+}
+
 defineExpose({
   init,
 })
@@ -124,12 +175,13 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="50%"
     :title="!permissionDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
-    :close-on-press-escape="false"
+    :close-on-press-escape="true"
   >
     <el-form
+      style="height: 550px; padding-bottom: 200px"
       :model="permissionDataForm"
       :rules="rules"
       ref="permissionDataFormRef"
@@ -150,6 +202,44 @@ defineExpose({
           autocomplete="off"
           clearable
           :placeholder="$t('permission.fields.permissionName')"
+        />
+      </el-form-item>
+      <el-form-item label-width="125px" :label="$t('permission.fields.customizesType')" prop="customizesType">
+        <el-radio-group v-model="permissionDataForm.customizesType">
+          <el-radio value="USER" border>{{ $t('permission.fields.user') }}</el-radio>
+          <el-radio value="DEPT" border>{{ $t('permission.fields.dept') }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        v-if="permissionDataForm.customizesType === 'USER'"
+        label-width="125px"
+        :label="t('permission.fields.user')"
+      >
+        <el-transfer
+          :titles="['待选择用户列表', '已选择用户列表']"
+          v-model="permissionDataForm.permissions"
+          filterable
+          :filter-method="filterMethod"
+          filter-placeholder=""
+          :data="userList"
+        />
+      </el-form-item>
+
+      <el-form-item
+        v-if="permissionDataForm.customizesType === 'DEPT'"
+        label-width="125px"
+        :label="t('permission.fields.dept')"
+      >
+        <el-cascader
+          tag-type="info"
+          v-model="permissionDataForm.permissions"
+          :options="deptOption"
+          :props="cascaderProps"
+          :show-all-levels="false"
+          clearable
+          filterable
+          placeholder=""
         />
       </el-form-item>
     </el-form>

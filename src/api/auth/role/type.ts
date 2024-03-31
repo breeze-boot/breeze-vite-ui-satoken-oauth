@@ -11,6 +11,8 @@ export interface RoleRecord {
   id?: number
   roleName?: string
   roleCode?: string
+  permissionCode?: string
+  permissionIds?: number[]
 }
 
 /**
@@ -38,4 +40,15 @@ export interface RoleQuery extends PageQuery {
   userId?: number
   roleCode: string
   roleName: string
+}
+
+/**
+ * 数据权限列类型声明
+ */
+export interface ColumnPermissionRecord {
+  tableName?: string
+  columnName?: string[]
+  tableColumnName?: object
+  roleId?: number
+  menuId?: number | string
 }

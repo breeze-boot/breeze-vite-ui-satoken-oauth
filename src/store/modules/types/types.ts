@@ -6,6 +6,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import type { Tab, UserInfoData, Tabs, Settings, Dicts } from '@/types/types'
 import { Theme } from '@/types/types'
+import Stomp from 'stompjs'
 
 /**
  * 用户保存类型
@@ -45,6 +46,13 @@ export interface SettingState {
 }
 
 /**
+ * stomp保存类型
+ */
+export interface MsgState {
+  stompClient: any
+}
+
+/**
  * 选项卡保存类型
  */
 export interface TabsState {
@@ -54,4 +62,5 @@ export interface TabsState {
   currentTabName: string
   currentTab: Tab
   tabs: Tabs
+  cacheTabs: string[]
 }

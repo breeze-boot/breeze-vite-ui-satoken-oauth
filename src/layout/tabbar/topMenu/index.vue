@@ -66,7 +66,7 @@ const selectMenu = async (index: string) => {
       @select="selectMenu"
     >
       <Logo v-if="menuLayout !== 'mix'" />
-      <Menu :layout="menuLayout" :menuList="menuRoutes" />
+      <Menu :layout="menuLayout" position="top" :menuList="menuRoutes" />
     </el-menu>
   </el-scrollbar>
 </template>

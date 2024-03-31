@@ -41,8 +41,6 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'multi',
   // 字典
-  dict: [],
-  // 表格顶部按钮
   tbHeaderBtn: [
     {
       type: 'primary',
@@ -66,9 +64,12 @@ const tableInfo = reactive<TableInfo>({
       icon: 'excel',
     },
   ],
+  // 字典
+  dict: ['HIDDEN', 'MENU_TYPE', 'HREF', 'KEEPALIVE'],
   // 表格字段配置
   fieldList: [
     {
+      fixed: true,
       width: '150px',
       prop: 'title',
       showOverflowTooltip: true,
@@ -112,15 +113,35 @@ const tableInfo = reactive<TableInfo>({
     },
     {
       width: '100px',
+      prop: 'href',
+      showOverflowTooltip: true,
+      label: t('menu.fields.href'),
+      type: 'dict',
+      dict: 'HREF',
+    },
+    {
+      width: '100px',
       prop: 'hidden',
       showOverflowTooltip: true,
       label: t('menu.fields.hidden'),
+      type: 'dict',
+      dict: 'HIDDEN',
+    },
+    {
+      width: '100px',
+      prop: 'keepAlive',
+      showOverflowTooltip: true,
+      label: t('menu.fields.keepAlive'),
+      type: 'dict',
+      dict: 'KEEPALIVE',
     },
     {
       width: '100px',
       prop: 'type',
       showOverflowTooltip: true,
       label: t('menu.fields.type'),
+      type: 'dict',
+      dict: 'MENU_TYPE',
     },
   ],
   handleBtn: {
@@ -137,9 +158,9 @@ const tableInfo = reactive<TableInfo>({
         event: 'edit',
         permission: ['auth:menu:modify'],
       },
-      // 添加子级
+      // 添加子菜单
       {
-        label: t('common.addSubLevel'),
+        label: t('menu.common.addSubMenu'),
         type: 'warning',
         icon: 'add',
         event: 'add',

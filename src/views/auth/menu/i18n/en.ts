@@ -1,6 +1,8 @@
 export default {
   menu: {
-    svgSelectDialog: 'svg icon select',
+    common: {
+      addSubMenu: 'add sub menu',
+    },
     fields: {
       platformId: 'platform',
       parentMenu: 'parent menu',

@@ -11,17 +11,19 @@ import { addMsg, getMsg, editMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import { useDict } from '@/hooks/dict'
 
 defineOptions({
   name: 'MsgAddOrEdit',
   inheritAttrs: false,
 })
 
+const { MSG_TYPE, MSG_LEVEL } = useDict('MSG_TYPE', 'MSG_LEVEL')
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const msgDataFormRef = ref()
-const msgDataForm = ref<MsgRecord>({})
+const msgDataForm = ref<MsgRecord>({ level: 'info', type: 0 })
 
 const rules = ref({
   title: [
@@ -152,23 +154,29 @@ defineExpose({
       </el-form-item>
 
       <el-form-item label-width="125px" :label="$t('msg.fields.type')" prop="type">
-        <el-switch
-          v-model="msgDataForm.type"
-          :active-value="1"
-          :inactive-value="0"
-          active-color="#13ce66"
-          inactive-color="#AAAAAA"
-        ></el-switch>
+        <el-radio-group v-model="msgDataForm.type">
+          <el-radio-button v-for="item in MSG_TYPE" :key="item.value" :label="item.value">
+            {{ item.label }}
+          </el-radio-button>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item label-width="125px" :label="$t('msg.fields.level')" prop="level">
-        <el-switch
-          v-model="msgDataForm.level"
-          :active-value="1"
-          :inactive-value="0"
-          active-color="#13ce66"
-          inactive-color="#AAAAAA"
-        ></el-switch>
+        <el-radio-group v-model="msgDataForm.level">
+          <el-radio-button v-for="item in MSG_LEVEL" :key="item.value" :label="item.value">
+            {{ item.label }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label-width="125px" :label="$t('msg.fields.level')" prop="level">
+        <el-input
+          v-model="msgDataForm.content"
+          style="width: 450px"
+          :rows="6"
+          type="textarea"
+          :placeholder="$t('msg.fields.content')"
+        />
       </el-form-item>
     </el-form>
     <template #footer>

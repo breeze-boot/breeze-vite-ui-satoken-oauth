@@ -4,11 +4,20 @@
 -->
 <script setup lang="ts">
 import useSettingStore from '@/store/modules/setting'
-import { watch, ref, nextTick } from 'vue'
+import useTabStore from '@/store/modules/tabs'
+import { watch, ref, nextTick, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 let { refresh } = storeToRefs(useSettingStore())
+let tabStore = useTabStore()
 let flag = ref(true)
+
+/**
+ * 当前缓存的页面
+ */
+const cacheTabs = computed(() => {
+  return tabStore.cacheTabs
+})
 
 /**
  * 监听刷新
@@ -25,11 +34,11 @@ watch(
 </script>
 <template>
   <!-- 路由组件出口的位置 -->
-  <router-view v-slot="{ Component }">
+  <router-view v-slot="{ Component, route }">
     <transition name="fade">
-      <div :key="$route.path">
-        <component :is="Component" v-if="flag" />
-      </div>
+      <keep-alive :include="cacheTabs">
+        <component :key="route.fullPath" :is="Component" v-if="flag" />
+      </keep-alive>
     </transition>
   </router-view>
 </template>

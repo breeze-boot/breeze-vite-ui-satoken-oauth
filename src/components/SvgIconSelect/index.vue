@@ -4,12 +4,14 @@
 -->
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
   name: 'SvgIconSelect',
   inheritAttrs: false,
 })
 
+const { t } = useI18n()
 const $emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: {
@@ -85,7 +87,7 @@ const initLoadIcons = () => {
     </template>
     <div class="icon-box">
       <div class="input-line">
-        <el-input @input="handleSearchIcon" v-model="filterText" placeholder="Filter keyword" />
+        <el-input @input="handleSearchIcon" v-model="filterText" :placeholder="t('common.placeholder.inputSvgName')" />
       </div>
       <ul class="icon-list">
         <li class="icon-item" v-for="(icon, index) in tempAllIcon" :key="index" @click="handleCheckIcon(icon)">

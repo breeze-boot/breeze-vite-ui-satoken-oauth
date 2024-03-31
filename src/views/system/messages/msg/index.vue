@@ -13,6 +13,7 @@ import { MsgRecord, MsgQuery } from '@/api/system/messages/msg/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import SendMsgSetting from '@/views/system/messages/msg/components/SendMsgSetting.vue'
 
 defineOptions({
   name: 'Msg',
@@ -22,6 +23,7 @@ defineOptions({
 const { t } = useI18n()
 const msgQueryFormRef = ref(ElForm)
 const msgAddOrEditRef = ref()
+const sendMsgSettingRef = ref()
 
 /**
  * 查询条件
@@ -44,6 +46,13 @@ const tableInfo = reactive<TableInfo>({
   dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
+    {
+      type: 'primary',
+      label: t('common.add'),
+      permission: ['sys:msg:create'],
+      event: 'add',
+      icon: 'add',
+    },
     {
       type: 'danger',
       label: t('common.delete'),
@@ -116,13 +125,13 @@ const tableInfo = reactive<TableInfo>({
         event: 'view',
         permission: ['sys:msg:info'],
       },
-      // 查看
+      // 推送
       {
-        label: t('common.info'),
+        label: t('msg.common.send'),
         type: 'warning',
-        icon: 'view',
-        event: 'view',
-        permission: ['sys:msg:info'],
+        icon: 'send',
+        event: 'send',
+        permission: ['sys:msg:send'],
       },
       // 删除
       {
@@ -178,6 +187,9 @@ const handleTableRowBtnClick = (event: any, row: any) => {
     case 'edit':
       handleUpdate(row)
       break
+    case 'send':
+      handleSend(row)
+      break
     case 'view':
       handleView(row)
       break
@@ -222,6 +234,13 @@ const handleView = (row: any) => {
  */
 const handleAdd = () => {
   AddOrEditHandle()
+}
+
+/**
+ * 推送消息
+ */
+const handleSend = (row: any) => {
+  sendMsgSettingRef.value.init(row.id)
 }
 
 /**
@@ -314,4 +333,7 @@ const handleSelectionChange = (rows: MsgRecords) => {
 
   <!-- 新增 / 修改 Dialog -->
   <add-or-edit ref="msgAddOrEditRef" @reload-data-list="reloadList" />
+
+  <!-- 新增 / 修改 Dialog -->
+  <send-msg-setting ref="sendMsgSettingRef" />
 </template>

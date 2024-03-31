@@ -1,5 +1,26 @@
 export default {
+  axios: {
+    reLogin: '刷新失败，请重新登录',
+    unknownError: '未知错误',
+    serverInternalError: '服务器内部错误',
+    insufficientPermissionsReLogin: '权限不足，请重新登录',
+    requestParameterError: '请求参数错误',
+    serviceUnavailable: '服务不可用',
+    networkRequestNotExist: '网络请求不存在',
+    networkError: '网络错误',
+    systemAbnormality: '系统异常',
+    connectionTimedOut: '连接超时',
+  },
+  halo: {
+    goodMorning: '上午好',
+    goodAfternoon: '下午好',
+    goodEvening: '晚上好',
+  },
   common: {
+    toBeSelectedColumns: '待选列',
+    selectedColumns: '已选择列',
+    confirm_read: '确认读取',
+    system_msg: '系统消息',
     confirm: '确认',
     cancel: '取消',
     search: '查询',
@@ -10,7 +31,6 @@ export default {
     operate: '操作',
     add: '添加',
     delete: '删除',
-    addSubLevel: '添加子级',
     edit: '修改',
     info: '查看',
     download: '下载',
@@ -19,8 +39,8 @@ export default {
     success: '成功',
     fail: '失败',
     reloadFail: '数据加载失败',
+
     cron: 'cron',
-    rolePermission: '角色权限',
 
     no: '序号',
     tableColumn: '表格字段',
@@ -37,6 +57,7 @@ export default {
       fileSize: '上传文件大小必须不能超过',
     },
     placeholder: {
+      inputSvgName: '请输入图标名称',
       input: '请输入',
       change: '请切换',
       check: '请选择',

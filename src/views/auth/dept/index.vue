@@ -102,7 +102,7 @@ const tableInfo = reactive<TableInfo>({
       },
       // 添加子级
       {
-        label: t('common.addSubLevel'),
+        label: t('dept.common.addSubDept'),
         type: 'warning',
         icon: 'add',
         event: 'add',
@@ -307,5 +307,5 @@ const handleSelectionChange = (rows: DeptRecords) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-edit ref="deptAddOrUpdateRef" @reload-data-list="reloadList" />
+  <add-or-edit ref="deptAddOrEditRef" @reload-data-list="reloadList" />
 </template>

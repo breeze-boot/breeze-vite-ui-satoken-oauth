@@ -1,5 +1,9 @@
 export default {
   user: {
+    common: {
+      resetPassword: '重置密码',
+      roleSettings: '角色设置',
+    },
     fields: {
       avatar: '头像',
       file: '文件',
@@ -24,10 +28,6 @@ export default {
       phone: '电话',
       email: '邮箱',
       isLock: '锁定',
-    },
-    common: {
-      resetPassword: '重置密码',
-      roleSettings: '角色设置',
     },
     rules: {
       userCode: '请输入用户编码',

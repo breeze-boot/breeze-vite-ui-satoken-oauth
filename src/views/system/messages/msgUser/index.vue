@@ -37,7 +37,7 @@ const tableInfo = reactive<TableInfo>({
   refresh: 1,
   tableIndex: true,
   // 选择框类型
-  select: 'single',
+  select: 'multi',
   // 字典
   dict: [],
   // 表格顶部按钮
@@ -45,21 +45,21 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'danger',
       label: t('common.delete'),
-      permission: ['messages1:msgUser:delete'],
+      permission: ['sys:msgUser:delete'],
       event: 'del',
       icon: 'delete',
     },
     {
       type: 'default',
       label: t('common.export'),
-      permission: ['messages1:msgUser:export'],
+      permission: ['sys:msgUser:export'],
       event: 'exportCurrentPage',
       icon: 'export',
     },
     {
       type: 'default',
       label: t('common.exportAll'),
-      permission: ['messages1:msgUser:export'],
+      permission: ['sys:msgUser:export'],
       event: 'exportAll',
       icon: 'excel',
     },
@@ -119,7 +119,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['messages1:msgUser:info'],
+        permission: ['sys:msgUser:info'],
       },
       // 删除
       {
@@ -127,7 +127,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'danger',
         icon: 'delete',
         event: 'delete',
-        permission: ['messages1:msgUser:delete'],
+        permission: ['sys:msgUser:delete'],
       },
     ],
   },

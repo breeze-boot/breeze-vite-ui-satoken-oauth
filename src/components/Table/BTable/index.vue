@@ -184,22 +184,22 @@ onUpdated(() => {
  * 初始化列
  */
 const initColumns = () => {
-  let _columnValue: number[] = []
+  let tempColumnValue: number[] = []
   ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
-    let _item: Field = {
+    let tempItem: Field = {
       ...item,
       key: index,
       hidden: true,
       disabled: false,
     }
     if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
-      _columnValue?.push(index)
-      _item.hidden = false
-      _item.disabled = true
+      tempColumnValue?.push(index)
+      tempItem.hidden = false
+      tempItem.disabled = true
     }
-    tableInfo.showFieldList.push(_item)
+    tableInfo.showFieldList.push(tempItem)
   })
-  hiddenColumnValue.value = _columnValue
+  hiddenColumnValue.value = tempColumnValue
 }
 
 /**
@@ -525,10 +525,10 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
       </template>
     </el-transfer>
 
-    <div class="footer">
-      <el-button>取消</el-button>
-      <el-button type="primary">确认</el-button>
-    </div>
+    <!--    <div class="footer">-->
+    <!--      <el-button>取消</el-button>-->
+    <!--      <el-button type="primary">确认</el-button>-->
+    <!--    </div>-->
   </el-popover>
 
   <el-card shadow="never" style="margin: 10px 0">
@@ -571,8 +571,8 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         border
         stripe
         :key="Math.random()"
-        :summary-method="summaryMethod"
-        :span-method="spanMethod"
+        :summary-method="props.summaryMethod"
+        :span-method="props.spanMethod"
         :style="tableStyle"
         :show-summary="showSummary"
         :highlight-current-row="true"

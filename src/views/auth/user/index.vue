@@ -10,7 +10,7 @@ import AddOrEdit from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
 import { UserRecord, UserQuery } from '@/api/auth/user/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { Query, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
@@ -94,8 +94,55 @@ const tableInfo = reactive<TableInfo>({
       label: t('user.fields.avatar'),
       type: 'image',
     },
+    // 测试
     {
-      prop: 'fileUpload',
+      prop: 'avatar',
+      showOverflowTooltip: true,
+      label: t('user.fields.avatar'),
+      type: 'rowLink',
+      width: '200px',
+      linkInfo: {
+        routePath: '/auth/menu',
+        rowParam: ['id', 'username'],
+        query: {
+          status: 1,
+        },
+      },
+    },
+    {
+      prop: 'avatar',
+      showOverflowTooltip: true,
+      label: t('user.fields.avatar'),
+      type: 'customRowLink',
+      width: '200px',
+      linkInfo: {
+        linkUrlProp: 'avatar',
+        rowParam: ['id', 'username'],
+        query: {
+          status: 1,
+        },
+        // 自定义固定的字段值
+        fixColumnName: '自定义名称：头像',
+      },
+    },
+    {
+      prop: 'avatar',
+      showOverflowTooltip: true,
+      label: t('user.fields.avatar'),
+      type: 'customRowLink',
+      width: '200px',
+      linkInfo: {
+        linkUrlProp: 'avatar',
+        rowParam: ['id', 'username'],
+        query: {
+          status: 1,
+        },
+        // 自定义动态字段值
+        dyColumnName: 'username',
+      },
+    },
+    {
+      prop: '',
       label: t('user.fields.fileUpload'),
       width: '100px',
       type: 'fileUpload',
@@ -121,7 +168,7 @@ const tableInfo = reactive<TableInfo>({
       },
     },
     {
-      prop: 'fileUpload',
+      prop: '',
       label: t('user.fields.customFileUpload'),
       width: '120px',
       type: 'fileUpload',
@@ -144,6 +191,7 @@ const tableInfo = reactive<TableInfo>({
       label: t('user.fields.file'),
       type: 'fileList',
     },
+    // 测试
     {
       prop: 'username',
       showOverflowTooltip: true,
@@ -254,7 +302,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'info',
         icon: 'user_role_settings',
         event: 'user_role_settings',
-        permission: ['auth:user:setRole'],
+        permission: ['auth:user:set:role'],
       },
       // 删除
       {

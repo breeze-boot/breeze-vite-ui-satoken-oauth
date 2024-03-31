@@ -15,6 +15,7 @@ import { watch, onMounted, computed } from 'vue'
 import variables from '@/styles/variables.module.scss'
 import useTabsStore from '@/store/modules/tabs.ts'
 import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
+import websocket from '@/layout/websocket/index.vue'
 
 let $router = useRouter()
 let $route = useRoute()
@@ -76,7 +77,7 @@ watch(
 )
 </script>
 <template>
-  <el-container class="layout-container" style="height: 100vh">
+  <el-container class="layout-container">
     <el-aside v-if="menuLayout !== 'top'" width="200px" :class="{ isCollapse: isCollapse }">
       <el-scrollbar>
         <el-menu
@@ -86,40 +87,33 @@ watch(
           @select="selectMenu"
         >
           <Logo />
-          <Menu :layout="menuLayout" :menuList="menuList" />
+          <Menu :layout="menuLayout" position="noTop" :menuList="menuList" />
         </el-menu>
       </el-scrollbar>
     </el-aside>
 
-    <el-container style="flex-direction: column !important">
-      <TabBar style="width: 100%" />
-      <Tab style="width: 100%" />
+    <el-container>
+      <TabBar />
+      <Tab />
       <el-main :style="tabStyle">
         <el-scrollbar class="scrollbar">
           <el-backtop :visibility-height="100" target=".scrollbar .el-scrollbar__wrap" :bottom="100">
-            <div
-              style="{
-                  height: 100%;
-                  width: 100%;
-                  background-color: transparent;
-                  text-align: center;
-                  line-height: 40px;
-                  color: #1989fa;
-                }"
-            >
-              <svg-icon name="backtop" width="1.5rem" height="1.5rem" />
+            <div class="backTop">
+              <svg-icon name="back-top" width="1.5rem" height="1.5rem" />
             </div>
           </el-backtop>
           <Main />
         </el-scrollbar>
       </el-main>
     </el-container>
+
     <context-menu ref="contextMenuRef" />
+    <websocket />
   </el-container>
 </template>
 <style lang="scss" scoped>
 .layout-container {
-  height: 100%;
+  height: 100vh;
 
   // 菜单区域
   .el-aside {
@@ -129,6 +123,10 @@ watch(
     .el-menu {
       border-right: none;
     }
+  }
+
+  .el-container {
+    flex-direction: column !important;
   }
 
   // 内容区域
@@ -142,6 +140,15 @@ watch(
     height: calc(100vh - var(--el-main-top-height));
     padding: 20px;
     transition: all 0.3s;
+  }
+
+  .backTop {
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+    text-align: center;
+    line-height: 40px;
+    color: #1989fa;
   }
 }
 

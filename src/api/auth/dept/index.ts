@@ -97,7 +97,7 @@ export function exportExcel(params: DeptQuery): AxiosPromise<DeptResponseData> {
 /**
  * 部门下拉框
  */
-export function selectDept(id: number): AxiosPromise<SelectResponseData> {
+export function selectDept(id?: number): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_DEPT_URL,
     method: 'get',

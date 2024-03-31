@@ -1,14 +1,16 @@
+import i18n from '@/i18n'
+
 export const loadGreetings = () => {
   let msg = ''
   const hours = new Date().getHours()
   if (hours <= 9) {
-    msg = '早上'
+    msg = i18n.global.t('halo.goodMorning')
   } else if (hours <= 12) {
-    msg = '上午'
+    msg = i18n.global.t('halo.goodMorning')
   } else if (hours <= 18) {
-    msg = '下午'
+    msg = i18n.global.t('halo.goodAfternoon')
   } else {
-    msg = '晚上'
+    msg = i18n.global.t('halo.goodEvening')
   }
   return msg
 }

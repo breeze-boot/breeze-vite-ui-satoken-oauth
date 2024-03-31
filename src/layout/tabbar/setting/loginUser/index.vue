@@ -18,7 +18,7 @@ let settingStore = useSettingStore()
  */
 const handleLogout = async () => {
   await userStore.logout()
-  $router.push({ path: '/login', query: { redirect: $route.path } }).then((r) => console.debug(r))
+  await $router.push({ path: '/login', query: { redirect: $route.path } })
 }
 
 /**

@@ -198,7 +198,9 @@ defineExpose({
     <template #footer>
       <div style="flex: auto">
         <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleUserRoleSettingsDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+        <el-button v-has="['auth:user:set:role']" type="primary" @click="handleUserRoleSettingsDataFormSubmit()">
+          {{ $t('common.confirm') }}
+        </el-button>
       </div>
     </template>
   </el-drawer>

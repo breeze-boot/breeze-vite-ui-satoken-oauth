@@ -5,6 +5,7 @@ export default {
       deptName: 'dept name',
       deptCode: 'dept code',
     },
+    common: { addSubDept: 'add sub dept' },
     rules: {
       parentId: 'Please select the parent department',
       deptName: 'Please enter the name of the department',

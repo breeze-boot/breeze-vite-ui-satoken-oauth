@@ -112,13 +112,13 @@ const tableInfo = reactive<TableInfo>({
         event: 'view',
         permission: ['auth:role:info'],
       },
-      // 角色权限
+      // 设置角色菜单权限, 具有权限或者超级管理员可以设置
       {
-        label: t('common.rolePermission'),
+        label: t('role.common.menuPermission'),
         type: 'success',
         icon: 'role_permission',
         event: 'role_permission',
-        permission: ['auth:role:list'],
+        permission: ['auth:menu:permission:modify', 'ROLE_ADMIN'],
       },
       // 删除
       {

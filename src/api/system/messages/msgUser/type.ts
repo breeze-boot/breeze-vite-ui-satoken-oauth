@@ -8,14 +8,16 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  * 用户消息列表类型声明
  */
 export interface MsgUserRecord {
-  id?: number
+  id: number
+  msgId: number
   title?: string
   code?: string
-  type?: string
+  type?: number
   level?: string
   username?: string
-  isRead?: string
-  isClose?: string
+  userId?: number
+  isRead?: number
+  isClose?: number
   createTime?: string
 }
 

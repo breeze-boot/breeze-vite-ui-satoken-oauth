@@ -51,7 +51,7 @@ const changeThemeColor = () => {
 }
 
 const loginFormData = reactive({
-  username: 'user',
+  username: 'admin',
   password: '123456',
 })
 
@@ -117,14 +117,14 @@ const login = async () => {
     ElNotification({
       type: 'success',
       message: '登录成功',
-      title: `Hi, ${loadGreetings()}好`,
+      title: `Hi, ${loadGreetings()}`,
     })
     loading.value = false
   } catch (error) {
     loading.value = false
     ElNotification({
       type: 'error',
-      message: (error as Error).message,
+      message: (error as Error).message || '',
     })
   }
 }

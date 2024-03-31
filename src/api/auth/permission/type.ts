@@ -11,6 +11,8 @@ export interface PermissionRecord {
   id?: number
   permissionName?: string
   permissionCode?: string
+  customizesType?: string
+  permissions?: number[]
 }
 
 /**
@@ -37,8 +39,4 @@ export interface PermissionResponseData extends ResponseData {
 export interface PermissionQuery extends PageQuery {
   permissionCode: string
   permissionName: string
-  isLock: string
-  status?: number
-  startTime?: string
-  endTime?: string
 }

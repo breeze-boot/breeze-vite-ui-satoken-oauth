@@ -2,8 +2,8 @@ import { createI18n } from 'vue-i18n'
 import zhCn from './lang/zh-cn'
 import en from './lang/en'
 import useSettingStore from '@/store/modules/setting.ts'
+import pinia from '@/store'
 
-const settings = useSettingStore().settings
 const pages: Record<string, any> = import.meta.glob('./../../**/**/**/i18n/*.ts', { eager: true })
 
 /**
@@ -41,9 +41,8 @@ const getImports = (pages: Record<string, any>): any => {
 }
 
 const modules = getImports(pages)
-
 const i18n = createI18n({
-  locale: settings.language,
+  locale: useSettingStore(pinia).settings.language,
   fallbackLocale: 'zhCn', // 设置备用语言
   messages: {
     zhCn: modules['zhCn'],

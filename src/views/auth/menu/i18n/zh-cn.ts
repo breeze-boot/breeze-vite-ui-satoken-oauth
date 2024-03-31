@@ -1,6 +1,8 @@
 export default {
-  svgSelectDialog: 'svg图标选择',
   menu: {
+    common: {
+      addSubMenu: '添加子菜单',
+    },
     fields: {
       platformId: '平台',
       parentMenu: '上级菜单',

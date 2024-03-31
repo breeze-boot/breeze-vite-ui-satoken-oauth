@@ -17,7 +17,7 @@ let userStore = useUserStore()
       <img :src="userStore.userInfo?.avatar || settings.logoUrl" alt="" class="avatar" />
       <div class="footer">
         <h3 class="title">
-          {{ loadGreetings() }}好 ~
+          {{ loadGreetings() }}~
           <span class="gradient">{{ userStore.userInfo?.username }}</span>
         </h3>
         <p class="subtitle" v-has="['ROLE_ADMIN1']">{{ settings.title }}</p>

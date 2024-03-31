@@ -7,10 +7,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addRole, getRole, editRole, checkRoleCode } from '@/api/auth/role'
+import { addRole, getRole, editRole, checkRoleCode, selectPermission, selectCustomizePermission } from '@/api/auth/role'
 import { RoleRecord } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import { SelectData } from '@/types/types.ts'
 
 defineOptions({
   name: 'RoleAddOrEdit',
@@ -22,6 +23,8 @@ const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const roleDataFormRef = ref()
 const roleDataForm = ref<RoleRecord>({})
+const permissionOption = ref<SelectData[]>()
+const customizePermissionOption = ref<SelectData[]>()
 const rules = ref({
   roleCode: [
     {
@@ -51,6 +54,20 @@ const rules = ref({
       trigger: 'blur',
     },
   ],
+  permissionCode: [
+    {
+      required: true,
+      message: t('role.rules.permissionCode'),
+      trigger: 'change',
+    },
+  ],
+  permissionIds: [
+    {
+      required: true,
+      message: t('role.rules.permissionIds'),
+      trigger: 'change',
+    },
+  ],
 })
 
 /**
@@ -65,6 +82,8 @@ const init = async (id: number) => {
   if (roleDataFormRef.value) {
     roleDataFormRef.value.resetFields()
   }
+  await initSelectPermission()
+  await initSelectCustomizePermission()
   if (id) {
     await getInfo(id)
   }
@@ -79,6 +98,26 @@ const getInfo = async (id: number) => {
   const response: any = await getRole(JSONBigInt.parse(id))
   if (response.code === '0000') {
     Object.assign(roleDataForm.value, response.data)
+  }
+}
+
+/**
+ * 初始权限下拉框数据
+ */
+const initSelectPermission = async () => {
+  const response: any = await selectPermission()
+  if (response.code === '0000') {
+    permissionOption.value = response.data
+  }
+}
+
+/**
+ * 初始化自定义权限下拉框数据
+ */
+const initSelectCustomizePermission = async () => {
+  const response: any = await selectCustomizePermission()
+  if (response.code === '0000') {
+    customizePermissionOption.value = response.data
   }
 }
 
@@ -150,6 +189,31 @@ defineExpose({
           clearable
           :placeholder="$t('role.fields.roleName')"
         />
+      </el-form-item>
+      <el-form-item label-width="125px" :label="$t('role.fields.permissionCode')" prop="permissionCode">
+        <el-select v-model="roleDataForm.permissionCode" :placeholder="$t('role.fields.permissionCode')">
+          <el-option
+            v-for="item in permissionOption"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value.valueOf()"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        v-if="roleDataForm.permissionCode === 'CUSTOMIZES'"
+        label-width="125px"
+        :label="$t('role.fields.permissionIds')"
+        prop="permissionIds"
+      >
+        <el-select multiple v-model="roleDataForm.permissionIds" :placeholder="$t('role.fields.permissionIds')">
+          <el-option
+            v-for="item in customizePermissionOption"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value.valueOf()"
+          />
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>

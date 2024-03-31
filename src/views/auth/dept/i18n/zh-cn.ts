@@ -5,6 +5,7 @@ export default {
       deptName: '部门名称',
       deptCode: '部门编码',
     },
+    common: { addSubDept: '添加子级部门' },
     rules: {
       parentId: '请选择上级部门',
       deptName: '请输入部门名称',

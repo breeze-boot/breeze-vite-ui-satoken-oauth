@@ -27,11 +27,8 @@ const permissionAddOrEditRef = ref()
  * 查询条件
  */
 const queryParams = reactive<PermissionQuery>({
-  endTime: '',
   permissionCode: '',
   permissionName: '',
-  isLock: '',
-  startTime: '',
   current: 1,
   size: 10,
 })
@@ -89,12 +86,6 @@ const tableInfo = reactive<TableInfo>({
       prop: 'permissionCode',
       showOverflowTooltip: true,
       label: t('permission.fields.permissionCode'),
-    },
-    {
-      prop: 'permissions',
-      showOverflowTooltip: true,
-      label: t('permission.fields.permissions'),
-      type: 'tag',
     },
     {
       prop: 'createName',

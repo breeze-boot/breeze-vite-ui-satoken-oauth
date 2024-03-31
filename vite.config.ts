@@ -14,6 +14,9 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
   // 获取各种环境下对应的变量
   const env = loadEnv(mode, process.cwd())
   return {
+    define: {
+      global: 'window',
+    },
     base: './',
     plugins: [
       vue(),
@@ -110,7 +113,6 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         'lodash-es',
         'echarts-liquidfill',
         'echarts',
-        'stompjs',
         'nprogress',
         'crypto-js',
         'moment',
@@ -127,6 +129,20 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       open: true, // 运行是否自动打开浏览器
       proxy: {
         [env.VITE_APP_BASE_API]: {
+          target: env.VITE_APP_BASE_SERVER,
+          // 需要代理跨域
+          changeOrigin: true,
+          // 允许websocket代理
+          ws: true,
+          // 将api替换为空
+          rewrite: (path) => path.replace(new RegExp('^' + env.VITE_APP_BASE_API), ''),
+          bypass(req, res, options: any) {
+            const proxyURL = options.target + options.rewrite(req.url)
+            console.log('proxyURL', proxyURL)
+            res.setHeader('x-req-proxyURL', proxyURL) // 设置响应头可以看到
+          },
+        },
+        ['/ws']: {
           target: env.VITE_APP_BASE_SERVER,
           // 需要代理跨域
           changeOrigin: true,

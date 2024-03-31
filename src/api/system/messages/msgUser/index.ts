@@ -8,6 +8,9 @@ import { MsgUserResponseData, MsgUserQuery } from './type.ts'
 
 enum API {
   MSG_USER_RESTFUL_URL = '/msgUser',
+  LIST_USERS_MSG_URL = '/msgUser/listUsersMsg',
+  CLOSE_USERS_MSG_URL = '/msgUser/close',
+  READ_USERS_MSG_URL = '/msgUser/read',
 }
 
 /**
@@ -46,5 +49,59 @@ export function exportExcel(params: MsgUserQuery): AxiosPromise<MsgUserResponseD
     url: API.MSG_USER_RESTFUL_URL,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * 获取用户的消息
+ *
+ * @param username
+ */
+export function closeMsg(username: string): AxiosPromise<MsgUserResponseData> {
+  return request({
+    url: API.LIST_USERS_MSG_URL,
+    method: 'get',
+    params: {
+      username,
+    },
+  })
+}
+
+/**
+ * 读取用户的消息
+ *
+ * @param msgId
+ */
+export function readUserMsg(msgId: number): AxiosPromise<MsgUserResponseData> {
+  return request({
+    url: `${API.READ_USERS_MSG_URL}/${msgId}`,
+    method: 'put',
+  })
+}
+
+/**
+ * 关闭用户的消息
+ *
+ * @param msgId
+ */
+export function closeUserMsg(msgId: number): AxiosPromise<MsgUserResponseData> {
+  return request({
+    url: `${API.CLOSE_USERS_MSG_URL}/${msgId}`,
+    method: 'put',
+  })
+}
+
+/**
+ * 获取用户的消息
+ *
+ * @param username
+ */
+export function listUsersMsg(username: string): AxiosPromise<MsgUserResponseData> {
+  return request({
+    url: API.LIST_USERS_MSG_URL,
+    method: 'get',
+    params: {
+      username,
+    },
   })
 }
