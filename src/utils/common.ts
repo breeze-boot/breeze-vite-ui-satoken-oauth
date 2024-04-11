@@ -15,6 +15,10 @@ export enum DIALOG_FLAG {
   ADD_SUB = 'ADD_SUB',
   EDIT = 'EDIT',
 }
+export enum SORT {
+  ASE = 'ascending',
+  DESC = 'descending',
+}
 
 export const camelCaseToUnderscore = (val: string) => {
   return val.replace(/[A-Z]/g, (letter: string) => `_${letter.toLowerCase()}`)

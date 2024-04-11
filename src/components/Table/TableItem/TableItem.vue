@@ -38,11 +38,43 @@ interface switchType {
   switchStatus: boolean
 }
 
+/**
+ * switch状态
+ */
 let switchState = reactive<switchType>({
   switchStatus: false,
 })
 
+const editId = ref(undefined)
+
+/**
+ * input点击事件
+ */
+const handleInputViewClick = (item: any, row: any) => {
+  editId.value = row.id
+}
+
+/**
+ * 失去焦点
+ */
+const inputBlur = (item: any, row: any) => {
+  if (row[item.prop]) {
+    editId.value = undefined
+    return
+  }
+  ElMessage.warning('请输入正确的值')
+}
+
+/**
+ * 保存行
+ */
+const saveRow = () => {}
+
 const switchLoading = ref(false)
+
+/**
+ * switch点击事件
+ */
 const beforeSwitchChange = (): boolean => {
   ElMessage.info('click...')
   switchState.switchStatus = true
@@ -66,6 +98,12 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
   }
 }
 
+/**
+ * 构造参数
+ *
+ * @param obj
+ * @returns
+ */
 const objToQueryString = (obj: any) => {
   let pairs = []
   for (let key in obj) {
@@ -189,11 +227,6 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     </a>
   </template>
 
-  <!-- input-->
-  <template v-else-if="tableField.type === 'input'">
-    <el-input type="text" v-model="scope.row[tableField.prop]" :readonly="tableField.input?.readonly" />
-  </template>
-
   <!-- file upload -->
   <template v-else-if="tableField.type === 'fileUpload' && tableField.upload">
     <file-upload-button
@@ -220,6 +253,55 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
         <el-button icon="view" :link="true" :disabled="!scope.row['fileUpload']" type="success" />
       </template>
     </el-popover>
+  </template>
+
+  <!-- 行内input -->
+  <template v-else-if="tableField.type === 'input'">
+    <el-form-item
+      label-width="0"
+      :rules="tableField.formOptions?.rules"
+      :prop="`rows[${scope.$index}][${tableField.prop}]`"
+      :label="tableField.label"
+    >
+      <div
+        v-if="editId != scope.row.id"
+        :style="{
+          cursor: 'pointer',
+          width: '100%',
+          height: '100%',
+        }"
+        @click="handleInputViewClick(tableField, scope.row)"
+      >
+        {{ scope.row[tableField.prop] }}
+      </div>
+      <el-input v-else v-model="scope.row[tableField.prop]" @blur="inputBlur(tableField, scope.row)" />
+    </el-form-item>
+  </template>
+
+  <!-- 行内下拉框 -->
+  <template v-else-if="tableField.type === 'select'">
+    <el-form-item
+      label-width="0"
+      :rules="tableField.formOptions?.rules"
+      :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
+      :label="tableField.label"
+    >
+      <el-select
+        v-model="scope.row[tableField.prop]"
+        :placeholder="tableField.formOptions?.placeholder"
+        style="width: 100%"
+        @change="saveRow"
+      >
+        <el-option
+          v-for="_ in tableField.formOptions?.tagSelect
+            ? tableField.formOptions?.tagSelect
+            : scope.row[tableField.formOptions?.selectOptionKey || 'select']"
+          :key="_.value"
+          :label="_.label"
+          :value="_.value"
+        />
+      </el-select>
+    </el-form-item>
   </template>
 
   <!-- switch-->
@@ -297,3 +379,18 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     {{ scope.row[tableField.prop] }}
   </template>
 </template>
+
+<style lang="scss">
+.input-column {
+  padding: 0 !important;
+
+  .cell {
+    height: 100% !important;
+    padding: 0 !important;
+
+    .el-input {
+      border: none !important;
+    }
+  }
+}
+</style>

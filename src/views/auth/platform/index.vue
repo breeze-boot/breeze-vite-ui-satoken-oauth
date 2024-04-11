@@ -5,12 +5,12 @@
 <!-- 平台管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, exportExcel, deletePlatform } from '@/api/auth/platform'
-import AddOrEdit from './components/PlatformAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
+import { page, exportExcel, deletePlatform } from '@/api/auth/platform'
 import type { PlatformRecords } from '@/api/auth/platform/type.ts'
 import type { PlatformRecord, PlatformQuery } from '@/api/auth/platform/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
+import AddOrEdit from './components/PlatformAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
@@ -31,8 +31,8 @@ const queryParams = reactive<PlatformQuery>({
   size: 10,
 })
 
-let checkedRows = reactive<PlatformRecords>([])
-let currentRows = reactive<PlatformRecords>([])
+let checkedRows = reactive<string[]>(['1111111111111111111'])
+let currentRow = reactive<PlatformRecord>({})
 
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
@@ -77,11 +77,23 @@ const tableInfo = reactive<TableInfo>({
   fieldList: [
     {
       prop: 'platformName',
+      sortable: 'custom',
       showOverflowTooltip: true,
       label: t('platform.fields.platformName'),
+      type: 'input',
+      formOptions: {
+        rules: [
+          {
+            required: true,
+            message: 'Please input platform name',
+            trigger: 'blur',
+          },
+        ],
+      },
     },
     {
       prop: 'platformCode',
+      sortable: 'custom',
       showOverflowTooltip: true,
       label: t('platform.fields.platformCode'),
     },
@@ -244,18 +256,9 @@ const handleUpdate = (row: any) => {
  *
  * @param row 选择的行数据
  */
-function handleRowClick(row: PlatformRecord) {
-  currentRows = [row]
-  console.log(currentRows)
-}
-
-/**
- * 选中行，设置当前行currentRow
- *
- * @param rows 选择的行数据
- */
-const handleSelectionChange = (rows: PlatformRecords) => {
-  currentRows = rows
+const handleSelectionChange = (row: PlatformRecord) => {
+  currentRow = row
+  console.log(currentRow)
 }
 </script>
 
@@ -300,6 +303,7 @@ const handleSelectionChange = (rows: PlatformRecords) => {
     :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
+    :default-sort="tableInfo.defaultSort"
     :refresh="tableInfo.refresh"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
@@ -309,7 +313,6 @@ const handleSelectionChange = (rows: PlatformRecords) => {
     @handle-table-row-btn-click="handleTableRowBtnClick"
     @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
-    @handle-row-click="handleRowClick"
   />
 
   <!-- 新增 / 修改 Dialog -->

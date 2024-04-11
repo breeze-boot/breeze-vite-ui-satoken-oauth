@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
-import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
+import { Btn, ColumnSort, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
-import { cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
-import { camelCaseToUnderscore } from '@/utils/common.ts'
+import { camelCaseToUnderscore, SORT } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
 import useUserStore from '@/store/modules/user.ts'
 import TableItem from '../TableItem/TableItem.vue'
@@ -92,20 +91,36 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
+  // 表格数据配置
+  modelValue: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
   // 操作栏配置
   handleBtn: {
     type: Object,
     default: () => {},
   },
   // 操作按钮是否不可点击
-  btnDisable: {
+  rowBtnDisable: {
     type: Function,
     default: () => false,
   },
   // 操作按钮是否隐藏
-  btnHidden: {
+  rowBtnHidden: {
+    type: Function,
+    default: () => true,
+  },
+  // 操作按钮是否不可点击
+  headerBtnDisable: {
     type: Function,
     default: () => false,
+  },
+  // 操作按钮是否隐藏
+  headerBtnHidden: {
+    type: Function,
+    default: () => true,
   },
   // 是否分页
   pager: {
@@ -137,6 +152,7 @@ const $emit = defineEmits([
   'handle-table-header-btn-click',
   'handle-row-db-click',
   'selection-change',
+  'init-table-data',
   'handle-table-row-btn-click',
 ])
 const tableInfo = reactive({
@@ -164,6 +180,22 @@ const tableInfo = reactive({
 let hiddenColumnValue = ref<number[]>()
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
+
+// 弹出
+const buttonRef = ref()
+const popoverRef = ref()
+
+/**
+ * 表格数据
+ */
+const tableData = computed({
+  get: () => {
+    return props.modelValue
+  },
+  set: (value) => {
+    $emit('init-table-data', value)
+  },
+})
 
 /**
  * 初始化事件
@@ -215,6 +247,10 @@ const refreshData = () => {
  * 初始化操作按钮
  */
 const initHandleBtn = reactive((props.handleBtn as handleType) || ({} as handleType))
+
+/**
+ * 行内按钮
+ */
 const handleBtnOperate = props.handleBtn || false
 
 /**
@@ -243,26 +279,92 @@ const dict = useDict(...props.dict)
 const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
 
 /**
+ * 排序列
+ */
+const sortField = new Map()
+
+/**
  * 处理查询条件
  */
-const handleParams = () => {
+const handleParams = (order?: ColumnSort) => {
   const obj = {} as QueryParams
   for (const key in props.query) {
     if (props.query[key] || props.query[key] === 0) {
       obj[key] = props.query[key]
     }
   }
+
+  setOrder(order, obj)
+
   // 根据分页条件，整个查询
   return props.pager ? { ...obj, ...tableInfo.pagerQuery.query } : obj
+}
+
+const setOrder = (order?: ColumnSort, obj: QueryParams) => {
+  // 检查是否有排序字段和排序顺序
+  if (order) {
+    // 获取排序顺序（升序或降序）
+    const ascSortOrder = SORT.ASE
+    const descSortOrder = SORT.DESC
+    // 获取当前排序字段列表
+    let ascSortProps = sortField.get(ascSortOrder) || ''
+    let descSortProps = sortField.get(descSortOrder) || ''
+
+    // 获取当前排序字段
+    const prop = camelCaseToUnderscore(order.prop) + '|'
+    // 检查当前字段是否已经存在于排序字段列表中
+    const propIndexAsc = ascSortProps.indexOf(prop)
+    const propIndexDesc = descSortProps.indexOf(prop)
+
+    // 如果字段已存在，则移除
+    if (propIndexAsc !== -1 || propIndexDesc !== -1) {
+      ascSortProps = ascSortProps.replace(prop, '')
+      descSortProps = descSortProps.replace(prop, '')
+    }
+
+    const sortOrder = order.order
+    if (ascSortOrder === sortOrder) {
+      ascSortProps += prop
+    } else {
+      descSortProps += prop
+    }
+    sortField.set(ascSortOrder, ascSortProps)
+    sortField.set(descSortOrder, descSortProps)
+    obj['sort'] = Object.fromEntries(sortField)
+  }
+}
+
+/**
+ * 自定义排序
+ *
+ * @param order
+ */
+const handleSortChange = (order: ColumnSort) => {
+  getList({
+    order: order.order,
+    prop: order.prop,
+  })
 }
 
 /**
  * 获取数据
  */
-const getList = () => {
+const getList = (order?: ColumnSort) => {
   singleSelectValue.value = undefined
+  currentRows.value = []
+
+  // 父组件传入的数据，直接渲染
+  if (!tableData.value) {
+    tableInfo.loading = true
+    tableInfo.rows = tableData.value
+    props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
+    tableInfo.loading = false
+    return
+  }
   if (!props.listApi) return
-  props.listApi(handleParams()).then((response: any) => {
+
+  tableInfo.loading = true
+  props.listApi(handleParams(order)).then((response: any) => {
     if (response.code === '0000') {
       tableInfo.rows = []
       if (props.pager) {
@@ -271,24 +373,56 @@ const getList = () => {
       } else {
         tableInfo.rows = response.data
       }
-      // 设置当前选中项
-      if (!props.checkedRows) {
-        return
-      }
 
-      props.checkedRows.forEach((selected: any) => {
-        // 传来的值去匹配表格数据
-        const row = tableInfo.rows.find(
-          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
-        )
-        nextTick(() => {
-          if (!row) return
-          tableRef.value.toggleRowSelection(row, true)
-        })
-      })
-    } else {
-      ElMessage.warning(response.message)
+      props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
+      tableInfo.loading = false
+      return
     }
+    ElMessage.warning(response.message)
+    tableInfo.loading = false
+  })
+}
+
+/**
+ * 设置当前选中项
+ */
+const setMultiCheckedList = () => {
+  if (!props.checkedRows) {
+    return
+  }
+  props.checkedRows.forEach((selected: any) => {
+    // 传来的值去匹配表格数据
+    const row = tableInfo.rows.find(
+      (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
+    )
+    nextTick(() => {
+      if (!row) return
+      tableRef.value.toggleRowSelection(row, undefined)
+    })
+  })
+}
+
+/**
+ * 设置当前选中项
+ */
+const setSingleCheckedList = () => {
+  if (!props.checkedRows) {
+    return
+  }
+  props.checkedRows.forEach((selected: any) => {
+    // 传来的值去匹配表格数据
+    const index = (tableInfo.rows as []).findIndex(
+      (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] === selected,
+    )
+
+    nextTick(() => {
+      if (index !== -1) {
+        singleSelectValue.value = index
+      }
+      const rows = tableInfo.rows[index]
+      $emit('selection-change', rows)
+      currentRows.value = rows
+    })
   })
 }
 
@@ -315,11 +449,11 @@ const handleCurrentChange = (current: number) => {
 /**
  * 选中行数据执行
  *
- * @param rows
+ * @param row
  */
-const handleSelectionChange = (rows: any) => {
-  $emit('selection-change', rows)
-  currentRows.value = rows
+const handleSelectionChange = (row: any) => {
+  $emit('selection-change', row)
+  currentRows.value = row
 }
 
 /**
@@ -332,9 +466,11 @@ const handleRowClick = (row: any) => {
   if (index !== -1) {
     singleSelectValue.value = index
   }
-  currentRows.value = [row]
-  $emit('selection-change', cloneDeep(row))
-
+  if (props.select === 'single') {
+    $emit('selection-change', row)
+    currentRows.value = row
+    return
+  }
   if (row) {
     tableRef.value!.toggleRowSelection(row, undefined)
   } else {
@@ -345,10 +481,11 @@ const handleRowClick = (row: any) => {
 /**
  * 双击表格的行项目
  *
- * @param row
+ * @param row 行数组或者行对象
  */
 const handleRowDbClick = (row: any) => {
   $emit('handle-row-db-click', row)
+  currentRows.value = row
 }
 
 /**
@@ -446,29 +583,6 @@ const handleExport = (query: any) => {
   console.debug(query)
 }
 
-/**
- * 监听方法
- */
-watch(
-  () => props.reloadCurrentPage,
-  () => {
-    tableInfo.pagerQuery.query.current = 1
-    getList()
-  },
-)
-/**
- * 监听方法
- */
-watch(
-  () => props.refresh,
-  () => {
-    getList()
-  },
-)
-
-// 弹出
-const buttonRef = ref()
-const popoverRef = ref()
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.()
 }
@@ -494,6 +608,64 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         }
       })
     })
+  }
+}
+
+/**
+ * 监听方法
+ */
+watch(
+  () => props.reloadCurrentPage,
+  () => {
+    tableInfo.pagerQuery.query.current = 1
+    getList()
+  },
+)
+/**
+ * 监听方法
+ */
+watch(
+  () => props.refresh,
+  () => {
+    getList()
+  },
+)
+
+/**
+ * 监听切换选择
+ */
+watch(
+  () => props.checkedRows,
+  () => {
+    if (!props.checkedRows || props.checkedRows.length <= 0) {
+      props.select === 'single' ? (singleSelectValue.value = -1) : tableRef.value!.clearSelection()
+      return
+    }
+    // 设置当前选中项
+    props.checkedRows.forEach((selected: any) => {
+      if (!tableRef.value.rows) return
+      // 传来的值去匹配表格数据
+      const index = (tableInfo.rows as []).findIndex(
+        (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] === selected,
+      )
+
+      nextTick(() => {
+        if (index < 0) return
+        const row = tableInfo.rows[index]
+        if (props.select === 'single') {
+          $emit('selection-change', row)
+          currentRows.value = row
+          return
+        }
+        tableRef.value.toggleRowSelection(row, true)
+      })
+    })
+  },
+)
+
+const setHeaderClass = (params: any) => {
+  if (sortField.has(params.column.property)) {
+    params.column.order = sortField.get(params.column.property)
   }
 }
 </script>
@@ -524,27 +696,25 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         <span>{{ option.key }} - {{ option.label }}</span>
       </template>
     </el-transfer>
-
-    <!--    <div class="footer">-->
-    <!--      <el-button>取消</el-button>-->
-    <!--      <el-button type="primary">确认</el-button>-->
-    <!--    </div>-->
   </el-popover>
 
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
       <div class="tools">
         <div v-if="initTbHeaderBtn" class="table-btn-group">
-          <svg-button
-            v-for="(item, index) in initTbHeaderBtn"
-            :key="index"
-            :type="item.type"
-            :circle="false"
-            :label="item.label"
-            :icon="item.icon"
-            v-has="item.permission"
-            @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
-          />
+          <div v-for="(item, index) in initTbHeaderBtn" :key="index" style="margin: 0 0.5rem">
+            <svg-button
+              :key="index"
+              :type="item.type"
+              :circle="false"
+              :label="item.label"
+              :icon="item.icon"
+              :disabled="item.disabled || headerBtnDisable(item.event, currentRows)"
+              v-if="item.hidden || headerBtnHidden(item.event, currentRows)"
+              v-has="item.permission"
+              @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
+            />
+          </div>
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
@@ -576,10 +746,15 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         :style="tableStyle"
         :show-summary="showSummary"
         :highlight-current-row="true"
-        @select-all="handleSelectionChange"
+        :header-cell-class-name="
+          (params: any) => {
+            setHeaderClass(params)
+          }
+        "
         @selection-change="handleSelectionChange"
         @row-dblclick="handleRowDbClick"
         @row-click="handleRowClick"
+        @sort-change="handleSortChange"
       >
         <el-table-column
           v-if="props.select === 'multi'"
@@ -612,10 +787,12 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
 
         <el-table-column
           v-for="(item, index) in tableField"
+          class-name="input-column"
           :key="index"
           :prop="item.prop"
           :label="item.label"
           :align="item.align || 'center'"
+          :sortable="item.sortable"
           :header-align="item.align || 'center'"
           :width="item.width"
           :min-width="item.minWidth || '100px'"
@@ -627,9 +804,11 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             <template v-if="item.children">
               <el-table-column
                 v-for="(_item, _index) in item.children"
+                class-name="input-column"
                 :key="_index"
                 :label="_item.label"
                 :align="_item.align || 'center'"
+                :sortable="_item.sortable"
                 :header-align="_item.align || 'center'"
                 :width="_item.width"
                 :min-width="_item.minWidth || '100px'"
@@ -676,7 +855,8 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
                 :icon="item.icon"
                 :type="item.type"
                 :label="item.label"
-                :disabled="item.disabled || btnDisable(item.event, scope.row)"
+                :disabled="item.disabled || rowBtnDisable(item.event, scope.row)"
+                v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
                 @svg-btn-click="handleTableRowClick(item.event, scope.row, scope.$index)"
               />
             </template>

@@ -3,6 +3,10 @@
  * @since: 2023-10-02
  */
 
+import { Arrayable } from 'element-plus/es/utils'
+import { SelectData } from '@/types/types.ts'
+import { FormItemRule } from 'element-plus/es/components/form'
+
 /**
  * 按钮类型
  */
@@ -38,6 +42,15 @@ export interface TableInfo {
   tableIndex?: boolean
   checkedRows?: object[] | number[] | string[]
   handleBtn?: HandleBtn
+  defaultSort?: ColumnSort
+}
+
+/**
+ * 表格排序
+ */
+export interface ColumnSort {
+  prop: string
+  order: 'ascending' | 'descending'
 }
 
 /**
@@ -58,8 +71,20 @@ export interface HandleBtn {
  */
 export interface Field {
   key?: number
+  sortable?: boolean | 'custom'
   disabled?: boolean
-  type?: string | 'tag' | 'customRowLink' | 'rowLink' | 'image' | 'switch' | 'input' | 'upload' | 'file'
+  type?:
+    | string
+    | 'tag'
+    | 'customRowLink'
+    | 'rowLink'
+    | 'image'
+    | 'switch'
+    | 'upload'
+    | 'file'
+    | 'select'
+    | 'input'
+    | 'textarea'
   prop: string
   label: string
   switch?: SwitchOption
@@ -67,6 +92,7 @@ export interface Field {
   upload?: UploadOption
   textarea?: TextareaOption
   dict?: string
+  formOptions?: FormOptions
   showOverflowTooltip?: boolean
   hidden?: boolean
   linkInfo?: LinkInfo
@@ -76,6 +102,14 @@ export interface Field {
   minWidth?: string
   fixed?: boolean
   children?: Field[]
+}
+
+export interface FormOptions {
+  type?: string
+  placeholder?: string
+  rules: Arrayable<FormItemRule>
+  tagSelect?: SelectData[]
+  selectOptionKey?: string
 }
 
 /**
