@@ -5,10 +5,12 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { PlatformResponseData, PlatformQuery, PlatformRecord } from './type'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   PLATFORM_RESTFUL_URL = '/platform',
   CHECK_PLATFORM_CODE_URL = '/platform/checkPlatformCode',
+  PLATFORM_SELECT_URL = '/common/selectPlatform',
 }
 
 /**
@@ -89,7 +91,7 @@ export function exportExcel(params: PlatformRecord): AxiosPromise<PlatformRespon
 }
 
 /**
- * 校验用户名是否重复
+ * 校验平台编码是否重复
  *
  *  @param platformCode
  *  @param platformId
@@ -102,5 +104,16 @@ export function checkPlatformCode(platformCode: string, platformId?: number): Ax
       platformId: platformId,
       platformCode: platformCode,
     },
+  })
+}
+
+/**
+ * 平台下拉框
+ *
+ */
+export function selectPlatform(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: API.PLATFORM_SELECT_URL,
+    method: 'get',
   })
 }

@@ -54,6 +54,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:role:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -61,6 +62,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:role:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: RoleRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -103,6 +105,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:role:modify'],
+        eventHandle: (row: RoleRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -111,6 +114,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['auth:role:info'],
+        eventHandle: (row: RoleRecord) => handleInfo(row),
       },
       // 设置角色菜单权限, 具有权限或者超级管理员可以设置
       {
@@ -119,6 +123,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'role_permission',
         event: 'role_permission',
         permission: ['auth:menu:permission:modify', 'ROLE_ADMIN'],
+        eventHandle: (row: RoleRecord) => handleRolePermission(row),
       },
       // 删除
       {
@@ -127,6 +132,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:role:delete'],
+        eventHandle: (row: RoleRecord) => handleDelete([row] as RoleRecords),
       },
     ],
   },
@@ -173,55 +179,11 @@ const setRolePermissionHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'role_permission':
-      handleRolePermission(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -334,8 +296,6 @@ const handleSelectionChange = (rows: RoleRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

@@ -48,6 +48,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:menu:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(undefined, DIALOG_FLAG.ADD),
     },
     {
       type: 'default',
@@ -157,6 +158,16 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:menu:modify'],
+        eventHandle: (row: MenuRecord) => handleUpdate(row),
+      },
+      // 详情
+      {
+        label: t('common.info'),
+        type: '',
+        icon: 'info',
+        event: 'info',
+        permission: ['auth:menu:info'],
+        eventHandle: (row: MenuRecord) => handleInfo(row),
       },
       // 添加子菜单
       {
@@ -165,6 +176,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'add',
         event: 'add',
         permission: ['auth:menu:create'],
+        eventHandle: (row: MenuRecord) => handleAdd(row.id, DIALOG_FLAG.ADD_SUB),
       },
       // 删除
       {
@@ -173,6 +185,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:menu:delete'],
+        eventHandle: (row: MenuRecord) => handleDelete(row),
       },
     ],
   },
@@ -211,51 +224,11 @@ const AddOrEditHandle = (id?: number, flag?: DIALOG_FLAG) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete(row)
-      break
-    case 'add':
-      handleAdd(row.id, DIALOG_FLAG.ADD_SUB)
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- */
-const handleTableHeaderBtnClick = (event: string) => {
-  switch (event) {
-    case 'add':
-      handleAdd(undefined, DIALOG_FLAG.ADD)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -358,8 +331,6 @@ const handleSelectionChange = (rows: MenuRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

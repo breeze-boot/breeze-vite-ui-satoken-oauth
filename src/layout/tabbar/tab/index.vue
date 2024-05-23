@@ -69,7 +69,6 @@ const handleSwitchTab = async (pane: any) => {
   text-align: right;
   font-size: 12px;
   background: transparent !important;
-  z-index: 999;
 
   .tabs > .el-tabs__content {
     padding: 32px;
@@ -99,6 +98,12 @@ const handleSwitchTab = async (pane: any) => {
     .el-tabs__nav {
       border: none !important;
       height: 30px !important;
+      display: flex;
+      float: left;
+      position: relative;
+      transition: transform var(--el-transition-duration);
+      white-space: nowrap;
+      z-index: calc(var(--el-index-normal) - 1);
 
       .el-tabs__item {
         width: auto !important;

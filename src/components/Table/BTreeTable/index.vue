@@ -114,12 +114,7 @@ const props = defineProps({
 })
 const tableRef = ref<any>()
 
-const $emit = defineEmits([
-  'handle-table-header-btn-click',
-  'handle-row-db-click',
-  'selection-change',
-  'handle-table-row-btn-click',
-])
+const $emit = defineEmits(['handle-row-db-click', 'selection-change'])
 const tableInfo = reactive({
   loading: false,
   // 分页信息
@@ -347,19 +342,47 @@ const handleRowDbClick = (row: any) => {
 /**
  * 派发按钮点击事件
  *
- * @param event
+ * @param btn
  * @param row
  * @param index
  */
-const handleTableRowClick = (event: string, row: any, index: number) => {
-  switch (event) {
+const handleTableRowClick = (btn: Btn, row: any, index: number) => {
+  switch (btn.event) {
     case 'delete' || 'remove':
       confirmBox(() => {
-        $emit('handle-table-row-btn-click', event, row, index)
+        btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
       })
       break
     default:
-      $emit('handle-table-row-btn-click', event, row, index)
+      btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
+      break
+  }
+}
+
+/**
+ * 表格头部按钮点击事件
+ *
+ * @param btn
+ * @param rows
+ * @param index
+ */
+const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
+  switch (btn.event) {
+    case 'delete' || 'remove':
+      confirmBox(() => {
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+      })
+      break
+    case 'edit':
+      checkBeforeClickBtn().then(() => {
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+      })
+      break
+    case 'export':
+      handleExport(handleParams())
+      break
+    default:
+      btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
       break
   }
 }
@@ -384,33 +407,6 @@ const confirmBox = (func: any) => {
         message: t('common.cancel'),
       })
     })
-}
-
-/**
- * 派发表格顶部按钮点击事件
- *
- * @param event
- * @param rows
- */
-const handleTableHeaderClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'del':
-      checkBeforeClickBtn().then(() => {
-        confirmBox(() => {
-          $emit('handle-table-header-btn-click', event, rows)
-        })
-      })
-      break
-    case 'add':
-      $emit('handle-table-header-btn-click', event, rows)
-      break
-    case 'export':
-      handleExport(props.query)
-      break
-    default:
-      $emit('handle-table-header-btn-click', event, rows)
-      break
-  }
 }
 
 /**
@@ -536,7 +532,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
             :label="item.label"
             :icon="item.icon"
             v-has="item.permission"
-            @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
+            @svg-btn-click="handleHeadBtnClick(item, currentRows, index)"
           />
           <svg-button
             icon="expend"
@@ -677,7 +673,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
                 :type="item.type"
                 :label="item.label"
                 :disabled="item.disabled || btnDisableSets(item.event, scope.row)"
-                @svg-btn-click="handleTableRowClick(item.event, scope.row, scope.$index)"
+                @svg-btn-click="handleTableRowClick(item, scope.row, scope.$index)"
               />
             </template>
           </template>

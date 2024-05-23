@@ -8,6 +8,7 @@ import { FileResponseData, FileQuery, FileRecord, FileUploadResponseData, FilePa
 
 enum API {
   FILE_RESTFUL_URL = '/file',
+  UPLOAD_FILE_URL = '/common/uploadMinioS3',
 }
 
 /**
@@ -20,32 +21,6 @@ export function page(params: FileQuery): AxiosPromise<FileResponseData> {
     url: API.FILE_RESTFUL_URL,
     method: 'get',
     params: params,
-  })
-}
-
-/**
- * 获取详情
- *
- * @param id
- */
-export function getFile(id: number): AxiosPromise<FileResponseData> {
-  return request({
-    url: API.FILE_RESTFUL_URL,
-    method: 'get',
-    params: id,
-  })
-}
-
-/**
- * 添加
- *
- * @param data 文件
- */
-export function addFile(data: FileRecord): AxiosPromise<FileResponseData> {
-  return request({
-    url: API.FILE_RESTFUL_URL,
-    method: 'post',
-    data: data,
   })
 }
 

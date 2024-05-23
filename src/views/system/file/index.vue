@@ -50,6 +50,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:file:upload'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -57,6 +58,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:file:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: FileRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -145,14 +147,16 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:file:info'],
+        eventHandle: (row: FileRecord) => handleInfo(row),
       },
-      // 删除
+      // 下载
       {
         label: t('common.download'),
         type: 'primary',
         icon: 'download',
         event: 'download',
         permission: ['sys:file:download'],
+        eventHandle: (row: FileRecord) => handleDownload(row),
       },
       // 删除
       {
@@ -161,6 +165,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:file:delete'],
+        eventHandle: (row: FileRecord) => handleDelete([row] as FileRecords),
       },
     ],
   },
@@ -198,55 +203,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'download':
-      handleDownload(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: FileRecords) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: FileRecord) => {
+const handleInfo = (row: FileRecord) => {
   alert(row + '查询')
 }
 
@@ -283,15 +244,6 @@ const handleDelete = async (rows: FileRecords) => {
       reloadList()
     },
   })
-}
-
-/**
- * 修改
- *
- * @param row 修改参数
- */
-const handleUpdate = (row: any) => {
-  AddOrEditHandle(row.id)
 }
 
 /**
@@ -349,8 +301,6 @@ const handleSelectionChange = (rows: FileRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

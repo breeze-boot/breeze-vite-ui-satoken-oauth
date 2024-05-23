@@ -14,11 +14,13 @@ import SvgButton from '@/components//SvgButton/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
 import FileUpload from '@/components/Upload/FileUpload/index.vue'
+import WangEditor from '@/components/WangEditor/index.vue'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
   BTable,
+  WangEditor,
   BTreeTable,
   SearchContainerBox,
   SvgButton,

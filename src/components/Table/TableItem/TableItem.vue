@@ -261,19 +261,10 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       label-width="0"
       :rules="tableField.formOptions?.rules"
       :prop="`rows[${scope.$index}][${tableField.prop}]`"
-      :label="tableField.label"
     >
-      <div
-        v-if="editId != scope.row.id"
-        :style="{
-          cursor: 'pointer',
-          width: '100%',
-          height: '100%',
-        }"
-        @click="handleInputViewClick(tableField, scope.row)"
-      >
+      <span v-if="editId != scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
         {{ scope.row[tableField.prop] }}
-      </div>
+      </span>
       <el-input v-else v-model="scope.row[tableField.prop]" @blur="inputBlur(tableField, scope.row)" />
     </el-form-item>
   </template>
@@ -379,18 +370,25 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     {{ scope.row[tableField.prop] }}
   </template>
 </template>
-
 <style lang="scss">
 .input-column {
   padding: 0 !important;
 
-  .cell {
-    height: 100% !important;
-    padding: 0 !important;
+  .el-form-item {
+    --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
 
-    .el-input {
-      border: none !important;
+    .input-span {
+      cursor: pointer;
+      width: 100%;
+      display: block;
+      height: var(--el-input-inner-height);
+      line-height: var(--el-input-inner-height);
     }
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0 !important;
   }
 }
 </style>

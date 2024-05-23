@@ -6,4 +6,26 @@ html.dark {
   --baseSearchDialogTheme: rgba(0, 0 0, 0.3);
   --baseTextColor: rgba(255, 255, 255, 0.88);
   --loginTheme: (--el-color-black);
+
+  // textarea - css vars
+  --w-e-textarea-bg-color: #131313;
+  --w-e-textarea-color: #d7d7d7;
+  --w-e-textarea-border-color: #ccc;
+  --w-e-textarea-slight-border-color: #e8e8e8;
+  --w-e-textarea-slight-color: #d4d4d4;
+  --w-e-textarea-slight-bg-color: #f5f2f0;
+  --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
+  --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
+
+  // toolbar - css vars
+  --w-e-toolbar-color: #d5d5d5;
+  --w-e-toolbar-bg-color: #212121;
+  --w-e-toolbar-active-color: #fff;
+  --w-e-toolbar-active-bg-color: #5b5b5b;
+  --w-e-toolbar-disabled-color: #6b6b6b;
+  --w-e-toolbar-border-color: #3b3b3b;
+
+  // modal - css vars
+  --w-e-modal-button-bg-color: rgba(103, 103, 103, 0.64);
+  --w-e-modal-button-border-color: rgba(152, 152, 152, 0.34);
 }

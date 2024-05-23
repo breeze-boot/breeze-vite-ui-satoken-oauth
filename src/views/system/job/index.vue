@@ -55,6 +55,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:job:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -62,6 +63,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:job:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: JobRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -150,6 +152,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['sys:job:modify'],
+        eventHandle: (row: JobRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -158,6 +161,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:job:info'],
+        eventHandle: (row: JobRecord) => handleInfo(row),
       },
       // 查看日志
       {
@@ -166,6 +170,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'job_view_log',
         event: 'job_view_log',
         permission: ['sys:jLog:list'],
+        eventHandle: (row: JobRecord) => handleJobViewLog(row),
       },
       // 立即运行
       {
@@ -174,6 +179,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'job_run_immediately',
         event: 'job_run_immediately',
         permission: [],
+        eventHandle: (row: JobRecord) => handleJobRunImmediately(row),
       },
       // 删除
       {
@@ -182,6 +188,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:job:delete'],
+        eventHandle: (row: JobRecord) => handleDelete([row] as JobRecords),
       },
     ],
   },
@@ -219,58 +226,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    case 'job_view_log':
-      handleJobViewLog(row)
-      break
-    case 'job_run_immediately':
-      handleJobRunImmediately(row)
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -397,8 +357,6 @@ const handleSelectionChange = (rows: JobRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

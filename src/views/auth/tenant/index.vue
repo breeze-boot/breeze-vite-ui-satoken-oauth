@@ -52,6 +52,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:tenant:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -59,6 +60,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:tenant:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: TenantRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -101,6 +103,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:tenant:modify'],
+        eventHandle: (row: TenantRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -109,6 +112,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['auth:tenant:info'],
+        eventHandle: (row: TenantRecord) => handleInfo(row),
       },
       // 删除
       {
@@ -117,6 +121,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:tenant:delete'],
+        eventHandle: (row: TenantRecord) => handleInfo([row] as TenantRecords),
       },
     ],
   },
@@ -154,52 +159,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -303,8 +267,6 @@ const handleSelectionChange = (rows: TenantRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

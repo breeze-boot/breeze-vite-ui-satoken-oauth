@@ -146,15 +146,9 @@ const props = defineProps({
     default: true,
   },
 })
-const tableRef = ref<any>()
+const tableRef = ref<any>('')
 
-const $emit = defineEmits([
-  'handle-table-header-btn-click',
-  'handle-row-db-click',
-  'selection-change',
-  'init-table-data',
-  'handle-table-row-btn-click',
-])
+const $emit = defineEmits(['handle-row-db-click', 'selection-change', 'init-table-data'])
 const tableInfo = reactive({
   loading: false,
   // 分页信息
@@ -352,7 +346,6 @@ const handleSortChange = (order: ColumnSort) => {
 const getList = (order?: ColumnSort) => {
   singleSelectValue.value = undefined
   currentRows.value = []
-
   // 父组件传入的数据，直接渲染
   if (!tableData.value) {
     tableInfo.loading = true
@@ -491,19 +484,47 @@ const handleRowDbClick = (row: any) => {
 /**
  * 派发按钮点击事件
  *
- * @param event
+ * @param btn
  * @param row
  * @param index
  */
-const handleTableRowClick = (event: string, row: any, index: number) => {
-  switch (event) {
+const handleTableRowClick = (btn: Btn, row: any, index: number) => {
+  switch (btn.event) {
     case 'delete' || 'remove':
       confirmBox(() => {
-        $emit('handle-table-row-btn-click', event, row, index)
+        btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
       })
       break
     default:
-      $emit('handle-table-row-btn-click', event, row, index)
+      btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
+      break
+  }
+}
+
+/**
+ * 表格头部按钮点击事件
+ *
+ * @param btn
+ * @param rows
+ * @param index
+ */
+const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
+  switch (btn.event) {
+    case 'delete' || 'remove':
+      confirmBox(() => {
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+      })
+      break
+    case 'edit':
+      checkBeforeClickBtn().then(() => {
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+      })
+      break
+    case 'export':
+      handleExport(handleParams())
+      break
+    default:
+      btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
       break
   }
 }
@@ -531,33 +552,6 @@ const confirmBox = (func: any) => {
 }
 
 /**
- * 派发表格顶部按钮点击事件
- *
- * @param event
- * @param rows
- */
-const handleTableHeaderClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'del':
-      checkBeforeClickBtn().then(() => {
-        confirmBox(() => {
-          $emit('handle-table-header-btn-click', event, rows)
-        })
-      })
-      break
-    case 'add':
-      $emit('handle-table-header-btn-click', event, rows)
-      break
-    case 'export':
-      handleExport(props.query)
-      break
-    default:
-      $emit('handle-table-header-btn-click', event, rows)
-      break
-  }
-}
-
-/**
  * 按钮点击前校验方法
  */
 const checkBeforeClickBtn = () => {
@@ -570,6 +564,7 @@ const checkBeforeClickBtn = () => {
     resolve({})
   })
 }
+
 /**
  * 后台请求导出数据，处理数据
  *
@@ -712,7 +707,7 @@ const setHeaderClass = (params: any) => {
               :disabled="item.disabled || headerBtnDisable(item.event, currentRows)"
               v-if="item.hidden || headerBtnHidden(item.event, currentRows)"
               v-has="item.permission"
-              @svg-btn-click="handleTableHeaderClick(item.event, currentRows)"
+              @svg-btn-click="handleHeadBtnClick(item, currentRows, index)"
             />
           </div>
           <slot name="tbHeaderBtn"></slot>
@@ -849,6 +844,7 @@ const setHeaderClass = (params: any) => {
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
               <svg-button
+                :key="index"
                 :circle="false"
                 v-has="item.permission"
                 :link="initHandleBtn.link || item.link"
@@ -857,7 +853,7 @@ const setHeaderClass = (params: any) => {
                 :label="item.label"
                 :disabled="item.disabled || rowBtnDisable(item.event, scope.row)"
                 v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
-                @svg-btn-click="handleTableRowClick(item.event, scope.row, scope.$index)"
+                @svg-btn-click="handleTableRowClick(item, scope.row, scope.$index)"
               />
             </template>
           </template>

@@ -10,7 +10,6 @@ import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   MENU_RESTFUL_URL = '/menu',
-  PLATFORM_SELECT_URL = '/common/selectPlatform',
   MENU_SELECT_URL = '/common/selectMenu',
 }
 
@@ -104,17 +103,6 @@ export function selectMenu(id: number): AxiosPromise<SelectResponseData> {
     url: API.MENU_SELECT_URL,
     method: 'get',
     params: { id },
-  })
-}
-
-/**
- * 平台下拉框
- *
- */
-export function selectPlatform(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.PLATFORM_SELECT_URL,
-    method: 'get',
   })
 }
 

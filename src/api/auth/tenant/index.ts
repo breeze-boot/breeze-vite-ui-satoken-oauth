@@ -5,10 +5,12 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { TenantResponseData, TenantQuery, TenantRecord } from './type'
+import {SelectResponseData} from "@/types/types.ts";
 
 enum API {
   TENANT_RESTFUL_URL = '/tenant',
   CHECK_TENANT_CODE_URL = '/tenant/checkTenantCode',
+  TENANT_SELECT_URL = '/common/selectTenant',
 }
 
 /**
@@ -102,5 +104,16 @@ export function checkTenantCode(tenantCode: string, tenantId?: number): AxiosPro
       tenantId: tenantId,
       tenantCode: tenantCode,
     },
+  })
+}
+
+/**
+ * 租户下拉框
+ *
+ */
+export function selectTenant(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: API.TENANT_SELECT_URL,
+    method: 'get',
   })
 }

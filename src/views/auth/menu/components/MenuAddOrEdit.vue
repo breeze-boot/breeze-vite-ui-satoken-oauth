@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addMenu, editMenu, getMenu, selectMenu, selectPlatform } from '@/api/auth/menu'
+import { addMenu, editMenu, getMenu, selectMenu } from '@/api/auth/menu'
 import { MenuRecord } from '@/api/auth/menu/type.ts'
 import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
@@ -15,6 +15,7 @@ import { useDict } from '@/hooks/dict'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
 import JSONBigInt from 'json-bigint'
+import { selectPlatform } from '@/api/auth/platform'
 
 defineOptions({
   name: 'MenuAddOrEdit',
@@ -213,10 +214,7 @@ defineExpose({
         </el-select>
       </el-form-item>
       <el-form-item label-width="100px" :label="t('menu.fields.type')" style="text-align: left" prop="type">
-        <el-radio-group
-          v-model="menuDataForm.type"
-          @click="menuDataForm.type === 2 ? (menuDataForm.href = 0) : (menuDataForm.href = 1)"
-        >
+        <el-radio-group v-model="menuDataForm.type">
           <el-radio-button v-for="item in MENU_TYPE" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
           </el-radio-button>
@@ -231,7 +229,7 @@ defineExpose({
         prop="href"
       >
         <el-radio-group v-model="menuDataForm.href">
-          <el-radio-button v-for="item in HREF" :key="item.value" :value="item.value">
+          <el-radio-button v-for="item in HREF" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -245,7 +243,7 @@ defineExpose({
         prop="keepAlive"
       >
         <el-radio-group v-model="menuDataForm.keepAlive">
-          <el-radio-button v-for="item in KEEPALIVE" :key="item.value" :value="item.value">
+          <el-radio-button v-for="item in KEEPALIVE" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -259,7 +257,7 @@ defineExpose({
         prop="hidden"
       >
         <el-radio-group v-model="menuDataForm.hidden">
-          <el-radio-button v-for="item in HIDDEN" :key="item.value" :value="item.value">
+          <el-radio-button v-for="item in HIDDEN" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
@@ -322,7 +320,9 @@ defineExpose({
           autocomplete="off"
           clearable
           :placeholder="t('menu.fields.component')"
-        />
+        >
+          <template #prepend>src/views</template>
+        </el-input>
       </el-form-item>
 
       <el-form-item

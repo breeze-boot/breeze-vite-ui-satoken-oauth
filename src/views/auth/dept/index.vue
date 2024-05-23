@@ -50,6 +50,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:dept:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(undefined, DIALOG_FLAG.ADD),
     },
     {
       type: 'danger',
@@ -57,6 +58,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:dept:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (row: DeptRecord) => handleDelete(row),
     },
     {
       type: 'default',
@@ -87,7 +89,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    minWidth: 400,
+    minWidth: 300,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -99,6 +101,16 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:dept:modify'],
+        eventHandle: (row: DeptRecord) => handleUpdate(row),
+      },
+      // 详情
+      {
+        label: t('common.info'),
+        type: 'warning',
+        icon: 'add',
+        event: 'add',
+        permission: ['auth:dept:info'],
+        eventHandle: (row: DeptRecord) => handleInfo(row),
       },
       // 添加子级
       {
@@ -107,6 +119,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'add',
         event: 'add',
         permission: ['auth:dept:create'],
+        eventHandle: (row: DeptRecord) => handleAdd(row.id as number, DIALOG_FLAG.ADD_SUB),
       },
       // 删除
       {
@@ -115,6 +128,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:dept:delete'],
+        eventHandle: (row) => handleDelete(row),
       },
     ],
   },
@@ -151,53 +165,12 @@ const handleQuery = () => {
 const AddOrEditHandle = (id?: number, flag?: DIALOG_FLAG) => {
   deptAddOrEditRef.value.init(id, flag)
 }
-
-/**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete(row)
-      break
-    case 'add':
-      handleAdd(row.id, DIALOG_FLAG.ADD_SUB)
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- */
-const handleTableHeaderBtnClick = (event: string) => {
-  switch (event) {
-    case 'add':
-      handleAdd(undefined, DIALOG_FLAG.ADD)
-      break
-    default:
-      break
-  }
-}
-
 /**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -300,8 +273,6 @@ const handleSelectionChange = (rows: DeptRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

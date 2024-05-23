@@ -8,7 +8,7 @@ import { ResponseData } from '@/types/types.ts'
  * 菜单列表类型声明
  */
 export interface MenuRecord {
-  id?: number | string
+  id?: number
   platformId?: number
   platformName?: string
   name?: string

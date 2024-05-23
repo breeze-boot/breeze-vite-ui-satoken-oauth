@@ -10,7 +10,7 @@ import AddOrEdit from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
 import { UserRecord, UserQuery } from '@/api/auth/user/type.ts'
-import { Query, TableInfo } from '@/components/Table/types/types.ts'
+import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
@@ -63,6 +63,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:user:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -70,6 +71,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:user:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: UserRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -279,6 +281,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:user:modify'],
+        eventHandle: (row: UserRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -287,6 +290,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['auth:user:info'],
+        eventHandle: (row: UserRecord) => handleInfo(row),
       },
       // 重置密码
       {
@@ -295,6 +299,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'user_reset_password',
         event: 'user_reset_password',
         permission: ['auth:user:reset'],
+        eventHandle: (row: UserRecord) => handleUserRestPassword(row),
       },
       // 角色设置
       {
@@ -303,6 +308,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'user_role_settings',
         event: 'user_role_settings',
         permission: ['auth:user:set:role'],
+        eventHandle: (row: UserRecord) => handleUserRoleSettings(row),
       },
       // 删除
       {
@@ -311,6 +317,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:user:delete'],
+        eventHandle: (row: UserRecord) => handleDelete([row] as UserRecords),
       },
     ],
   },
@@ -348,58 +355,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'user_reset_password':
-      handleUserRestPassword(row)
-      break
-    case 'user_role_settings':
-      handleUserRoleSettings(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -581,8 +541,6 @@ const handleSelectionChange = (rows: UserRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

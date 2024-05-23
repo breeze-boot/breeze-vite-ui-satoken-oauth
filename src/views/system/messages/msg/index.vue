@@ -52,6 +52,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:msg:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -59,6 +60,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:msg:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: MsgRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -116,6 +118,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['sys:msg:modify'],
+        eventHandle: (row: MsgRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -124,6 +127,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:msg:info'],
+        eventHandle: (row: MsgRecord) => handleInfo(row),
       },
       // 推送
       {
@@ -132,6 +136,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'send',
         event: 'send',
         permission: ['sys:msg:send'],
+        eventHandle: (row: MsgRecord) => handleSend(row),
       },
       // 删除
       {
@@ -140,6 +145,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:msg:delete'],
+        eventHandle: (rows: MsgRecords) => handleDelete(rows),
       },
     ],
   },
@@ -177,55 +183,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'send':
-      handleSend(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: MsgRecord) => {
   console.log(row)
 }
 
@@ -239,7 +201,7 @@ const handleAdd = () => {
 /**
  * 推送消息
  */
-const handleSend = (row: any) => {
+const handleSend = (row: MsgRecord) => {
   sendMsgSettingRef.value.init(row.id)
 }
 
@@ -248,7 +210,7 @@ const handleSend = (row: any) => {
  *
  * @param row 修改参数
  */
-const handleUpdate = (row: any) => {
+const handleUpdate = (row: MsgRecord) => {
   AddOrEditHandle(row.id)
 }
 
@@ -325,8 +287,6 @@ const handleSelectionChange = (rows: MsgRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

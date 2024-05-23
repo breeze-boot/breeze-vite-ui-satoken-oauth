@@ -21,6 +21,7 @@ export interface Btn {
   permission: string[]
   link?: boolean
   event: Event
+  eventHandle?: (row: any, $index: number) => void
 }
 
 /**

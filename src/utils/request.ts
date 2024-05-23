@@ -91,8 +91,7 @@ const redirectToLogin = async (): Promise<void> => {
  * @param error
  */
 const handleRefreshToken = async (error: any) => {
-  if (!error.config._retry && !isRefreshing) {
-    error.config._retry = true
+  if (!isRefreshing) {
     isRefreshing = true
 
     try {
@@ -124,11 +123,7 @@ const handleRefreshToken = async (error: any) => {
  * @param error
  */
 const handle401Error = async (error: any) => {
-  if (error.response.data.code === 'SYSTEM_ERROR_0001') {
-    ElMessage.error(error.response.data.message)
-    return Promise.reject(error.response.data)
-  }
-  if (isRefreshing && error.response.data.code === 'A103') {
+  if (isRefreshing && (error.response.data.code === 'A101' || error.response.data.code === 'A102')) {
     await redirectToLogin()
     ElMessage.error(i18n.global.t('axios.reLogin'))
     return Promise.reject(error.response.data)
@@ -150,7 +145,8 @@ request.interceptors.response.use(
         ElMessage.warning(message)
         break
       case '0002':
-        ElMessage.error(i18n.global.t('axios.systemAbnormality'))
+        ElMessage.warning(message)
+        debugger
         break
       case undefined:
         // 没有code时正常返回数据

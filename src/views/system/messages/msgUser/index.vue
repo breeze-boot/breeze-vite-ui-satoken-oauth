@@ -48,6 +48,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:msgUser:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: MsgUserRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -120,6 +121,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:msgUser:info'],
+        eventHandle: (rows: MsgUserRecords) => handleInfo(rows),
       },
       // 删除
       {
@@ -128,6 +130,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:msgUser:delete'],
+        eventHandle: (row: MsgUserRecord) => handleDelete([row] as MsgUserRecords),
       },
     ],
   },
@@ -156,46 +159,11 @@ const handleQuery = () => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -272,8 +240,6 @@ const handleSelectionChange = (rows: MsgUserRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />

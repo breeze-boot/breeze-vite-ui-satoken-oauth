@@ -54,6 +54,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:dict:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -61,6 +62,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:dict:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: DictRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -123,6 +125,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['sys:dict:modify'],
+        eventHandle: (row: DictRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -131,6 +134,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:dict:info'],
+        eventHandle: (row: DictRecord) => handleInfo(row),
       },
       // 查看字典项
       {
@@ -139,6 +143,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'dict_item_view',
         event: 'dict_item_view',
         permission: ['sys:dict:list'],
+        eventHandle: (row: DictRecord) => handleDictItemViewLog(row),
       },
       // 删除
       {
@@ -147,6 +152,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:dict:delete'],
+        eventHandle: (row: DictRecord) => handleDelete([row] as DictRecords),
       },
     ],
   },
@@ -184,55 +190,11 @@ const AddOrEditHandle = (id?: number) => {
 }
 
 /**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    case 'view':
-      handleView(row)
-      break
-    case 'delete':
-      handleDelete([row])
-      break
-    case 'dict_item_view':
-      handleDictItemViewLog(row)
-      break
-    default:
-      break
-  }
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
-}
-
-/**
  * 详情
  *
  * @param row 参数
  */
-const handleView = (row: any) => {
+const handleInfo = (row: any) => {
   console.log(row)
 }
 
@@ -344,8 +306,6 @@ const handleSelectionChange = (rows: DictRecords) => {
     :select="tableInfo.select"
     :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
-    @handle-table-row-btn-click="handleTableRowBtnClick"
-    @handle-table-header-btn-click="handleTableHeaderBtnClick"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
   />
