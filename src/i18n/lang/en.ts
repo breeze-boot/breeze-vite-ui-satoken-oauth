@@ -64,4 +64,14 @@ export default {
       click: 'please click ',
     },
   },
+  settings: {
+    fields: {
+      prop: 'prop',
+      label: 'label',
+      hidden: 'hidden',
+      width: 'width',
+      fixed: 'fixed',
+      operate: 'operate',
+    },
+  },
 }

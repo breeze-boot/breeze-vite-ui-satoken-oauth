@@ -8,10 +8,7 @@ import { camelCaseToUnderscore, SORT } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
 import useUserStore from '@/store/modules/user.ts'
 import TableItem from '../TableItem/TableItem.vue'
-
-const useStore = useUserStore()
-
-type TransferKey = number
+import { VueDraggable } from 'vue-draggable-plus'
 
 defineOptions({
   name: 'BTable',
@@ -19,6 +16,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const useStore = useUserStore()
 
 const props = defineProps({
   // 表格顶部按钮
@@ -171,7 +169,6 @@ const tableInfo = reactive({
   rows: [],
 })
 
-let hiddenColumnValue = ref<number[]>()
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
 
@@ -195,7 +192,7 @@ const tableData = computed({
  * 初始化事件
  */
 onMounted(() => {
-  initColumns()
+  initColumn()
   refreshData()
 })
 
@@ -205,28 +202,6 @@ onMounted(() => {
 onUpdated(() => {
   return tableRef.value.doLayout()
 })
-
-/**
- * 初始化列
- */
-const initColumns = () => {
-  let tempColumnValue: number[] = []
-  ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
-    let tempItem: Field = {
-      ...item,
-      key: index,
-      hidden: true,
-      disabled: false,
-    }
-    if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
-      tempColumnValue?.push(index)
-      tempItem.hidden = false
-      tempItem.disabled = true
-    }
-    tableInfo.showFieldList.push(tempItem)
-  })
-  hiddenColumnValue.value = tempColumnValue
-}
 
 /**
  * 刷新数据
@@ -248,9 +223,34 @@ const initHandleBtn = reactive((props.handleBtn as handleType) || ({} as handleT
 const handleBtnOperate = props.handleBtn || false
 
 /**
- * 表格样式计算属性
+ * 初始化事件
  */
-const tableField = computed(() => tableInfo.showFieldList.filter((item) => item.hidden))
+const initColumn = () => {
+  tableInfo.showFieldList = []
+  ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
+    let tempItem: Field = {
+      ...item,
+      key: index,
+      fixed: item.fixed || false,
+      align: item.align || 'center',
+      width: item.width || 100,
+      hidden: item.hidden || false,
+      disabled: item.disabled || false,
+    }
+    if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
+      item.hidden = true
+      item.disabled = true
+    }
+    tableInfo.showFieldList.push(tempItem)
+  })
+}
+
+/**
+ * 表格显示列计算属性
+ */
+const tableField = computed(() => {
+  return tableInfo.showFieldList.filter((item) => !item.hidden)
+})
 
 /**
  * 表格样式计算属性
@@ -276,23 +276,6 @@ const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
  * 排序列
  */
 const sortField = new Map()
-
-/**
- * 处理查询条件
- */
-const handleParams = (order?: ColumnSort) => {
-  const obj = {} as QueryParams
-  for (const key in props.query) {
-    if (props.query[key] || props.query[key] === 0) {
-      obj[key] = props.query[key]
-    }
-  }
-
-  setOrder(order, obj)
-
-  // 根据分页条件，整个查询
-  return props.pager ? { ...obj, ...tableInfo.pagerQuery.query } : obj
-}
 
 const setOrder = (order?: ColumnSort, obj: QueryParams) => {
   // 检查是否有排序字段和排序顺序
@@ -338,6 +321,23 @@ const handleSortChange = (order: ColumnSort) => {
     order: order.order,
     prop: order.prop,
   })
+}
+
+/**
+ * 处理查询条件
+ */
+const handleParams = (order?: ColumnSort) => {
+  const obj = {} as QueryParams
+  for (const key in props.query) {
+    if (props.query[key] || props.query[key] === 0) {
+      obj[key] = props.query[key]
+    }
+  }
+
+  setOrder(order, obj)
+
+  // 根据分页条件，整个查询
+  return props.pager ? { ...obj, ...tableInfo.pagerQuery.query } : obj
 }
 
 /**
@@ -582,30 +582,6 @@ const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.()
 }
 
-const filterMethod = (query: string, item: Field) => {
-  return item.label.toLowerCase().includes(query.toLowerCase())
-}
-
-const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: TransferKey[]) => {
-  if (direction === 'left') {
-    movedKeys.forEach((key: number) => {
-      tableInfo.showFieldList.forEach((item: Field) => {
-        if (tableInfo.showFieldList[key].prop === item.prop) {
-          tableInfo.showFieldList[key].hidden = true
-        }
-      })
-    })
-  } else if (direction === 'right') {
-    movedKeys.forEach((key: number) => {
-      tableInfo.showFieldList.forEach((item: Field) => {
-        if (tableInfo.showFieldList[key].prop === item.prop) {
-          tableInfo.showFieldList[key].hidden = false
-        }
-      })
-    })
-  }
-}
-
 /**
  * 监听方法
  */
@@ -658,10 +634,9 @@ watch(
   },
 )
 
-const setHeaderClass = (params: any) => {
-  if (sortField.has(params.column.property)) {
-    params.column.order = sortField.get(params.column.property)
-  }
+let tableKey = ref<number>(Math.random())
+const onEnd = () => {
+  tableKey.value = Math.random()
 }
 </script>
 
@@ -677,20 +652,35 @@ const setHeaderClass = (params: any) => {
     :title="t('common.tableColumn')"
     virtual-triggering
   >
-    <el-transfer
-      v-model="hiddenColumnValue"
-      filterable
-      style="text-align: left; display: inline-block"
-      :titles="[t('common.showTableColumn'), t('common.hiddenTableColumn')]"
-      :filter-method="filterMethod"
-      :filter-placeholder="t('common.search')"
-      :data="tableInfo.showFieldList"
-      @change="handleChangeColumn"
-    >
-      <template #default="{ option }">
-        <span>{{ option.key }} - {{ option.label }}</span>
-      </template>
-    </el-transfer>
+    <VueDraggable v-model="tableInfo.showFieldList" target="tbody" @end="onEnd">
+      <el-table ref="bTableSettings" :data="tableInfo.showFieldList" style="width: 100%" max-height="450">
+        <el-table-column fixed prop="prop" :label="t('settings.fields.prop')" width="150" />
+        <el-table-column prop="label" :label="t('settings.fields.label')" width="120" />
+        <el-table-column prop="hidden" :label="t('settings.fields.hidden')" width="120">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.hidden"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="width" :label="t('settings.fields.width')" width="250">
+          <template #default="{ row }">
+            <el-slider :max="1000" v-model="row.width" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="fixed" :label="t('settings.fields.fixed')" width="120">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.fixed"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+    </VueDraggable>
   </el-popover>
 
   <el-card shadow="never" style="margin: 10px 0">
@@ -713,14 +703,7 @@ const setHeaderClass = (params: any) => {
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
-          <svg-button
-            ref="buttonRef"
-            v-click-outside="onClickOutside"
-            icon="filter"
-            width="1.5rem"
-            height="1.5rem"
-            :circle="true"
-          />
+          <svg-button ref="buttonRef" v-click-outside="onClickOutside" icon="settings" width="1.4rem" :circle="true" />
         </div>
       </div>
     </template>
@@ -735,17 +718,13 @@ const setHeaderClass = (params: any) => {
         v-loading="tableInfo.loading"
         border
         stripe
-        :key="Math.random()"
+        row-key="id"
+        :key="tableKey"
         :summary-method="props.summaryMethod"
         :span-method="props.spanMethod"
         :style="tableStyle"
         :show-summary="showSummary"
         :highlight-current-row="true"
-        :header-cell-class-name="
-          (params: any) => {
-            setHeaderClass(params)
-          }
-        "
         @selection-change="handleSelectionChange"
         @row-dblclick="handleRowDbClick"
         @row-click="handleRowClick"
@@ -779,7 +758,6 @@ const setHeaderClass = (params: any) => {
           type="index"
           :width="tableField.length === 0 ? '' : 66"
         />
-
         <el-table-column
           v-for="(item, index) in tableField"
           class-name="input-column"
@@ -795,8 +773,8 @@ const setHeaderClass = (params: any) => {
           :fixed="item.fixed"
         >
           <template #default="scope">
-            <!-- 多级表头 -->
             <template v-if="item.children">
+              <!-- 多级表头 -->
               <el-table-column
                 v-for="(_item, _index) in item.children"
                 class-name="input-column"

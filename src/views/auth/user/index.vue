@@ -4,7 +4,7 @@
 -->
 <!-- 用户管理 -->
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref } from 'vue'
 import { page, open, exportExcel, deleteUser, editAvatar } from '@/api/auth/user'
 import AddOrEdit from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
@@ -102,7 +102,7 @@ const tableInfo = reactive<TableInfo>({
       showOverflowTooltip: true,
       label: t('user.fields.avatar'),
       type: 'rowLink',
-      width: '200px',
+      width: 200,
       linkInfo: {
         routePath: '/auth/menu',
         rowParam: ['id', 'username'],
@@ -116,7 +116,7 @@ const tableInfo = reactive<TableInfo>({
       showOverflowTooltip: true,
       label: t('user.fields.avatar'),
       type: 'customRowLink',
-      width: '200px',
+      width: 200,
       linkInfo: {
         linkUrlProp: 'avatar',
         rowParam: ['id', 'username'],
@@ -132,7 +132,7 @@ const tableInfo = reactive<TableInfo>({
       showOverflowTooltip: true,
       label: t('user.fields.avatar'),
       type: 'customRowLink',
-      width: '200px',
+      width: 100,
       linkInfo: {
         linkUrlProp: 'avatar',
         rowParam: ['id', 'username'],
@@ -146,7 +146,7 @@ const tableInfo = reactive<TableInfo>({
     {
       prop: '',
       label: t('user.fields.fileUpload'),
-      width: '100px',
+      width: 100,
       type: 'fileUpload',
       upload: {
         // 默认系统标识
@@ -172,7 +172,7 @@ const tableInfo = reactive<TableInfo>({
     {
       prop: '',
       label: t('user.fields.customFileUpload'),
-      width: '120px',
+      width: 120,
       type: 'fileUpload',
       upload: {
         // 默认系统标识

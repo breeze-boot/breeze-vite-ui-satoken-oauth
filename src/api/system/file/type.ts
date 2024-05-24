@@ -50,7 +50,7 @@ export interface FileQuery extends PageQuery {
 /**
  * 文件上传参数类型声明
  */
-export interface FileParam extends PageQuery {
+export interface FileParam {
   bizId?: string | number
   bizType: string
   title: string

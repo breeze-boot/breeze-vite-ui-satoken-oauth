@@ -71,7 +71,7 @@ const tableInfo = reactive<TableInfo>({
   fieldList: [
     {
       fixed: true,
-      width: '150px',
+      width: 150,
       prop: 'title',
       showOverflowTooltip: true,
       label: t('menu.fields.title'),
@@ -87,7 +87,7 @@ const tableInfo = reactive<TableInfo>({
       label: t('menu.fields.sort'),
     },
     {
-      width: '70px',
+      width: 70,
       align: 'center',
       prop: 'icon',
       showOverflowTooltip: true,
@@ -95,25 +95,25 @@ const tableInfo = reactive<TableInfo>({
       type: 'icon',
     },
     {
-      width: '150px',
+      width: 150,
       prop: 'permission',
       showOverflowTooltip: true,
       label: t('menu.fields.permission'),
     },
     {
-      width: '100px',
+      width: 100,
       prop: 'path',
       showOverflowTooltip: true,
       label: t('menu.fields.path'),
     },
     {
-      width: '150px',
+      width: 150,
       prop: 'component',
       showOverflowTooltip: true,
       label: t('menu.fields.component'),
     },
     {
-      width: '100px',
+      width: 100,
       prop: 'href',
       showOverflowTooltip: true,
       label: t('menu.fields.href'),
@@ -121,7 +121,7 @@ const tableInfo = reactive<TableInfo>({
       dict: 'HREF',
     },
     {
-      width: '100px',
+      width: 100,
       prop: 'hidden',
       showOverflowTooltip: true,
       label: t('menu.fields.hidden'),
@@ -129,7 +129,7 @@ const tableInfo = reactive<TableInfo>({
       dict: 'HIDDEN',
     },
     {
-      width: '100px',
+      width: 100,
       prop: 'keepAlive',
       showOverflowTooltip: true,
       label: t('menu.fields.keepAlive'),
@@ -137,7 +137,7 @@ const tableInfo = reactive<TableInfo>({
       dict: 'KEEPALIVE',
     },
     {
-      width: '100px',
+      width: 100,
       prop: 'type',
       showOverflowTooltip: true,
       label: t('menu.fields.type'),

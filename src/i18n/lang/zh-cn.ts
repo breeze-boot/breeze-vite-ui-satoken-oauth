@@ -64,4 +64,14 @@ export default {
       click: '请点击',
     },
   },
+  settings: {
+    fields: {
+      prop: 'prop',
+      label: '字段名',
+      hidden: '是否隐藏',
+      width: '宽度',
+      fixed: '固定',
+      operate: '操作',
+    },
+  },
 }

@@ -9,10 +9,9 @@ import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
 import useUserStore from '@/store/modules/user.ts'
 import TableItem from '@/components/Table/TableItem/TableItem.vue'
+import { VueDraggable } from 'vue-draggable-plus'
 
 const useStore = useUserStore()
-
-type TransferKey = number
 
 defineOptions({
   name: 'BTreeTable',
@@ -139,7 +138,6 @@ const tableInfo = reactive({
   rows: [],
 })
 
-let hiddenColumnValue = ref<number[]>()
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
 
@@ -147,7 +145,7 @@ let currentRows = ref<any>()
  * 初始化事件
  */
 onMounted(() => {
-  initColumns()
+  initColumn()
   refreshData()
 })
 
@@ -159,26 +157,34 @@ onUpdated(() => {
 })
 
 /**
- * 初始化列
+ * 初始化事件
  */
-const initColumns = () => {
-  let _columnValue: number[] = []
+const initColumn = () => {
+  tableInfo.showFieldList = []
   ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
-    let _item: Field = {
+    let tempItem: Field = {
       ...item,
       key: index,
-      hidden: true,
-      disabled: false,
+      fixed: item.fixed || false,
+      align: item.align || 'center',
+      width: item.width || 100,
+      hidden: item.hidden || false,
+      disabled: item.disabled || false,
     }
     if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
-      _columnValue?.push(index)
-      _item.hidden = false
-      _item.disabled = true
+      item.hidden = true
+      item.disabled = true
     }
-    tableInfo.showFieldList.push(_item)
+    tableInfo.showFieldList.push(tempItem)
   })
-  hiddenColumnValue.value = _columnValue
 }
+
+/**
+ * 表格显示列计算属性
+ */
+const tableField = computed(() => {
+  return tableInfo.showFieldList.filter((item) => !item.hidden)
+})
 
 /**
  * 刷新数据
@@ -194,11 +200,6 @@ const refreshData = () => {
  */
 const initHandleBtn = reactive(props.handleBtn as handleType)
 const handleBtnOperate = props.handleBtn || false
-
-/**
- * 表格样式计算属性
- */
-const tableField = computed(() => tableInfo.showFieldList.filter((item) => item.hidden))
 
 /**
  * 表格展开
@@ -433,7 +434,13 @@ const handleExport = (query: any) => {
     ElMessage.warning('导出数据错误')
     return
   }
-  console.debug(query)
+}
+
+// 弹出
+const buttonRef = ref()
+const popoverRef = ref()
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.()
 }
 
 /**
@@ -456,38 +463,11 @@ watch(
   },
 )
 
-// 弹出
-const buttonRef = ref()
-const popoverRef = ref()
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.()
-}
-
-const filterMethod = (query: string, item: Field) => {
-  return item.label.toLowerCase().includes(query.toLowerCase())
-}
-
-const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: TransferKey[]) => {
-  if (direction === 'left') {
-    movedKeys.forEach((key: number) => {
-      tableInfo.showFieldList.forEach((item: Field) => {
-        if (tableInfo.showFieldList[key].prop === item.prop) {
-          tableInfo.showFieldList[key].hidden = true
-        }
-      })
-    })
-  } else if (direction === 'right') {
-    movedKeys.forEach((key: number) => {
-      tableInfo.showFieldList.forEach((item: Field) => {
-        if (tableInfo.showFieldList[key].prop === item.prop) {
-          tableInfo.showFieldList[key].hidden = false
-        }
-      })
-    })
-  }
+let tableKey = ref<number>(Math.random())
+const onEnd = () => {
+  tableKey.value = Math.random()
 }
 </script>
-
 <template>
   <el-popover
     placement="left-start"
@@ -497,29 +477,39 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
     ref="popoverRef"
     :virtual-ref="buttonRef"
     trigger="click"
-    :title="t('common.tableColumn')"
     virtual-triggering
   >
-    <el-transfer
-      v-model="hiddenColumnValue"
-      filterable
-      style="text-align: left; display: inline-block"
-      :titles="[t('common.showTableColumn'), t('common.hiddenTableColumn')]"
-      :filter-method="filterMethod"
-      :filter-placeholder="t('common.search')"
-      :data="tableInfo.showFieldList"
-      @change="handleChangeColumn"
-    >
-      <template #default="{ option }">
-        <span>{{ option.key }} - {{ option.label }}</span>
-      </template>
-    </el-transfer>
-
-    <div class="footer">
-      <el-button>取消</el-button>
-      <el-button type="primary">确认</el-button>
-    </div>
+    <VueDraggable v-model="tableInfo.showFieldList" target="tbody" @end="onEnd">
+      <el-table ref="bTreeTableSettings" :data="tableInfo.showFieldList" style="width: 100%" max-height="350">
+        <el-table-column fixed prop="prop" :label="t('settings.fields.prop')" width="150" />
+        <el-table-column prop="label" :label="t('settings.fields.label')" width="120" />
+        <el-table-column prop="hidden" :label="t('settings.fields.hidden')" width="120">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.hidden"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="width" :label="t('settings.fields.width')" width="250">
+          <template #default="{ row }">
+            <el-slider :max="1000" v-model="row.width" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="fixed" :label="t('settings.fields.fixed')" width="120">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.fixed"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+    </VueDraggable>
   </el-popover>
+
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
       <div class="tools">
@@ -544,14 +534,7 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
-          <svg-button
-            ref="buttonRef"
-            v-click-outside="onClickOutside"
-            icon="filter"
-            width="1.5rem"
-            height="1.5rem"
-            :circle="true"
-          />
+          <svg-button ref="buttonRef" v-click-outside="onClickOutside" icon="settings" width="1.4rem" :circle="true" />
         </div>
       </div>
     </template>
@@ -567,8 +550,8 @@ const handleChangeColumn = (value: TransferKey[], direction: string, movedKeys: 
         border
         :default-expand-all="expandAll"
         stripe
-        :key="Math.random()"
         row-key="id"
+        :key="tableKey"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :style="tableStyle"
         :highlight-current-row="true"

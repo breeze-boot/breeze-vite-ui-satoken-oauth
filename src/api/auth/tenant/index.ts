@@ -5,7 +5,7 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { TenantResponseData, TenantQuery, TenantRecord } from './type'
-import {SelectResponseData} from "@/types/types.ts";
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   TENANT_RESTFUL_URL = '/tenant',

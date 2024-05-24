@@ -99,7 +99,7 @@ export interface Field {
   linkInfo?: LinkInfo
   tag?: TagOptions
   align?: 'center' | 'right' | 'left'
-  width?: string
+  width?: number
   minWidth?: string
   fixed?: boolean
   children?: Field[]

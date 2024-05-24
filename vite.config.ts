@@ -119,7 +119,6 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         'js-cookie',
         'json-bigint',
         'file-saver',
-        'vuedraggable',
       ],
     },
     // 代理跨域
