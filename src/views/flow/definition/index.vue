@@ -6,13 +6,15 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElForm, ElMessage } from 'element-plus'
-import { page, exportExcel, deleteDefinition } from '@/api/flow/definition'
-import type { DefinitionRecords } from '@/api/flow/definition/type.ts'
-import type { DefinitionRecord, DefinitionQuery } from '@/api/flow/definition/type.ts'
+import { page, exportExcel, deleteDefinition, startInstance } from '@/api/flow/definition'
+import type { FlowDefinitionRecords } from '@/api/flow/definition/type.ts'
+import type { FlowDefinitionRecord, FlowDefinitionQuery } from '@/api/flow/definition/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
-import AddOrEdit from './components/DefinitionAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import AddOrEdit from '@/views/flow/definition/components/DefinationAddOrEdit.vue'
+import { FlowStartParam } from '@/api/flow/definition/type.ts'
+import useUserStore from '@/store/modules/user.ts'
 
 defineOptions({
   name: 'Definition',
@@ -24,13 +26,24 @@ const definitionQueryFormRef = ref(ElForm)
 const definitionAddOrEditRef = ref()
 
 // 查询条件
-const queryParams = reactive<DefinitionQuery>({
+const queryParams = reactive<FlowDefinitionQuery>({
+  definitionKey: '',
+  definitionName: '',
   current: 1,
   size: 10,
 })
 
 let checkedRows = reactive<string[]>([])
-let currentRow = reactive<DefinitionRecord>({})
+let currentRow = reactive<FlowDefinitionRecord>({
+  categoryName: '',
+  definitionKey: '',
+  definitionName: '',
+  deploymentTime: '',
+  suspended: '',
+  tenantId: '',
+  version: '',
+  xml: '',
+})
 
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
@@ -39,16 +52,16 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'single',
   // 字典
-  dict: [],
+  dict: ['FLOW_SUSPENDED'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
       type: 'primary',
-      label: t('common.add'),
-      permission: ['flow:definition:create'],
-      event: 'add',
-      icon: 'add',
-      eventHandle: () => handleAdd(),
+      label: t('common.design'),
+      permission: ['flow:definition:design'],
+      event: 'design',
+      icon: 'design',
+      eventHandle: () => handleDesign(),
     },
     {
       type: 'danger',
@@ -56,7 +69,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['flow:definition:delete'],
       event: 'del',
       icon: 'delete',
-      eventHandle: (rows: DefinitionRecords) => handleDelete(rows),
+      eventHandle: (rows: FlowDefinitionRecords) => handleDelete(rows),
     },
     {
       type: 'default',
@@ -76,39 +89,48 @@ const tableInfo = reactive<TableInfo>({
   // 表格字段配置
   fieldList: [
     {
-      prop: 'key',
+      prop: 'definitionKey',
       showOverflowTooltip: true,
-      label: t('definition.fields.key'),
+      label: t('definition.fields.definitionKey'),
+      width: 280,
     },
     {
-      prop: 'name',
+      prop: 'definitionName',
       showOverflowTooltip: true,
-      label: t('definition.fields.name'),
+      label: t('definition.fields.definitionName'),
+      width: 150,
     },
     {
       prop: 'categoryName',
       showOverflowTooltip: true,
       label: t('definition.fields.categoryName'),
-    },
-    {
-      prop: 'tenantId',
-      showOverflowTooltip: true,
-      label: t('definition.fields.tenantId'),
+      width: 150,
     },
     {
       prop: 'deploymentTime',
       showOverflowTooltip: true,
       label: t('definition.fields.deploymentTime'),
+      width: 150,
     },
     {
       prop: 'version',
       showOverflowTooltip: true,
       label: t('definition.fields.version'),
+      width: 100,
     },
     {
       prop: 'suspended',
       showOverflowTooltip: true,
       label: t('definition.fields.suspended'),
+      width: 100,
+      type: 'dict',
+      dict: 'FLOW_SUSPENDED',
+    },
+    {
+      prop: 'tenantId',
+      showOverflowTooltip: true,
+      label: t('definition.fields.tenantId'),
+      width: 150,
     },
   ],
   handleBtn: {
@@ -117,14 +139,23 @@ const tableInfo = reactive<TableInfo>({
     fixed: 'right',
     link: true,
     btList: [
-      // 编辑
+      // 设计
       {
-        label: t('common.edit'),
+        label: t('common.design'),
         type: 'success',
-        icon: 'edit',
-        event: 'edit',
-        permission: ['flow:definition:modify'],
-        eventHandle: (row: DefinitionRecord) => handleUpdate(row),
+        icon: 'design',
+        event: 'design',
+        permission: ['flow:definition:design'],
+        eventHandle: (row: FlowDefinitionRecord) => handleDesign(row),
+      },
+      // 启动
+      {
+        label: t('common.start'),
+        type: 'warning',
+        icon: 'view',
+        event: 'view',
+        permission: ['flow:instance:start'],
+        eventHandle: (row: FlowDefinitionRecord) => handleStart(row),
       },
       // 查看
       {
@@ -133,7 +164,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['flow:definition:info'],
-        eventHandle: (row: DefinitionRecord) => handleInfo(row),
+        eventHandle: (row: FlowDefinitionRecord) => handleInfo(row),
       },
       // 删除
       {
@@ -142,7 +173,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['flow:definition:delete'],
-        eventHandle: (row: DefinitionRecord) => handleDelete([row] as DefinitionRecords),
+        eventHandle: (row: FlowDefinitionRecord) => handleDelete([row] as FlowDefinitionRecords),
       },
     ],
   },
@@ -189,20 +220,15 @@ const handleInfo = (row: any) => {
 }
 
 /**
- * 添加
- */
-const handleAdd = () => {
-  AddOrEditHandle()
-}
-
-/**
  * 删除
  *
  * @param rows 行数据
  */
-const handleDelete = async (rows: DefinitionRecords) => {
-  const definitionIds = rows.map((item: any) => item.id)
-  await deleteDefinition(definitionIds)
+const handleDelete = async (rows: FlowDefinitionRecords) => {
+  const definitions: any[] = rows.map((item: any) => {
+    return { deploymentId: item.id, cascade: true }
+  })
+  await deleteDefinition(definitions)
   ElMessage.success({
     message: t('common.success'),
     duration: 500,
@@ -213,12 +239,30 @@ const handleDelete = async (rows: DefinitionRecords) => {
 }
 
 /**
- * 修改
+ *启动
  *
  * @param row 修改参数
  */
-const handleUpdate = (row: any) => {
-  AddOrEditHandle(row.id)
+const handleStart = async (row: FlowDefinitionRecord) => {
+  let startParam: FlowStartParam = {
+    definitionKey: row.definitionKey,
+    businessKey: '',
+    variables: {
+      approved: true,
+    },
+    isPassFirstNode: true,
+    tenantId: useUserStore().userInfo.tenantId.toString(),
+  }
+  await startInstance(startParam)
+}
+
+/**
+ * 设计
+ *
+ * @param row 修改参数
+ */
+const handleDesign = (row?: FlowDefinitionRecord) => {
+  AddOrEditHandle(row?.id)
 }
 
 /**
@@ -226,7 +270,7 @@ const handleUpdate = (row: any) => {
  *
  * @param row 选择的行数据
  */
-const handleSelectionChange = (row: DefinitionRecord) => {
+const handleSelectionChange = (row: FlowDefinitionRecord) => {
   currentRow = row
   console.log(currentRow)
 }
@@ -236,22 +280,22 @@ const handleSelectionChange = (row: DefinitionRecord) => {
   <search-container-box>
     <el-form ref="definitionQueryFormRef" :model="queryParams" :inline="true">
       <!--  流程定义名 -->
-      <el-form-item :label="t('definition.fields.name')" prop="name">
+      <el-form-item :label="t('definition.fields.definitionName')" prop="name">
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('definition.fields.name')"
-          v-model="queryParams.name"
+          :placeholder="t('definition.fields.definitionName')"
+          v-model="queryParams.definitionName"
         />
       </el-form-item>
 
       <!--  流程定义编码 -->
-      <el-form-item :label="t('definition.fields.key')" prop="key">
+      <el-form-item :label="t('definition.fields.definitionKey')" prop="definitionKey">
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('definition.fields.key')"
-          v-model="queryParams.key"
+          :placeholder="t('definition.fields.definitionKey')"
+          v-model="queryParams.definitionKey"
         />
       </el-form-item>
 
