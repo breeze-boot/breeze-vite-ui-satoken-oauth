@@ -132,7 +132,7 @@ export default {
         :key="`designer-${reloadIndex}`"
         keyboard
         :events="['element.click', 'connection.added', 'connection.removed', 'connection.changed']"
-        ref="myProcessDesigner"
+        ref="processDesigner"
         @element-click="elementClick"
         @element-contextmenu="elementContextmenu"
         @save="onSaveProcessXml"
