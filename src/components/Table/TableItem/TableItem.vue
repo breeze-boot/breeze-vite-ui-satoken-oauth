@@ -223,7 +223,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <!-- 自定义链接名称-->
   <template v-else-if="tableField.type === 'customRowLink'">
     <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
-      {{ scope.row[tableField.linkInfo?.dyColumnName] || tableField.linkInfo?.fixColumnName }}
+      {{ scope?.row[tableField?.linkInfo?.columnName || ''] || tableField.linkInfo?.fixColumnName }}
     </a>
   </template>
 

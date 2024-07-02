@@ -8,15 +8,15 @@ import { RoleResponseData, RoleQuery, RoleRecord, ColumnPermissionRecord } from 
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  ROLE_RESTFUL_URL = '/role',
-  CHECK_ROLE_CODE_URL = '/role/checkRoleCode',
-  SELECT_PERMISSION_URL = '/common/selectPermission',
-  SELECT_CUSTOMIZE_PERMISSION_URL = '/common/selectCustomizePermission',
-  SELECT_TABLE_URL = '/common/selectTable',
-  SELECT_TABLE_COLUMN_URL = '/common/selectTableColumn',
-  SET_COLUMN_PERMISSION_RESTFUL_URL = '/columnPermission/setColumnPermission',
-  LIST_COLUMN_PERMISSION_RESTFUL_URL = '/columnPermission/listSetColumnPermission',
-  REMOVE_COLUMN_PERMISSION_RESTFUL_URL = '/columnPermission/removeColumnPermission',
+  ROLE_RESTFUL_URL = '/auth/v1/role',
+  CHECK_ROLE_CODE_URL = '/auth/v1/role/checkRoleCode',
+  SELECT_PERMISSION_URL = '/sys/v1/common/selectPermission',
+  SELECT_CUSTOMIZE_PERMISSION_URL = '/sys/v1/common/selectCustomizePermission',
+  SELECT_TABLE_URL = '/sys/v1/common/selectTable',
+  SELECT_TABLE_COLUMN_URL = '/sys/v1/common/selectTableColumn',
+  SET_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/setColumnPermission',
+  LIST_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/listSetColumnPermission',
+  REMOVE_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/removeColumnPermission',
 }
 
 /**
@@ -49,7 +49,7 @@ export function getRole(id: number): AxiosPromise<RoleResponseData> {
  *
  * @param data
  */
-export function addRole(data: RoleRecord): AxiosPromise<RoleResponseData> {
+export function addRole(data: RoleRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.ROLE_RESTFUL_URL,
     method: 'post',
@@ -62,7 +62,7 @@ export function addRole(data: RoleRecord): AxiosPromise<RoleResponseData> {
  *
  * @param data
  */
-export function editRole(data: RoleRecord): AxiosPromise<RoleResponseData> {
+export function editRole(data: RoleRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.ROLE_RESTFUL_URL,
     method: 'put',
@@ -75,7 +75,7 @@ export function editRole(data: RoleRecord): AxiosPromise<RoleResponseData> {
  *
  * @param ids
  */
-export function deleteRole(ids: number[]): AxiosPromise<RoleResponseData> {
+export function deleteRole(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.ROLE_RESTFUL_URL,
     method: 'delete',
@@ -88,7 +88,7 @@ export function deleteRole(ids: number[]): AxiosPromise<RoleResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: RoleQuery): AxiosPromise<RoleResponseData> {
+export function exportExcel(params: RoleQuery): AxiosPromise<any> {
   return request({
     url: API.ROLE_RESTFUL_URL,
     method: 'post',

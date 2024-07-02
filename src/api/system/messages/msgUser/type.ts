@@ -31,7 +31,7 @@ export type MsgUserRecords = MsgUserRecord[]
  */
 export interface MsgUserResponseData extends ResponseData {
   data: {
-    records: MsgUserRecords
+    records: MsgUserRecords | MsgUserRecord
     total: number
     size: number
     current: number

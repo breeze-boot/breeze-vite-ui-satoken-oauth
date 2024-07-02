@@ -28,7 +28,7 @@ export type JLogRecords = JLogRecord[]
  */
 export interface JLogResponseData extends ResponseData {
   data: {
-    records: JLogRecords
+    records: JLogRecords | JLogRecord
     total: number
     size: number
     current: number

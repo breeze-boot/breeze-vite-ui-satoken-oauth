@@ -4,6 +4,6 @@
 -->
 <script setup lang="ts"></script>
 
-<template></template>
+<template>手机登录</template>
 
 <style lang="scss" scoped></style>

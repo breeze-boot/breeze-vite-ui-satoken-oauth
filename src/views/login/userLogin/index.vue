@@ -218,7 +218,7 @@ const login = async () => {
       left: 50%;
       width: 70%;
       padding: 30px 10px;
-      background-color: $loginTheme;
+      background-color: $login-theme;
       transform: translateX(-50%);
 
       h1 {

@@ -140,7 +140,7 @@ const tableInfo = reactive<TableInfo>({
           status: 1,
         },
         // 自定义动态字段值
-        dyColumnName: 'username',
+        columnName: 'username',
       },
     },
     {

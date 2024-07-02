@@ -25,7 +25,7 @@ export type DictItemRecords = DictItemRecord[]
  */
 export interface DictItemResponseData extends ResponseData {
   data: {
-    records: DictItemRecords
+    records: DictItemRecords | DictItemRecord
     total: number
     size: number
     current: number

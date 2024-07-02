@@ -5,10 +5,10 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { FileResponseData, FileQuery, FileRecord, FileUploadResponseData, FileParam } from './type'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  FILE_RESTFUL_URL = '/file',
-  UPLOAD_FILE_URL = '/common/uploadMinioS3',
+  FILE_RESTFUL_URL = '/sys/v1/file',
 }
 
 /**
@@ -29,7 +29,7 @@ export function page(params: FileQuery): AxiosPromise<FileResponseData> {
  *
  * @param data 文件
  */
-export function editFile(data: FileRecord): AxiosPromise<FileResponseData> {
+export function editFile(data: FileRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'put',
@@ -42,7 +42,7 @@ export function editFile(data: FileRecord): AxiosPromise<FileResponseData> {
  *
  * @param ids ids数组
  */
-export function deleteFile(ids: number[]): AxiosPromise<FileResponseData> {
+export function deleteFile(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'delete',
@@ -55,7 +55,7 @@ export function deleteFile(ids: number[]): AxiosPromise<FileResponseData> {
  *
  * @param params 查询参数
  */
-export function exportExcel(params: FileQuery): AxiosPromise<FileResponseData> {
+export function exportExcel(params: FileQuery): AxiosPromise<any> {
   return request({
     url: API.FILE_RESTFUL_URL,
     method: 'post',

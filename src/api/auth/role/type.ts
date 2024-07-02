@@ -25,7 +25,7 @@ export type RoleRecords = RoleRecord[]
  */
 export interface RoleResponseData extends ResponseData {
   data: {
-    records: RoleRecords
+    records: RoleRecords | RoleRecord
     total: number
     size: number
     current: number

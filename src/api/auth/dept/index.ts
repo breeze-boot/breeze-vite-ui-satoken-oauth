@@ -9,9 +9,9 @@ import JSONBigInt from 'json-bigint'
 import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  MENU_RESTFUL_URL = '/dept',
-  CHECK_DEPT_CODE_URL = '/dept/checkDeptCode',
-  SELECT_DEPT_URL = '/common/selectDept',
+  MENU_RESTFUL_URL = '/auth/v1/dept',
+  CHECK_DEPT_CODE_URL = '/auth/v1/dept/checkDeptCode',
+  SELECT_DEPT_URL = '/sys/v1/common/selectDept',
 }
 
 /**

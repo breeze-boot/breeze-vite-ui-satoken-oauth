@@ -30,10 +30,12 @@ export default {
     exportAll: 'export all',
     operate: 'operate',
     add: 'add',
+    design: 'design',
     delete: 'delete',
     edit: 'edit',
     info: 'info',
     download: 'download',
+    start: 'start',
     upload: 'upload',
 
     success: 'success',
@@ -41,6 +43,7 @@ export default {
     reloadFail: 'data reload fail',
 
     cron: 'cron',
+    nextStep: 'next step',
 
     no: 'no',
     tableColumn: 'table column',

@@ -7,8 +7,8 @@ import { AxiosPromise } from 'axios'
 import { PermissionResponseData, PermissionQuery, PermissionRecord } from './type'
 
 enum API {
-  PERMISSION_RESTFUL_URL = '/permission',
-  CHECK_PERMISSION_CODE_URL = '/permission/checkPermissionCode',
+  PERMISSION_RESTFUL_URL = '/auth/v1/permission',
+  CHECK_PERMISSION_CODE_URL = '/auth/v1/permission/checkPermissionCode',
 }
 
 /**

@@ -15,7 +15,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
-  name: 'Category',
+  name: 'FlowCategory',
   inheritAttrs: false,
 })
 
@@ -32,7 +32,7 @@ const queryParams = reactive<CategoryQuery>({
 })
 
 let checkedRows = reactive<string[]>([])
-let currentRow = reactive<CategoryRecord>({})
+let currentRow = reactive<CategoryRecord>({ categoryCode: '', categoryName: '', tenantId: '' })
 
 const tableInfo = reactive<TableInfo>({
   // 刷新标识

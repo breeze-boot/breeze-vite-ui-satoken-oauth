@@ -32,7 +32,7 @@ export type FileRecords = FileRecord[]
  */
 export interface FileResponseData extends ResponseData {
   data: {
-    records: FileRecords
+    records: FileRecords | FileRecord
     total: number
     size: number
     current: number

@@ -1,12 +1,12 @@
 // 导出 variables.module.scss，提供给TypeScript使用
 :export {
-  baseMainTheme: $baseMainTheme;
-  baseLeftTheme: $baseLeftTheme;
-  baseTopTheme: $baseTopTheme;
-  baseTextColor: $baseTextColor;
-  baseContextMenuWidth: $baseContextMenuWidth;
-  baseMenuWidth: $baseMenuWidth;
+  baseMainTheme: $base-main-theme;
+  baseLeftTheme: $base-left-theme;
+  baseTopTheme: $base-top-theme;
+  baseTextColor: $base-text-color;
+  baseContextMenuWidth: $base-context-menu-width;
+  baseMenuWidth: $base-menu-width;
 
-  loginTheme: $loginTheme;
-  svgTheme: $svgTheme;
+  loginTheme: $login-theme;
+  svgTheme: $svg-theme;
 }

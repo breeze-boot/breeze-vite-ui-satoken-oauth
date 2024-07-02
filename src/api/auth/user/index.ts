@@ -12,15 +12,15 @@ import {
   UserResetPasswordParam,
   UserSetRoleParam,
 } from './type'
-import { SelectResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  USER_RESTFUL_URL = '/user',
-  CHECK_USERNAME_URL = '/user/checkUsername',
-  SELECT_DEPT_URL = '/common/selectDept',
-  SELECT_POST_URL = '/common/selectPost',
-  SELECT_ROLE_URL = '/common/selectRole',
-  SELECT_USER_LIST_URL = '/common/listUser',
+  USER_RESTFUL_URL = '/auth/v1/user',
+  CHECK_USERNAME_URL = '/auth/v1/user/checkUsername',
+  SELECT_DEPT_URL = '/sys/v1/common/selectDept',
+  SELECT_POST_URL = '/sys/v1/common/selectPost',
+  SELECT_ROLE_URL = '/sys/v1/common/selectRole',
+  SELECT_USER_LIST_URL = '/sys/v1/common/listUser',
 }
 
 /**
@@ -33,19 +33,6 @@ export function page(params: UserQuery): AxiosPromise<UserResponseData> {
     url: API.USER_RESTFUL_URL,
     method: 'get',
     params: params,
-  })
-}
-
-/**
- * switch激活
- *
- * @param data
- */
-export function open(data: UserSwitchParam): AxiosPromise<UserResponseData> {
-  return request({
-    url: API.USER_RESTFUL_URL + `/open`,
-    method: 'put',
-    data: data,
   })
 }
 
@@ -66,7 +53,7 @@ export function getUser(id: number): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function addUser(data: UserRecord): AxiosPromise<UserResponseData> {
+export function addUser(data: UserRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'post',
@@ -79,7 +66,7 @@ export function addUser(data: UserRecord): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function editUser(data: UserRecord): AxiosPromise<UserResponseData> {
+export function editUser(data: UserRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'put',
@@ -92,9 +79,22 @@ export function editUser(data: UserRecord): AxiosPromise<UserResponseData> {
  *
  * @param data
  */
-export function editAvatar(data: UserRecord): AxiosPromise<UserResponseData> {
+export function editAvatar(data: UserRecord): AxiosPromise<ResponseData> {
   return request({
     url: `${API.USER_RESTFUL_URL}/modifyAvatar`,
+    method: 'put',
+    data: data,
+  })
+}
+
+/**
+ * switch激活
+ *
+ * @param data
+ */
+export function open(data: UserSwitchParam): AxiosPromise<ResponseData> {
+  return request({
+    url: API.USER_RESTFUL_URL + `/open`,
     method: 'put',
     data: data,
   })
@@ -105,7 +105,7 @@ export function editAvatar(data: UserRecord): AxiosPromise<UserResponseData> {
  *
  * @param ids
  */
-export function deleteUser(ids: number[]): AxiosPromise<UserResponseData> {
+export function deleteUser(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'delete',
@@ -118,7 +118,7 @@ export function deleteUser(ids: number[]): AxiosPromise<UserResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: UserQuery): AxiosPromise<UserResponseData> {
+export function exportExcel(params: UserQuery): AxiosPromise<any> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'post',
@@ -149,7 +149,7 @@ export function selectRole(): AxiosPromise<SelectResponseData> {
 /**
  * 岗位下拉框
  */
-export function selectPost(): Promise<AxiosPromise<SelectResponseData>> {
+export function selectPost(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_POST_URL,
     method: 'get',
@@ -178,7 +178,7 @@ export function checkUsername(username: string, userId?: number): AxiosPromise<a
  *
  * @param data
  */
-export function userResetPassword(data: UserResetPasswordParam): AxiosPromise<any> {
+export function userResetPassword(data: UserResetPasswordParam): AxiosPromise<ResponseData> {
   return request({
     url: `${API.USER_RESTFUL_URL}/reset`,
     method: 'put',
@@ -191,7 +191,7 @@ export function userResetPassword(data: UserResetPasswordParam): AxiosPromise<an
  *
  * @param data
  */
-export function userSetRole(data: UserSetRoleParam): AxiosPromise<any> {
+export function userSetRole(data: UserSetRoleParam): AxiosPromise<ResponseData> {
   return request({
     url: `${API.USER_RESTFUL_URL}/setRole`,
     method: 'put',

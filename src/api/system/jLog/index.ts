@@ -4,10 +4,11 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { JLogResponseData, JLogQuery, JLogRecord } from './type'
+import { JLogResponseData, JLogQuery } from './type'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  J_LOG_RESTFUL_URL = '/jLog',
+  J_LOG_RESTFUL_URL = '/sys/v1/jLog',
 }
 
 /**
@@ -24,49 +25,11 @@ export function page(params: JLogQuery): AxiosPromise<JLogResponseData> {
 }
 
 /**
- * 获取详情
- *
- * @param id
- */
-export function getJLog(id: number): AxiosPromise<JLogResponseData> {
-  return request({
-    url: `${API.J_LOG_RESTFUL_URL}/info/${id}`,
-    method: 'get',
-  })
-}
-
-/**
- * 添加
- *
- * @param data
- */
-export function addJLog(data: JLogRecord): AxiosPromise<JLogResponseData> {
-  return request({
-    url: API.J_LOG_RESTFUL_URL,
-    method: 'post',
-    data: data,
-  })
-}
-
-/**
- * 编辑
- *
- * @param data
- */
-export function editJLog(data: JLogRecord): AxiosPromise<JLogResponseData> {
-  return request({
-    url: API.J_LOG_RESTFUL_URL,
-    method: 'put',
-    data: data,
-  })
-}
-
-/**
  * 删除
  *
  * @param ids
  */
-export function deleteJLog(ids: number[]): AxiosPromise<JLogResponseData> {
+export function deleteJLog(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.J_LOG_RESTFUL_URL,
     method: 'delete',
@@ -79,7 +42,7 @@ export function deleteJLog(ids: number[]): AxiosPromise<JLogResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: JLogQuery): AxiosPromise<JLogResponseData> {
+export function exportExcel(params: JLogQuery): AxiosPromise<any> {
   return request({
     url: API.J_LOG_RESTFUL_URL,
     method: 'post',

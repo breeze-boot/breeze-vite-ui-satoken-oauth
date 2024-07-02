@@ -23,7 +23,7 @@ export type TenantRecords = TenantRecord[]
  */
 export interface TenantResponseData extends ResponseData {
   data: {
-    records: TenantRecords
+    records: TenantRecords | TenantRecord
     total: number
     size: number
     current: number

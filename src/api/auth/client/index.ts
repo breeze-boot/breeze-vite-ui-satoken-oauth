@@ -7,8 +7,8 @@ import { AxiosPromise } from 'axios'
 import { ClientResponseData, ClientQuery, ClientRecord } from './type.ts'
 
 enum API {
-  CLIENT_RESTFUL_URL = '/client',
-  CHECK_CLIENT_CODE_URL = '/client/checkClientCode',
+  CLIENT_RESTFUL_URL = '/auth/v1/client',
+  CHECK_CLIENT_CODE_URL = '/auth/v1/client/checkClientCode',
 }
 
 /**

@@ -24,7 +24,7 @@ export type PlatformRecords = PlatformRecord[]
  */
 export interface PlatformResponseData extends ResponseData {
   data: {
-    records: PlatformRecords
+    records: PlatformRecords | PlatformRecord
     total: number
     size: number
     current: number

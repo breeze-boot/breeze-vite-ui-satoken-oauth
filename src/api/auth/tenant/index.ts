@@ -5,12 +5,12 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { TenantResponseData, TenantQuery, TenantRecord } from './type'
-import { SelectResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  TENANT_RESTFUL_URL = '/tenant',
-  CHECK_TENANT_CODE_URL = '/tenant/checkTenantCode',
-  TENANT_SELECT_URL = '/common/selectTenant',
+  TENANT_RESTFUL_URL = '/auth/v1/tenant',
+  CHECK_TENANT_CODE_URL = '/auth/v1/tenant/checkTenantCode',
+  TENANT_SELECT_URL = '/sys/v1/common/selectTenant',
 }
 
 /**
@@ -43,7 +43,7 @@ export function getTenant(id: number): AxiosPromise<TenantResponseData> {
  *
  * @param data
  */
-export function addTenant(data: TenantRecord): AxiosPromise<TenantResponseData> {
+export function addTenant(data: TenantRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'post',
@@ -56,7 +56,7 @@ export function addTenant(data: TenantRecord): AxiosPromise<TenantResponseData> 
  *
  * @param data
  */
-export function editTenant(data: TenantRecord): AxiosPromise<TenantResponseData> {
+export function editTenant(data: TenantRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'put',
@@ -69,7 +69,7 @@ export function editTenant(data: TenantRecord): AxiosPromise<TenantResponseData>
  *
  * @param ids
  */
-export function deleteTenant(ids: number[]): AxiosPromise<TenantResponseData> {
+export function deleteTenant(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'delete',
@@ -82,7 +82,7 @@ export function deleteTenant(ids: number[]): AxiosPromise<TenantResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: TenantQuery): AxiosPromise<TenantResponseData> {
+export function exportExcel(params: TenantQuery): AxiosPromise<any> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'post',

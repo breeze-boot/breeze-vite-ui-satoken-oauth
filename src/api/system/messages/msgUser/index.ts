@@ -5,12 +5,13 @@
 import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
 import { MsgUserResponseData, MsgUserQuery } from './type.ts'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  MSG_USER_RESTFUL_URL = '/msgUser',
-  LIST_USERS_MSG_URL = '/msgUser/listUsersMsg',
-  CLOSE_USERS_MSG_URL = '/msgUser/close',
-  READ_USERS_MSG_URL = '/msgUser/read',
+  MSG_USER_RESTFUL_URL = '/sys/v1/msgUser',
+  LIST_USERS_MSG_URL = '/sys/v1/msgUser/listUsersMsg',
+  CLOSE_USERS_MSG_URL = '/sys/v1/msgUser/close',
+  READ_USERS_MSG_URL = '/sys/v1/msgUser/read',
 }
 
 /**
@@ -31,7 +32,7 @@ export function page(params: MsgUserQuery): AxiosPromise<MsgUserResponseData> {
  *
  * @param ids
  */
-export function deleteMsgUser(ids: number[]): AxiosPromise<MsgUserResponseData> {
+export function deleteMsgUser(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.MSG_USER_RESTFUL_URL,
     method: 'delete',
@@ -44,7 +45,7 @@ export function deleteMsgUser(ids: number[]): AxiosPromise<MsgUserResponseData> 
  *
  * @param params
  */
-export function exportExcel(params: MsgUserQuery): AxiosPromise<MsgUserResponseData> {
+export function exportExcel(params: MsgUserQuery): AxiosPromise<any> {
   return request({
     url: API.MSG_USER_RESTFUL_URL,
     method: 'post',
@@ -53,26 +54,11 @@ export function exportExcel(params: MsgUserQuery): AxiosPromise<MsgUserResponseD
 }
 
 /**
- * 获取用户的消息
- *
- * @param username
- */
-export function closeMsg(username: string): AxiosPromise<MsgUserResponseData> {
-  return request({
-    url: API.LIST_USERS_MSG_URL,
-    method: 'get',
-    params: {
-      username,
-    },
-  })
-}
-
-/**
  * 读取用户的消息
  *
  * @param msgId
  */
-export function readUserMsg(msgId: number): AxiosPromise<MsgUserResponseData> {
+export function readUserMsg(msgId: number): AxiosPromise<ResponseData> {
   return request({
     url: `${API.READ_USERS_MSG_URL}/${msgId}`,
     method: 'put',
@@ -84,7 +70,7 @@ export function readUserMsg(msgId: number): AxiosPromise<MsgUserResponseData> {
  *
  * @param msgId
  */
-export function closeUserMsg(msgId: number): AxiosPromise<MsgUserResponseData> {
+export function closeUserMsg(msgId: number): AxiosPromise<ResponseData> {
   return request({
     url: `${API.CLOSE_USERS_MSG_URL}/${msgId}`,
     method: 'put',

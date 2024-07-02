@@ -239,7 +239,6 @@ defineExpose({
           :show-all-levels="false"
           clearable
           filterable
-          placeholder=""
         />
       </el-form-item>
     </el-form>

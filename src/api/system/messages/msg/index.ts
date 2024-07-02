@@ -5,10 +5,11 @@
 import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
 import { MsgResponseData, MsgQuery, MsgRecord } from './type.ts'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  MSG_RESTFUL_URL = '/msg',
-  CHECK_MSG_CODE_URL = '/msg/checkMsgCode',
+  MSG_RESTFUL_URL = '/sys/v1/msg',
+  CHECK_MSG_CODE_URL = '/sys/v1/msg/checkMsgCode',
 }
 
 /**
@@ -41,7 +42,7 @@ export function getMsg(id: number): AxiosPromise<MsgResponseData> {
  *
  * @param data
  */
-export function addMsg(data: MsgRecord): AxiosPromise<MsgResponseData> {
+export function addMsg(data: MsgRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.MSG_RESTFUL_URL,
     method: 'post',
@@ -54,7 +55,7 @@ export function addMsg(data: MsgRecord): AxiosPromise<MsgResponseData> {
  *
  * @param data
  */
-export function editMsg(data: MsgRecord): AxiosPromise<MsgResponseData> {
+export function editMsg(data: MsgRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.MSG_RESTFUL_URL,
     method: 'put',
@@ -67,7 +68,7 @@ export function editMsg(data: MsgRecord): AxiosPromise<MsgResponseData> {
  *
  * @param ids
  */
-export function deleteMsg(ids: number[]): AxiosPromise<MsgResponseData> {
+export function deleteMsg(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.MSG_RESTFUL_URL,
     method: 'delete',
@@ -80,7 +81,7 @@ export function deleteMsg(ids: number[]): AxiosPromise<MsgResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: MsgQuery): AxiosPromise<MsgResponseData> {
+export function exportExcel(params: MsgQuery): AxiosPromise<any> {
   return request({
     url: API.MSG_RESTFUL_URL,
     method: 'post',

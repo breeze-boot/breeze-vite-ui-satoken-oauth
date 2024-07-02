@@ -5,9 +5,10 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { JobResponseData, JobQuery, JobRecord, JobSwitchParam } from './type'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  JOB_RESTFUL_URL = '/job',
+  JOB_RESTFUL_URL = '/sys/v1/job',
 }
 
 /**
@@ -40,7 +41,7 @@ export function getJob(id: number): AxiosPromise<JobResponseData> {
  *
  * @param data
  */
-export function addJob(data: JobRecord): AxiosPromise<JobResponseData> {
+export function addJob(data: JobRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.JOB_RESTFUL_URL,
     method: 'post',
@@ -53,7 +54,7 @@ export function addJob(data: JobRecord): AxiosPromise<JobResponseData> {
  *
  * @param data
  */
-export function editJob(data: JobRecord): AxiosPromise<JobResponseData> {
+export function editJob(data: JobRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.JOB_RESTFUL_URL,
     method: 'put',
@@ -66,7 +67,7 @@ export function editJob(data: JobRecord): AxiosPromise<JobResponseData> {
  *
  * @param ids
  */
-export function deleteJob(ids: number[]): AxiosPromise<JobResponseData> {
+export function deleteJob(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.JOB_RESTFUL_URL,
     method: 'delete',
@@ -79,7 +80,7 @@ export function deleteJob(ids: number[]): AxiosPromise<JobResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: JobQuery): AxiosPromise<JobResponseData> {
+export function exportExcel(params: JobQuery): AxiosPromise<ResponseData> {
   return request({
     url: API.JOB_RESTFUL_URL,
     method: 'post',
@@ -92,7 +93,7 @@ export function exportExcel(params: JobQuery): AxiosPromise<JobResponseData> {
  *
  * @param jobId
  */
-export function runJobNow(jobId: number): AxiosPromise<JobResponseData> {
+export function runJobNow(jobId: number): AxiosPromise<ResponseData> {
   return request({
     url: `${API.JOB_RESTFUL_URL}/runJobNow`,
     method: 'get',
@@ -107,7 +108,7 @@ export function runJobNow(jobId: number): AxiosPromise<JobResponseData> {
  *
  * @param data
  */
-export function open(data: JobSwitchParam): AxiosPromise<JobResponseData> {
+export function open(data: JobSwitchParam): AxiosPromise<ResponseData> {
   return request({
     url: `${API.JOB_RESTFUL_URL}/open`,
     method: 'put',

@@ -9,11 +9,11 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  */
 export interface MsgRecord {
   id?: number
-  title?: string
-  code?: string
+  title: string
+  code: string
   type: number
   level: string
-  content?: string
+  content: string
 }
 
 /**
@@ -26,7 +26,7 @@ export type MsgRecords = MsgRecord[]
  */
 export interface MsgResponseData extends ResponseData {
   data: {
-    records: MsgRecords
+    records: MsgRecords | MsgRecord
     total: number
     size: number
     current: number

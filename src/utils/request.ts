@@ -138,6 +138,12 @@ const handle401Error = async (error: any) => {
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { code, message, access_token } = response.data
+
+    // 响应数据为二进制流处理(Excel导出)
+    if (response.data instanceof ArrayBuffer) {
+      return response
+    }
+
     switch (code) {
       case '0000':
         return response.data
@@ -146,13 +152,12 @@ request.interceptors.response.use(
         break
       case '0002':
         ElMessage.warning(message)
-        debugger
         break
       case undefined:
         // 没有code时正常返回数据
         return access_token ? response.data : response
       default:
-        ElMessage.error(i18n.global.t('axios.systemAbnormality'))
+        ElMessage.error(message || i18n.global.t('axios.systemAbnormality'))
     }
   },
   async (error: any) => {
@@ -168,7 +173,6 @@ request.interceptors.response.use(
             return Promise.reject(error)
         }
       }
-      debugger
       switch (error.response.status) {
         case 401:
           return handle401Error(error)

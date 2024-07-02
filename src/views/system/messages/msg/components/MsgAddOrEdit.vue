@@ -23,7 +23,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const msgDataFormRef = ref()
-const msgDataForm = ref<MsgRecord>({ level: 'info', type: 0 })
+const msgDataForm = ref<MsgRecord>({ code: '', content: '', title: '', level: 'info', type: 0 })
 
 const rules = ref({
   title: [

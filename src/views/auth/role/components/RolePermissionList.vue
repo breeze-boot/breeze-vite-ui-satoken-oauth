@@ -58,7 +58,6 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  debugger
   const treePermissionResponse: any = await listTreePermission()
   if (treePermissionResponse.code !== '0000') {
     ElMessage.warning({

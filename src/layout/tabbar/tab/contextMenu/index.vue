@@ -78,7 +78,7 @@ const handleMenuItemClick = async (event: string) => {
 
   .context-menu {
     position: relative;
-    width: $baseContextMenuWidth;
+    width: $base-context-menu-width;
 
     .context-menu-item {
       height: 30px;

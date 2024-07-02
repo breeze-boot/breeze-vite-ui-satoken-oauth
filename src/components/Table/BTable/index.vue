@@ -92,7 +92,7 @@ const props = defineProps({
   // 表格数据配置
   modelValue: {
     type: Array,
-    required: true,
+    required: false,
     default: () => [],
   },
   // 操作栏配置
@@ -344,19 +344,22 @@ const handleParams = (order?: ColumnSort) => {
  * 获取数据
  */
 const getList = (order?: ColumnSort) => {
+  tableInfo.loading = true
   singleSelectValue.value = undefined
   currentRows.value = []
+
   // 父组件传入的数据，直接渲染
   if (!tableData.value) {
     tableInfo.loading = true
     tableInfo.rows = tableData.value
     props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
     tableInfo.loading = false
+    onEnd()
     return
   }
+
   if (!props.listApi) return
 
-  tableInfo.loading = true
   props.listApi(handleParams(order)).then((response: any) => {
     if (response.code === '0000') {
       tableInfo.rows = []
@@ -368,10 +371,10 @@ const getList = (order?: ColumnSort) => {
       }
 
       props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
-      tableInfo.loading = false
-      return
+    } else {
+      ElMessage.warning(response.message)
     }
-    ElMessage.warning(response.message)
+    onEnd()
     tableInfo.loading = false
   })
 }

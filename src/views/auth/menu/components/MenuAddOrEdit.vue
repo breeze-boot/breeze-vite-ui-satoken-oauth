@@ -322,6 +322,8 @@ defineExpose({
           :placeholder="t('menu.fields.component')"
         >
           <template #prepend>src/views</template>
+
+          <template #append>.vue</template>
         </el-input>
       </el-form-item>
 

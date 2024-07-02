@@ -1,30 +1,34 @@
 // 默认主题色
 :root {
-  --baseMainTheme: #ECECECFF;
-  --baseLeftTheme: rgba(0, 0, 0, 0.0);
-  --baseTopTheme: #ECECECFF;
-  --baseSearchDialogTheme: rgba(255, 255, 255, 0.3);
-  --baseTextColor: rgba(40, 40, 40, 0.82);
-  --loginTheme:rgb(255 255 255 / 57.5%);
+  --base-main-theme: #ECECECFF;
+  --base-left-theme: rgba(0, 0, 0, 0.0);
+  --base-top-theme: #ECECECFF;
+  --base-search-dialog-theme: rgba(255, 255, 255, 0.3);
+  --base-text-color: rgba(40, 40, 40, 0.82);
+  --login-theme: rgb(255 255 255 / 57.5%);
+  --djs-palette: --palette-background-color;
+  --djs-entry: rgba(0, 0, 0, 0.82);
 }
 
 // 主题背景色
-$baseMainTheme: var(--baseMainTheme);
-$baseLeftTheme: var(--baseLeftTheme);
-$baseTopTheme: var(--baseTopTheme);
+$base-main-theme: var(--base-main-theme);
+$base-left-theme: var(--base-left-theme);
+$base-top-theme: var(--base-top-theme);
 
 // 左侧菜单宽度
-$baseMenuWidth: 200px;
+$base-menu-width: 200px;
 // 右键菜单宽度
-$baseContextMenuWidth: 100px;
+$base-context-menu-width: 100px;
 
 // 左侧logo样式
-$baseLogoFontWeight: 600;
-$baseLogoFontSize: 15px;
+$base-logo-font-weight: 600;
+$base-logo-font-size: 15px;
 
-$baseTextColor: var(--baseTextColor);
+$base-text-color: var(--base-text-color);
 
-$baseSearchDialogTheme: var(--baseSearchDialogTheme);
+$base-search-dialog-theme: var(--base-search-dialog-theme);
 
-$svgTheme: var(--color);
-$loginTheme: var(--loginTheme);
+$login-theme: var(--login-theme);
+$svg-theme: var(--color);
+
+$tabbar-height: 90px;

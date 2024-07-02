@@ -130,14 +130,12 @@ watch(
   }
 
   // 内容区域
-  --el-main-top-height: 90px;
-
   .el-main {
     position: absolute;
-    top: var(--el-main-top-height);
+    top: $tabbar-height;
     left: 200px;
-    width: calc(100% - $baseMenuWidth);
-    height: calc(100vh - var(--el-main-top-height));
+    width: calc(100% - $base-menu-width);
+    height: calc(100vh - $tabbar-height);
     padding: 20px;
     transition: all 0.3s;
   }

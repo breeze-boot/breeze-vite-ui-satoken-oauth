@@ -28,7 +28,7 @@ export type JobRecords = JobRecord[]
  */
 export interface JobResponseData extends ResponseData {
   data: {
-    records: JobRecords
+    records: JobRecords | JobRecord
     total: number
     size: number
     current: number

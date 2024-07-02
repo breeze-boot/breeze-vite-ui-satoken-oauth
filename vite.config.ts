@@ -33,7 +33,11 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         symbolId: 'icon-[dir]-[name]',
       }),
     ],
-    resolve: { alias: { '@': path.resolve('./src') } },
+    resolve: {
+      alias: {
+        '@': path.resolve('./src'),
+      },
+    },
     css: {
       // CSS 预处理器
       preprocessorOptions: {

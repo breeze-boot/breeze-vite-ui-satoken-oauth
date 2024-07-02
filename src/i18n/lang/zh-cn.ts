@@ -30,10 +30,12 @@ export default {
     exportAll: '导出全部',
     operate: '操作',
     add: '添加',
+    design: '设计',
     delete: '删除',
     edit: '修改',
     info: '查看',
     download: '下载',
+    start: '启动',
     upload: '上传',
 
     success: '成功',
@@ -41,6 +43,7 @@ export default {
     reloadFail: '数据加载失败',
 
     cron: 'cron',
+    nextStep: '下一步',
 
     no: '序号',
     tableColumn: '表格字段',

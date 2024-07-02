@@ -27,8 +27,8 @@ const { settings } = settingStore
   height: 50px;
   padding-left: 5px;
   overflow: hidden;
-  font-size: $baseLogoFontSize;
-  font-weight: $baseLogoFontWeight;
+  font-size: $base-logo-font-size;
+  font-weight: $base-logo-font-weight;
 
   img {
     display: inline-block;
@@ -38,7 +38,7 @@ const { settings } = settingStore
   }
 
   .title {
-    color: $baseTextColor;
+    color: $base-text-color;
     display: inline-block;
     margin: 2px 0 0 18px;
     overflow: hidden;

@@ -95,7 +95,7 @@ const toggleOpenSearch = () => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: $baseSearchDialogTheme;
+  background: $base-search-dialog-theme;
   display: none;
   z-index: 9;
 

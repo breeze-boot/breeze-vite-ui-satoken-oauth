@@ -6,6 +6,7 @@
 <!-- 测试WangEditor -->
 <script setup lang="ts">
 import WangEditor from '@/components/WangEditor/index.vue'
+
 defineOptions({
   name: 'TestWangEditor',
   inheritAttrs: false,

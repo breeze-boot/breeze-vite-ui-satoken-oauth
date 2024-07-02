@@ -6,9 +6,10 @@ import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { DictQuery, DictRecord, DictResponseData } from '@/api/system/dict/type.ts'
 import { UserResponseData, UserSwitchParam } from '@/api/auth/user/type.ts'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  DICT_RESTFUL_URL = '/dict',
+  DICT_RESTFUL_URL = '/sys/v1/dict',
 }
 
 /**
@@ -54,7 +55,7 @@ export function getDict(id: number): AxiosPromise<DictResponseData> {
  *
  * @param data
  */
-export function addDict(data: DictRecord): AxiosPromise<DictResponseData> {
+export function addDict(data: DictRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL,
     method: 'post',
@@ -67,7 +68,7 @@ export function addDict(data: DictRecord): AxiosPromise<DictResponseData> {
  *
  * @param data
  */
-export function editDict(data: DictRecord): AxiosPromise<DictResponseData> {
+export function editDict(data: DictRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL,
     method: 'put',
@@ -80,7 +81,7 @@ export function editDict(data: DictRecord): AxiosPromise<DictResponseData> {
  *
  * @param ids
  */
-export function deleteDict(ids: number[]): AxiosPromise<DictResponseData> {
+export function deleteDict(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL,
     method: 'delete',
@@ -93,7 +94,7 @@ export function deleteDict(ids: number[]): AxiosPromise<DictResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: DictQuery): AxiosPromise<DictResponseData> {
+export function exportExcel(params: DictQuery): AxiosPromise<any> {
   return request({
     url: API.DICT_RESTFUL_URL,
     method: 'post',

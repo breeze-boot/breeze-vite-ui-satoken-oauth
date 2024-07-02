@@ -234,7 +234,7 @@ const handleSelectionChange = (row: PlatformRecord) => {
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('platform.fields.platformCode')"
+          :placeholder="t('platform.fields.platformName')"
           v-model="queryParams.platformName"
         />
       </el-form-item>

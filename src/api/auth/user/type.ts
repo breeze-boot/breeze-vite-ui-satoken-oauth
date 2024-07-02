@@ -38,7 +38,7 @@ export type UserRecords = UserRecord[]
  */
 export interface UserResponseData extends ResponseData {
   data: {
-    records: UserRecords
+    records: UserRecords | UserRecord
     total: number
     size: number
     current: number

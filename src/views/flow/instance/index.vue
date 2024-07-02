@@ -20,7 +20,6 @@ defineOptions({
 
 const { t } = useI18n()
 const instanceQueryFormRef = ref(ElForm)
-const instanceAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<InstanceQuery>({
@@ -32,7 +31,15 @@ const queryParams = reactive<InstanceQuery>({
 })
 
 let checkedRows = reactive<string[]>([])
-let currentRow = reactive<InstanceRecord>({})
+let currentRow = reactive<InstanceRecord>({
+  businessKey: '',
+  email: '',
+  key: '',
+  name: '',
+  startTime: '',
+  startUserName: '',
+  version: '',
+})
 
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
@@ -78,43 +85,49 @@ const tableInfo = reactive<TableInfo>({
   // 表格字段配置
   fieldList: [
     {
-      prop: 'businessKey',
-      showOverflowTooltip: true,
-      label: t('instance.fields.businessKey'),
-    },
-    {
-      prop: 'startUserName',
-      showOverflowTooltip: true,
-      label: t('instance.fields.startUserName'),
-    },
-    {
-      prop: 'version',
-      showOverflowTooltip: true,
-      label: t('instance.fields.version'),
-    },
-    {
       prop: 'key',
       showOverflowTooltip: true,
       label: t('instance.fields.key'),
+      width: 200,
     },
     {
       prop: 'name',
       showOverflowTooltip: true,
       label: t('instance.fields.name'),
+      width: 200,
+    },
+    {
+      prop: 'businessKey',
+      showOverflowTooltip: true,
+      label: t('instance.fields.businessKey'),
+    },
+    {
+      prop: 'startUserId',
+      showOverflowTooltip: true,
+      label: t('instance.fields.startUserId'),
+      width: 200,
     },
     {
       prop: 'startTime',
       showOverflowTooltip: true,
       label: t('instance.fields.startTime'),
+      width: 200,
+    },
+    {
+      prop: 'version',
+      showOverflowTooltip: true,
+      label: t('instance.fields.version'),
+      width: 50,
     },
     {
       prop: 'email',
       showOverflowTooltip: true,
       label: t('instance.fields.email'),
+      width: 250,
     },
   ],
   handleBtn: {
-    minWidth: 400,
+    minWidth: 200,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -170,15 +183,6 @@ const resetQuery = () => {
  */
 const handleQuery = () => {
   reloadList()
-}
-
-/**
- * 添加或者修改
- *
- * @param id 主键
- */
-const AddOrEditHandle = (id?: number) => {
-  instanceAddOrEditRef.value.init(id)
 }
 
 /**

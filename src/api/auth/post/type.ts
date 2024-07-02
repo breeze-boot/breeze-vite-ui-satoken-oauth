@@ -23,7 +23,7 @@ export type PostRecords = PostRecord[]
  */
 export interface PostResponseData extends ResponseData {
   data: {
-    records: PostRecords
+    records: PostRecords | PostRecord
     total: number
     size: number
     current: number

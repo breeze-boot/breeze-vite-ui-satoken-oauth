@@ -5,10 +5,11 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { PostResponseData, PostQuery, PostRecord } from './type'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  POST_RESTFUL_URL = '/post',
-  CHECK_POST_CODE_URL = '/post/checkPostCode',
+  POST_RESTFUL_URL = '/auth/v1/post',
+  CHECK_POST_CODE_URL = '/auth/v1/post/checkPostCode',
 }
 
 /**
@@ -41,7 +42,7 @@ export function getPost(id: number): AxiosPromise<PostResponseData> {
  *
  * @param data
  */
-export function addPost(data: PostRecord): AxiosPromise<PostResponseData> {
+export function addPost(data: PostRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'post',
@@ -54,7 +55,7 @@ export function addPost(data: PostRecord): AxiosPromise<PostResponseData> {
  *
  * @param data
  */
-export function editPost(data: PostRecord): AxiosPromise<PostResponseData> {
+export function editPost(data: PostRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'put',
@@ -67,7 +68,7 @@ export function editPost(data: PostRecord): AxiosPromise<PostResponseData> {
  *
  * @param ids
  */
-export function deletePost(ids: number[]): AxiosPromise<PostResponseData> {
+export function deletePost(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'delete',
@@ -80,7 +81,7 @@ export function deletePost(ids: number[]): AxiosPromise<PostResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: PostQuery): AxiosPromise<PostResponseData> {
+export function exportExcel(params: PostQuery): AxiosPromise<any> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'post',

@@ -31,7 +31,7 @@ export type LogRecords = LogRecord[]
  */
 export interface LogResponseData extends ResponseData {
   data: {
-    records: LogRecords
+    records: LogRecords | LogRecord
     total: number
     size: number
     current: number

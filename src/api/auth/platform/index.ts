@@ -5,12 +5,12 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { PlatformResponseData, PlatformQuery, PlatformRecord } from './type'
-import { SelectResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  PLATFORM_RESTFUL_URL = '/platform',
-  CHECK_PLATFORM_CODE_URL = '/platform/checkPlatformCode',
-  PLATFORM_SELECT_URL = '/common/selectPlatform',
+  PLATFORM_RESTFUL_URL = '/auth/v1/platform',
+  CHECK_PLATFORM_CODE_URL = '/auth/v1/platform/checkPlatformCode',
+  PLATFORM_SELECT_URL = '/sys/v1/common/selectPlatform',
 }
 
 /**
@@ -43,7 +43,7 @@ export function getPlatform(id: number): AxiosPromise<PlatformResponseData> {
  *
  * @param data
  */
-export function addPlatform(data: PlatformRecord): AxiosPromise<PlatformResponseData> {
+export function addPlatform(data: PlatformRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',
@@ -56,7 +56,7 @@ export function addPlatform(data: PlatformRecord): AxiosPromise<PlatformResponse
  *
  * @param data
  */
-export function editPlatform(data: PlatformRecord): AxiosPromise<PlatformResponseData> {
+export function editPlatform(data: PlatformRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'put',
@@ -69,7 +69,7 @@ export function editPlatform(data: PlatformRecord): AxiosPromise<PlatformRespons
  *
  * @param ids
  */
-export function deletePlatform(ids: number[]): AxiosPromise<PlatformResponseData> {
+export function deletePlatform(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'delete',
@@ -82,7 +82,7 @@ export function deletePlatform(ids: number[]): AxiosPromise<PlatformResponseData
  *
  * @param params
  */
-export function exportExcel(params: PlatformRecord): AxiosPromise<PlatformResponseData> {
+export function exportExcel(params: PlatformRecord): AxiosPromise<any> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',

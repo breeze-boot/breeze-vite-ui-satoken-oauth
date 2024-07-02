@@ -9,7 +9,7 @@ import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
-import { DictItemQuery, DictItemRecords } from '@/api/system/dictItem/type.ts'
+import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
 import { ElMessage } from 'element-plus'
 import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
 
@@ -51,6 +51,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:dict:create'],
       event: 'add',
       icon: 'add',
+      eventHandle: () => handleAdd(),
     },
     {
       type: 'danger',
@@ -58,6 +59,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:dict:delete'],
       event: 'del',
       icon: 'delete',
+      eventHandle: (rows: DictItemRecords) => handleDelete(rows),
     },
   ],
   // 表格字段配置
@@ -99,6 +101,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['sys:dict:modify'],
+        eventHandle: (row: DictItemRecord) => handleUpdate(row),
       },
       // 删除
       {
@@ -107,27 +110,11 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:dict:delete'],
+        eventHandle: (row: DictItemRecord) => handleDelete([row]),
       },
     ],
   },
 })
-
-/**
- * 表格组件事件分发
- *
- * @param event
- * @param row
- */
-const handleTableRowBtnClick = (event: any, row: any) => {
-  console.log(row)
-  switch (event) {
-    case 'edit':
-      handleUpdate(row)
-      break
-    default:
-      break
-  }
-}
 
 /**
  * 初始化
@@ -149,25 +136,6 @@ const init = async (id: number) => {
 const getInfo = async (id: number) => {
   queryParams.dictId = id
   reloadList()
-}
-
-/**
- * 表格组件头部按钮事件分发
- *
- * @param event 事件
- * @param rows  行数据
- */
-const handleTableHeaderBtnClick = (event: string, rows: any) => {
-  switch (event) {
-    case 'add':
-      handleAdd()
-      break
-    case 'del':
-      handleDelete(rows)
-      break
-    default:
-      break
-  }
 }
 
 /**
@@ -253,8 +221,6 @@ defineExpose({
         :select="tableInfo.select"
         :handle-btn="tableInfo.handleBtn"
         table-height="80%"
-        @handle-table-row-btn-click="handleTableRowBtnClick"
-        @handle-table-header-btn-click="handleTableHeaderBtnClick"
         @selection-change="handleSelectionChange"
       />
     </template>

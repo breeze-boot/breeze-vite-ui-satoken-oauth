@@ -96,7 +96,7 @@ export interface Field {
   formOptions?: FormOptions
   showOverflowTooltip?: boolean
   hidden?: boolean
-  linkInfo?: LinkInfo
+  linkInfo?: LinkInfo | LinkInfo2
   tag?: TagOptions
   align?: 'center' | 'right' | 'left'
   width?: number
@@ -203,6 +203,20 @@ export interface TagOption {
 export interface LinkInfo {
   // 路由路径
   routePath?: string
+  // 路由参数，行项目获取
+  rowParam?: string[]
+  // 路由参数
+  query?: Query
+  // 自定义显示的内容，从行项目获取
+  columnName?: string
+  // 自定义显示的内容
+  fixColumnName?: string
+}
+
+/**
+ * 字段行内跳转字段属性类型
+ */
+export interface LinkInfo2 {
   // url地址
   linkUrlProp?: string
   // 路由参数，行项目获取
@@ -210,11 +224,10 @@ export interface LinkInfo {
   // 路由参数
   query?: Query
   // 自定义显示的内容，从行项目获取
-  dyColumnName?: string
+  columnName?: string
   // 自定义显示的内容
   fixColumnName?: string
 }
-
 /**
  * 链接字段属性查询类型
  */

@@ -6,7 +6,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import type { Tab, UserInfoData, Tabs, Settings, Dicts } from '@/types/types'
 import { Theme } from '@/types/types'
-import Stomp from 'stompjs'
 
 /**
  * 用户保存类型

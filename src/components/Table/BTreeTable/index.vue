@@ -251,6 +251,7 @@ const handleParams = () => {
  * 获取数据
  */
 const getList = () => {
+  tableInfo.loading = true
   singleSelectValue.value = undefined
   if (!props.listApi) return
   props.listApi(handleParams()).then((response: any) => {
@@ -263,22 +264,24 @@ const getList = () => {
         tableInfo.rows = response.data
       }
       // 设置当前选中项
-      if (!props.checkedRows) {
-        return
+      if (props.checkedRows) {
+        setCheckedList()
       }
-
-      props.checkedRows.forEach((selected: any) => {
-        const row = tableInfo.rows.find(
-          (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
-        )
-        nextTick(() => {
-          if (!row) return
-          tableRef.value.toggleRowSelection(row, true)
-        })
-      })
     } else {
       ElMessage.warning(response.message)
     }
+    onEnd()
+    tableInfo.loading = false
+  })
+}
+
+const setCheckedList = () => {
+  props.checkedRows.forEach((selected: any) => {
+    const row = tableInfo.rows.find((item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected)
+    nextTick(() => {
+      if (!row) return
+      tableRef.value.toggleRowSelection(row, true)
+    })
   })
 }
 
@@ -434,6 +437,7 @@ const handleExport = (query: any) => {
     ElMessage.warning('导出数据错误')
     return
   }
+  console.debug(query)
 }
 
 // 弹出
@@ -529,7 +533,12 @@ const onEnd = () => {
             type="success"
             :circle="false"
             label="全部展开"
-            @svg-btn-click="() => (expandAll = !expandAll)"
+            @svg-btn-click="
+              () => {
+                expandAll = !expandAll
+                onEnd()
+              }
+            "
           />
           <slot name="tbHeaderBtn"></slot>
         </div>

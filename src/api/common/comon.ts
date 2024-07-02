@@ -6,7 +6,7 @@ import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
 
 enum API {
-  COMMON_DOWNlOAD = '/common/download',
+  COMMON_DOWNlOAD = '/sys/v1/common/download',
 }
 
 /**

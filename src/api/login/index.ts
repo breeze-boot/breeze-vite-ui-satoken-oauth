@@ -9,7 +9,7 @@ import { GrantType } from '@/types/types.ts'
 
 enum API {
   AUTH_URL = '/oauth2/token',
-  LIST_PERMISSION_URL = '/menu/listTreeMenu',
+  LIST_PERMISSION_URL = '/auth/v1/menu/listTreeMenu',
   LOGOUT_URL = '/logout',
 }
 

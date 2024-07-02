@@ -9,8 +9,8 @@ import type { MenuResponseData, MenuQuery, MenuRecord, MenuTreeResponseData } fr
 import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  MENU_RESTFUL_URL = '/menu',
-  MENU_SELECT_URL = '/common/selectMenu',
+  MENU_RESTFUL_URL = '/auth/v1/menu',
+  MENU_SELECT_URL = '/sys/v1/common/selectMenu',
 }
 
 /**

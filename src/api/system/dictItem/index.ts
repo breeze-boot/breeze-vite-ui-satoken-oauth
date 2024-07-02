@@ -5,9 +5,10 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { DictItemQuery, DictItemRecord, DictItemResponseData } from '@/api/system/dictItem/type.ts'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  DICT_ITEM_RESTFUL_URL = '/dictItem',
+  DICT_ITEM_RESTFUL_URL = '/sys/v1/dictItem',
 }
 
 /**
@@ -40,7 +41,7 @@ export function getDictItem(id: number): AxiosPromise<DictItemResponseData> {
  *
  * @param data
  */
-export function addDictItem(data: DictItemRecord): AxiosPromise<DictItemResponseData> {
+export function addDictItem(data: DictItemRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'post',
@@ -53,7 +54,7 @@ export function addDictItem(data: DictItemRecord): AxiosPromise<DictItemResponse
  *
  * @param data
  */
-export function editDictItem(data: DictItemRecord): AxiosPromise<DictItemResponseData> {
+export function editDictItem(data: DictItemRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'put',
@@ -66,7 +67,7 @@ export function editDictItem(data: DictItemRecord): AxiosPromise<DictItemRespons
  *
  * @param ids
  */
-export function deleteDictItem(ids: number[]): AxiosPromise<DictItemResponseData> {
+export function deleteDictItem(ids: number[]): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'delete',
@@ -79,7 +80,7 @@ export function deleteDictItem(ids: number[]): AxiosPromise<DictItemResponseData
  *
  * @param params
  */
-export function exportExcel(params: DictItemQuery): AxiosPromise<DictItemResponseData> {
+export function exportExcel(params: DictItemQuery): AxiosPromise<any> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'post',
