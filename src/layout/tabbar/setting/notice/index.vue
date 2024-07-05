@@ -3,7 +3,7 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { watch, onMounted, ref } from 'vue'
 import { closeUserMsg, listUsersMsg, readUserMsg } from '@/api/system/messages/msgUser'
 import useUserStore from '@/store/modules/user'
 import closePng from '@/assets/images/close.png'
@@ -12,8 +12,10 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { getMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
+import useSettingStore from '@/store/modules/setting.ts'
 
-const useStore = useUserStore()
+const settingStore = useSettingStore()
+const userStore = useUserStore()
 const drawer = ref(false)
 const direction = ref('rtl')
 const noticeMsg = ref<MsgUserRecord[]>([])
@@ -31,7 +33,7 @@ onMounted(() => {
  * 初始化消息
  */
 const initNoticeMsg = async () => {
-  const response: any = await listUsersMsg(useStore.userInfo.username)
+  const response: any = await listUsersMsg(userStore.userInfo.username)
   if (response.code === '0000') {
     noticeMsg.value = response.data
   }
@@ -44,6 +46,16 @@ const handleShowMsg = async () => {
   await initNoticeMsg()
   drawer.value = true
 }
+
+/**
+ * 监听方法
+ */
+watch(
+  () => settingStore.device,
+  () => {
+    drawer.value = false
+  },
+)
 
 /**
  * 查看消息详情
@@ -151,6 +163,7 @@ const handleCloseDialog = async () => {
   font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑',
     Arial, sans-serif;
 }
+
 .msg-content {
   margin: 30px 10px;
   font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑',

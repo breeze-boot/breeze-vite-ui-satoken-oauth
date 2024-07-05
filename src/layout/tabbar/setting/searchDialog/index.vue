@@ -88,6 +88,7 @@ const toggleOpenSearch = () => {
   </div>
   <el-button style="margin: 0 5px" circle :icon="Search" @click.stop="toggleOpenSearch" />
 </template>
+
 <style lang="scss" scoped>
 .dialog_search {
   position: absolute;
@@ -95,7 +96,7 @@ const toggleOpenSearch = () => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: $base-search-dialog-theme;
+  background: var(--base-search-dialog-theme);
   display: none;
   z-index: 9;
 

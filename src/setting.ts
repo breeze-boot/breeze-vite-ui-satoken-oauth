@@ -1,5 +1,6 @@
 import logoUrl from '@/assets/vue.svg'
 import { reactive } from 'vue'
+import { DEVICE } from '@/utils/common.ts'
 
 /**
  * 用于项目logo | 标题配置
@@ -7,6 +8,7 @@ import { reactive } from 'vue'
 export default {
   title: 'Breeze-Vite-UI',
   defaultIsCollapse: false,
+  defaultDevice: DEVICE.PC,
   defaultShowAvatar: false,
   defaultLogoUrl: logoUrl,
   defaultEnableWatermark: true,

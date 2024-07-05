@@ -1,34 +1,27 @@
 // 默认主题色
 :root {
   --base-main-theme: #ECECECFF;
-  --base-left-theme: rgba(0, 0, 0, 0.0);
-  --base-top-theme: #ECECECFF;
-  --base-search-dialog-theme: rgba(255, 255, 255, 0.3);
-  --base-text-color: rgba(40, 40, 40, 0.82);
+  --base-left-theme: rgba(255, 255, 255, 0.0) !important;
+  --base-top-theme: #rgba (255, 255, 255, 0.0) !important;
+
+  --base-search-dialog-theme: rgba(255, 255, 255, 0.5);
+
+  --base-text-color: rgba(40, 40, 40, 0.82) !important;
+
   --login-theme: rgb(255 255 255 / 57.5%);
+
   --djs-palette: --palette-background-color;
   --djs-entry: rgba(0, 0, 0, 0.82);
 }
 
-// 主题背景色
-$base-main-theme: var(--base-main-theme);
-$base-left-theme: var(--base-left-theme);
-$base-top-theme: var(--base-top-theme);
-
-// 左侧菜单宽度
-$base-menu-width: 200px;
-// 右键菜单宽度
+// 折叠动态左侧菜单宽度
+$base-left-menu-width: 200px;
+// tab右键菜单宽度
 $base-context-menu-width: 100px;
+$base-context-menu-width: 100px;
+// 头部菜单宽度
+$base-main-top-height: 90px;
 
 // 左侧logo样式
 $base-logo-font-weight: 600;
 $base-logo-font-size: 15px;
-
-$base-text-color: var(--base-text-color);
-
-$base-search-dialog-theme: var(--base-search-dialog-theme);
-
-$login-theme: var(--login-theme);
-$svg-theme: var(--color);
-
-$tabbar-height: 90px;

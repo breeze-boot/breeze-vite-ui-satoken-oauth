@@ -3,7 +3,7 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import Menu from '@/layout/menu/index.vue'
+import Menu from '@/layout/menuItem/index.vue'
 import Logo from '@/layout/logo/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
@@ -74,5 +74,10 @@ const selectMenu = async (index: string) => {
 .el-menu,
 .el-menu-item {
   border-bottom: none !important;
+}
+
+.el-sub-menu__title,
+.el-menu-item {
+  color: var(--base-text-color);
 }
 </style>

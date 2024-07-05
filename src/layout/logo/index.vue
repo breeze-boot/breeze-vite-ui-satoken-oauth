@@ -38,7 +38,7 @@ const { settings } = settingStore
   }
 
   .title {
-    color: $base-text-color;
+    color: var(--base-text-color);
     display: inline-block;
     margin: 2px 0 0 18px;
     overflow: hidden;

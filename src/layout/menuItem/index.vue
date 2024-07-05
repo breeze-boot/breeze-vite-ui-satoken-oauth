@@ -64,5 +64,15 @@ const props = defineProps(['menuList', 'layout', 'position'])
   display: block !important;
   width: 100% !important;
   text-align: left !important;
+  color: var(--base-text-color);
+}
+
+span {
+  color: var(--base-text-color);
+}
+
+.el-sub-menu__title,
+.el-menu-item {
+  color: var(--base-text-color);
 }
 </style>

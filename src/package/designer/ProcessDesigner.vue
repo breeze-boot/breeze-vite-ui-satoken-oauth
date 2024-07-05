@@ -29,15 +29,17 @@
             <template #content>
               <el-button :size="headerButtonSize" type="text" @click="previewProcessXML">预览XML</el-button>
               <br />
-              <!-- <el-button :size="headerButtonSize" type="text" @click="previewProcessJson">预览JSON</el-button> -->
+              <el-button :size="headerButtonSize" type="text" @click="previewProcessJson">预览JSON</el-button>
             </template>
             <el-button :size="headerButtonSize" :type="headerButtonType" :icon="View">预览</el-button>
           </el-tooltip>
-          <el-tooltip v-if="simulation" effect="light" :content="this.simulationStatus ? '退出模拟' : '开启模拟'">
-            <el-button :size="headerButtonSize" :type="headerButtonType" :icon="Cpu" @click="processSimulation">
-              模拟
-            </el-button>
-          </el-tooltip>
+          <template v-if="simulation">
+            <el-tooltip effect="light" :content="this.simulationStatus ? '退出模拟' : '开启模拟'">
+              <el-button :size="headerButtonSize" :type="headerButtonType" :icon="Cpu" @click="processSimulation">
+                模拟
+              </el-button>
+            </el-tooltip>
+          </template>
         </el-button-group>
         <el-button-group key="align-control">
           <el-tooltip effect="light" content="向左对齐">
@@ -132,7 +134,12 @@
       <div class="my-process-designer__canvas" ref="bpmn-canvas"></div>
     </div>
     <el-dialog :title="`预览${previewType}`" width="60%" v-model="previewModelVisible" append-to-body destroy-on-close>
-      <Codemirror v-model:value="previewResult" :options="cmOptions" border :height="600" />
+      <template v-if="previewType === 'xml'">
+        <Codemirror v-model:value="previewResult" :options="cmOptions" border :height="600" />
+      </template>
+      <template v-if="previewType === 'json'">
+        <vue-jsoneditor mode="tree" v-model:json="previewResult" />
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -169,18 +176,20 @@ import camundaModdleExtension from './plugins/extension-moddle/camunda'
 import activitiModdleExtension from './plugins/extension-moddle/activiti'
 import flowableModdleExtension from './plugins/extension-moddle/flowable'
 // 引入json转换与高亮
-// import X2JS from "x2js";
+import X2JS from 'x2js'
 
 import Codemirror from 'codemirror-editor-vue3'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/xml/xml.js'
 import 'codemirror/mode/javascript/javascript.js'
 import { nextTick } from 'vue'
+import VueJsoneditor from 'vue3-ts-jsoneditor'
 
 export default {
   name: 'MyProcessDesigner',
   componentName: 'MyProcessDesigner',
   components: {
+    VueJsoneditor,
     Codemirror,
   },
   setup() {
@@ -585,17 +594,17 @@ export default {
       })
     },
     previewProcessJson() {
-      // const newConvert = new X2JS();
-      // this.bpmnModeler.saveXML({ format: true }).then(({ xml }) => {
-      //   const { definitions } = newConvert.xml2js(xml);
-      //   if (definitions) {
-      //     this.previewResult = JSON.stringify(definitions, null, 4);
-      //   } else {
-      //     this.previewResult = "";
-      //   }
-      //   this.previewType = "json";
-      //   this.previewModelVisible = true;
-      // });
+      const newConvert = new X2JS()
+      this.bpmnModeler.saveXML({ format: true }).then(({ xml }) => {
+        const { definitions } = newConvert.xml2js(xml)
+        if (definitions) {
+          this.previewResult = JSON.stringify(definitions, null, 4)
+        } else {
+          this.previewResult = ''
+        }
+        this.previewType = 'json'
+        this.previewModelVisible = true
+      })
     },
   },
 }

@@ -3,7 +3,7 @@
  * @since: 2024-01-31
 -->
 <script setup lang="ts" name="settingsDrawer">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import { Setting } from '@element-plus/icons-vue'
 import navStyle from './navStyle/index.vue'
@@ -47,6 +47,16 @@ onMounted(() => {
 const openSetting = () => {
   drawer.value = true
 }
+
+/**
+ * 监听方法
+ */
+watch(
+  () => settingStore.device,
+  () => {
+    drawer.value = false
+  },
+)
 
 /**
  * 切换日间/夜间模式

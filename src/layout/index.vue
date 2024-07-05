@@ -3,60 +3,30 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import Logo from './logo/index.vue'
-import Menu from './menu/index.vue'
+import LeftMenu from './leftMenu/index.vue'
 import TabBar from './tabbar/index.vue'
-import Tab from './tabbar/tab/index.vue'
 import Main from './main/index.vue'
 import useSettingStore from '@/store/modules/setting'
-import useMenuStore from '@/store/modules/menu'
-import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
-import { watch, onMounted, computed } from 'vue'
+import { watchEffect, computed } from 'vue'
 import variables from '@/styles/variables.module.scss'
-import useTabsStore from '@/store/modules/tabs.ts'
 import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
+import { useWindowSize } from '@vueuse/core'
 import websocket from '@/layout/websocket/index.vue'
+import { MenuLayout } from '@/types/types.ts'
+import { DEVICE } from '@/utils/common.ts'
 
-let $router = useRouter()
-let $route = useRoute()
-let menuStore = useMenuStore()
-let tabStore = useTabsStore()
-let { theme, settings } = useSettingStore()
-
-onMounted(async () => {
-  await menuStore.setMenuChildren(
-    menuStore.getOneLevelMenuInfo('path', tabStore.currentTab.path)?.children as RouteRecordRaw[],
-  )
-  tabStore.setTab($route)
-})
+let settingStore = useSettingStore()
+const { theme, settings } = useSettingStore()
+const { width } = useWindowSize()
 
 /**
  * 菜单位置计算属性
  */
-const menuLayout = computed(() => {
-  return theme.menuLayout
-})
-
+const menuLayout = computed(() => theme.menuLayout)
 /**
  * 计算获取菜单数据
  */
-const menuList = computed(() => {
-  return theme.menuLayout === 'mix' ? menuStore.mixMenuRoutes : menuStore.menuRoutes
-})
-
-/**
- * 计算获取菜单数据
- */
-const isCollapse = computed(() => {
-  return settings.isCollapse
-})
-
-const selectMenu = async (index: string) => {
-  if (menuLayout.value !== 'top') {
-    await $router.push({ path: index })
-    tabStore.setTab($route)
-  }
-}
+const isCollapse = computed(() => settings.isCollapse)
 
 /**
  * 动态获取tab的样式
@@ -64,37 +34,42 @@ const selectMenu = async (index: string) => {
 const tabStyle = computed(() => {
   return {
     background: variables.baseMainTheme,
-    left: menuLayout.value !== 'top' ? (!isCollapse.value ? '200px' : '56px') : '0px',
-    width: menuLayout.value !== 'top' ? (isCollapse.value ? 'calc(100% - 56px)' : 'calc(100% - 200px)') : '100%',
+    left: menuLayout.value !== 'top' ? (!isCollapse.value ? variables.baseLeftMenuWidth : '56px') : '0px',
+    width:
+      menuLayout.value !== 'top'
+        ? isCollapse.value
+          ? 'calc(100% - 56px)'
+          : 'calc(100% - variables.baseLeftMenuWidth)'
+        : '100%',
   }
 })
 
-watch(
-  () => theme.menuLayout,
-  () => {
-    $router.push({ path: $route.path, query: {} })
-  },
-)
+const WIDTH: number = 992
+watchEffect(() => {
+  let _menuLayout: MenuLayout = menuLayout.value
+  if (width.value > WIDTH) {
+    settingStore.settings.isCollapse = false
+    settingStore.setDevice(DEVICE.PC)
+    settingStore.setMenuLayout(_menuLayout)
+  } else {
+    settingStore.setMenuLayout('left')
+    if (width.value >= WIDTH / 2 && width.value < WIDTH) {
+      settingStore.settings.isCollapse = true
+      settingStore.setDevice(DEVICE.PAD)
+    } else {
+      settingStore.setDevice(DEVICE.MOBILE)
+    }
+  }
+})
 </script>
+
 <template>
   <el-container class="layout-container">
-    <el-aside v-if="menuLayout !== 'top'" width="200px" :class="{ isCollapse: isCollapse }">
-      <el-scrollbar>
-        <el-menu
-          background-color="transparent"
-          :default-active="$route.path"
-          :collapse="isCollapse"
-          @select="selectMenu"
-        >
-          <Logo />
-          <Menu :layout="menuLayout" position="noTop" :menuList="menuList" />
-        </el-menu>
-      </el-scrollbar>
-    </el-aside>
-
-    <el-container>
+    <left-menu />
+    <el-container class="layout-main-container">
       <TabBar />
-      <Tab />
+
+      <!-- 内容区域 -->
       <el-main :style="tabStyle">
         <el-scrollbar class="scrollbar">
           <el-backtop :visibility-height="100" target=".scrollbar .el-scrollbar__wrap" :bottom="100">
@@ -111,42 +86,35 @@ watch(
     <websocket />
   </el-container>
 </template>
+
 <style lang="scss" scoped>
 .layout-container {
   height: 100vh;
 
-  // 菜单区域
-  .el-aside {
-    box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
-    transition: all 0.3s;
+  --el-main-top-height: 90px;
 
-    .el-menu {
-      border-right: none;
-    }
-  }
-
-  .el-container {
+  .layout-main-container {
     flex-direction: column !important;
-  }
 
-  // 内容区域
-  .el-main {
-    position: absolute;
-    top: $tabbar-height;
-    left: 200px;
-    width: calc(100% - $base-menu-width);
-    height: calc(100vh - $tabbar-height);
-    padding: 20px;
-    transition: all 0.3s;
-  }
+    // 内容区域
+    .el-main {
+      position: absolute;
+      top: $base-main-top-height;
+      left: 200px;
+      width: calc(100% - $base-left-menu-width);
+      height: calc(100vh - $base-main-top-height);
+      padding: 20px;
+      transition: all 0.3s;
+    }
 
-  .backTop {
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-    text-align: center;
-    line-height: 40px;
-    color: #1989fa;
+    .backTop {
+      height: 100%;
+      width: 100%;
+      background-color: transparent;
+      text-align: center;
+      line-height: 40px;
+      color: #1989fa;
+    }
   }
 }
 

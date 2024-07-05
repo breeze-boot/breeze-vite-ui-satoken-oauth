@@ -8,16 +8,13 @@ import { ArrowRight, Fold, Expand } from '@element-plus/icons-vue'
 import useSettingStore from '@/store/modules/setting'
 import { useRoute } from 'vue-router'
 
-let settings = useSettingStore().settings
 const $route = useRoute()
-const changeIcon = () => {
-  settings.isCollapse = !settings.isCollapse
-}
+let settings = useSettingStore().settings
 </script>
 
 <template>
   <!-- el折叠图标 -->
-  <el-icon class="is-collapse-icon" size="20px" @click="changeIcon">
+  <el-icon class="is-collapse-icon" size="20px" @click="() => (settings.isCollapse = !settings.isCollapse)">
     <component :is="settings.isCollapse ? Expand : Fold" :style="{ color: variables.baseTextColor }"></component>
   </el-icon>
   <!-- 面包屑导航 -->

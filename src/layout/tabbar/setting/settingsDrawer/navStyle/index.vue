@@ -12,9 +12,7 @@ let { theme } = settingStore
 /**
  * 动态当前布局
  */
-const menuLayout = computed(() => {
-  return theme.menuLayout
-})
+const menuLayout = computed(() => theme.menuLayout)
 
 /**
  * 改变布局
@@ -81,9 +79,9 @@ const handleClickMenuStyle = (item: string) => {
 .layout-mix {
   width: 50px;
   height: 40px;
-  margin: 0 10px;
   border-radius: 5px;
   cursor: pointer;
+  margin: 10px;
 }
 
 .layout-left {

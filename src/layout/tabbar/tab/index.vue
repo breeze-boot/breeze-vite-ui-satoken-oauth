@@ -45,7 +45,7 @@ const handleSwitchTab = async (pane: any) => {
 </script>
 
 <template>
-  <el-header class="el-header-tabs-container">
+  <div class="el-header-tabs-container">
     <el-tabs
       v-model="tabsStore.currentTabName"
       type="card"
@@ -59,7 +59,7 @@ const handleSwitchTab = async (pane: any) => {
         {{ item }}
       </el-tab-pane>
     </el-tabs>
-  </el-header>
+  </div>
 </template>
 <style lang="scss" scoped>
 .el-header-tabs-container {

@@ -13,6 +13,7 @@ const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
     return {
       refresh: false,
+      device: CookiesStorage.get(CookiesKey.DEVICE) || setting.defaultDevice,
       theme: {
         watermark: setting.defaultEnableWatermark,
         watermarkContent: setting.watermarkContent,
@@ -53,6 +54,10 @@ const useSettingStore = defineStore('SettingStore', {
     setMenuLayout(value: string) {
       this.theme.menuLayout = value
       CookiesStorage.set(CookiesKey.MENU_LAYOUT, value)
+    },
+    setDevice(value: string) {
+      this.device = value
+      CookiesStorage.set(CookiesKey.DEVICE, value)
     },
   },
 })

@@ -9,6 +9,7 @@ import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
 import useTabsStore from '@/store/modules/tabs.ts'
+import VueJsoneditor from 'vue3-ts-jsoneditor'
 
 defineOptions({
   name: 'TableItem',
@@ -365,6 +366,15 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     </el-tag>
   </template>
 
+  <!-- json -->
+  <span v-else-if="tableField.type === 'json'">
+    <el-popover placement="left" :width="600" trigger="click">
+      <template #reference>
+        <el-button type="primary" text style="margin-right: 16px">详情</el-button>
+      </template>
+      <vue-jsoneditor mode="tree" v-model:json="scope.row[tableField.prop]" />
+    </el-popover>
+  </span>
   <!-- 文本 -->
   <template v-else>
     {{ scope.row[tableField.prop] }}

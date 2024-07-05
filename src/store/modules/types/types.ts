@@ -40,6 +40,7 @@ export interface DictState {
  */
 export interface SettingState {
   refresh: boolean
+  device: string
   theme: Theme
   settings: Settings
 }

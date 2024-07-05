@@ -1,12 +1,15 @@
 // 导出 variables.module.scss，提供给TypeScript使用
 :export {
-  baseMainTheme: $base-main-theme;
-  baseLeftTheme: $base-left-theme;
-  baseTopTheme: $base-top-theme;
-  baseTextColor: $base-text-color;
-  baseContextMenuWidth: $base-context-menu-width;
-  baseMenuWidth: $base-menu-width;
+  // 主题背景色
+  baseMainTheme: var(--base-main-theme);
+  // 菜单 logo等字体颜色
+  baseTextColor: var(--base-text-color);
 
-  loginTheme: $login-theme;
-  svgTheme: $svg-theme;
+  // 折叠动态左侧菜单宽度
+  baseLeftMenuWidth: $base-left-menu-width;
+
+  // tab右键菜单宽度
+  baseContextMenuWidth: $base-context-menu-width;
+
+  svgTheme: var(--color);
 }

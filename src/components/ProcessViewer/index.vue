@@ -9,7 +9,6 @@ const props = defineProps({
   },
 })
 
-const containerEl = ref<any>(null)
 const defaultZoom = ref<number>(1)
 const bpmnViewer = ref<any>(null)
 
@@ -28,7 +27,7 @@ const handleZoomIn = (zoomStep = 0.1) => {
     throw new Error('[Process Viewer Warn ]: The zoom ratio cannot be greater than 4')
   }
   defaultZoom.value = newZoom
-  bpmnViewer.value.get('canvas').zoom(defaultZoom)
+  bpmnViewer.value.get('canvas').zoom(defaultZoom.value)
 }
 
 const handleZoomOut = (zoomStep = 0.1) => {
@@ -37,21 +36,22 @@ const handleZoomOut = (zoomStep = 0.1) => {
     throw new Error('[Process Viewer Warn ]: The zoom ratio cannot be less than 0.6')
   }
   defaultZoom.value = newZoom
-  bpmnViewer.value.get('canvas').zoom(defaultZoom)
+  bpmnViewer.value.get('canvas').zoom(defaultZoom.value)
 }
 
-const previewXml = () => {
-  containerEl.value = document.getElementById('container')
+const previewXml = async () => {
   // 每次清一下
   bpmnViewer.value && bpmnViewer.value.destroy()
-  bpmnViewer.value = new BpmnViewer({ container: containerEl.value })
-  bpmnViewer.value.importXML(props.xml, (err: any) => {
-    if (!err) {
-      bpmnViewer.value.get('canvas').zoom('fit-viewport', 'auto')
-      return
-    }
-    console.error(err)
-  })
+  bpmnViewer.value = new BpmnViewer({ container: document.getElementById('container') })
+
+  try {
+    const result = await bpmnViewer.value.importXML(props.xml)
+    bpmnViewer.value.get('canvas').zoom('fit-viewport', 'auto')
+    const { warnings } = result
+    console.log(warnings)
+  } catch (err: any) {
+    console.log(err.message, err.warnings)
+  }
 }
 </script>
 
@@ -74,7 +74,7 @@ const previewXml = () => {
   position: relative;
   border: 1px solid #efefef;
   width: 100%;
-  height: calc(100vh - $tabbar-height - 50px);
+  height: calc(90vh);
 
   .process-viewer__canvas {
     flex: 1;

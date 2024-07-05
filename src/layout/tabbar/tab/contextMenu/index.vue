@@ -6,7 +6,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import useTabsStore from '@/store/modules/tabs.ts'
-import { LocationQueryRaw, RouteParamsRaw, useRouter } from 'vue-router'
+import { LocationQueryRaw, useRouter } from 'vue-router'
 
 const $router = useRouter()
 let tabsStore = useTabsStore()

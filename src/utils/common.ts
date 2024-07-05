@@ -19,6 +19,11 @@ export enum SORT {
   ASE = 'ascending',
   DESC = 'descending',
 }
+export enum DEVICE {
+  PC = 'pc',
+  PAD = 'PAD',
+  MOBILE = 'MOBILE',
+}
 
 export const camelCaseToUnderscore = (val: string) => {
   return val.replace(/[A-Z]/g, (letter: string) => `_${letter.toLowerCase()}`)

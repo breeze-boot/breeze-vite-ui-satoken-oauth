@@ -1,10 +1,13 @@
 html.dark {
   // 主题背景色
   --base-main-theme: var(--el-color-black);
-  --base-left-theme: var(--el-color-black);
-  --base-top-theme: var(--el-color-black);
+  --base-left-theme: var(--el-color-black) !important;
+  --base-top-theme: var(--el-color-black) !important;
+
   --base-search-dialog-theme: rgba(0, 0 0, 0.3);
-  --base-text-color: rgba(255, 255, 255, 0.88);
+
+  --base-text-color: rgba(255, 255, 255, 0.88) !important;
+
   --login-theme: (--el-color-black);
   --djs-palette: rgba(0, 0, 0, 0.66);
   --djs-entry: rgb(255, 255, 255);

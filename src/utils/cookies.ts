@@ -5,6 +5,7 @@ export enum CookiesKey {
   MENU_LAYOUT = 'MENU_LAYOUT',
   THEME_COLOR = 'THEME_COLOR',
   LANGUAGE = 'LANGUAGE',
+  DEVICE = 'DEVICE',
   SIZE = 'SIZE',
 }
 

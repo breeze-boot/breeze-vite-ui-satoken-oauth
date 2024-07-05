@@ -14,51 +14,61 @@
           :type="elementType"
         />
       </el-collapse-item>
-      <el-collapse-item name="condition" v-if="elementType === 'Process'" key="message">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><comment /></el-icon>
-            消息与信号
-          </div>
-        </template>
-        <signal-and-massage />
-      </el-collapse-item>
-      <el-collapse-item name="condition" v-if="conditionFormVisible" key="condition">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><promotion /></el-icon>
-            流转条件
-          </div>
-        </template>
-        <flow-condition :business-object="elementBusinessObject" :type="elementType" />
-      </el-collapse-item>
-      <el-collapse-item name="condition" v-if="formVisible" key="form">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><list /></el-icon>
-            表单
-          </div>
-        </template>
-        <element-form :id="elementId" :type="elementType" />
-      </el-collapse-item>
-      <el-collapse-item name="task" v-if="elementType.indexOf('Task') !== -1" key="task">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><checked /></el-icon>
-            任务
-          </div>
-        </template>
-        <element-task :id="elementId" :type="elementType" />
-      </el-collapse-item>
-      <el-collapse-item name="multiInstance" v-if="elementType.indexOf('Task') !== -1" key="multiInstance">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><help-filled /></el-icon>
-            多实例
-          </div>
-        </template>
-        <element-multi-instance :business-object="elementBusinessObject" :type="elementType" />
-      </el-collapse-item>
+      <template v-if="elementType === 'Process'">
+        <el-collapse-item name="condition" key="message">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><comment /></el-icon>
+              消息与信号
+            </div>
+          </template>
+          <signal-and-massage />
+        </el-collapse-item>
+      </template>
+      <template v-if="conditionFormVisible">
+        <el-collapse-item name="condition" key="condition">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><promotion /></el-icon>
+              流转条件
+            </div>
+          </template>
+          <flow-condition :business-object="elementBusinessObject" :type="elementType" />
+        </el-collapse-item>
+      </template>
+      <template v-if="formVisible">
+        <el-collapse-item name="condition" key="form">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><list /></el-icon>
+              表单
+            </div>
+          </template>
+          <element-form :id="elementId" :type="elementType" />
+        </el-collapse-item>
+      </template>
+      <template v-if="elementType.indexOf('Task') !== -1">
+        <el-collapse-item name="task" key="task">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><checked /></el-icon>
+              任务
+            </div>
+          </template>
+          <element-task :id="elementId" :type="elementType" />
+        </el-collapse-item>
+      </template>
+      <template v-if="elementType.indexOf('Task') !== -1">
+        <el-collapse-item name="multiInstance" key="multiInstance">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><help-filled /></el-icon>
+              多实例
+            </div>
+          </template>
+          <element-multi-instance :business-object="elementBusinessObject" :type="elementType" />
+        </el-collapse-item>
+      </template>
       <el-collapse-item name="listeners" key="listeners">
         <template #title>
           <div class="panel-tab__title">
@@ -68,15 +78,17 @@
         </template>
         <element-listeners :id="elementId" :type="elementType" />
       </el-collapse-item>
-      <el-collapse-item name="taskListeners" v-if="elementType === 'UserTask'" key="taskListeners">
-        <template #title>
-          <div class="panel-tab__title">
-            <el-icon><bell-filled /></el-icon>
-            任务监听器
-          </div>
-        </template>
-        <user-task-listeners :id="elementId" :type="elementType" />
-      </el-collapse-item>
+      <template v-if="elementType === 'UserTask'">
+        <el-collapse-item name="taskListeners" key="taskListeners">
+          <template #title>
+            <div class="panel-tab__title">
+              <el-icon><bell-filled /></el-icon>
+              任务监听器
+            </div>
+          </template>
+          <user-task-listeners :id="elementId" :type="elementType" />
+        </el-collapse-item>
+      </template>
       <el-collapse-item name="extensions" key="extensions">
         <template #title>
           <div class="panel-tab__title">
@@ -198,6 +210,7 @@ export default {
       // 初始第一个选中元素 bpmn:Process
       this.initFormOnChanged(null)
       this.bpmnModeler.on('import.done', (e) => {
+        console.debug(e)
         this.initFormOnChanged(null)
       })
       // 监听选择事件，修改当前激活的元素以及表单

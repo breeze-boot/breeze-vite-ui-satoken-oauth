@@ -205,7 +205,7 @@ export interface Settings {
  * 设置主题类型
  */
 export interface Theme {
-  menuLayout: 'left' | 'top' | 'mix' | string
+  menuLayout: MenuLayout
   watermark: boolean
   watermarkContent: string[]
   themeModel: string
@@ -214,6 +214,8 @@ export interface Theme {
   themeColor: string
   size: string
 }
+
+export type MenuLayout = 'left' | 'top' | 'mix' | string
 
 /**
  * Tab类型
