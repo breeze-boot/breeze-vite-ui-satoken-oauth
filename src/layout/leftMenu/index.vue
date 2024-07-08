@@ -83,6 +83,11 @@ watch(
     color: var(--base-text-color);
   }
 
+  .el-sub-menu__title:hover,
+  .el-menu-item:hover {
+    color: red;
+  }
+
   .el-menu {
     border-right: none;
   }

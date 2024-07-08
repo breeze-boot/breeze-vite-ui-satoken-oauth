@@ -67,12 +67,16 @@ const props = defineProps(['menuList', 'layout', 'position'])
   color: var(--base-text-color);
 }
 
-span {
-  color: var(--base-text-color);
-}
-
+span,
 .el-sub-menu__title,
 .el-menu-item {
   color: var(--base-text-color);
 }
+
+.el-sub-menu__title:hover,
+.el-menu-item:hover,
+span:hover {
+  color: red;
+}
+
 </style>
