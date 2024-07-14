@@ -52,6 +52,7 @@ export interface UserResponseData extends ResponseData {
 export interface UserQuery extends PageQuery {
   userCode: string
   username: string
+  email: string
   isLock: string
   status?: number
   startTime?: string
@@ -70,7 +71,7 @@ export interface UserRoleQuery extends PageQuery {
 /**
  * 用户switch锁定开启参数类型声明
  */
-export interface UserSwitchParam {
+export interface UserSwitchForm {
   username?: string
   isLock?: number
 }
@@ -78,7 +79,7 @@ export interface UserSwitchParam {
 /**
  * 用户密码重置表单类型声明
  */
-export interface UserResetPasswordParam {
+export interface UserResetPasswordForm {
   id?: number
   password?: string
   confirmPassword?: string
@@ -87,7 +88,31 @@ export interface UserResetPasswordParam {
 /**
  *用户角色设置表单类型声明
  */
-export interface UserSetRoleParam {
+export interface UserSetRoleForm {
   userId: number
   roleIds: number[]
+}
+
+/**
+ * 用户表单类型声明
+ */
+export interface UserForm {
+  id?: number
+  avatar?: string
+  avatarFileId?: string
+  avatarName?: string
+  username?: string
+  userCode?: string
+  email?: string
+  amountName?: string
+  deptId?: number[]
+  postId?: number[]
+  idCard?: string
+  roleIds?: number[]
+  confirmPassword?: string
+  sex?: number
+  isLock?: number
+  password?: string
+  phone?: string
+  roleName?: string
 }

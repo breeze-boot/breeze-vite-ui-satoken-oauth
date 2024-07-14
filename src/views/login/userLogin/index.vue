@@ -107,18 +107,18 @@ const rules = {
 /**
  * 登录请求
  */
-const login = async () => {
+const handleLogin = async () => {
   await loginFormRef.value.validate()
   loading.value = true
   try {
     await useStore.userLogin(loginFormData)
     let redirect: string = $route.query.redirect as string
-    await $router.push({ path: redirect || '/' })
     ElNotification({
       type: 'success',
       message: '登录成功',
       title: `Hi, ${loadGreetings()}`,
     })
+    await $router.push({ path: redirect || '/' })
     loading.value = false
   } catch (error) {
     loading.value = false
@@ -180,7 +180,7 @@ const login = async () => {
               </el-form-item>
             </el-form>
             <el-form-item>
-              <el-button :loading="loading" size="large" class="login_btn" type="primary" @click="login">
+              <el-button :loading="loading" size="large" class="login_btn" type="primary" @click="handleLogin">
                 登录
               </el-button>
             </el-form-item>

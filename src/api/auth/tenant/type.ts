@@ -38,3 +38,12 @@ export interface TenantQuery extends PageQuery {
   tenantCode: string
   tenantName: string
 }
+
+/**
+ * 租户表单类型声明
+ */
+export interface TenantForm {
+  id?: number
+  tenantName?: string
+  tenantCode?: string
+}

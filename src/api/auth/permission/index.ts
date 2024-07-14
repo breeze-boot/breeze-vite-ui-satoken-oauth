@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { PermissionResponseData, PermissionQuery, PermissionRecord } from './type'
+import { PermissionResponseData, PermissionQuery, PermissionForm } from './type'
 
 enum API {
   PERMISSION_RESTFUL_URL = '/auth/v1/permission',
@@ -41,7 +41,7 @@ export function getPermission(id: number): AxiosPromise<PermissionResponseData> 
  *
  * @param data
  */
-export function addPermission(data: PermissionRecord): AxiosPromise<PermissionResponseData> {
+export function addPermission(data: PermissionForm): AxiosPromise<PermissionResponseData> {
   return request({
     url: API.PERMISSION_RESTFUL_URL,
     method: 'post',
@@ -52,11 +52,12 @@ export function addPermission(data: PermissionRecord): AxiosPromise<PermissionRe
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editPermission(data: PermissionRecord): AxiosPromise<PermissionResponseData> {
+export function editPermission(id: number, data: PermissionForm): AxiosPromise<PermissionResponseData> {
   return request({
-    url: API.PERMISSION_RESTFUL_URL,
+    url: `${API.PERMISSION_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

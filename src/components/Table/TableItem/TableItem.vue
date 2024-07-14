@@ -77,7 +77,6 @@ const switchLoading = ref(false)
  * switch点击事件
  */
 const beforeSwitchChange = (): boolean => {
-  ElMessage.info('click...')
   switchState.switchStatus = true
   switchLoading.value = false
   return switchState.switchStatus
@@ -95,7 +94,13 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
     _data[switchOption.status] = row[switchOption.status]
     const response: any = await switchOption.api(_data)
     switchLoading.value = false
-    ElMessage.success(response.message)
+    ElMessage.success({
+      message: response.message,
+      duration: 500,
+      onClose: () => {
+        $emit('reloadDataList')
+      },
+    })
   }
 }
 

@@ -49,8 +49,8 @@ const showAvatar = computed(() => {
       <el-avatar v-if="showAvatar" :src="showAvatar ? avatar : '#'">
         <span v-if="!showAvatar">{{ username }}</span>
       </el-avatar>
-      <el-avatar v-else>
-        <span>{{ username }}</span>
+      <el-avatar v-else size="default">
+        <span style="font-size: 0.7rem">{{ username }}</span>
       </el-avatar>
     </span>
     <template #dropdown>

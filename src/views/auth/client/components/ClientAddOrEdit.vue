@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addClient, getClient, editClient, checkClientCode } from '@/api/auth/client'
-import { ClientRecord } from '@/api/auth/client/type.ts'
+import { ClientForm } from '@/api/auth/client/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
@@ -22,7 +22,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const clientDataFormRef = ref()
-const clientDataForm = ref<ClientRecord>({
+const clientDataForm = ref<ClientForm>({
   authorizationGrantTypes: [],
   clientAuthenticationMethods: [],
   clientId: '',
@@ -104,7 +104,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   clientDataForm.value.id = undefined
   // 重置表单数据
   if (clientDataFormRef.value) {
@@ -113,6 +112,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -137,7 +137,7 @@ const handleClientDataFormSubmit = () => {
     }
     const id = clientDataForm.value.id
     if (id) {
-      await editClient(clientDataForm.value)
+      await editClient(id, clientDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

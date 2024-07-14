@@ -101,7 +101,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'edit',
         event: 'edit',
         permission: ['auth:dept:modify'],
-        eventHandle: (row: DeptRecord) => handleUpdate(row),
+        eventHandle: (row: DeptRecord) => handleUpdate(row.id as number, DIALOG_FLAG.EDIT),
       },
       // 详情
       {
@@ -200,10 +200,11 @@ const handleDelete = async (row: DeptRecord) => {
 /**
  * 修改
  *
- * @param row 修改参数
+ * @param id
+ * @param flag
  */
-const handleUpdate = (row: any) => {
-  AddOrEditHandle(row.id)
+const handleUpdate = (id: number | undefined, flag: DIALOG_FLAG.EDIT) => {
+  AddOrEditHandle(id, flag)
 }
 
 /**

@@ -30,7 +30,6 @@ const rules = ref({})
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   leaveDataForm.value.id = undefined
   // 重置表单数据
   if (leaveDataFormRef.value) {
@@ -39,6 +38,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**

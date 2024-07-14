@@ -13,7 +13,7 @@ import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { userSetRole } from '@/api/auth/user'
-import { UserSetRoleParam, UserRoleQuery } from '@/api/auth/user/type.ts'
+import { UserSetRoleForm, UserRoleQuery } from '@/api/auth/user/type.ts'
 import { ElMessage } from 'element-plus'
 
 defineOptions({
@@ -26,7 +26,7 @@ const { t } = useI18n()
 const visible = ref(false)
 const userRoleTableRef = ref()
 const roleQueryFormRef = ref()
-const userSetRoleDataForm = ref<UserSetRoleParam>({ userId: 0, roleIds: [] })
+const userSetRoleDataForm = ref<UserSetRoleForm>({ userId: 0, roleIds: [] })
 
 let currentRows = reactive<RoleRecords>([])
 
@@ -55,11 +55,13 @@ const tableInfo = reactive<TableInfo>({
   fieldList: [
     {
       prop: 'roleName',
+      width: 200,
       showOverflowTooltip: true,
       label: t('role.fields.roleName'),
     },
     {
       prop: 'roleCode',
+      width: 200,
       showOverflowTooltip: true,
       label: t('role.fields.roleCode'),
     },
@@ -87,13 +89,12 @@ const resetQuery = () => {
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
-
   if (id) {
     userSetRoleDataForm.value.userId = id
     queryParams.userId = id
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**

@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { TenantResponseData, TenantQuery, TenantRecord } from './type'
+import { TenantResponseData, TenantQuery, TenantForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -43,7 +43,7 @@ export function getTenant(id: number): AxiosPromise<TenantResponseData> {
  *
  * @param data
  */
-export function addTenant(data: TenantRecord): AxiosPromise<ResponseData> {
+export function addTenant(data: TenantForm): AxiosPromise<ResponseData> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'post',
@@ -54,11 +54,12 @@ export function addTenant(data: TenantRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editTenant(data: TenantRecord): AxiosPromise<ResponseData> {
+export function editTenant(id: number, data: TenantForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.TENANT_RESTFUL_URL,
+    url: `${API.TENANT_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

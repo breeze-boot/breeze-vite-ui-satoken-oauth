@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { PlatformResponseData, PlatformQuery, PlatformRecord } from './type'
+import { PlatformResponseData, PlatformQuery, PlatformRecord, PlatformForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -43,7 +43,7 @@ export function getPlatform(id: number): AxiosPromise<PlatformResponseData> {
  *
  * @param data
  */
-export function addPlatform(data: PlatformRecord): AxiosPromise<ResponseData> {
+export function addPlatform(data: PlatformForm): AxiosPromise<ResponseData> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',
@@ -54,11 +54,12 @@ export function addPlatform(data: PlatformRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editPlatform(data: PlatformRecord): AxiosPromise<ResponseData> {
+export function editPlatform(id: number, data: PlatformForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.PLATFORM_RESTFUL_URL,
+    url: `${API.PLATFORM_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

@@ -52,3 +52,13 @@ export interface ColumnPermissionRecord {
   roleId?: number
   menuId?: number | string
 }
+/**
+ * 角色表单类型声明
+ */
+export interface RoleForm {
+  id?: number
+  roleName?: string
+  roleCode?: string
+  permissionCode?: string
+  permissionIds?: number[]
+}

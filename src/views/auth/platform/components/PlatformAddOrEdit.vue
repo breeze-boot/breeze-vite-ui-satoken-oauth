@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addPlatform, getPlatform, editPlatform, checkPlatformCode } from '@/api/auth/platform'
-import type { PlatformRecord } from '@/api/auth/platform/type.ts'
+import type { PlatformForm } from '@/api/auth/platform/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
@@ -21,7 +21,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const platformDataFormRef = ref()
-const platformDataForm = ref<PlatformRecord>({})
+const platformDataForm = ref<PlatformForm>({})
 const rules = ref({
   platformName: [
     {
@@ -60,7 +60,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   platformDataForm.value.id = undefined
   // 重置表单数据
   if (platformDataFormRef.value) {
@@ -69,6 +68,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -93,7 +93,7 @@ const handleDataFormSubmit = () => {
     }
     const id = platformDataForm.value.id
     if (id) {
-      await editPlatform(platformDataForm.value)
+      await editPlatform(id, platformDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

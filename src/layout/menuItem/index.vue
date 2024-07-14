@@ -64,19 +64,6 @@ const props = defineProps(['menuList', 'layout', 'position'])
   display: block !important;
   width: 100% !important;
   text-align: left !important;
-  color: var(--base-text-color);
+  color: inherit;
 }
-
-span,
-.el-sub-menu__title,
-.el-menu-item {
-  color: var(--base-text-color);
-}
-
-.el-sub-menu__title:hover,
-.el-menu-item:hover,
-span:hover {
-  color: red;
-}
-
 </style>

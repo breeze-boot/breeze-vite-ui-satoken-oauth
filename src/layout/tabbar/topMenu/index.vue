@@ -75,9 +75,4 @@ const selectMenu = async (index: string) => {
 .el-menu-item {
   border-bottom: none !important;
 }
-
-.el-sub-menu__title,
-.el-menu-item {
-  color: var(--base-text-color);
-}
 </style>

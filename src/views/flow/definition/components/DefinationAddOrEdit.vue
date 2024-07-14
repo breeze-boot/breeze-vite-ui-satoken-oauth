@@ -87,7 +87,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   definitionDataForm.value.id = undefined
   // 重置表单数据
   if (definitionDataFormRef.value) {
@@ -97,6 +96,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**

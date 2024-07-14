@@ -62,11 +62,11 @@ watch(
  */
 const handleShowMsgInfo = async (msgUser: MsgUserRecord) => {
   currentMsgId.value = msgUser.msgId
-  visible.value = true
   const response: any = await getMsg(msgUser.msgId)
   if (response.code === '0000') {
     noticeMsgInfo.value = response.data
   }
+  visible.value = true
 }
 
 /**

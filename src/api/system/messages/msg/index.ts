@@ -53,11 +53,12 @@ export function addMsg(data: MsgRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editMsg(data: MsgRecord): AxiosPromise<ResponseData> {
+export function editMsg(id: number, data: MsgRecord): AxiosPromise<ResponseData> {
   return request({
-    url: API.MSG_RESTFUL_URL,
+    url: `${API.MSG_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

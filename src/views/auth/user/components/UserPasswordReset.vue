@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { userResetPassword } from '@/api/auth/user'
-import { UserResetPasswordParam } from '@/api/auth/user/type.ts'
+import { UserResetPasswordForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 
 defineOptions({
@@ -19,7 +19,7 @@ defineOptions({
 const { t } = useI18n()
 const visible = ref(false)
 const restUserPasswordDataFormRef = ref()
-const userRestPasswordDataForm = ref<UserResetPasswordParam>({})
+const userRestPasswordDataForm = ref<UserResetPasswordForm>({})
 const rules = ref({
   password: [
     {
@@ -60,7 +60,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   userRestPasswordDataForm.value.id = undefined
   // 重置表单数据
   if (restUserPasswordDataFormRef.value) {
@@ -69,6 +68,7 @@ const init = async (id: number) => {
   if (id) {
     userRestPasswordDataForm.value.id = id
   }
+  visible.value = true
 }
 
 /**

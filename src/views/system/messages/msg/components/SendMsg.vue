@@ -55,7 +55,6 @@ const rules = ref({
  * @msgId 消息ID
  */
 const init = async (method: string, msgId: number) => {
-  visible.value = true
   currentMsgId.value = msgId
   currentMethod.value = method
   // 重置表单数据
@@ -64,6 +63,7 @@ const init = async (method: string, msgId: number) => {
   }
 
   await initDeptSelect()
+  visible.value = true
 }
 
 const initDeptSelect = async () => {

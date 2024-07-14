@@ -39,3 +39,13 @@ export interface PlatformQuery extends PageQuery {
   platformCode: string
   platformName: string
 }
+
+/**
+ * 平台表单类型声明
+ */
+export interface PlatformForm {
+  id?: number
+  platformName?: string
+  platformCode?: string
+  description?: string
+}

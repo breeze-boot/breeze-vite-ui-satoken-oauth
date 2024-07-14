@@ -4,6 +4,6 @@
 -->
 <script setup lang="ts"></script>
 
-<template></template>
+<template>404</template>
 
 <style lang="scss" scoped></style>

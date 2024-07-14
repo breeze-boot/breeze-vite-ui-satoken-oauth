@@ -8,7 +8,7 @@ import { ResponseData } from '@/types/types.ts'
  * 部门列表类型声明
  */
 export interface DeptRecord {
-  id?: number | string
+  id?: number
   parentId?: number | string
   deptCode?: string
   deptName?: string
@@ -38,4 +38,14 @@ export interface DeptResponseData extends ResponseData {
 export interface DeptQuery {
   deptName?: string
   deptCode?: string
+}
+
+/**
+ * 部门表单类型声明
+ */
+export interface DeptForm {
+  id?: number
+  parentId?: number | string
+  deptCode?: string
+  deptName?: string
 }

@@ -36,6 +36,7 @@ export interface TableInfo {
   refresh?: number
   mountedRefresh?: boolean
   dict?: string[]
+  rows?: []
   pager?: boolean
   select?: 'multi' | 'single'
   tbHeaderBtn?: Btn[]
@@ -99,7 +100,7 @@ export interface Field {
   linkInfo?: LinkInfo | LinkInfo2
   tag?: TagOptions
   align?: 'center' | 'right' | 'left'
-  width?: number
+  width?: number | string
   minWidth?: string
   fixed?: boolean
   children?: Field[]
@@ -201,7 +202,7 @@ export interface TagOption {
  * 字段行内跳转字段属性类型
  */
 export interface LinkInfo {
-  // 路由路径
+  // 前端定义的路由路径
   routePath?: string
   // 路由参数，行项目获取
   rowParam?: string[]
@@ -217,7 +218,7 @@ export interface LinkInfo {
  * 字段行内跳转字段属性类型
  */
 export interface LinkInfo2 {
-  // url地址
+  // 后台返回的url地址
   linkUrlProp?: string
   // 路由参数，行项目获取
   rowParam?: string[]

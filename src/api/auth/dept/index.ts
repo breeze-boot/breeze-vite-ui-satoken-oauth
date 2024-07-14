@@ -4,12 +4,12 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import type { DeptResponseData, DeptQuery, DeptRecord } from './type'
+import type { DeptResponseData, DeptQuery, DeptForm } from './type'
 import JSONBigInt from 'json-bigint'
 import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  MENU_RESTFUL_URL = '/auth/v1/dept',
+  DEPT_RESTFUL_URL = '/auth/v1/dept',
   CHECK_DEPT_CODE_URL = '/auth/v1/dept/checkDeptCode',
   SELECT_DEPT_URL = '/sys/v1/common/selectDept',
 }
@@ -21,7 +21,7 @@ enum API {
  */
 export function list(params: DeptQuery): AxiosPromise<DeptResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: API.DEPT_RESTFUL_URL,
     method: 'get',
     params: {
       ...params,
@@ -37,7 +37,7 @@ export function list(params: DeptQuery): AxiosPromise<DeptResponseData> {
  */
 export function getDept(id: number): AxiosPromise<DeptResponseData> {
   return request({
-    url: `${API.MENU_RESTFUL_URL}/info/${id}`,
+    url: `${API.DEPT_RESTFUL_URL}/info/${id}`,
     method: 'get',
   })
 }
@@ -47,9 +47,9 @@ export function getDept(id: number): AxiosPromise<DeptResponseData> {
  *
  * @param data
  */
-export function addDept(data: DeptRecord): AxiosPromise<DeptResponseData> {
+export function addDept(data: DeptForm): AxiosPromise<DeptResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: API.DEPT_RESTFUL_URL,
     method: 'post',
     data: data,
   })
@@ -58,11 +58,12 @@ export function addDept(data: DeptRecord): AxiosPromise<DeptResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editDept(data: DeptRecord): AxiosPromise<DeptResponseData> {
+export function editDept(id: number, data: DeptForm): AxiosPromise<DeptResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: `${API.DEPT_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })
@@ -75,7 +76,7 @@ export function editDept(data: DeptRecord): AxiosPromise<DeptResponseData> {
  */
 export function deleteDept(id: number): AxiosPromise<DeptResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: API.DEPT_RESTFUL_URL,
     method: 'delete',
     data: id,
   })
@@ -88,7 +89,7 @@ export function deleteDept(id: number): AxiosPromise<DeptResponseData> {
  */
 export function exportExcel(params: DeptQuery): AxiosPromise<DeptResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: API.DEPT_RESTFUL_URL,
     method: 'post',
     data: params,
   })

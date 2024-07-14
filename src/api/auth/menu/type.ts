@@ -73,3 +73,24 @@ export interface MenuTreeResponseData extends ResponseData {
     pages: number
   }
 }
+
+/**
+ * 菜单表单类型声明
+ */
+export interface MenuForm {
+  id?: number
+  platformId?: number
+  platformName?: string
+  name?: string
+  title?: string
+  icon?: string
+  sort: number
+  parentId?: number | string
+  permission?: string
+  component?: string
+  href: number
+  keepAlive: number
+  hidden: number
+  type: number
+  path?: string
+}

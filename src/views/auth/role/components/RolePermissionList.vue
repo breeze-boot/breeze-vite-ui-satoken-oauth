@@ -43,12 +43,12 @@ const currentClickRoleId = ref<string | number>()
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   // 重置表单数据
   if (rolePermissionTreeRef.value) {
     currentClickRoleId.value = undefined
   }
   currentClickRoleId.value = id
+  visible.value = true
   await getInfo(id)
 }
 
@@ -76,7 +76,9 @@ const getInfo = async (id: number) => {
     return
   }
   const menuIds = rolesPermissionResponse.data.map((item: any) => item.menuId)
-  rolePermissionTreeRef.value!.setCheckedKeys(menuIds, true)
+  if (menuIds) {
+    rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
+  }
 }
 
 /**

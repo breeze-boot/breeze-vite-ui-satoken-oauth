@@ -15,10 +15,12 @@ export enum DIALOG_FLAG {
   ADD_SUB = 'ADD_SUB',
   EDIT = 'EDIT',
 }
+
 export enum SORT {
   ASE = 'ascending',
   DESC = 'descending',
 }
+
 export enum DEVICE {
   PC = 'pc',
   PAD = 'PAD',
@@ -39,6 +41,8 @@ export const convertBigNumberToString = (obj: any): any => {
 
   if (obj._isBigNumber) {
     return obj.toString()
+  } else if (Array.isArray(obj)) {
+    return obj.map((item) => convertBigNumberToString(item))
   }
 
   for (const key in obj) {

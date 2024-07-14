@@ -11,7 +11,7 @@ import useUserStore from '@/store/modules/user.ts'
 import TableItem from '@/components/Table/TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 
-const useStore = useUserStore()
+const userStore = useUserStore()
 
 defineOptions({
   name: 'BTreeTable',
@@ -167,11 +167,11 @@ const initColumn = () => {
       key: index,
       fixed: item.fixed || false,
       align: item.align || 'center',
-      width: item.width || 100,
+      width: item.width || '',
       hidden: item.hidden || false,
       disabled: item.disabled || false,
     }
-    if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
+    if (userStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
       item.hidden = true
       item.disabled = true
     }
@@ -272,6 +272,7 @@ const getList = () => {
     }
     onEnd()
     tableInfo.loading = false
+    handleDoExpandTableRowView()
   })
 }
 
@@ -447,6 +448,35 @@ const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.()
 }
 
+const expandedRows = ref<any[]>([])
+const expandedKeys = ref<any[]>([])
+
+const handleDoExpandTableRowView = () => {
+  if (expandedRows.value.length > 0) {
+    let idList = expandedRows.value.map((ele: any) => ele.id)
+    handleGetOpenRowId(tableInfo.rows, idList)
+  }
+}
+const handleExpandChange = (_expandedRows: any, expanded: boolean) => {
+  if (expanded) {
+    expandedRows.value.push(_expandedRows)
+  } else {
+    const number = expandedRows.value.indexOf(_expandedRows)
+    expandedRows.value.splice(number, 1)
+  }
+}
+
+const handleGetOpenRowId = (val: any, idList: any) => {
+  val.forEach((ele: any) => {
+    if (idList.includes(ele.id)) {
+      expandedKeys.value.push(ele.id)
+    }
+    if (ele.children && ele.children?.length > 0) {
+      handleGetOpenRowId(ele.children, idList)
+    }
+  })
+}
+
 /**
  * 监听方法
  */
@@ -498,7 +528,7 @@ const onEnd = () => {
         </el-table-column>
         <el-table-column prop="width" :label="t('settings.fields.width')" width="250">
           <template #default="{ row }">
-            <el-slider :max="1000" v-model="row.width" />
+            <el-slider :min="150" :max="500" v-model="row.width" />
           </template>
         </el-table-column>
         <el-table-column prop="fixed" :label="t('settings.fields.fixed')" width="120">
@@ -559,15 +589,21 @@ const onEnd = () => {
         border
         :default-expand-all="expandAll"
         stripe
-        row-key="id"
+        :row-key="
+          (val: any) => {
+            return val.id
+          }
+        "
         :key="tableKey"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         :style="tableStyle"
         :highlight-current-row="true"
+        :expand-row-keys="expandedKeys"
         @select-all="handleSelectionChange"
         @selection-change="handleSelectionChange"
         @row-dblclick="handleRowDbClick"
         @row-click="handleRowClick"
+        @expand-change="handleExpandChange"
       >
         <el-table-column
           v-if="props.select === 'multi'"
@@ -605,8 +641,8 @@ const onEnd = () => {
           :label="item.label"
           :align="item.align || 'left'"
           :header-align="item.align || 'left'"
-          :width="item.width"
-          :min-width="item.minWidth || '100px'"
+          :width="item.width || ''"
+          :min-width="item.minWidth || ''"
           :show-overflow-tooltip="item.showOverflowTooltip"
           :fixed="item.fixed"
         >
@@ -619,8 +655,8 @@ const onEnd = () => {
                 :label="_item.label"
                 :align="_item.align || 'center'"
                 :header-align="_item.align || 'center'"
-                :width="_item.width"
-                :min-width="_item.minWidth || '100px'"
+                :width="_item.width || ''"
+                :min-width="_item.minWidth || ''"
                 :show-overflow-tooltip="_item.showOverflowTooltip"
                 :fixed="_item.fixed"
               >

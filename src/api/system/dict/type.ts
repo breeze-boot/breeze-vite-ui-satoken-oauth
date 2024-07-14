@@ -39,3 +39,21 @@ export interface DictQuery extends PageQuery {
   dictCode: string
   dictName: string
 }
+
+/**
+ * 字典switch锁定开启参数类型声明
+ */
+export interface DictSwitchForm {
+  id?: number
+  status?: number
+}
+
+/**
+ * 字典表单类型声明
+ */
+export interface DictForm {
+  id?: number
+  dictName: string
+  dictCode: string
+  status: number
+}

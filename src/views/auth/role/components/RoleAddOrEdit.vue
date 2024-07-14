@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addRole, getRole, editRole, checkRoleCode, selectPermission, selectCustomizePermission } from '@/api/auth/role'
-import { RoleRecord } from '@/api/auth/role/type.ts'
+import { RoleForm } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { SelectData } from '@/types/types.ts'
@@ -22,7 +22,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const roleDataFormRef = ref()
-const roleDataForm = ref<RoleRecord>({})
+const roleDataForm = ref<RoleForm>({})
 const permissionOption = ref<SelectData[]>()
 const customizePermissionOption = ref<SelectData[]>()
 const rules = ref({
@@ -76,7 +76,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   roleDataForm.value.id = undefined
   // 重置表单数据
   if (roleDataFormRef.value) {
@@ -87,6 +86,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -131,7 +131,7 @@ const handleRoleDataFormSubmit = () => {
     }
     const id = roleDataForm.value.id
     if (id) {
-      await editRole(roleDataForm.value)
+      await editRole(id, roleDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

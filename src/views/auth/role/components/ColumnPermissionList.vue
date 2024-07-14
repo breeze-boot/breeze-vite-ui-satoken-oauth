@@ -56,7 +56,6 @@ const rules = ref({
  * @data 菜单数据
  */
 const init = async (data: MenuTreeRecord, currentClickRoleId: number) => {
-  visible.value = true
   columnPermissionDataForm.value.menuId = data.id
   columnPermissionDataForm.value.roleId = currentClickRoleId
   // 重置表单数据
@@ -71,6 +70,7 @@ const init = async (data: MenuTreeRecord, currentClickRoleId: number) => {
 
   await initTableNameSelect()
   await getInfo(currentClickRoleId)
+  visible.value = true
 }
 
 /**

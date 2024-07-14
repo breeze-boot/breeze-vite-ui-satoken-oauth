@@ -16,7 +16,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
-const useStore = useUserStore()
+const userStore = useUserStore()
 
 const props = defineProps({
   // 表格顶部按钮
@@ -233,11 +233,11 @@ const initColumn = () => {
       key: index,
       fixed: item.fixed || false,
       align: item.align || 'center',
-      width: item.width || 100,
+      width: item.width || '',
       hidden: item.hidden || false,
       disabled: item.disabled || false,
     }
-    if (useStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
+    if (userStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
       item.hidden = true
       item.disabled = true
     }
@@ -344,22 +344,22 @@ const handleParams = (order?: ColumnSort) => {
  * 获取数据
  */
 const getList = (order?: ColumnSort) => {
-  tableInfo.loading = true
   singleSelectValue.value = undefined
   currentRows.value = []
 
   // 父组件传入的数据，直接渲染
-  if (!tableData.value) {
+  if (tableData.value.length > 0) {
     tableInfo.loading = true
     tableInfo.rows = tableData.value
     props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
-    tableInfo.loading = false
     onEnd()
+    tableInfo.loading = false
     return
   }
 
   if (!props.listApi) return
 
+  tableInfo.loading = true
   props.listApi(handleParams(order)).then((response: any) => {
     if (response.code === '0000') {
       tableInfo.rows = []
@@ -670,7 +670,7 @@ const onEnd = () => {
         </el-table-column>
         <el-table-column prop="width" :label="t('settings.fields.width')" width="250">
           <template #default="{ row }">
-            <el-slider :max="1000" v-model="row.width" />
+            <el-slider :min="150" :max="500" v-model="row.width" />
           </template>
         </el-table-column>
         <el-table-column prop="fixed" :label="t('settings.fields.fixed')" width="120">
@@ -770,8 +770,8 @@ const onEnd = () => {
           :align="item.align || 'center'"
           :sortable="item.sortable"
           :header-align="item.align || 'center'"
-          :width="item.width"
-          :min-width="item.minWidth || '100px'"
+          :width="item.width || ''"
+          :min-width="item.minWidth || ''"
           :show-overflow-tooltip="item.showOverflowTooltip"
           :fixed="item.fixed"
         >
@@ -783,11 +783,11 @@ const onEnd = () => {
                 class-name="input-column"
                 :key="_index"
                 :label="_item.label"
-                :align="_item.align || 'center'"
                 :sortable="_item.sortable"
+                :align="_item.align || 'center'"
                 :header-align="_item.align || 'center'"
-                :width="_item.width"
-                :min-width="_item.minWidth || '100px'"
+                :width="_item.width || ''"
+                :min-width="_item.minWidth || ''"
                 :show-overflow-tooltip="_item.showOverflowTooltip"
                 :fixed="_item.fixed"
               >

@@ -39,3 +39,13 @@ export interface CategoryQuery extends PageQuery {
   categoryName: string
   categoryCode: string
 }
+
+/**
+ * 流程分类表单类型声明
+ */
+export interface CategoryForm {
+  id?: number
+  categoryName: string
+  categoryCode: string
+  tenantId: string
+}

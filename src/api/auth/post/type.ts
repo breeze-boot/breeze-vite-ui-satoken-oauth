@@ -38,3 +38,12 @@ export interface PostQuery extends PageQuery {
   postCode: string
   postName: string
 }
+
+/**
+ * 职位表单类型声明
+ */
+export interface PostForm {
+  id?: number
+  postName?: string
+  postCode?: string
+}

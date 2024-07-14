@@ -38,6 +38,7 @@ const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
       userInfo: GET_OBJ_STORAGE(StorageName.UserInfo) as UserInfoData,
+      tenantId: GET_STRING_STORAGE(StorageName.XTenantId) as string,
       refreshToken: GET_STRING_STORAGE(StorageName.RefreshToken) as string,
       accessToken: GET_STRING_STORAGE(StorageName.AccessToken) as string,
       roleCodes: GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[],
@@ -61,6 +62,9 @@ const useUserStore = defineStore('User', {
         // 持久化
         this.userInfo = response.user_info as UserInfoData
         SET_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
+
+        this.tenantId = response.user_info.tenantId as string
+        SET_STORAGE(StorageName.XTenantId, this.userInfo.tenantId as string)
 
         this.refreshToken = response.refresh_token as string
         SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
@@ -102,6 +106,7 @@ const useUserStore = defineStore('User', {
      */
     async logout() {
       this.userInfo = {} as UserInfoData
+      this.tenantId = '' as string
       this.accessToken = '' as string
       this.refreshToken = '' as string
       this.permissions = [] as string[]
@@ -115,6 +120,13 @@ const useUserStore = defineStore('User', {
     storeLoginInfo(refreshToken: string, accessToken: string) {
       this.accessToken = accessToken
       this.refreshToken = refreshToken
+    },
+    /**
+     * 保存租户信息
+     */
+    storeTenantId(tenantId: string) {
+      this.tenantId = tenantId
+      SET_STRING_STORAGE(StorageName.XTenantId, tenantId)
     },
   },
   getters: {

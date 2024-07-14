@@ -9,6 +9,7 @@ import { LoginResponseData } from '@/api/login/type.ts'
 import { convertBigNumberToString } from '@/utils/common.ts'
 
 let isRefreshing: boolean = false // 标记是否正在刷新token
+let refreshTimes: number = 1
 let requests: any[] = [] // 存储待重发的请求
 let userStore: any = undefined
 import i18n from '@/i18n/index'
@@ -47,7 +48,7 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (accessToken && !config.headers[StorageName.Authorization]) {
     config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
   }
-  config.headers[StorageName.XTenantId] = userStore.userInfo.tenantId || '1'
+  config.headers[StorageName.XTenantId] = userStore.tenantId || '1'
   return config
 })
 
@@ -92,8 +93,8 @@ const redirectToLogin = async (): Promise<void> => {
  */
 const handleRefreshToken = async (error: any) => {
   if (!isRefreshing) {
+    refreshTimes++
     isRefreshing = true
-
     try {
       const response: LoginResponseData = await userStore.toRefreshToken()
       const token: string = response.access_token
@@ -123,13 +124,31 @@ const handleRefreshToken = async (error: any) => {
  * @param error
  */
 const handle401Error = async (error: any) => {
-  if (isRefreshing && (error.response.data.code === 'A101' || error.response.data.code === 'A102')) {
-    await redirectToLogin()
+  if (refreshTimes == 3) {
+    refreshTimes = 1
     ElMessage.error(i18n.global.t('axios.reLogin'))
+    await redirectToLogin()
+    return
+  }
+
+  const { code, message } = error.response.data
+  if (code === 'A102') {
+    await redirectToLogin()
+    ElMessage.error(message)
     return Promise.reject(error.response.data)
   }
 
   return await handleRefreshToken(error)
+}
+/**
+ * 403处理逻辑
+ *
+ * @param error
+ */
+const handle403Error = async (error: any) => {
+  const { message } = error.response.data
+  ElMessage.error(message)
+  return Promise.reject(error.response.data)
 }
 
 /**
@@ -143,7 +162,6 @@ request.interceptors.response.use(
     if (response.data instanceof ArrayBuffer) {
       return response
     }
-
     switch (code) {
       case '0000':
         return response.data
@@ -176,6 +194,8 @@ request.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           return handle401Error(error)
+        case 403:
+          return handle403Error(error)
         default:
           handleNetworkError(error)
       }

@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addDept, getDept, editDept, selectDept, checkDeptCode } from '@/api/auth/dept'
-import type { DeptRecord } from '@/api/auth/dept/type.ts'
+import type { DeptForm } from '@/api/auth/dept/type.ts'
 import { useI18n } from 'vue-i18n'
 import type { SelectData } from '@/types/types.ts'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
@@ -24,7 +24,7 @@ const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const deptOption = ref<SelectData[]>()
 const deptDataFormRef = ref()
-const deptDataForm = ref<DeptRecord>({})
+const deptDataForm = ref<DeptForm>({})
 const rules = ref({
   parentId: [
     {
@@ -67,9 +67,9 @@ const rules = ref({
  * 初始化
  *
  * @param id
+ * @param flag
  */
 const init = async (id: number, flag: DIALOG_FLAG) => {
-  visible.value = true
   deptDataForm.value.id = undefined
   deptDataForm.value.parentId = undefined
 
@@ -95,6 +95,7 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
     await initSelectDept(id)
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -135,7 +136,7 @@ const handleDeptDataFormSubmit = () => {
     }
     const id = deptDataForm.value.id
     if (id) {
-      await editDept(deptDataForm.value)
+      await editDept(id, deptDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

@@ -8,11 +8,9 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addCategory, getCategory, editCategory, checkCategoryCode } from '@/api/flow/category'
-import type { CategoryRecord } from '@/api/flow/category/type.ts'
+import type { CategoryForm } from '@/api/flow/category/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
-import { SelectData } from '@/types/types.ts'
-import { selectTenant } from '@/api/auth/tenant'
 import useUserStore from '@/store/modules/user.ts'
 
 defineOptions({
@@ -23,9 +21,8 @@ defineOptions({
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
-const tenantIdOption = ref<SelectData[]>()
 const categoryDataFormRef = ref()
-const categoryDataForm = ref<CategoryRecord>({ categoryCode: '', categoryName: '', tenantId: '' })
+const categoryDataForm = ref<CategoryForm>({ categoryCode: '', categoryName: '', tenantId: '' })
 const rules = ref({
   categoryName: [
     {
@@ -64,26 +61,15 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   categoryDataForm.value.id = undefined
   // 重置表单数据
   if (categoryDataFormRef.value) {
     categoryDataFormRef.value.resetFields()
   }
-  await initTenant()
   if (id) {
     await getInfo(id)
   }
-}
-
-/**
- * 初始化租户下拉框
- */
-const initTenant = async () => {
-  const response: any = await selectTenant()
-  if (response.code === '0000') {
-    tenantIdOption.value = response.data
-  }
+  visible.value = true
 }
 
 /**
@@ -109,7 +95,7 @@ const handleDataFormSubmit = () => {
     categoryDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
     const id = categoryDataForm.value.id
     if (id) {
-      await editCategory(categoryDataForm.value)
+      await editCategory(id, categoryDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

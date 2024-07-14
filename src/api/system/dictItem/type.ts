@@ -41,3 +41,14 @@ export interface DictItemQuery {
   dictCode: string
   dictName: string
 }
+
+/**
+ * 字典项表单类型声明
+ */
+export interface DictItemForm {
+  id?: number
+  dictId?: number
+  label: string
+  value: string
+  type: string
+}

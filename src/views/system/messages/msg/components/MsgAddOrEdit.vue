@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addMsg, getMsg, editMsg } from '@/api/system/messages/msg'
-import { MsgRecord } from '@/api/system/messages/msg/type.ts'
+import { MsgForm } from '@/api/system/messages/msg/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
@@ -23,7 +23,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const msgDataFormRef = ref()
-const msgDataForm = ref<MsgRecord>({ code: '', content: '', title: '', level: 'info', type: 0 })
+const msgDataForm = ref<MsgForm>({ code: '', content: '', title: '', level: 'info', type: 0 })
 
 const rules = ref({
   title: [
@@ -69,7 +69,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   msgDataForm.value.id = undefined
   // 重置表单数据
   if (msgDataFormRef.value) {
@@ -78,6 +77,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -102,7 +102,7 @@ const handleMsgDataFormSubmit = () => {
     }
     const id = msgDataForm.value.id
     if (id) {
-      await editMsg(msgDataForm.value)
+      await editMsg(id, msgDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

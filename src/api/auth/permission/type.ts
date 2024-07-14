@@ -40,3 +40,14 @@ export interface PermissionQuery extends PageQuery {
   permissionCode: string
   permissionName: string
 }
+
+/**
+ * 权限表单类型声明
+ */
+export interface PermissionForm {
+  id?: number
+  permissionName?: string
+  permissionCode?: string
+  customizesType?: string
+  permissions?: number[]
+}

@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addDict, getDict, editDict } from '@/api/system/dict'
-import { DictRecord } from '@/api/system/dict/type.ts'
+import { DictForm } from '@/api/system/dict/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
@@ -21,7 +21,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const dictDataFormRef = ref()
-const dictDataForm = ref<DictRecord>({ dictCode: '', dictName: '', status: 0 })
+const dictDataForm = ref<DictForm>({ dictCode: '', dictName: '', status: 0 })
 
 const rules = ref({
   dictName: [
@@ -46,7 +46,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   dictDataForm.value.id = undefined
   // 重置表单数据
   if (dictDataFormRef.value) {
@@ -55,6 +54,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -79,7 +79,7 @@ const handleDictDataFormSubmit = () => {
     }
     const id = dictDataForm.value.id
     if (id) {
-      await editDict(dictDataForm.value)
+      await editDict(id, dictDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

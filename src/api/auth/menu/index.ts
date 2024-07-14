@@ -5,7 +5,7 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import JSONBigInt from 'json-bigint'
-import type { MenuResponseData, MenuQuery, MenuRecord, MenuTreeResponseData } from './type'
+import type { MenuResponseData, MenuQuery, MenuTreeResponseData, MenuForm } from './type'
 import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -46,7 +46,7 @@ export function getMenu(id: number): AxiosPromise<MenuResponseData> {
  *
  * @param data
  */
-export function addMenu(data: MenuRecord): AxiosPromise<MenuResponseData> {
+export function addMenu(data: MenuForm): AxiosPromise<MenuResponseData> {
   return request({
     url: API.MENU_RESTFUL_URL,
     method: 'post',
@@ -57,11 +57,12 @@ export function addMenu(data: MenuRecord): AxiosPromise<MenuResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editMenu(data: MenuRecord): AxiosPromise<MenuResponseData> {
+export function editMenu(id: number, data: MenuForm): AxiosPromise<MenuResponseData> {
   return request({
-    url: API.MENU_RESTFUL_URL,
+    url: `${API.MENU_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

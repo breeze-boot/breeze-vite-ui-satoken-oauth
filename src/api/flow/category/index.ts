@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { CategoryResponseData, CategoryQuery, CategoryRecord } from './type'
+import { CategoryResponseData, CategoryQuery, CategoryRecord, CategoryForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -43,7 +43,7 @@ export function getCategory(id: number): AxiosPromise<CategoryResponseData> {
  *
  * @param data
  */
-export function addCategory(data: CategoryRecord): AxiosPromise<ResponseData> {
+export function addCategory(data: CategoryForm): AxiosPromise<ResponseData> {
   return request({
     url: API.CATEGORY_RESTFUL_URL,
     method: 'post',
@@ -54,11 +54,12 @@ export function addCategory(data: CategoryRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editCategory(data: CategoryRecord): AxiosPromise<ResponseData> {
+export function editCategory(id: number, data: CategoryForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.CATEGORY_RESTFUL_URL,
+    url: `${API.CATEGORY_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

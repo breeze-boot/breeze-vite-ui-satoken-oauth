@@ -47,3 +47,15 @@ export interface MsgQuery extends PageQuery {
   isRead?: string
   isClose?: string
 }
+
+/**
+ * 消息表单类型声明
+ */
+export interface MsgForm {
+  id?: number
+  title: string
+  code: string
+  type: number
+  level: string
+  content: string
+}

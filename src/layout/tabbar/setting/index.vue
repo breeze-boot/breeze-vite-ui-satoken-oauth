@@ -11,6 +11,7 @@ import FontSize from './fontSize/index.vue'
 import Notice from './notice/index.vue'
 import FullScreen from './fullScreen/index.vue'
 import Refresh from './refresh/index.vue'
+import Tenant from './tenant/index.vue'
 </script>
 
 <template>
@@ -28,6 +29,8 @@ import Refresh from './refresh/index.vue'
   <notice />
   <!-- 设置抽屉 -->
   <settings-drawer />
+  <!-- 租户 -->
+  <tenant />
   <!-- 登录人 -->
   <login-user />
 </template>

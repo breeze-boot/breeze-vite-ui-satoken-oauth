@@ -12,6 +12,7 @@ import { Theme } from '@/types/types'
  */
 export interface UserState {
   userInfo: UserInfoData
+  tenantId: string
   refreshToken: string
   accessToken: string
   roleCodes: string[]

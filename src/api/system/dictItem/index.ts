@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { DictItemQuery, DictItemRecord, DictItemResponseData } from '@/api/system/dictItem/type.ts'
+import { DictItemForm, DictItemQuery, DictItemRecord, DictItemResponseData } from '@/api/system/dictItem/type.ts'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
@@ -41,7 +41,7 @@ export function getDictItem(id: number): AxiosPromise<DictItemResponseData> {
  *
  * @param data
  */
-export function addDictItem(data: DictItemRecord): AxiosPromise<ResponseData> {
+export function addDictItem(data: DictItemForm): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'post',
@@ -52,11 +52,12 @@ export function addDictItem(data: DictItemRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editDictItem(data: DictItemRecord): AxiosPromise<ResponseData> {
+export function editDictItem(id: number, data: DictItemForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.DICT_ITEM_RESTFUL_URL,
+    url: `${API.DICT_ITEM_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

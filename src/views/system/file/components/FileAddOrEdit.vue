@@ -20,8 +20,8 @@ const currentFileList = ref<UploadUserFile[]>([])
  * 初始化
  */
 const init = () => {
-  visible.value = true
   currentFileList.value = []
+  visible.value = true
 }
 
 const handleCallBack = () => {

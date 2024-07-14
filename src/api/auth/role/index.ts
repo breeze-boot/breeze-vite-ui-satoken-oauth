@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { RoleResponseData, RoleQuery, RoleRecord, ColumnPermissionRecord } from './type'
+import { RoleResponseData, RoleQuery, ColumnPermissionRecord, RoleForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -49,7 +49,7 @@ export function getRole(id: number): AxiosPromise<RoleResponseData> {
  *
  * @param data
  */
-export function addRole(data: RoleRecord): AxiosPromise<ResponseData> {
+export function addRole(data: RoleForm): AxiosPromise<ResponseData> {
   return request({
     url: API.ROLE_RESTFUL_URL,
     method: 'post',
@@ -60,11 +60,12 @@ export function addRole(data: RoleRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editRole(data: RoleRecord): AxiosPromise<ResponseData> {
+export function editRole(id: number, data: RoleForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.ROLE_RESTFUL_URL,
+    url: `${API.ROLE_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

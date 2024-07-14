@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addPost, getPost, editPost, checkPostCode } from '@/api/auth/post'
-import { PostRecord } from '@/api/auth/post/type.ts'
+import { PostForm } from '@/api/auth/post/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
@@ -21,7 +21,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const postDataFormRef = ref()
-const postDataForm = ref<PostRecord>({})
+const postDataForm = ref<PostForm>({})
 const rules = ref({
   postCode: [
     {
@@ -59,7 +59,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   postDataForm.value.id = undefined
   // 重置表单数据
   if (postDataFormRef.value) {
@@ -68,6 +67,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -92,7 +92,7 @@ const handlePostDataFormSubmit = () => {
     }
     const id = postDataForm.value.id
     if (id) {
-      await editPost(postDataForm.value)
+      await editPost(id, postDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

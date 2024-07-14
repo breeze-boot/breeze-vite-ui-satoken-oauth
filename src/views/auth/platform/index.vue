@@ -211,7 +211,7 @@ const handleDelete = async (rows: PlatformRecords) => {
  *
  * @param row 修改参数
  */
-const handleUpdate = (row: any) => {
+const handleUpdate = (row: PlatformRecord) => {
   AddOrEditHandle(row.id)
 }
 

@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addMenu, editMenu, getMenu, selectMenu } from '@/api/auth/menu'
-import { MenuRecord } from '@/api/auth/menu/type.ts'
+import { MenuForm } from '@/api/auth/menu/type.ts'
 import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
 import { useDict } from '@/hooks/dict'
@@ -29,7 +29,7 @@ const visible = ref(false)
 const platformOptions = ref<SelectData[]>()
 const menuOptions = ref<SelectData[]>()
 const menuDataFormRef = ref()
-const menuDataForm = ref<MenuRecord>({ hidden: 0, href: 0, keepAlive: 0, sort: 0, type: 0 })
+const menuDataForm = ref<MenuForm>({ hidden: 0, href: 0, keepAlive: 0, sort: 0, type: 0 })
 
 const rules = ref({
   platformId: [
@@ -83,7 +83,6 @@ const rules = ref({
  * @param flag
  */
 const init = async (id: number, flag: DIALOG_FLAG) => {
-  visible.value = true
   menuDataForm.value.id = undefined
   menuDataForm.value.parentId = undefined
   // 重置表单数据
@@ -109,6 +108,7 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
     await initSelectMenu(id)
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -160,7 +160,7 @@ const handleMenuDataFormSubmit = () => {
     }
     const id = menuDataForm.value.id
     if (id) {
-      await editMenu(menuDataForm.value)
+      await editMenu(id, menuDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

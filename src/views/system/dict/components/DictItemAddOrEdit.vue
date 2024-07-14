@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem/index.ts'
-import { DictItemRecord } from '@/api/system/dictItem/type.ts'
+import { DictItemForm } from '@/api/system/dictItem/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 
@@ -21,7 +21,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const dictItemDataFormRef = ref()
-const dictItemDataForm = ref<DictItemRecord>({ type: '', label: '', value: '', id: 0 })
+const dictItemDataForm = ref<DictItemForm>({ type: '', label: '', value: '', id: 0 })
 
 let tagTypes = ref([
   { type: 'primary' },
@@ -61,7 +61,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   // 添加的时候传来的是字典项ID
   dictItemDataForm.value.id = undefined
   // 添加的时候传来的是字典ID
@@ -73,6 +72,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -98,7 +98,7 @@ const handleDictItemDataFormSubmit = () => {
     dictItemDataForm.value.value = dictItemDataForm.value.value.trim()
     const id = dictItemDataForm.value.id
     if (id) {
-      await editDictItem(dictItemDataForm.value)
+      await editDictItem(id, dictItemDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

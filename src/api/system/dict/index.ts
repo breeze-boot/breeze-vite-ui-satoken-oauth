@@ -4,8 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { DictQuery, DictRecord, DictResponseData } from '@/api/system/dict/type.ts'
-import { UserResponseData, UserSwitchParam } from '@/api/auth/user/type.ts'
+import { DictForm, DictQuery, DictRecord, DictResponseData, DictSwitchForm } from '@/api/system/dict/type.ts'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
@@ -30,7 +29,7 @@ export function page(params: DictQuery): AxiosPromise<DictResponseData> {
  *
  * @param data
  */
-export function open(data: UserSwitchParam): AxiosPromise<UserResponseData> {
+export function open(data: DictSwitchForm): AxiosPromise<DictResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL + `/open`,
     method: 'put',
@@ -55,7 +54,7 @@ export function getDict(id: number): AxiosPromise<DictResponseData> {
  *
  * @param data
  */
-export function addDict(data: DictRecord): AxiosPromise<ResponseData> {
+export function addDict(data: DictForm): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_RESTFUL_URL,
     method: 'post',
@@ -66,11 +65,12 @@ export function addDict(data: DictRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editDict(data: DictRecord): AxiosPromise<ResponseData> {
+export function editDict(id: number, data: DictForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.DICT_RESTFUL_URL,
+    url: `${API.DICT_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

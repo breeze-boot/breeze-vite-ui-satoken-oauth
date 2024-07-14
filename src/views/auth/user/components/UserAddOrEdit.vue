@@ -8,10 +8,11 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addUser, getUser, editUser, selectDept, checkUsername, selectRole, selectPost } from '@/api/auth/user'
-import { UserRecord } from '@/api/auth/user/type.ts'
+import { UserForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
+import useFormValidation from '@/hooks/formValidation'
 
 defineOptions({
   name: 'UserAddOrEdit',
@@ -25,7 +26,7 @@ const deptOption = ref<SelectData[]>()
 const roleOption = ref<SelectData[]>()
 const postOption = ref<SelectData[]>()
 const userDataFormRef = ref()
-const userDataForm = ref<UserRecord>({})
+const userDataForm = ref<UserForm>({})
 const rules = ref({
   username: [
     {
@@ -150,7 +151,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   userDataForm.value.id = undefined
   // 重置表单数据
   if (userDataFormRef.value) {
@@ -164,6 +164,7 @@ const init = async (id: number) => {
   await initSelectDept()
   await initSelectPost()
   await initSelectRole()
+  visible.value = true
 }
 
 /**
@@ -212,13 +213,16 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleUserDataFormSubmit = () => {
+  let { isNANValue } = useFormValidation()
   userDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
+    isNANValue(userDataForm.value)
+
     const id = userDataForm.value.id
     if (id) {
-      await editUser(userDataForm.value)
+      await editUser(id, userDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

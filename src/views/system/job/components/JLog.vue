@@ -109,10 +109,10 @@ const handleTableRowBtnClick = (event: any, row: any) => {
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**

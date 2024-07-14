@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { PostResponseData, PostQuery, PostRecord } from './type'
+import { PostResponseData, PostQuery, PostForm } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
@@ -42,7 +42,7 @@ export function getPost(id: number): AxiosPromise<PostResponseData> {
  *
  * @param data
  */
-export function addPost(data: PostRecord): AxiosPromise<ResponseData> {
+export function addPost(data: PostForm): AxiosPromise<ResponseData> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'post',
@@ -53,11 +53,12 @@ export function addPost(data: PostRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editPost(data: PostRecord): AxiosPromise<ResponseData> {
+export function editPost(id: number, data: PostForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.POST_RESTFUL_URL,
+    url: `${API.POST_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

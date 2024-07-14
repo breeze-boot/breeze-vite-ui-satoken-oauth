@@ -112,38 +112,6 @@ const tableInfo = reactive<TableInfo>({
       },
     },
     {
-      prop: 'avatar',
-      showOverflowTooltip: true,
-      label: t('user.fields.avatar'),
-      type: 'customRowLink',
-      width: 200,
-      linkInfo: {
-        linkUrlProp: 'avatar',
-        rowParam: ['id', 'username'],
-        query: {
-          status: 1,
-        },
-        // 自定义固定的字段值
-        fixColumnName: '自定义名称：头像',
-      },
-    },
-    {
-      prop: 'avatar',
-      showOverflowTooltip: true,
-      label: t('user.fields.avatar'),
-      type: 'customRowLink',
-      width: 100,
-      linkInfo: {
-        linkUrlProp: 'avatar',
-        rowParam: ['id', 'username'],
-        query: {
-          status: 1,
-        },
-        // 自定义动态字段值
-        columnName: 'username',
-      },
-    },
-    {
       prop: '',
       label: t('user.fields.fileUpload'),
       width: 100,

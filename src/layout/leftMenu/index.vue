@@ -78,16 +78,6 @@ watch(
   box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
   transition: all 0.3s;
 
-  .el-sub-menu__title,
-  .el-menu-item {
-    color: var(--base-text-color);
-  }
-
-  .el-sub-menu__title:hover,
-  .el-menu-item:hover {
-    color: red;
-  }
-
   .el-menu {
     border-right: none;
   }

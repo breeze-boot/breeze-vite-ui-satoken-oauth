@@ -8,7 +8,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addPermission, getPermission, editPermission, checkPermissionCode } from '@/api/auth/permission'
-import { PermissionRecord } from '@/api/auth/permission/type.ts'
+import { PermissionForm } from '@/api/auth/permission/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { selectDept } from '@/api/auth/dept'
@@ -25,7 +25,7 @@ const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const permissionDataFormRef = ref()
-const permissionDataForm = ref<PermissionRecord>({
+const permissionDataForm = ref<PermissionForm>({
   customizesType: 'USER',
 })
 const deptOption = ref<SelectData[]>()
@@ -83,7 +83,6 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   permissionDataForm.value.id = undefined
   // 重置表单数据
   if (permissionDataFormRef.value) {
@@ -94,6 +93,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -118,7 +118,7 @@ const handlePermissionDataFormSubmit = () => {
     }
     const id = permissionDataForm.value.id
     if (id) {
-      await editPermission(permissionDataForm.value)
+      await editPermission(id, permissionDataForm.value)
       ElMessage.success({
         message: t('common.success'),
         duration: 500,

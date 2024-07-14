@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
-import { ClientResponseData, ClientQuery, ClientRecord } from './type.ts'
+import { ClientResponseData, ClientQuery, ClientRecord, ClientForm } from './type.ts'
 
 enum API {
   CLIENT_RESTFUL_URL = '/auth/v1/client',
@@ -41,7 +41,7 @@ export function getClient(id: number): AxiosPromise<ClientResponseData> {
  *
  * @param data
  */
-export function addClient(data: ClientRecord): AxiosPromise<ClientResponseData> {
+export function addClient(data: ClientForm): AxiosPromise<ClientResponseData> {
   return request({
     url: API.CLIENT_RESTFUL_URL,
     method: 'post',
@@ -52,11 +52,12 @@ export function addClient(data: ClientRecord): AxiosPromise<ClientResponseData> 
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editClient(data: ClientRecord): AxiosPromise<ClientResponseData> {
+export function editClient(id: number, data: ClientForm): AxiosPromise<ClientResponseData> {
   return request({
-    url: API.CLIENT_RESTFUL_URL,
+    url: `${API.CLIENT_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })
