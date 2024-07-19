@@ -7,18 +7,15 @@ import { cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
-import useUserStore from '@/store/modules/user.ts'
 import TableItem from '@/components/Table/TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
-
-const userStore = useUserStore()
+import useColumnStore from '@/store/modules/column.ts'
+import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'BTreeTable',
   inheritAttrs: false,
 })
-
-const { t } = useI18n()
 
 const props = defineProps({
   // 表格顶部按钮
@@ -111,8 +108,11 @@ const props = defineProps({
     default: true,
   },
 })
-const tableRef = ref<any>()
 
+const treeTableRef = ref<any>()
+let $route = useRoute()
+const columnStore = useColumnStore()
+const { t } = useI18n()
 const $emit = defineEmits(['handle-row-db-click', 'selection-change'])
 const tableInfo = reactive({
   loading: false,
@@ -153,37 +153,7 @@ onMounted(() => {
  * 更新事件
  */
 onUpdated(() => {
-  return tableRef.value.doLayout()
-})
-
-/**
- * 初始化事件
- */
-const initColumn = () => {
-  tableInfo.showFieldList = []
-  ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
-    let tempItem: Field = {
-      ...item,
-      key: index,
-      fixed: item.fixed || false,
-      align: item.align || 'center',
-      width: item.width || '',
-      hidden: item.hidden || false,
-      disabled: item.disabled || false,
-    }
-    if (userStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
-      item.hidden = true
-      item.disabled = true
-    }
-    tableInfo.showFieldList.push(tempItem)
-  })
-}
-
-/**
- * 表格显示列计算属性
- */
-const tableField = computed(() => {
-  return tableInfo.showFieldList.filter((item) => !item.hidden)
+  return treeTableRef.value.doLayout()
 })
 
 /**
@@ -199,18 +169,44 @@ const refreshData = () => {
  * 初始化操作按钮
  */
 const initHandleBtn = reactive(props.handleBtn as handleType)
+
+/**
+ * 行内按钮
+ */
 const handleBtnOperate = props.handleBtn || false
 
 /**
- * 表格展开
+ * 初始化事件
  */
-const expandAll = computed({
-  get: () => {
-    return tableInfo.expandAll
-  },
-  set: (value) => {
-    tableInfo.expandAll = value
-  },
+const initColumn = async () => {
+  tableInfo.showFieldList = []
+  // 路由名称就是菜单组件名称
+  const routeName: string = $route.name as string
+  const columns: string[] = (await columnStore.getColumnByMenu(routeName)) as string[]
+  ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
+    let tempItem: Field = {
+      ...item,
+      key: index,
+      fixed: item.fixed || false,
+      align: item.align || 'center',
+      width: item.width || '',
+      hidden: item.hidden || false,
+      disabled: item.disabled || false,
+    }
+
+    if (columns.indexOf(camelCaseToUnderscore(tempItem.prop)) != -1) {
+      tempItem.hidden = true
+      tempItem.disabled = true
+    }
+    tableInfo.showFieldList.push(tempItem)
+  })
+}
+
+/**
+ * 表格显示列计算属性
+ */
+const tableField = computed(() => {
+  return tableInfo.showFieldList.filter((item) => !item.hidden)
 })
 
 /**
@@ -232,6 +228,18 @@ const dict = useDict(...props.dict)
  * 初始化表格顶部按钮设置
  */
 const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
+
+/**
+ * 表格展开
+ */
+const expandAll = computed({
+  get: () => {
+    return tableInfo.expandAll
+  },
+  set: (value) => {
+    tableInfo.expandAll = value
+  },
+})
 
 /**
  * 处理查询条件
@@ -281,7 +289,7 @@ const setCheckedList = () => {
     const row = tableInfo.rows.find((item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected)
     nextTick(() => {
       if (!row) return
-      tableRef.value.toggleRowSelection(row, true)
+      treeTableRef.value.toggleRowSelection(row, true)
     })
   })
 }
@@ -329,9 +337,9 @@ const handleRowClick = (row: any) => {
   currentRows.value = [row]
   $emit('selection-change', cloneDeep(row))
   if (row) {
-    tableRef.value!.toggleRowSelection(row, undefined)
+    treeTableRef.value!.toggleRowSelection(row, undefined)
   } else {
-    tableRef.value!.clearSelection()
+    treeTableRef.value!.clearSelection()
   }
 }
 
@@ -379,7 +387,7 @@ const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
       })
       break
     case 'edit':
-      checkBeforeClickBtn().then(() => {
+      handleCheckBeforeClickBtn().then(() => {
         btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
       })
       break
@@ -417,7 +425,7 @@ const confirmBox = (func: any) => {
 /**
  * 按钮点击前校验方法
  */
-const checkBeforeClickBtn = () => {
+const handleCheckBeforeClickBtn = () => {
   return new Promise((resolve, reject) => {
     if (!currentRows.value || currentRows.value.length === 0) {
       ElMessage.warning(t('common.selectLineItem'))
@@ -441,11 +449,19 @@ const handleExport = (query: any) => {
   console.debug(query)
 }
 
-// 弹出
-const buttonRef = ref()
-const popoverRef = ref()
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.()
+// 表格设置按钮
+const tableSettingButtonRef = ref()
+const tableSettingsPopoverRef = ref()
+// 表格列权限设置按钮
+const tableColumnPermissionButtonRef = ref()
+const tableColumnPermissionPopoverRef = ref()
+
+const tableSettingsOnClickOutside = () => {
+  unref(tableSettingsPopoverRef).popperRef?.delayHide?.()
+}
+
+const tableColumnPermissionOnClickOutside = () => {
+  unref(tableColumnPermissionPopoverRef).popperRef?.delayHide?.()
 }
 
 const expandedRows = ref<any[]>([])
@@ -508,8 +524,8 @@ const onEnd = () => {
     :popper-style="{
       width: 1000,
     }"
-    ref="popoverRef"
-    :virtual-ref="buttonRef"
+    ref="tableSettingsPopoverRef"
+    :virtual-ref="tableSettingButtonRef"
     trigger="click"
     virtual-triggering
   >
@@ -543,7 +559,19 @@ const onEnd = () => {
       </el-table>
     </VueDraggable>
   </el-popover>
-
+  <el-popover
+    placement="left-start"
+    :popper-style="{
+      width: 1000,
+    }"
+    ref="tableColumnPermissionPopoverRef"
+    :virtual-ref="tableColumnPermissionButtonRef"
+    trigger="click"
+    :title="t('common.tableColumn')"
+    virtual-triggering
+  >
+    ---
+  </el-popover>
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
       <div class="tools">
@@ -573,14 +601,27 @@ const onEnd = () => {
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
-          <svg-button ref="buttonRef" v-click-outside="onClickOutside" icon="settings" width="1.4rem" :circle="true" />
+          <svg-button
+            ref="tableSettingButtonRef"
+            v-click-outside="tableSettingsOnClickOutside"
+            icon="settings"
+            width="1.4rem"
+            :circle="true"
+          />
+          <svg-button
+            ref="tableColumnPermissionButtonRef"
+            v-click-outside="tableColumnPermissionOnClickOutside"
+            icon="column_permission"
+            width="1.4rem"
+            :circle="true"
+          />
         </div>
       </div>
     </template>
 
     <div class="table">
       <el-table
-        ref="tableRef"
+        ref="treeTableRef"
         :fit="true"
         :data="tableInfo.rows"
         :max-height="tableHeight"

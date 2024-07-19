@@ -35,7 +35,7 @@ const handleSwitchTab = async (pane: any) => {
   const routeName: string = pane.paneName
   const menuInfo = menuStore.getMenuInfo('name', routeName)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
-  tabsStore.currentTab = tabsStore.getCurrentTab(routeName)
+  tabsStore.currentTab = await tabsStore.getCurrentTab(routeName)
   if (!tabsStore.currentTab.fullPath) return
   await $router.push({
     path: tabsStore.currentTab.fullPath,

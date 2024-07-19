@@ -4,19 +4,15 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { RoleResponseData, RoleQuery, ColumnPermissionRecord, RoleForm } from './type'
+import { RoleResponseData, RoleQuery, RoleForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
   ROLE_RESTFUL_URL = '/auth/v1/role',
   CHECK_ROLE_CODE_URL = '/auth/v1/role/checkRoleCode',
-  SELECT_PERMISSION_URL = '/sys/v1/common/selectPermission',
+  SELECT_PERMISSION_TYPE_URL = '/sys/v1/common/selectPermissionType',
   SELECT_CUSTOMIZE_PERMISSION_URL = '/sys/v1/common/selectCustomizePermission',
-  SELECT_TABLE_URL = '/sys/v1/common/selectTable',
-  SELECT_TABLE_COLUMN_URL = '/sys/v1/common/selectTableColumn',
-  SET_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/setColumnPermission',
-  LIST_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/listSetColumnPermission',
-  REMOVE_COLUMN_PERMISSION_RESTFUL_URL = '/auth/v1/columnPermission/removeColumnPermission',
+  SELECT_COLUMN_PERMISSION_URL = '/sys/v1/common/selectColumnPermission',
 }
 
 /**
@@ -159,15 +155,15 @@ export function modifyPermission(data: any): AxiosPromise<ResponseData> {
 /**
  * 权限下拉框
  */
-export function selectPermission(): AxiosPromise<SelectResponseData> {
+export function selectRowPermissionType(): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.SELECT_PERMISSION_URL,
+    url: API.SELECT_PERMISSION_TYPE_URL,
     method: 'get',
   })
 }
 
 /**
- * 自定义权限下拉框
+ * 自定义行权限下拉框
  */
 export function selectCustomizePermission(): AxiosPromise<SelectResponseData> {
   return request({
@@ -177,59 +173,11 @@ export function selectCustomizePermission(): AxiosPromise<SelectResponseData> {
 }
 
 /**
- * 表格下拉框
+ * 自定义列权限下拉框
  */
-export function selectTable(): AxiosPromise<SelectResponseData> {
+export function selectColumnPermission(): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.SELECT_TABLE_URL,
+    url: API.SELECT_COLUMN_PERMISSION_URL,
     method: 'get',
-  })
-}
-
-/**
- * 表格字段下拉框
- */
-export function selectTableColumn(tableName: string): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_TABLE_COLUMN_URL,
-    method: 'get',
-    params: {
-      tableName,
-    },
-  })
-}
-
-/**
- * 回显列的数据权限
- */
-export function listSetColumnPermission(roleId?: number): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.LIST_COLUMN_PERMISSION_RESTFUL_URL,
-    method: 'get',
-    params: {
-      roleId,
-    },
-  })
-}
-
-/**
- * 设置列的数据权限
- */
-export function setColumnPermission(data: ColumnPermissionRecord): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SET_COLUMN_PERMISSION_RESTFUL_URL,
-    method: 'post',
-    data: data,
-  })
-}
-
-/**
- * 删除列的数据权限
- */
-export function removeColumnPermission(data: any): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.REMOVE_COLUMN_PERMISSION_RESTFUL_URL,
-    method: 'delete',
-    data: data,
   })
 }

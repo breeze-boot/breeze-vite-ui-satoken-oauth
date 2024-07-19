@@ -6,10 +6,7 @@
 import { computed } from 'vue'
 import useUserStore from '@/store/modules/user.ts'
 import useSettingStore from '@/store/modules/setting.ts'
-import { useRoute, useRouter } from 'vue-router'
 
-let $router = useRouter()
-let $route = useRoute()
 let userStore = useUserStore()
 let settingStore = useSettingStore()
 
@@ -18,7 +15,7 @@ let settingStore = useSettingStore()
  */
 const handleLogout = async () => {
   await userStore.logout()
-  await $router.push({ path: '/login', query: { redirect: $route.path } })
+  window.location.reload()
 }
 
 /**

@@ -65,6 +65,7 @@ const init = async (id: number) => {
   dictItemDataForm.value.id = undefined
   // 添加的时候传来的是字典ID
   dictItemDataForm.value.dictId = id
+  visible.value = true
   // 重置表单数据
   if (dictItemDataFormRef.value) {
     dictItemDataFormRef.value.resetFields()
@@ -72,7 +73,6 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

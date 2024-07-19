@@ -11,8 +11,9 @@ export interface RoleRecord {
   id?: number
   roleName?: string
   roleCode?: string
-  permissionCode?: string
-  permissionIds?: number[]
+  rowPermissionType?: string
+  rowPermissionName?: string
+  rowPermissionIds?: number[]
 }
 
 /**
@@ -43,22 +44,12 @@ export interface RoleQuery extends PageQuery {
 }
 
 /**
- * 数据权限列类型声明
- */
-export interface ColumnPermissionRecord {
-  tableName?: string
-  columnName?: string[]
-  tableColumnName?: object
-  roleId?: number
-  menuId?: number | string
-}
-/**
  * 角色表单类型声明
  */
 export interface RoleForm {
   id?: number
   roleName?: string
   roleCode?: string
-  permissionCode?: string
-  permissionIds?: number[]
+  rowPermissionType?: string
+  rowPermissionIds?: number[]
 }

@@ -30,6 +30,7 @@ const rules = ref({})
  */
 const init = async (id: number) => {
   todoDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (todoDataFormRef.value) {
     todoDataFormRef.value.resetFields()
@@ -37,7 +38,6 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

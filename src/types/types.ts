@@ -20,7 +20,7 @@ export interface PageQuery {
  * 下拉框公共参数
  */
 export interface SelectData {
-  value: number | string
+  value: number | string | boolean
   label: string
   children?: SelectData[]
 }
@@ -40,7 +40,7 @@ export interface SelectResponseData extends ResponseData {
  * 公共返回参数
  */
 export interface ResponseData {
-  code: number
+  code: number | string
   message: string
   timestamp: bigint
   data:
@@ -74,7 +74,7 @@ export interface UserInfoData {
   password: null
   username: string
   avtar: string
-  tenantId: number
+  tenantId: string
   permissions: object
   authorities: AuthoritiesDatas
   accountNonExpired: boolean
@@ -151,7 +151,7 @@ export enum StorageName {
   RoleCodes = 'ROLE_CODES',
   Permissions = 'PERMISSIONS',
   UserInfo = 'USER_INFO',
-  ExcludeColumn = 'EXCLUDE_COLUMN',
+  Columns = 'COLUMNS ',
   XTenantId = 'X-TENANT-ID',
   Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
@@ -176,6 +176,7 @@ export enum StorageName {
 export interface Dict {
   [idx: number]: DictItem
 }
+
 export interface Dicts {
   [idx: string]: Dict
 }
@@ -240,4 +241,12 @@ export interface Option {
   key: string | number
   label: string
   initial: string
+}
+
+/**
+ * 菜单列缓存类型声明
+ */
+export interface ColumnCacheData {
+  menu?: string
+  columns: string[]
 }

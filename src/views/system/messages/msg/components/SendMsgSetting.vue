@@ -48,11 +48,11 @@ const rules = ref({
  */
 const init = async (msgId: number) => {
   currentMsgId.value = msgId
+  visible.value = true
   // 重置表单数据
   if (sendMsgMethodFormRef.value) {
     sendMsgMethodFormRef.value.resetFields()
   }
-  visible.value = true
 }
 
 /**

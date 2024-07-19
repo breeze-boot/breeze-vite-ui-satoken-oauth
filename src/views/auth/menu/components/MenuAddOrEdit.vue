@@ -85,6 +85,7 @@ const rules = ref({
 const init = async (id: number, flag: DIALOG_FLAG) => {
   menuDataForm.value.id = undefined
   menuDataForm.value.parentId = undefined
+  visible.value = true
   // 重置表单数据
   if (menuDataFormRef.value) {
     menuDataFormRef.value.resetFields()
@@ -92,7 +93,7 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
   await initSelectPlatform()
   if (flag === DIALOG_FLAG.ADD) {
     // 添加，都可以选择
-    menuDataForm.value.parentId = ROOT.value
+    menuDataForm.value.parentId = ROOT.value as number
     await initSelectMenu(undefined)
   }
 
@@ -108,7 +109,6 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
     await initSelectMenu(id)
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

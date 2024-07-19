@@ -11,14 +11,11 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage, ElTree } from 'element-plus'
 import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
-import ColumnPermissionList from '@/views/auth/role/components/ColumnPermissionList.vue'
 
 defineOptions({
   name: 'RolePermissionList',
   inheritAttrs: false,
 })
-const columnPermissionListRef = ref()
-
 const filterText = ref('')
 const treeSetting = reactive({
   expandAll: true,
@@ -43,12 +40,12 @@ const currentClickRoleId = ref<string | number>()
  * @param id
  */
 const init = async (id: number) => {
+  visible.value = true
   // 重置表单数据
   if (rolePermissionTreeRef.value) {
     currentClickRoleId.value = undefined
   }
   currentClickRoleId.value = id
-  visible.value = true
   await getInfo(id)
 }
 
@@ -90,13 +87,6 @@ const handleRoleDataFormSubmit = async () => {
   if (halfCheckedKeys.length > 0) {
     checkedKeys.push(...halfCheckedKeys)
   }
-  if (checkedKeys.length <= 0) {
-    ElMessage.warning({
-      message: t('role.common.rolePermission'),
-      duration: 500,
-    })
-    return
-  }
   await modifyPermission({
     roleId: currentClickRoleId.value,
     permissionIds: checkedKeys,
@@ -118,10 +108,6 @@ watch(filterText, (val) => {
 const filterNode = (value: string, data: MenuTreeRecord) => {
   if (!value) return true
   return data.title.includes(value)
-}
-
-const handleSetColumnPermission = (data: MenuTreeRecord) => {
-  columnPermissionListRef.value.init(data, currentClickRoleId.value)
 }
 
 defineExpose({
@@ -171,9 +157,6 @@ defineExpose({
         <template #default="{ node, data }">
           <span v-if="data.type === 1" class="custom-tree-node">
             <span>{{ node.label }}</span>
-            <span>
-              <el-button text type="primary" @click="handleSetColumnPermission(data)">列数据权限</el-button>
-            </span>
           </span>
         </template>
       </el-tree>
@@ -189,8 +172,6 @@ defineExpose({
       </el-button>
     </template>
   </el-dialog>
-
-  <column-permission-list ref="columnPermissionListRef" />
 </template>
 
 <style scoped>

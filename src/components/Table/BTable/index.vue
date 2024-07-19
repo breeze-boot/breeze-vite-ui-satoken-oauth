@@ -6,17 +6,15 @@ import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore, SORT } from '@/utils/common.ts'
 import { useDict } from '@/hooks/dict'
-import useUserStore from '@/store/modules/user.ts'
 import TableItem from '../TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import useColumnStore from '@/store/modules/column'
+import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'BTable',
   inheritAttrs: false,
 })
-
-const { t } = useI18n()
-const userStore = useUserStore()
 
 const props = defineProps({
   // 表格顶部按钮
@@ -144,8 +142,11 @@ const props = defineProps({
     default: true,
   },
 })
-const tableRef = ref<any>('')
 
+const normalTableRef = ref<any>('')
+let $route = useRoute()
+const columnStore = useColumnStore()
+const { t } = useI18n()
 const $emit = defineEmits(['handle-row-db-click', 'selection-change', 'init-table-data'])
 const tableInfo = reactive({
   loading: false,
@@ -166,15 +167,11 @@ const tableInfo = reactive({
   // 显示的列
   showFieldList: [] as Field[],
   // 表格的值
-  rows: [],
+  rows: [] as any[],
 })
 
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
-
-// 弹出
-const buttonRef = ref()
-const popoverRef = ref()
 
 /**
  * 表格数据
@@ -200,7 +197,7 @@ onMounted(() => {
  * 更新事件
  */
 onUpdated(() => {
-  return tableRef.value.doLayout()
+  return normalTableRef.value.doLayout()
 })
 
 /**
@@ -225,8 +222,11 @@ const handleBtnOperate = props.handleBtn || false
 /**
  * 初始化事件
  */
-const initColumn = () => {
+const initColumn = async () => {
   tableInfo.showFieldList = []
+  // 路由名称就是菜单组件名称
+  const routeName: string = $route.name as string
+  const columns: string[] = (await columnStore.getColumnByMenu(routeName)) as string[]
   ;(props.fieldList as Field[])?.forEach((item: Field, index: number) => {
     let tempItem: Field = {
       ...item,
@@ -237,9 +237,10 @@ const initColumn = () => {
       hidden: item.hidden || false,
       disabled: item.disabled || false,
     }
-    if (userStore.excludeColumn.includes(camelCaseToUnderscore(item.prop))) {
-      item.hidden = true
-      item.disabled = true
+
+    if (columns.indexOf(camelCaseToUnderscore(tempItem.prop)) != -1) {
+      tempItem.hidden = true
+      tempItem.disabled = true
     }
     tableInfo.showFieldList.push(tempItem)
   })
@@ -350,7 +351,7 @@ const getList = (order?: ColumnSort) => {
   // 父组件传入的数据，直接渲染
   if (tableData.value.length > 0) {
     tableInfo.loading = true
-    tableInfo.rows = tableData.value
+    tableInfo.rows = tableData.value as any[]
     props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
     onEnd()
     tableInfo.loading = false
@@ -393,7 +394,7 @@ const setMultiCheckedList = () => {
     )
     nextTick(() => {
       if (!row) return
-      tableRef.value.toggleRowSelection(row, undefined)
+      normalTableRef.value.toggleRowSelection(row, undefined)
     })
   })
 }
@@ -468,9 +469,9 @@ const handleRowClick = (row: any) => {
     return
   }
   if (row) {
-    tableRef.value!.toggleRowSelection(row, undefined)
+    normalTableRef.value!.toggleRowSelection(row, undefined)
   } else {
-    tableRef.value!.clearSelection()
+    normalTableRef.value!.clearSelection()
   }
 }
 
@@ -519,7 +520,7 @@ const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
       })
       break
     case 'edit':
-      checkBeforeClickBtn().then(() => {
+      handleCheckBeforeClickBtn().then(() => {
         btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
       })
       break
@@ -557,7 +558,7 @@ const confirmBox = (func: any) => {
 /**
  * 按钮点击前校验方法
  */
-const checkBeforeClickBtn = () => {
+const handleCheckBeforeClickBtn = () => {
   return new Promise((resolve, reject) => {
     if (!currentRows.value || currentRows.value.length === 0) {
       ElMessage.warning(t('common.selectLineItem'))
@@ -581,8 +582,19 @@ const handleExport = (query: any) => {
   console.debug(query)
 }
 
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.()
+// 表格设置按钮
+const tableSettingButtonRef = ref()
+const tableSettingsPopoverRef = ref()
+
+const tableColumnPermissionButtonRef = ref()
+const tableColumnPermissionPopoverRef = ref()
+
+const tableSettingsOnClickOutside = () => {
+  unref(tableSettingsPopoverRef).popperRef?.delayHide?.()
+}
+
+const tableColumnPermissionOnClickOutside = () => {
+  unref(tableColumnPermissionPopoverRef).popperRef?.delayHide?.()
 }
 
 /**
@@ -612,12 +624,12 @@ watch(
   () => props.checkedRows,
   () => {
     if (!props.checkedRows || props.checkedRows.length <= 0) {
-      props.select === 'single' ? (singleSelectValue.value = -1) : tableRef.value!.clearSelection()
+      props.select === 'single' ? (singleSelectValue.value = -1) : normalTableRef.value!.clearSelection()
       return
     }
     // 设置当前选中项
     props.checkedRows.forEach((selected: any) => {
-      if (!tableRef.value.rows) return
+      if (!normalTableRef.value.rows) return
       // 传来的值去匹配表格数据
       const index = (tableInfo.rows as []).findIndex(
         (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] === selected,
@@ -631,7 +643,7 @@ watch(
           currentRows.value = row
           return
         }
-        tableRef.value.toggleRowSelection(row, true)
+        normalTableRef.value.toggleRowSelection(row, true)
       })
     })
   },
@@ -649,8 +661,8 @@ const onEnd = () => {
     :popper-style="{
       width: 1000,
     }"
-    ref="popoverRef"
-    :virtual-ref="buttonRef"
+    ref="tableSettingsPopoverRef"
+    :virtual-ref="tableSettingButtonRef"
     trigger="click"
     :title="t('common.tableColumn')"
     virtual-triggering
@@ -665,6 +677,7 @@ const onEnd = () => {
               v-model="row.hidden"
               class="ml-2"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              :disabled="row.disabled"
             />
           </template>
         </el-table-column>
@@ -684,6 +697,20 @@ const onEnd = () => {
         </el-table-column>
       </el-table>
     </VueDraggable>
+  </el-popover>
+
+  <el-popover
+    placement="left-start"
+    :popper-style="{
+      width: 1000,
+    }"
+    ref="tableColumnPermissionPopoverRef"
+    :virtual-ref="tableColumnPermissionButtonRef"
+    trigger="click"
+    :title="t('common.tableColumn')"
+    virtual-triggering
+  >
+    ---
   </el-popover>
 
   <el-card shadow="never" style="margin: 10px 0">
@@ -706,14 +733,27 @@ const onEnd = () => {
           <slot name="tbHeaderBtn"></slot>
         </div>
         <div class="tool-btn">
-          <svg-button ref="buttonRef" v-click-outside="onClickOutside" icon="settings" width="1.4rem" :circle="true" />
+          <svg-button
+            ref="tableSettingButtonRef"
+            v-click-outside="tableSettingsOnClickOutside"
+            icon="settings"
+            width="1.4rem"
+            :circle="true"
+          />
+          <svg-button
+            ref="tableColumnPermissionButtonRef"
+            v-click-outside="tableColumnPermissionOnClickOutside"
+            icon="column_permission"
+            width="1.4rem"
+            :circle="true"
+          />
         </div>
       </div>
     </template>
 
     <div class="table">
       <el-table
-        ref="tableRef"
+        ref="normalTableRef"
         :fit="true"
         :data="tableInfo.rows"
         :max-height="tableHeight"

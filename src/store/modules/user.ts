@@ -43,7 +43,6 @@ const useUserStore = defineStore('User', {
       accessToken: GET_STRING_STORAGE(StorageName.AccessToken) as string,
       roleCodes: GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[],
       permissions: GET_ARRAY_STORAGE(StorageName.Permissions) as string[],
-      excludeColumn: GET_ARRAY_STORAGE(StorageName.ExcludeColumn) as string[],
     }
   },
   actions: {
@@ -64,7 +63,7 @@ const useUserStore = defineStore('User', {
         SET_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
 
         this.tenantId = response.user_info.tenantId as string
-        SET_STORAGE(StorageName.XTenantId, this.userInfo.tenantId as string)
+        SET_STRING_STORAGE(StorageName.XTenantId, this.userInfo.tenantId as string)
 
         this.refreshToken = response.refresh_token as string
         SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
@@ -74,9 +73,6 @@ const useUserStore = defineStore('User', {
 
         this.roleCodes = response.user_info.userRoleCodes as string[]
         SET_STORAGE(StorageName.RoleCodes, this.roleCodes as string[])
-
-        this.excludeColumn = response.user_info.excludeColumn as string[]
-        SET_STORAGE(StorageName.ExcludeColumn, this.excludeColumn as string[])
 
         this.permissions = filterPermissions(this.userInfo as UserInfoData) as string[]
         SET_STORAGE(StorageName.Permissions, this.permissions as string[])
@@ -111,7 +107,6 @@ const useUserStore = defineStore('User', {
       this.refreshToken = '' as string
       this.permissions = [] as string[]
       this.roleCodes = [] as string[]
-      this.excludeColumn = [] as string[]
       CLEAR_STORAGE()
     },
     /**

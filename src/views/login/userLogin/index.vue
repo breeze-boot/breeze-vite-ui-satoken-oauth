@@ -9,17 +9,19 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
-import useSettingStore from '@/store/modules/setting.ts'
+import useColumnStore from '@/store/modules/column'
+import useSettingStore from '@/store/modules/setting'
 import { storeToRefs } from 'pinia'
 
 let settingStore = useSettingStore()
+let columnStore = useColumnStore()
 let { theme, settings } = storeToRefs(settingStore)
 
 let $router = useRouter()
 let $route = useRoute()
 let loading = ref(false)
 
-let useStore = useUserStore()
+let userStore = useUserStore()
 let loginFormRef = ref()
 
 /**
@@ -28,7 +30,7 @@ let loginFormRef = ref()
 onMounted(() => {
   changeDark()
   changeThemeColor()
-  useStore.logout()
+  userStore.logout()
 })
 
 /**
@@ -111,13 +113,14 @@ const handleLogin = async () => {
   await loginFormRef.value.validate()
   loading.value = true
   try {
-    await useStore.userLogin(loginFormData)
+    await userStore.userLogin(loginFormData)
     let redirect: string = $route.query.redirect as string
     ElNotification({
       type: 'success',
       message: '登录成功',
       title: `Hi, ${loadGreetings()}`,
     })
+    await columnStore.getRolesMenuColumns()
     await $router.push({ path: redirect || '/' })
     loading.value = false
   } catch (error) {
@@ -180,7 +183,14 @@ const handleLogin = async () => {
               </el-form-item>
             </el-form>
             <el-form-item>
-              <el-button :loading="loading" size="large" class="login_btn" type="primary" @click="handleLogin">
+              <el-button
+                @keyup.enter="handleLogin()"
+                :loading="loading"
+                size="large"
+                class="login_btn"
+                type="primary"
+                @click="handleLogin"
+              >
                 登录
               </el-button>
             </el-form-item>

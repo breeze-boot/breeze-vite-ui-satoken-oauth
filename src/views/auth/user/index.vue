@@ -35,6 +35,7 @@ const { IS_LOCK } = useDict('IS_LOCK')
  * 查询条件
  */
 const queryParams = reactive<UserQuery>({
+  email: '',
   endTime: '',
   userCode: '',
   username: '',

@@ -66,8 +66,8 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  visible.value = true
   jobDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (jobDataFormRef.value) {
     jobDataFormRef.value.resetFields()

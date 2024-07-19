@@ -152,6 +152,7 @@ const rules = ref({
  */
 const init = async (id: number) => {
   userDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (userDataFormRef.value) {
     // TODO
@@ -164,7 +165,6 @@ const init = async (id: number) => {
   await initSelectDept()
   await initSelectPost()
   await initSelectRole()
-  visible.value = true
 }
 
 /**
@@ -214,12 +214,12 @@ const getInfo = async (id: number) => {
  */
 const handleUserDataFormSubmit = () => {
   let { isNANValue } = useFormValidation()
+  isNANValue(userDataForm.value)
+
   userDataFormRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return false
     }
-    isNANValue(userDataForm.value)
-
     const id = userDataForm.value.id
     if (id) {
       await editUser(id, userDataForm.value)

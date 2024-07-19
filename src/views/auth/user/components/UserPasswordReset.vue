@@ -10,6 +10,8 @@ import { ElMessage } from 'element-plus'
 import { userResetPassword } from '@/api/auth/user'
 import { UserResetPasswordForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
+import { encrypt } from '@/utils/common.ts'
+import { SALES } from '@/types/types.ts'
 
 defineOptions({
   name: 'PasswordReset',
@@ -61,6 +63,7 @@ const rules = ref({
  */
 const init = async (id: number) => {
   userRestPasswordDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (restUserPasswordDataFormRef.value) {
     restUserPasswordDataFormRef.value.resetFields()
@@ -68,7 +71,6 @@ const init = async (id: number) => {
   if (id) {
     userRestPasswordDataForm.value.id = id
   }
-  visible.value = true
 }
 
 /**
@@ -79,17 +81,19 @@ const handleUserRestPasswordDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    const id = userRestPasswordDataForm.value.id
-    if (id) {
-      await userResetPassword(userRestPasswordDataForm.value)
-      ElMessage.success({
-        message: t('common.success'),
-        duration: 500,
-        onClose: () => {
-          visible.value = false
-        },
-      })
+    const password = userRestPasswordDataForm.value.password
+    const fromData: UserResetPasswordForm = {
+      id: userRestPasswordDataForm.value.id,
+      password: encrypt(password!.trim(), SALES) as string,
     }
+    await userResetPassword(fromData)
+    ElMessage.success({
+      message: t('common.success'),
+      duration: 500,
+      onClose: () => {
+        visible.value = false
+      },
+    })
   })
 }
 

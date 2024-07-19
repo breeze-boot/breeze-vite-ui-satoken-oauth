@@ -58,18 +58,14 @@ const handleInputViewClick = (item: any, row: any) => {
 /**
  * 失去焦点
  */
-const inputBlur = (item: any, row: any) => {
+const inputBlur = (item: Field, row: any) => {
   if (row[item.prop]) {
     editId.value = undefined
+    tableField.value.formOptions?.handleBlur ? tableField.value.formOptions?.handleBlur(scope.value.row) : () => {}
     return
   }
   ElMessage.warning('请输入正确的值')
 }
-
-/**
- * 保存行
- */
-const saveRow = () => {}
 
 const switchLoading = ref(false)
 
@@ -271,7 +267,48 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       <span v-if="editId != scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
         {{ scope.row[tableField.prop] }}
       </span>
-      <el-input v-else v-model="scope.row[tableField.prop]" @blur="inputBlur(tableField, scope.row)" />
+      <el-input
+        v-else
+        v-model="scope.row[tableField.prop]"
+        :disabled="
+          tableField.formOptions?.disabled ||
+          (tableField.formOptions?.isDisabled
+            ? tableField.formOptions?.isDisabled(tableField, scope.row)
+            : tableField.formOptions?.disabled)
+        "
+        @change="tableField.formOptions?.handleChange ? tableField.formOptions?.handleChange(scope.row) : () => {}"
+        @blur="inputBlur(tableField, scope.row)"
+      />
+    </el-form-item>
+  </template>
+
+  <!-- 行内radio -->
+  <template v-else-if="tableField.type === 'radio'">
+    <el-form-item
+      label-width="0"
+      :rules="tableField.formOptions?.rules"
+      :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
+    >
+      <div>
+        <el-radio
+          style="width: 50%"
+          v-for="_ in tableField.formOptions?.options
+            ? tableField.formOptions?.options
+            : scope.row[tableField.formOptions?.optionKey || 'checkbox']"
+          v-model="scope.row[tableField.prop]"
+          :key="_.value"
+          :value="_.value"
+          :label="_.label"
+          :disabled="
+            tableField.formOptions?.disabled ||
+            (tableField.formOptions?.isDisabled
+              ? tableField.formOptions?.isDisabled(tableField, scope.row)
+              : tableField.formOptions?.disabled)
+          "
+          @change="tableField.formOptions?.handleChange ? tableField.formOptions?.handleChange(scope.row) : () => {}"
+          @blur="tableField.formOptions?.handleBlur ? tableField.formOptions?.handleBlur(scope.row) : () => {}"
+        />
+      </div>
     </el-form-item>
   </template>
 
@@ -281,18 +318,25 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       label-width="0"
       :rules="tableField.formOptions?.rules"
       :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
-      :label="tableField.label"
     >
       <el-select
         v-model="scope.row[tableField.prop]"
         :placeholder="tableField.formOptions?.placeholder"
         style="width: 100%"
-        @change="saveRow"
+        :disabled="
+          tableField.formOptions?.disabled ||
+          (tableField.formOptions?.isDisabled
+            ? tableField.formOptions?.isDisabled(tableField, scope.row)
+            : tableField.formOptions?.disabled)
+        "
+        @change="tableField.formOptions?.handleChange ? tableField.formOptions?.handleChange(scope.row) : () => {}"
+        @blur="tableField.formOptions?.handleBlur ? tableField.formOptions?.handleBlur(scope.row) : () => {}"
       >
+        <!-- options 若没有配置，可以从后台返回的select数据中获取 -->
         <el-option
-          v-for="_ in tableField.formOptions?.tagSelect
-            ? tableField.formOptions?.tagSelect
-            : scope.row[tableField.formOptions?.selectOptionKey || 'select']"
+          v-for="_ in tableField.formOptions?.options
+            ? tableField.formOptions?.options
+            : scope.row[tableField.formOptions?.optionKey || 'select']"
           :key="_.value"
           :label="_.label"
           :value="_.value"

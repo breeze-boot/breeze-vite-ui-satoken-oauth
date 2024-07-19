@@ -57,13 +57,13 @@ const rules = ref({
 const init = async (method: string, msgId: number) => {
   currentMsgId.value = msgId
   currentMethod.value = method
+  visible.value = true
   // 重置表单数据
   if (sendMsgFormRef.value) {
     sendMsgFormRef.value.resetFields()
   }
 
   await initDeptSelect()
-  visible.value = true
 }
 
 const initDeptSelect = async () => {

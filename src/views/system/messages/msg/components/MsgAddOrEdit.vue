@@ -70,6 +70,7 @@ const rules = ref({
  */
 const init = async (id: number) => {
   msgDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (msgDataFormRef.value) {
     msgDataFormRef.value.resetFields()
@@ -77,7 +78,6 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

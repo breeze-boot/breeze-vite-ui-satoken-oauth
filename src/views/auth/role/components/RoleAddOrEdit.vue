@@ -7,7 +7,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addRole, getRole, editRole, checkRoleCode, selectPermission, selectCustomizePermission } from '@/api/auth/role'
+import {
+  addRole,
+  getRole,
+  editRole,
+  checkRoleCode,
+  selectRowPermissionType,
+  selectCustomizePermission,
+} from '@/api/auth/role'
 import { RoleForm } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
@@ -24,7 +31,7 @@ const visible = ref(false)
 const roleDataFormRef = ref()
 const roleDataForm = ref<RoleForm>({})
 const permissionOption = ref<SelectData[]>()
-const customizePermissionOption = ref<SelectData[]>()
+const customizeRowPermissionOption = ref<SelectData[]>()
 const rules = ref({
   roleCode: [
     {
@@ -54,17 +61,17 @@ const rules = ref({
       trigger: 'blur',
     },
   ],
-  permissionCode: [
+  rowPermissionType: [
     {
       required: true,
-      message: t('role.rules.permissionCode'),
+      message: t('role.rules.rowPermissionType'),
       trigger: 'change',
     },
   ],
-  permissionIds: [
+  rowPermissionIds: [
     {
       required: true,
-      message: t('role.rules.permissionIds'),
+      message: t('role.rules.rowPermissionIds'),
       trigger: 'change',
     },
   ],
@@ -77,16 +84,16 @@ const rules = ref({
  */
 const init = async (id: number) => {
   roleDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (roleDataFormRef.value) {
     roleDataFormRef.value.resetFields()
   }
-  await initSelectPermission()
+  await initSelectRowPermissionType()
   await initSelectCustomizePermission()
   if (id) {
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**
@@ -104,20 +111,20 @@ const getInfo = async (id: number) => {
 /**
  * 初始权限下拉框数据
  */
-const initSelectPermission = async () => {
-  const response: any = await selectPermission()
+const initSelectRowPermissionType = async () => {
+  const response: any = await selectRowPermissionType()
   if (response.code === '0000') {
     permissionOption.value = response.data
   }
 }
 
 /**
- * 初始化自定义权限下拉框数据
+ * 初始化自定义行权限下拉框数据
  */
 const initSelectCustomizePermission = async () => {
   const response: any = await selectCustomizePermission()
   if (response.code === '0000') {
-    customizePermissionOption.value = response.data
+    customizeRowPermissionOption.value = response.data
   }
 }
 
@@ -190,8 +197,8 @@ defineExpose({
           :placeholder="$t('role.fields.roleName')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('role.fields.permissionCode')" prop="permissionCode">
-        <el-select v-model="roleDataForm.permissionCode" :placeholder="$t('role.fields.permissionCode')">
+      <el-form-item label-width="125px" :label="$t('role.fields.rowPermissionType')" prop="rowPermissionType">
+        <el-select v-model="roleDataForm.rowPermissionType" :placeholder="$t('role.fields.rowPermissionType')">
           <el-option
             v-for="item in permissionOption"
             :key="item.value"
@@ -201,14 +208,14 @@ defineExpose({
         </el-select>
       </el-form-item>
       <el-form-item
-        v-if="roleDataForm.permissionCode === 'CUSTOMIZES'"
+        v-if="roleDataForm.rowPermissionType === 'CUSTOMIZES'"
         label-width="125px"
-        :label="$t('role.fields.permissionIds')"
-        prop="permissionIds"
+        :label="$t('role.fields.rowPermissionIds')"
+        prop="rowPermissionIds"
       >
-        <el-select multiple v-model="roleDataForm.permissionIds" :placeholder="$t('role.fields.permissionIds')">
+        <el-select multiple v-model="roleDataForm.rowPermissionIds" :placeholder="$t('role.fields.rowPermissionIds')">
           <el-option
-            v-for="item in customizePermissionOption"
+            v-for="item in customizeRowPermissionOption"
             :key="item.value"
             :label="item.label"
             :value="item.value.valueOf()"

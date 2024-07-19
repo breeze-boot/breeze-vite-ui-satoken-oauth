@@ -52,7 +52,6 @@ const useTabsStore = defineStore('Tabs', {
         this.tabs.push(tab)
       }
       if (!this.cacheTabs.some((name: string): boolean => name === tab.name) && route.meta.keepAlive) {
-        console.log('123')
         this.cacheTabs.push(tab.name)
       }
 

@@ -85,6 +85,7 @@ export interface Field {
     | 'upload'
     | 'file'
     | 'select'
+    | 'radio'
     | 'input'
     | 'textarea'
   prop: string
@@ -107,11 +108,14 @@ export interface Field {
 }
 
 export interface FormOptions {
-  type?: string
+  handleChange?: (row: any) => void
+  handleBlur?: (row: any) => void
   placeholder?: string
-  rules: Arrayable<FormItemRule>
-  tagSelect?: SelectData[]
-  selectOptionKey?: string
+  disabled?: boolean
+  isDisabled?: (field: Field, row: any) => boolean
+  rules?: Arrayable<FormItemRule>
+  options?: SelectData[]
+  optionKey?: string // 后台行内返回的选项的字段名
 }
 
 /**

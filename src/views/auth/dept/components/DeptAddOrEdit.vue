@@ -73,13 +73,14 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
   deptDataForm.value.id = undefined
   deptDataForm.value.parentId = undefined
 
+  visible.value = true
   // 重置表单数据
   if (deptDataFormRef.value) {
     deptDataFormRef.value.resetFields()
   }
   if (flag === DIALOG_FLAG.ADD) {
     // 添加，都可以选择
-    deptDataForm.value.parentId = ROOT.value
+    deptDataForm.value.parentId = ROOT.value as number
     await initSelectDept(undefined)
   }
 
@@ -95,7 +96,6 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
     await initSelectDept(id)
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

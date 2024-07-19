@@ -60,6 +60,7 @@ const rules = ref({
  */
 const init = async (id: number) => {
   postDataForm.value.id = undefined
+  visible.value = true
   // 重置表单数据
   if (postDataFormRef.value) {
     postDataFormRef.value.resetFields()
@@ -67,7 +68,6 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
-  visible.value = true
 }
 
 /**

@@ -91,6 +91,16 @@ const tableInfo = reactive<TableInfo>({
       showOverflowTooltip: true,
       label: t('role.fields.roleCode'),
     },
+    {
+      prop: 'rowPermissionType',
+      showOverflowTooltip: true,
+      label: t('role.fields.rowPermissionType'),
+    },
+    {
+      prop: 'rowPermissionName',
+      showOverflowTooltip: true,
+      label: t('role.fields.rowPermissionName'),
+    },
   ],
   handleBtn: {
     minWidth: 400,
