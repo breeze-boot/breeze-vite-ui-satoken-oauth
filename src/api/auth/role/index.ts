@@ -12,7 +12,6 @@ enum API {
   CHECK_ROLE_CODE_URL = '/auth/v1/role/checkRoleCode',
   SELECT_PERMISSION_TYPE_URL = '/sys/v1/common/selectPermissionType',
   SELECT_CUSTOMIZE_PERMISSION_URL = '/sys/v1/common/selectCustomizePermission',
-  SELECT_COLUMN_PERMISSION_URL = '/sys/v1/common/selectColumnPermission',
 }
 
 /**
@@ -168,16 +167,6 @@ export function selectRowPermissionType(): AxiosPromise<SelectResponseData> {
 export function selectCustomizePermission(): AxiosPromise<SelectResponseData> {
   return request({
     url: API.SELECT_CUSTOMIZE_PERMISSION_URL,
-    method: 'get',
-  })
-}
-
-/**
- * 自定义列权限下拉框
- */
-export function selectColumnPermission(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_COLUMN_PERMISSION_URL,
     method: 'get',
   })
 }

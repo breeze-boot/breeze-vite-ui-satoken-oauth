@@ -389,20 +389,20 @@ const handleUpdateCurrentRow = async (row: any) => {
  */
 const handleUpdateBiz = async (row: any) => {
   let data = {}
-  row.fileUpload.forEach((column: any) => {
+  for (const column of row.fileUpload) {
     data = {
       bizId: row.id,
-      id: column.fileId,
     }
-  })
-  await editFile(data as FileRecord)
-  ElMessage.success({
-    message: t('common.success'),
-    duration: 500,
-    onClose: () => {
-      reloadList()
-    },
-  })
+
+    await editFile(column.fileId, data as FileRecord)
+    ElMessage.success({
+      message: t('common.success'),
+      duration: 500,
+      onClose: () => {
+        reloadList()
+      },
+    })
+  }
 }
 
 /**

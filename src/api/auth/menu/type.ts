@@ -56,6 +56,7 @@ export interface MenuQuery {
  */
 export interface MenuTreeRecord {
   id: number | string
+  name?: string
   title: string
   type: number
   children?: MenuTreeRecord[]

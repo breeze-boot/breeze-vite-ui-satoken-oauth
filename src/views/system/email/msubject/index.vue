@@ -151,7 +151,6 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: [],
         eventHandle: (row: MSubjectRecord) => handleSetTo(row),
       },
       // 设置邮箱抄送人
@@ -160,7 +159,6 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: [],
         eventHandle: (row: MSubjectRecord) => handleSetCc(row),
       },
       // 查看

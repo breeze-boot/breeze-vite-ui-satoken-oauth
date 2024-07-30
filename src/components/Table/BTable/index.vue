@@ -10,6 +10,7 @@ import TableItem from '../TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import useColumnStore from '@/store/modules/column'
 import { useRoute } from 'vue-router'
+import { ColumnCacheData } from '@/types/types.ts'
 
 defineOptions({
   name: 'BTable',
@@ -234,13 +235,16 @@ const initColumn = async () => {
       fixed: item.fixed || false,
       align: item.align || 'center',
       width: item.width || '',
+      sliderWidth: item.width as number,
       hidden: item.hidden || false,
       disabled: item.disabled || false,
+      visible: item.hidden || true,
     }
 
-    if (columns.indexOf(camelCaseToUnderscore(tempItem.prop)) != -1) {
+    if (columns.indexOf(tempItem.prop) != -1) {
       tempItem.hidden = true
       tempItem.disabled = true
+      tempItem.visible = false
     }
     tableInfo.showFieldList.push(tempItem)
   })
@@ -598,6 +602,25 @@ const tableColumnPermissionOnClickOutside = () => {
 }
 
 /**
+ * 设置菜单列的权限
+ *
+ * @param value
+ * @param field
+ */
+const handleSetColumnVisible = async (value: boolean, field: Field) => {
+  const routeName: string = $route.name as string
+  const data: ColumnCacheData = {
+    menu: routeName,
+    columns: [field.prop],
+    // true 后端删除列控制，前端进行展示
+    // false 后端增加列控制，前端进行隐藏
+    visible: value,
+  }
+  await columnStore.setColumnByMenu(data)
+  getList()
+}
+
+/**
  * 监听方法
  */
 watch(
@@ -653,6 +676,10 @@ let tableKey = ref<number>(Math.random())
 const onEnd = () => {
   tableKey.value = Math.random()
 }
+
+const handleSliderChange = (row: any) => {
+  row.width = row.sliderWidth
+}
 </script>
 
 <template>
@@ -678,12 +705,13 @@ const onEnd = () => {
               class="ml-2"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
               :disabled="row.disabled"
+              @change="getList()"
             />
           </template>
         </el-table-column>
         <el-table-column prop="width" :label="t('settings.fields.width')" width="250">
           <template #default="{ row }">
-            <el-slider :min="150" :max="500" v-model="row.width" />
+            <el-slider :min="150" :max="500" v-model="row.sliderWidth" @change="handleSliderChange(row)" />
           </template>
         </el-table-column>
         <el-table-column prop="fixed" :label="t('settings.fields.fixed')" width="120">
@@ -707,10 +735,18 @@ const onEnd = () => {
     ref="tableColumnPermissionPopoverRef"
     :virtual-ref="tableColumnPermissionButtonRef"
     trigger="click"
-    :title="t('common.tableColumn')"
+    :title="t('common.setTableColumn')"
     virtual-triggering
   >
-    ---
+    <div style="display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column">
+      <el-checkbox
+        v-for="(item, index) in tableInfo.showFieldList"
+        @change="handleSetColumnVisible(item.visible as boolean, item)"
+        :label="item.label"
+        v-model="item.visible"
+        :key="index"
+      ></el-checkbox>
+    </div>
   </el-popover>
 
   <el-card shadow="never" style="margin: 10px 0">
@@ -741,6 +777,7 @@ const onEnd = () => {
             :circle="true"
           />
           <svg-button
+            v-has="['ROLE_ADMIN']"
             ref="tableColumnPermissionButtonRef"
             v-click-outside="tableColumnPermissionOnClickOutside"
             icon="column_permission"
@@ -898,15 +935,6 @@ const onEnd = () => {
 </template>
 
 <style lang="scss" scoped>
-.footer {
-  display: flex;
-  justify-content: flex-end;
-  align-content: center;
-  width: 100%;
-  padding: 30px;
-  height: 20px;
-}
-
 .tools {
   display: flex;
   align-content: center;
@@ -925,5 +953,14 @@ const onEnd = () => {
 
 .table-pagination {
   padding: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-content: center;
+  width: 100%;
+  padding: 30px;
+  height: 20px;
 }
 </style>

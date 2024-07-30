@@ -70,10 +70,9 @@ onMounted(async () => {
     userQueryFormRef.value.resetFields()
   }
 
-  const id = queryParams.value.id as unknown as number
-  queryParams.value.id = Number(id)
+  queryParams.value.id = JSONBigInt.parse(route.query.id)
   queryParams.value.column = route.query.column as string
-  await getInfo(id, queryParams.value.column)
+  await getInfo(queryParams.value.id, queryParams.value.column)
 })
 
 /**
@@ -83,14 +82,15 @@ onMounted(async () => {
  * @param column
  */
 const getInfo = async (id: number, column: string) => {
-  const response: any = await listToEmail(JSONBigInt.parse(id))
+  debugger
   if (column === 'toEmail') {
+    const response: any = await listToEmail(id)
     if (response.code === '0000') {
       tableInfo.rows = response.data
       tableInfo.refresh = Math.random()
     }
   } else if (column === 'ccEmail') {
-    const response: any = await listCcEmail(JSONBigInt.parse(id))
+    const response: any = await listCcEmail(id)
     if (response.code === '0000') {
       tableInfo.rows = response.data
       tableInfo.refresh = Math.random()

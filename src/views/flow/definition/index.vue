@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElForm, ElMessage } from 'element-plus'
-import { page, exportExcel, deleteDefinition, startInstance } from '@/api/flow/definition'
+import { page, exportExcel, deleteDefinition, startInstance, isSuspended } from '@/api/flow/definition'
 import type { FlowDefinitionRecords } from '@/api/flow/definition/type.ts'
 import type { FlowDefinitionRecord, FlowDefinitionQuery } from '@/api/flow/definition/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
@@ -120,6 +120,18 @@ const tableInfo = reactive<TableInfo>({
     },
     {
       prop: 'suspended',
+      label: t('definition.fields.suspended'),
+      type: 'switch',
+      switch: {
+        activeValue: 1,
+        inactiveValue: 0,
+        api: isSuspended,
+        pk: 'id',
+        status: 'suspended',
+      },
+    },
+    {
+      prop: 'suspended',
       showOverflowTooltip: true,
       label: t('definition.fields.suspended'),
       width: 100,
@@ -226,7 +238,7 @@ const handleInfo = (row: any) => {
  */
 const handleDelete = async (rows: FlowDefinitionRecords) => {
   const definitions: any[] = rows.map((item: any) => {
-    return { deploymentId: item.id, cascade: true }
+    return { definitionKey: item.definitionKey, cascade: true }
   })
   await deleteDefinition(definitions)
   ElMessage.success({

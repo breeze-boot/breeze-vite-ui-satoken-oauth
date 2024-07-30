@@ -62,6 +62,10 @@ export default {
       return this.show
     },
   },
+  beforeUnmount() {
+    this.xmlString = ''
+    this.modeler = null
+  },
   methods: {
     changePageMode(mode) {
       const theme = mode
@@ -107,8 +111,8 @@ export default {
     },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     elementContextmenu(element) {},
-    onSaveProcessXml(xmlData) {
-      this.$emit('save', xmlData)
+    onSaveProcessXml(xmlData, id, name) {
+      this.$emit('save', xmlData, id, name)
     },
   },
 }

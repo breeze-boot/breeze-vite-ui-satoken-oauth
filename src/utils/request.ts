@@ -124,7 +124,7 @@ const handleRefreshToken = async (error: any) => {
  * @param error
  */
 const handle401Error = async (error: any) => {
-  if (refreshTimes == 3) {
+  if (refreshTimes == 2) {
     refreshTimes = 1
     ElMessage.error(i18n.global.t('axios.reLogin'))
     await redirectToLogin()

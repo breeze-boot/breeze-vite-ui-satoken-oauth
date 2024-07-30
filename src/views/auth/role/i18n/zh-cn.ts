@@ -4,6 +4,7 @@ export default {
       cascadeCheck: '级联勾选',
       oneCheck: '逐个勾选',
       menuPermission: '菜单权限',
+      menuColumnPermission: '菜单列权限',
     },
     fields: {
       roleCode: '角色编码',

@@ -358,9 +358,6 @@ export default {
   },
   mounted() {
     this.initBpmnModeler()
-    console.log(this.modelValue)
-    console.log(this.processId)
-    console.log(this.processName)
     nextTick(() => {
       this.createNewDiagram(this.modelValue)
     })
@@ -425,9 +422,7 @@ export default {
       // 将字符串转换成图显示出来
       let newId = this.processId || `Process_${new Date().getTime()}`
       let newName = this.processName || `业务流程_${new Date().getTime()}`
-      console.log(newId)
       let xmlString = xml || DefaultEmptyXML(newId, newName, this.prefix)
-      console.log(xmlString)
       try {
         let { warnings } = await this.bpmnModeler.importXML(xmlString)
         if (warnings && warnings.length) {
@@ -511,7 +506,9 @@ export default {
           reject()
         }
         this.bpmnModeler.saveXML({ format: true }).then(({ xml }) => {
-          this.$emit('save', xml)
+          const id = this.bpmnModeler.getDefinitions().rootElements[0].id
+          const name = this.bpmnModeler.getDefinitions().rootElements[0].name
+          this.$emit('save', xml, id, name)
           resolve(xml)
         })
       })
@@ -563,7 +560,7 @@ export default {
     },
     processReZoom() {
       this.defaultZoom = 1
-      this.bpmnModeler.get('canvas').zoom('fit-viewport', 'auto')
+      if (this.bpmnModeler) this.bpmnModeler.get('canvas').zoom('fit-viewport', 'auto')
     },
     processRestart() {
       this.recoverable = false

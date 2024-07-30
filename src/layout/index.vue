@@ -8,12 +8,12 @@ import TabBar from './tabbar/index.vue'
 import Main from './main/index.vue'
 import useSettingStore from '@/store/modules/setting'
 import { watchEffect, computed } from 'vue'
-import variables from '@/styles/variables.module.scss'
 import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
 import { useWindowSize } from '@vueuse/core'
 import websocket from '@/layout/websocket/index.vue'
 import { MenuLayout } from '@/types/types.ts'
 import { DEVICE } from '@/utils/common.ts'
+import variables from '@/styles/variables.module.scss'
 
 let settingStore = useSettingStore()
 const { theme, settings } = useSettingStore()
@@ -39,7 +39,7 @@ const tabStyle = computed(() => {
       menuLayout.value !== 'top'
         ? isCollapse.value
           ? 'calc(100% - 56px)'
-          : 'calc(100% - variables.baseLeftMenuWidth)'
+          : 'calc(100% - ' + variables.baseLeftMenuWidth + ')'
         : '100%',
   }
 })

@@ -55,13 +55,11 @@ const tableInfo = reactive<TableInfo>({
   fieldList: [
     {
       prop: 'roleName',
-      width: 200,
       showOverflowTooltip: true,
       label: t('role.fields.roleName'),
     },
     {
       prop: 'roleCode',
-      width: 200,
       showOverflowTooltip: true,
       label: t('role.fields.roleCode'),
     },

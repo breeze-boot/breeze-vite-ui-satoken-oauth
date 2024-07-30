@@ -40,8 +40,9 @@ export interface MenuColumnQuery extends PageQuery {
 }
 
 /**
- * 角色的菜单列响应类型声明
+ * 角色的菜单列表单类型声明
  */
-export interface RolesColumnCacheResponseData extends ResponseData {
-  data: ColumnCacheData[]
+export interface RoleMenuColumnForm {
+  menu: string[]
+  roleId: number
 }

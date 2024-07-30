@@ -95,3 +95,16 @@ export function exportExcel(params: FlowDefinitionRecord): AxiosPromise<any> {
     data: params,
   })
 }
+
+/**
+ * switch激活
+ *
+ * @param params
+ */
+export function isSuspended(params: any): AxiosPromise<ResponseData> {
+  return request({
+    url: API.DEFINITION_RESTFUL_URL + `/isSuspended`,
+    method: 'put',
+    params: params,
+  })
+}

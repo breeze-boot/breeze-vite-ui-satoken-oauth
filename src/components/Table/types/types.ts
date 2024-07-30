@@ -18,7 +18,7 @@ export interface Btn {
   hidden?: (event: string, row: any) => boolean
   slot?: string
   slotName?: string
-  permission: string[]
+  permission?: string[]
   link?: boolean
   event: Event
   eventHandle?: (row: any, $index: number) => void
@@ -72,9 +72,25 @@ export interface HandleBtn {
  * 表格字段类型
  */
 export interface Field {
-  key?: number
-  sortable?: boolean | 'custom'
+  align?: 'center' | 'right' | 'left'
+  children?: Field[]
+  dict?: string
   disabled?: boolean
+  visible?: boolean
+  fixed?: boolean
+  formOptions?: FormOptions
+  hidden?: boolean
+  input?: InputOption
+  key?: number
+  label: string
+  linkInfo?: LinkInfo | LinkInfo2
+  minWidth?: string
+  prop: string
+  showOverflowTooltip?: boolean
+  sortable?: boolean | 'custom'
+  switch?: SwitchOption
+  tag?: TagOptions
+  textarea?: TextareaOption
   type?:
     | string
     | 'tag'
@@ -88,23 +104,9 @@ export interface Field {
     | 'radio'
     | 'input'
     | 'textarea'
-  prop: string
-  label: string
-  switch?: SwitchOption
-  input?: InputOption
   upload?: UploadOption
-  textarea?: TextareaOption
-  dict?: string
-  formOptions?: FormOptions
-  showOverflowTooltip?: boolean
-  hidden?: boolean
-  linkInfo?: LinkInfo | LinkInfo2
-  tag?: TagOptions
-  align?: 'center' | 'right' | 'left'
   width?: number | string
-  minWidth?: string
-  fixed?: boolean
-  children?: Field[]
+  sliderWidth?: number
 }
 
 export interface FormOptions {

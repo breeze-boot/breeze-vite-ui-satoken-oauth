@@ -7,7 +7,8 @@
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteRole } from '@/api/auth/role'
 import AddOrEdit from './components/RoleAddOrEdit.vue'
-import MenuPermissionList from './components/RolePermissionList.vue'
+import RoleMenuPermissionList from './components/RoleMenuPermissionList.vue'
+import RoleMenuColumnPermissionList from './components/RoleMenuColumnPermissionList.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { RoleRecords } from '@/api/auth/role/type.ts'
 import { RoleRecord, RoleQuery } from '@/api/auth/role/type.ts'
@@ -23,7 +24,8 @@ defineOptions({
 const { t } = useI18n()
 const roleQueryFormRef = ref(ElForm)
 const roleAddOrEditRef = ref()
-const rolePermissionListRef = ref()
+const roleMenuPermissionListRef = ref()
+const roleMenuColumnPermissionListRef = ref()
 
 /**
  * 查询条件
@@ -135,6 +137,15 @@ const tableInfo = reactive<TableInfo>({
         permission: ['auth:menu:permission:modify', 'ROLE_ADMIN'],
         eventHandle: (row: RoleRecord) => handleRolePermission(row),
       },
+      // 设置角色菜单列权限, 具有权限或者超级管理员可以设置
+      {
+        label: t('role.common.menuColumnPermission'),
+        type: 'success',
+        icon: 'role_permission',
+        event: 'role_permission',
+        permission: ['auth:menu:column:permission:modify', 'ROLE_ADMIN'],
+        eventHandle: (row: RoleRecord) => handleRoleMenuColumnPermission(row),
+      },
       // 删除
       {
         label: t('common.delete'),
@@ -185,7 +196,7 @@ const AddOrEditHandle = (id?: number) => {
  * @param id 主键
  */
 const setRolePermissionHandle = (id?: number) => {
-  rolePermissionListRef.value.init(id)
+  roleMenuPermissionListRef.value.init(id)
 }
 
 /**
@@ -202,8 +213,17 @@ const handleInfo = (row: any) => {
  *
  * @param row 参数
  */
-const handleRolePermission = (row: any) => {
+const handleRolePermission = (row: RoleRecord) => {
   setRolePermissionHandle(row.id)
+}
+
+/**
+ * 设置角色菜单列的权限
+ *
+ * @param row 参数
+ */
+const handleRoleMenuColumnPermission = (row: RoleRecord) => {
+  roleMenuColumnPermissionListRef.value.init(row.id)
 }
 
 /**
@@ -313,6 +333,9 @@ const handleSelectionChange = (rows: RoleRecords) => {
   <!-- 新增 / 修改 Dialog -->
   <add-or-edit ref="roleAddOrEditRef" @reload-data-list="reloadList" />
 
-  <!-- 菜单权限 Dialog -->
-  <menu-permission-list ref="rolePermissionListRef" @reload-data-list="reloadList" />
+  <!-- 角色的菜单权限 Dialog -->
+  <role-menu-permission-list ref="roleMenuPermissionListRef" />
+
+  <!-- 角色的菜单列权限 Dialog -->
+  <role-menu-column-permission-list ref="roleMenuColumnPermissionListRef" />
 </template>

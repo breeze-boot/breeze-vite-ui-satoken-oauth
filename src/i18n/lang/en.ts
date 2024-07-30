@@ -47,6 +47,7 @@ export default {
 
     no: 'no',
     tableColumn: 'table column',
+    setTableColumn: 'set table column',
     showTableColumn: 'show column',
     hiddenTableColumn: 'hidden column',
     pleasEnterMenuName: 'please enter a menu name',

@@ -110,9 +110,10 @@ export function selectMenu(id: number): AxiosPromise<SelectResponseData> {
 /**
  * 权限列表
  */
-export function listTreePermission(): AxiosPromise<MenuTreeResponseData> {
+export function listTreePermission(type: number[]): AxiosPromise<MenuTreeResponseData> {
   return request({
     url: `${API.MENU_RESTFUL_URL}/listTreePermission`,
-    method: 'get',
+    method: 'post',
+    data: type,
   })
 }

@@ -21,11 +21,15 @@ export const isHasPermission = (app: any) => {
 
 const filterOptions = async (el: any, options: any) => {
   if (!options.value) return
+  const permissions: string[] = await userStore.getPermissions()
+  let remove: boolean = true
   for (const item of options.value) {
-    const permissions: string[] = await userStore.getPermissions()
-    if (!permissions.includes(item)) {
-      // 删除DOM元素
-      el.parentNode.removeChild(el)
+    if (permissions.includes(item)) {
+      remove = false
     }
+  }
+  if (remove) {
+    // 删除DOM元素
+    el.parentNode.removeChild(el)
   }
 }

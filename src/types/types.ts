@@ -151,7 +151,7 @@ export enum StorageName {
   RoleCodes = 'ROLE_CODES',
   Permissions = 'PERMISSIONS',
   UserInfo = 'USER_INFO',
-  Columns = 'COLUMNS ',
+  Columns = 'COLUMNS',
   XTenantId = 'X-TENANT-ID',
   Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
@@ -249,4 +249,5 @@ export interface Option {
 export interface ColumnCacheData {
   menu?: string
   columns: string[]
+  visible?: boolean
 }

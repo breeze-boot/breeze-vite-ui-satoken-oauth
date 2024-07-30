@@ -39,7 +39,7 @@ const tableInfo = reactive<TableInfo>({
   refresh: 1,
   tableIndex: true,
   // 选择框类型
-  select: 'single',
+  select: 'multi',
   // 字典
   dict: [],
   // 表格顶部按钮
@@ -179,7 +179,7 @@ const handleSelectionChange = (rows: MenuColumnRecords) => {
 <template>
   <search-container-box>
     <el-form ref="menuColumnQueryFormRef" :model="queryParams" :inline="true">
-      <!-- 权限编码 -->
+      <!-- 菜单编码 -->
       <el-form-item :label="t('menuColumn.fields.menu')" prop="menu">
         <el-input
           @keyup.enter="handleQuery"
@@ -189,7 +189,7 @@ const handleSelectionChange = (rows: MenuColumnRecords) => {
         />
       </el-form-item>
 
-      <!-- 权限名称 -->
+      <!-- 列 -->
       <el-form-item :label="t('menuColumn.fields.column')" prop="column">
         <el-input
           @keyup.enter="handleQuery"

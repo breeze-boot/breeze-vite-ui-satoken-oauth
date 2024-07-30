@@ -27,11 +27,12 @@ export function page(params: FileQuery): AxiosPromise<FileResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data 文件
  */
-export function editFile(data: FileRecord): AxiosPromise<ResponseData> {
+export function editFile(id: number, data: FileRecord): AxiosPromise<ResponseData> {
   return request({
-    url: API.FILE_RESTFUL_URL,
+    url: `${API.FILE_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

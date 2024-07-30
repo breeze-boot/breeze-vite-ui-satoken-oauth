@@ -48,30 +48,30 @@ const definitionDataForm = ref<FlowDefinitionParam>({
 })
 
 const rules = ref({
-  definitionName: [
-    {
-      required: true,
-      message: t('definition.rules.definitionName'),
-      trigger: 'blur',
-    },
-    {
-      pattern: /^(?!\\d)[\\da-zA-Z\u4e00-\u9fff]*$/,
-      message: t('definition.rules.definitionNameCannotStartWithNumber'),
-      trigger: 'blur',
-    },
-  ],
-  definitionKey: [
-    {
-      required: true,
-      message: t('definition.rules.definitionKey'),
-      trigger: 'blur',
-    },
-    {
-      pattern: /^(?![0-9])[A-Za-z0-9]+$/,
-      message: t('definition.rules.definitionKeyCannotStartWithNumber'),
-      trigger: 'blur',
-    },
-  ],
+  // definitionName: [
+  //   {
+  //     required: true,
+  //     message: t('definition.rules.definitionName'),
+  //     trigger: 'blur',
+  //   },
+  //   {
+  //     pattern: /^(?!\\d)[\\da-zA-Z\u4e00-\u9fff]*$/,
+  //     message: t('definition.rules.definitionNameCannotStartWithNumber'),
+  //     trigger: 'blur',
+  //   },
+  // ],
+  // definitionKey: [
+  //   {
+  //     required: true,
+  //     message: t('definition.rules.definitionKey'),
+  //     trigger: 'blur',
+  //   },
+  //   {
+  //     pattern: /^(?![0-9])[A-Za-z0-9]+$/,
+  //     message: t('definition.rules.definitionKeyCannotStartWithNumber'),
+  //     trigger: 'blur',
+  //   },
+  // ],
   categoryCode: [
     {
       required: true,
@@ -91,6 +91,7 @@ const init = async (id: number) => {
   visible.value = true
   // 重置表单数据
   if (definitionDataFormRef.value) {
+    bpmnXml.value = ''
     definitionDataFormRef.value.resetFields()
   }
   await initCategory()
@@ -128,7 +129,7 @@ const handleShowDesigner = () => {
   })
 }
 
-const onSaveDesigner = async (xml: string) => {
+const onSaveDesigner = async (xml: string, id: string, name: string) => {
   ElMessageBox.confirm(t('definition.confirmMsg'), '', {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
@@ -138,6 +139,8 @@ const onSaveDesigner = async (xml: string) => {
       bpmnXml.value = xml
       visibleDesigner.value = false
       definitionDataForm.value.xml = xml
+      definitionDataForm.value.definitionKey = id
+      definitionDataForm.value.definitionName = name
     })
     .catch(() => {
       ElMessage({
@@ -199,10 +202,10 @@ defineExpose({
       label-width="120px"
     >
       <el-form-item label-width="110px" :label="t('definition.fields.definitionName')" prop="definitionName">
-        <el-input v-model="definitionDataForm.definitionName" autocomplete="off" clearable />
+        <el-input disabled v-model="definitionDataForm.definitionName" autocomplete="off" clearable />
       </el-form-item>
       <el-form-item label-width="110px" :label="t('definition.fields.definitionKey')" prop="definitionKey">
-        <el-input v-model="definitionDataForm.definitionKey" autocomplete="off" clearable />
+        <el-input disabled v-model="definitionDataForm.definitionKey" autocomplete="off" clearable />
       </el-form-item>
       <el-form-item label-width="110px" :label="t('category.fields.categoryCode')" prop="categoryCode">
         <el-select

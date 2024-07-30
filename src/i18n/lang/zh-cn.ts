@@ -47,6 +47,7 @@ export default {
 
     no: '序号',
     tableColumn: '表格字段',
+    setTableColumn: '设置表格字段',
     showTableColumn: '展示字段',
     hiddenTableColumn: '隐藏字段',
     pleasEnterMenuName: '请输入菜单名称',

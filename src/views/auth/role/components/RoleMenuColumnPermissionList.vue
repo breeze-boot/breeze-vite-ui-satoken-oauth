@@ -6,11 +6,11 @@
 <!-- 角色菜单权限修改弹出框 -->
 <script lang="ts" setup>
 import { ref, reactive, watch } from 'vue'
-import { listRolesPermission, modifyPermission } from '@/api/auth/role'
 import { useI18n } from 'vue-i18n'
 import { ElMessage, ElTree } from 'element-plus'
 import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
+import { listRolesMenuColumnPermission, saveRoleMenuColumn } from '@/api/auth/permission/menuColumn'
 
 defineOptions({
   name: 'RolePermissionList',
@@ -22,13 +22,7 @@ const treeSetting = reactive({
   checkStrictly: true,
 })
 
-const defaultProps = {
-  children: 'children',
-  label: 'title',
-}
-
 const { t } = useI18n()
-const $emit = defineEmits(['reloadDataList'])
 const visible = ref(false)
 const rolePermissionTreeRef = ref<InstanceType<typeof ElTree>>()
 const roleTreeData = ref<MenuTreeRecord[]>([])
@@ -55,7 +49,7 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const treePermissionResponse: any = await listTreePermission()
+  const treePermissionResponse: any = await listTreePermission([0, 1])
   if (treePermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
@@ -64,7 +58,7 @@ const getInfo = async (id: number) => {
     return
   }
   Object.assign(roleTreeData.value, treePermissionResponse.data)
-  const rolesPermissionResponse: any = await listRolesPermission(id)
+  const rolesPermissionResponse: any = await listRolesMenuColumnPermission(id)
   if (rolesPermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
@@ -72,9 +66,9 @@ const getInfo = async (id: number) => {
     })
     return
   }
-  const menuIds = rolesPermissionResponse.data.map((item: any) => item.menuId)
-  if (menuIds) {
-    rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
+  const menus = rolesPermissionResponse.data.map((item: any) => item.menu)
+  if (menus) {
+    rolePermissionTreeRef.value.setCheckedKeys(menus, true)
   }
 }
 
@@ -87,16 +81,15 @@ const handleRoleDataFormSubmit = async () => {
   if (halfCheckedKeys.length > 0) {
     checkedKeys.push(...halfCheckedKeys)
   }
-  await modifyPermission({
+  await saveRoleMenuColumn({
     roleId: currentClickRoleId.value,
-    permissionIds: checkedKeys,
+    menu: checkedKeys,
   })
   ElMessage.success({
     message: t('common.success'),
     duration: 500,
     onClose: () => {
       visible.value = false
-      $emit('reloadDataList')
     },
   })
 }
@@ -119,7 +112,7 @@ defineExpose({
   <el-dialog
     v-model="visible"
     width="38%"
-    :title="t('role.common.menuPermission')"
+    :title="t('role.common.menuColumnPermission')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
   >
@@ -143,14 +136,17 @@ defineExpose({
         ref="rolePermissionTreeRef"
         class="filter-tree"
         style="max-width: 600px"
-        node-key="id"
+        node-key="name"
         show-checkbox
         :check-strictly="treeSetting.checkStrictly"
         :expand-on-click-node="false"
         :default-expand-all="treeSetting.expandAll"
         highlight-current
         :data="roleTreeData"
-        :props="defaultProps"
+        :props="{
+          children: 'children',
+          label: 'title',
+        }"
         empty-text="无数据"
         :filter-node-method="filterNode"
       >
@@ -164,7 +160,7 @@ defineExpose({
     <template #footer>
       <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
       <el-button
-        v-has="['auth:menu:permission:modify', 'ROLE_ADMIN']"
+        v-has="['auth:menu:column:permission:modify', 'ROLE_ADMIN']"
         type="primary"
         @click="handleRoleDataFormSubmit()"
       >

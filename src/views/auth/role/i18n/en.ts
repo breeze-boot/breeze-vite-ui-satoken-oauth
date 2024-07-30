@@ -4,6 +4,7 @@ export default {
       cascadeCheck: 'Cascade Check',
       oneCheck: 'Check one by one',
       menuPermission: 'menu permission',
+      menuColumnPermission: 'menu column permission',
     },
     fields: {
       roleCode: 'role code',
