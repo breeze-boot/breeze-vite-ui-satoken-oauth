@@ -126,7 +126,7 @@ const handleUserRoleSettingsDataFormSubmit = async () => {
   if (response.code === '0000') {
     ElMessage.success({
       message: t('common.success'),
-      duration: 500,
+      duration: 1000,
       onClose: () => {
         visible.value = false
       },

@@ -1,0 +1,219 @@
+<!--
+ * @author: gaoweixuan
+ * @since: 2023-02-25
+-->
+
+<!-- 流程定义添加修改弹出框 -->
+<script lang="ts" setup>
+import { reactive, ref } from 'vue'
+import ProcessDesigner from '@/components/ProcessDesigner/index.vue'
+import { deployDefinition, getDefinition } from '@/api/bpm/def/definition'
+import { useI18n } from 'vue-i18n'
+import type { BpmDefinitionForm } from '@/api/bpm/def/definition/type.ts'
+import { SelectData } from '@/types/types.ts'
+import { selectCategory } from '@/api/bpm/def/category'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import useUserStore from '@/store/modules/user.ts'
+
+defineOptions({
+  name: 'DefinitionAddOrEdit',
+  inheritAttrs: false,
+})
+
+const { t } = useI18n()
+
+const visibleDesigner = ref<boolean>(false)
+const categoryOption = ref<SelectData[]>()
+const bpmnXml = ref<string>('')
+const reloadIndex = ref(0)
+const flowDesignerRef = ref(null)
+const flowForm = reactive<any>({
+  modelId: '',
+  procDefName: '',
+  procDefKey: '',
+})
+
+const $emit = defineEmits(['reloadDataList'])
+const visible = ref(false)
+const definitionDataFormRef = ref()
+const definitionDataForm = ref<BpmDefinitionForm>({
+  procDefName: '',
+  procDefKey: '',
+  categoryCode: '',
+  version: '',
+  deploymentTime: '',
+  xml: '',
+})
+
+const rules = ref({
+  categoryCode: [
+    {
+      required: true,
+      message: t('definition.rules.categoryCode'),
+      trigger: 'change',
+    },
+  ],
+})
+
+/**
+ * 初始化
+ *
+ * @param id
+ */
+const init = async (id: number) => {
+  definitionDataForm.value.id = undefined
+  visible.value = true
+  // 重置表单数据
+  if (definitionDataFormRef.value) {
+    bpmnXml.value = ''
+    definitionDataFormRef.value.resetFields()
+  }
+  await initCategory()
+  if (id) {
+    await getInfo(id)
+  }
+}
+
+/**
+ * 获取信息
+ *
+ * @param id
+ */
+const getInfo = async (id: number) => {
+  const response: any = await getDefinition(id)
+  if (response.code === '0000') {
+    Object.assign(definitionDataForm.value, response.data)
+    bpmnXml.value = response.data.xml
+  }
+}
+
+/**
+ * 显示设计器
+ */
+const handleShowDesigner = () => {
+  definitionDataFormRef.value.validate(async (valid: boolean) => {
+    if (!valid) {
+      return false
+    }
+    flowForm.modelId = definitionDataForm.value.id
+    flowForm.procDefKey = definitionDataForm.value.procDefKey
+    flowForm.procDefName = definitionDataForm.value.procDefName
+    reloadIndex.value = Math.random()
+    visibleDesigner.value = true
+  })
+}
+
+const onSaveDesigner = async (xml: string, procDefKey: string, procDefName: string) => {
+  ElMessageBox.confirm(t('definition.confirmMsg'), '', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
+  })
+    .then(() => {
+      bpmnXml.value = xml
+      visibleDesigner.value = false
+      definitionDataForm.value.xml = xml
+      definitionDataForm.value.procDefKey = procDefKey
+      definitionDataForm.value.procDefName = procDefName
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: t('common.cancel'),
+      })
+    })
+}
+
+/**
+ * 初始化流程分类下拉框
+ */
+const initCategory = async () => {
+  const response: any = await selectCategory()
+  if (response.code === '0000') {
+    categoryOption.value = response.data
+  }
+}
+
+/**
+ * 表单提交
+ */
+const handleDataFormSubmit = () => {
+  definitionDataFormRef.value.validate(async (valid: boolean) => {
+    if (!valid) {
+      return false
+    }
+    definitionDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
+    await deployDefinition(definitionDataForm.value)
+    ElMessage.success({
+      message: t('common.success'),
+      duration: 1000,
+      onClose: () => {
+        visible.value = false
+        $emit('reloadDataList')
+      },
+    })
+  })
+}
+
+defineExpose({
+  init,
+})
+</script>
+
+<template>
+  <el-dialog
+    v-model="visible"
+    width="38%"
+    :title="t('common.design')"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
+    <el-form
+      :model="definitionDataForm"
+      :rules="rules"
+      ref="definitionDataFormRef"
+      @keyup.enter="handleDataFormSubmit()"
+      label-width="120px"
+    >
+      <el-form-item label-width="110px" :label="t('definition.fields.procDefName')" prop="procDefName">
+        <el-input disabled v-model="definitionDataForm.procDefName" autocomplete="off" clearable />
+      </el-form-item>
+      <el-form-item label-width="110px" :label="t('definition.fields.procDefKey')" prop="procDefKey">
+        <el-input disabled v-model="definitionDataForm.procDefKey" autocomplete="off" clearable />
+      </el-form-item>
+      <el-form-item label-width="110px" :label="t('category.fields.categoryCode')" prop="categoryCode">
+        <el-select
+          v-model="definitionDataForm.categoryCode"
+          collapse-tags
+          filterable
+          :placeholder="$t('category.fields.categoryCode')"
+        >
+          <el-option
+            v-for="item in categoryOption"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value.valueOf()"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label-width="110px">
+        <el-button style="width: 100%" @click="handleShowDesigner">
+          {{ $t('common.nextStep') }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+    </template>
+  </el-dialog>
+
+  <process-designer
+    :key="`designer-${reloadIndex}`"
+    ref="flowDesignerRef"
+    :show="visibleDesigner"
+    :flow-form="flowForm"
+    :bpmn-xml="bpmnXml"
+    @save="onSaveDesigner"
+  />
+</template>

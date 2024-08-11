@@ -53,9 +53,7 @@ import { Plus } from '@element-plus/icons-vue'
 export default {
   name: 'SignalAndMassage',
   setup() {
-    return {
-      Plus,
-    }
+    return {}
   },
   data() {
     return {
@@ -67,6 +65,9 @@ export default {
     }
   },
   computed: {
+    Plus() {
+      return Plus
+    },
     modelConfig() {
       if (this.modelType === 'message') {
         return { title: '创建消息', idLabel: '消息ID', nameLabel: '消息名称' }

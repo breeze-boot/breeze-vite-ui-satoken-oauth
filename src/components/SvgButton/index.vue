@@ -49,6 +49,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  //loading
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   //按钮样式
   style: {
     type: Object,
@@ -68,10 +73,11 @@ const handleChick = () => {
     @click="handleChick"
     :circle="props.circle"
     :link="props.link"
+    :loading="props.loading"
     :style="props.style"
     :type="props.type"
   >
-    <svg-icon :name="props.icon" :width="props.width" :height="props.height" />
+    <svg-icon v-if="props.icon" :name="props.icon" :width="props.width" :height="props.height" />
     <span v-if="props.label !== ''" style="margin: 5px">{{ props.label }}</span>
   </el-button>
 </template>

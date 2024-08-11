@@ -250,7 +250,7 @@ const handleDelete = async (row: MenuRecord) => {
   await deleteMenu(JSONBigInt.parse(row.id))
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

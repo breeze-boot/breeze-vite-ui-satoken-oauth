@@ -232,6 +232,15 @@ export interface Tab {
   hidden: boolean
 }
 
+export interface Button {
+  event: string
+  key: string
+  name: string
+  procInstId: string
+  taskId: string
+  username: string
+}
+
 /**
  * Tab数组类型
  */

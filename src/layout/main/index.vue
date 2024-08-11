@@ -35,7 +35,7 @@ watch(
 <template>
   <!-- 路由组件出口的位置 -->
   <router-view v-slot="{ Component, route }">
-    <transition name="fade">
+    <transition name="slide-fade">
       <keep-alive :include="cacheTabs">
         <component :key="route.fullPath" :is="Component" v-if="flag" />
       </keep-alive>
@@ -44,17 +44,21 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.fade-enter-from {
+/*
+  进入和离开动画可以使用不同
+  持续时间和速度曲线。
+*/
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
   opacity: 0;
-  transform: scale(0);
-}
-
-.fade-enter-active {
-  transition: all 0.3s;
-}
-
-.fade-enter-to {
-  opacity: 1;
-  transform: scale(1);
 }
 </style>

@@ -82,7 +82,6 @@ onMounted(async () => {
  * @param column
  */
 const getInfo = async (id: number, column: string) => {
-  debugger
   if (column === 'toEmail') {
     const response: any = await listToEmail(id)
     if (response.code === '0000') {

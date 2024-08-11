@@ -2,9 +2,19 @@
 import BpmnViewer from 'bpmn-js/lib/Viewer'
 import { onMounted, ref } from 'vue'
 
+interface Nodes {
+  finishedSequence: string[]
+  finishedNode: string[]
+  currentTaskNode: string[]
+}
+
 const props = defineProps({
   xml: {
     type: String,
+    required: true,
+  },
+  xmlNodes: {
+    type: Object,
     required: true,
   },
 })
@@ -19,6 +29,30 @@ onMounted(() => {
 const handleReZoom = () => {
   defaultZoom.value = 1
   bpmnViewer.value.get('canvas').zoom('fit-viewport', 'auto')
+}
+
+/**
+ * 设置流程图颜色
+ *
+ * @param nodes
+ */
+const setProcessNodeColor = (nodes: Nodes) => {
+  if (bpmnViewer.value === null || !nodes) return
+
+  const canvas = bpmnViewer.value.get('canvas')
+  const { finishedNode = [], currentTaskNode = [] } = nodes
+
+  if (finishedNode) {
+    finishedNode.forEach((item: string) => {
+      canvas.addMarker(item, 'finished')
+    })
+  }
+
+  if (currentTaskNode) {
+    currentTaskNode.forEach((item: string) => {
+      canvas.addMarker(item, 'current')
+    })
+  }
 }
 
 const handleZoomIn = (zoomStep = 0.1) => {
@@ -45,12 +79,14 @@ const previewXml = async () => {
   bpmnViewer.value = new BpmnViewer({ container: document.getElementById('container') })
 
   try {
-    const result = await bpmnViewer.value.importXML(props.xml)
-    bpmnViewer.value.get('canvas').zoom('fit-viewport', 'auto')
-    const { warnings } = result
-    console.log(warnings)
+    if (!props.xml) return
+    await bpmnViewer.value.importXML(props.xml)
+    const canvas = bpmnViewer.value.get('canvas')
+    canvas.zoom('fit-viewport', 'auto')
   } catch (err: any) {
-    console.log(err.message, err.warnings)
+    console.error(err.message, err.warnings)
+  } finally {
+    setProcessNodeColor(props.xmlNodes as Nodes)
   }
 }
 </script>
@@ -74,7 +110,9 @@ const previewXml = async () => {
   position: relative;
   border: 1px solid #efefef;
   width: 100%;
-  height: calc(90vh);
+  height: calc(80vh);
+
+  overflow-x: hidden;
 
   .process-viewer__canvas {
     flex: 1;
@@ -82,6 +120,56 @@ const previewXml = async () => {
     position: relative;
     background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMTBoNDBNMTAgMHY0ME0wIDIwaDQwTTIwIDB2NDBNMCAzMGg0ME0zMCAwdjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlMGUwZTAiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQwIDBIMHY0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')
       repeat !important;
+  }
+
+  $finished-color: rgb(45, 63, 53);
+  $current-color: rgba(0, 178, 255, 0.99);
+
+  .finished.djs-connection {
+    .djs-visual path {
+      stroke: $finished-color !important;
+    }
+  }
+
+  .finished.djs-shape {
+    .djs-visual rect {
+      stroke: $finished-color !important;
+      fill: $finished-color !important;
+      fill-opacity: 0.15 !important;
+    }
+
+    .djs-visual polygon {
+      stroke: $finished-color !important;
+    }
+
+    .djs-visual path:nth-child(2) {
+      stroke: $finished-color !important;
+      fill: $finished-color !important;
+    }
+
+    .djs-visual circle {
+      stroke: $finished-color !important;
+      fill: $finished-color !important;
+      fill-opacity: 0.15 !important;
+    }
+  }
+
+  .current.djs-shape {
+    .djs-visual rect {
+      stroke: $current-color !important;
+      fill: $current-color !important;
+      fill-opacity: 0.15 !important;
+    }
+
+    .djs-visual polygon {
+      stroke: $current-color !important;
+    }
+
+    .djs-visual circle {
+      stroke: $current-color !important;
+      fill: $current-color !important;
+      fill-opacity: 0.15 !important;
+    }
   }
 }
 </style>

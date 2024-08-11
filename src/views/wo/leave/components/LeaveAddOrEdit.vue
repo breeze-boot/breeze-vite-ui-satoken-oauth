@@ -92,23 +92,17 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
-    v-model="visible"
-    width="38%"
-    :title="!leaveDataForm.id ? t('common.add') : t('common.edit')"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-  >
+  <el-card>
     <el-form
       :model="leaveDataForm"
       :rules="rules"
       ref="leaveDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
       label-width="120px"
-    ></el-form>
-    <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
-    </template>
-  </el-dialog>
+    >
+      <el-form-item :label="$t('leave.fields.title')" prop="title">
+        <el-input v-model="leaveDataForm.todoCode" :placeholder="$t('leave.fields.title')" />
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>

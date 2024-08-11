@@ -77,7 +77,7 @@ const handleCloseMsg = async (msgUser: MsgUserRecord) => {
   await closeUserMsg(msgUser.msgId)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: async () => {
       await initNoticeMsg()
     },
@@ -92,7 +92,7 @@ const handleCloseDialog = async () => {
   await readUserMsg(currentMsgId.value)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: async () => {
       visible.value = false
       await initNoticeMsg()

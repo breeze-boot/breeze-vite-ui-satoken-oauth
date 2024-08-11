@@ -101,7 +101,7 @@ const handleDictItemDataFormSubmit = () => {
       await editDictItem(id, dictItemDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -111,7 +111,7 @@ const handleDictItemDataFormSubmit = () => {
       await addDictItem(dictItemDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

@@ -151,7 +151,7 @@ export default {
     },
     width: {
       type: Number,
-      default: 480,
+      default: 550,
     },
     idEditDisabled: {
       type: Boolean,

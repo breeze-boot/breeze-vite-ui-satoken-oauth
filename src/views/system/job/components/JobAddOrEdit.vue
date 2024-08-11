@@ -102,7 +102,7 @@ const handleJobDataFormSubmit = () => {
       await editJob(jobDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -112,7 +112,7 @@ const handleJobDataFormSubmit = () => {
       await addJob(jobDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

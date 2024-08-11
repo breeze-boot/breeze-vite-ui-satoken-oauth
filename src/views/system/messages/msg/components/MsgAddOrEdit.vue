@@ -105,7 +105,7 @@ const handleMsgDataFormSubmit = () => {
       await editMsg(id, msgDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -115,7 +115,7 @@ const handleMsgDataFormSubmit = () => {
       await addMsg(msgDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

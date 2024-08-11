@@ -237,7 +237,7 @@ const handleDelete = async (rows: EmailConfigRecords) => {
   await deleteEmailConfig(emailIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

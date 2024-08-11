@@ -831,5 +831,4 @@ const handleSliderChange = (row: any) => {
   padding: 30px;
   height: 20px;
 }
-
 </style>

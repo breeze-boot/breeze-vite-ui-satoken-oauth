@@ -37,7 +37,7 @@ export default function useFormValidation() {
     if (check(formValue)) {
       ElMessage.warning({
         message: i18n.global.t('common.fail'),
-        duration: 500,
+        duration: 1000,
       })
       throw Error(i18n.global.t('common.fail'))
     }

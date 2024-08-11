@@ -189,7 +189,7 @@ const handleDelete = async (rows: RowPermissionRecords) => {
   await deletePermission(permissionIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

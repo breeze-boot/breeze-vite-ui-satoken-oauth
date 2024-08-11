@@ -224,7 +224,7 @@ const handleDelete = async (rows: MsgRecords) => {
   await deleteMsg(msgTemplateIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

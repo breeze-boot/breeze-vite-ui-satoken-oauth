@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, computed, ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, LocationQueryRaw } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
@@ -121,7 +121,9 @@ const handleLogin = async () => {
       title: `Hi, ${loadGreetings()}`,
     })
     await columnStore.getRolesMenuColumns()
-    await $router.push({ path: redirect || '/' })
+    await $router.push({
+      path: redirect || '/',
+    })
     loading.value = false
   } catch (error) {
     loading.value = false
@@ -138,7 +140,7 @@ const handleLogin = async () => {
     :font="theme.themeModel === 'dark' ? theme.lightFont : theme.darkFont"
     :content="theme.watermarkContent"
   >
-    <div class="login_container">
+    <div class="login_container" @keyup.enter="handleLogin">
       <el-row :gutter="24" style="margin: 0">
         <el-col
           :span="8"

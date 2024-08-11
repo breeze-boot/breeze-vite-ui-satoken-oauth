@@ -33,7 +33,7 @@ export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
  * 表格类型
  */
 export interface TableInfo {
-  refresh?: number
+  refresh: number
   mountedRefresh?: boolean
   dict?: string[]
   rows?: []
@@ -179,7 +179,7 @@ export interface SwitchOption {
   style?: string
   api: any
   pk: string
-  status: string
+  status?: string
 }
 
 /**

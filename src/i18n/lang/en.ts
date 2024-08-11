@@ -23,6 +23,7 @@ export default {
     system_msg: 'system message',
     confirm: 'confirm',
     cancel: 'cancel',
+    void: 'void',
     search: 'search',
     reset: 'reset',
     import: 'import',

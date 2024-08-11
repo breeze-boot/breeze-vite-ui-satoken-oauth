@@ -282,7 +282,7 @@ const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
  */
 const sortField = new Map()
 
-const setOrder = (order?: ColumnSort, obj: QueryParams) => {
+const setOrder = (order?: ColumnSort, obj?: QueryParams) => {
   // 检查是否有排序字段和排序顺序
   if (order) {
     // 获取排序顺序（升序或降序）
@@ -312,7 +312,9 @@ const setOrder = (order?: ColumnSort, obj: QueryParams) => {
     }
     sortField.set(ascSortOrder, ascSortProps)
     sortField.set(descSortOrder, descSortProps)
-    obj['sort'] = Object.fromEntries(sortField)
+    if (obj) {
+      obj['sort'] = Object.fromEntries(sortField)
+    }
   }
 }
 

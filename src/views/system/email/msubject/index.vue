@@ -258,7 +258,7 @@ const handleDelete = async (rows: MSubjectRecords) => {
   await deleteMSubject(mSubjectIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

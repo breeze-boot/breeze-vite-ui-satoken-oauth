@@ -375,7 +375,7 @@ const handleUpdateCurrentRow = async (row: any) => {
   await editAvatar(data as UserRecord)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       handleUpdateBiz(row)
     },
@@ -397,7 +397,7 @@ const handleUpdateBiz = async (row: any) => {
     await editFile(column.fileId, data as FileRecord)
     ElMessage.success({
       message: t('common.success'),
-      duration: 500,
+      duration: 1000,
       onClose: () => {
         reloadList()
       },
@@ -415,7 +415,7 @@ const handleDelete = async (rows: UserRecords) => {
   await deleteUser(userIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

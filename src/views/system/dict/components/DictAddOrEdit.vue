@@ -82,7 +82,7 @@ const handleDictDataFormSubmit = () => {
       await editDict(id, dictDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -92,7 +92,7 @@ const handleDictDataFormSubmit = () => {
       await addDict(dictDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

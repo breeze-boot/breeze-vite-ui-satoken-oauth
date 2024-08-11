@@ -1,8 +1,15 @@
 <template>
   <div class="panel-tab__content">
-    <el-form size="small" label-width="80px" @submit.prevent>
+    <el-form size="small" label-width="60px" @submit.prevent>
       <el-form-item label="表单标识">
-        <el-input v-model="formKey" clearable @change="updateElementFormKey" />
+        <el-input v-model="formKey" clearable @change="updateElementFormKey">
+          <template #prepend>
+            <el-select v-model="formType" @change="handleChangeFormType" placeholder="类型" style="width: 80px">
+              <el-option label="路由" value="route" />
+              <el-option label="表单Key" value="formKey" />
+            </el-select>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item label="业务标识">
         <el-select v-model="businessKey" @change="updateElementBusinessKey">
@@ -15,11 +22,13 @@
     <!--字段列表-->
     <div class="element-property list-property">
       <el-divider>
-        <el-icon><coin /></el-icon>
+        <el-icon>
+          <Coin />
+        </el-icon>
         表单字段
       </el-divider>
       <el-table :data="fieldList" size="small" max-height="240" border fit>
-        <el-table-column label="序号" type="index" width="50px" />
+        <el-table-column label="序号" align="center" type="index" width="50px" />
         <el-table-column label="字段名称" prop="label" min-width="80px" show-overflow-tooltip />
         <el-table-column
           label="字段类型"
@@ -29,7 +38,7 @@
           show-overflow-tooltip
         />
         <el-table-column label="默认值" prop="defaultValue" min-width="80px" show-overflow-tooltip />
-        <el-table-column label="操作" width="90px">
+        <el-table-column label="操作" width="100px">
           <template v-slot="{ row, $index }">
             <el-button link type="primary" @click="openFieldForm(row, $index)">编辑</el-button>
             <el-divider direction="vertical" />
@@ -40,6 +49,56 @@
     </div>
     <div class="element-drawer__button">
       <el-button size="small" type="primary" :icon="Plus" @click="openFieldForm(null, -1)">添加字段</el-button>
+    </div>
+
+    <div class="element-property list-property">
+      <el-divider>
+        <el-icon>
+          <Coin />
+        </el-icon>
+        表单按钮
+      </el-divider>
+      <el-table :data="fieldButtonList" size="small" max-height="240" border fit>
+        <el-table-column label="序号" align="center" type="index" width="50px" />
+        <el-table-column label="KEY" prop="id" min-width="80px" show-overflow-tooltip />
+        <el-table-column label="字段名称" prop="name" min-width="80px" show-overflow-tooltip />
+        <el-table-column
+          label="字段类型"
+          prop="type"
+          min-width="80px"
+          :formatter="(row) => fieldType[row.type] || row.type"
+          show-overflow-tooltip
+        />
+        <el-table-column label="操作" width="100px">
+          <template v-slot="{ row, $index }">
+            <el-button link type="primary" @click="handleEditFormButton(row, $index)">编辑</el-button>
+            <el-divider direction="vertical" />
+            <el-button link type="danger" style="color: #ff4d4f" @click="handleRemoveFormButton(row, $index)">
+              移除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="element-drawer__button">
+      <el-dropdown
+        @command="handleCommand"
+        split-button
+        type="primary"
+        style="width: 100% !important"
+        size="small"
+        :icon="Plus"
+        @click="handleOpenFormButtonForm"
+      >
+        添加按钮
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item v-for="(value, key) in normalFieldButton" :key="key" :command="key">
+              {{ value.name }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
 
     <!--字段配置侧边栏-->
@@ -77,13 +136,15 @@
         <el-divider key="enum-divider" />
         <p key="enum-title" class="listener-filed__title">
           <span>
-            <el-icon><menu /></el-icon>
+            <el-icon><Menu /></el-icon>
             枚举值列表：
           </span>
-          <el-button size="small" type="primary" @click="openFieldOptionForm(null, -1, 'enum')">添加枚举值</el-button>
+          <el-button style="margin: 10px" size="small" type="primary" @click="openFieldOptionForm(null, -1, 'enum')">
+            添加枚举值
+          </el-button>
         </p>
         <el-table key="enum-table" :data="fieldEnumList" size="small" max-height="240" border fit>
-          <el-table-column label="序号" width="50px" type="index" />
+          <el-table-column align="center" label="序号" width="50px" type="index" />
           <el-table-column label="枚举值编号" prop="id" min-width="100px" show-overflow-tooltip />
           <el-table-column label="枚举值名称" prop="name" min-width="100px" show-overflow-tooltip />
           <el-table-column label="操作" width="90px">
@@ -102,13 +163,20 @@
       <el-divider key="validation-divider" />
       <p key="validation-title" class="listener-filed__title">
         <span>
-          <el-icon><menu /></el-icon>
+          <el-icon><Menu /></el-icon>
           约束条件列表：
         </span>
-        <el-button size="small" type="primary" @click="openFieldOptionForm(null, -1, 'constraint')">添加约束</el-button>
+        <el-button
+          style="margin: 10px"
+          size="small"
+          type="primary"
+          @click="openFieldOptionForm(null, -1, 'constraint')"
+        >
+          添加约束
+        </el-button>
       </p>
       <el-table key="validation-table" :data="fieldConstraintsList" size="small" max-height="240" border fit>
-        <el-table-column label="序号" width="50px" type="index" />
+        <el-table-column align="center" label="序号" width="50px" type="index" />
         <el-table-column label="约束名称" prop="name" min-width="100px" show-overflow-tooltip />
         <el-table-column label="约束配置" prop="config" min-width="100px" show-overflow-tooltip />
         <el-table-column label="操作" width="90px">
@@ -131,13 +199,15 @@
       <el-divider key="property-divider" />
       <p key="property-title" class="listener-filed__title">
         <span>
-          <el-icon><menu /></el-icon>
+          <el-icon><Menu /></el-icon>
           字段属性列表：
         </span>
-        <el-button size="small" type="primary" @click="openFieldOptionForm(null, -1, 'property')">添加属性</el-button>
+        <el-button style="margin: 10px" size="small" type="primary" @click="openFieldOptionForm(null, -1, 'property')">
+          添加属性
+        </el-button>
       </p>
       <el-table key="property-table" :data="fieldPropertiesList" size="small" max-height="240" border fit>
-        <el-table-column label="序号" width="50px" type="index" />
+        <el-table-column align="center" label="序号" width="50px" type="index" />
         <el-table-column label="属性编号" prop="id" min-width="100px" show-overflow-tooltip />
         <el-table-column label="属性值" prop="value" min-width="100px" show-overflow-tooltip />
         <el-table-column label="操作" width="90px">
@@ -162,6 +232,37 @@
         <el-button size="small" type="primary" @click="saveField">保 存</el-button>
       </div>
     </el-drawer>
+
+    <!--表单按钮配置弹出框-->
+    <el-dialog v-model="formButtonModelVisible" title="表单按钮配置" width="600px" append-to-body destroy-on-close>
+      <el-form :model="formButtonFieldForm" label-width="90px" size="small" @submit.prevent>
+        <el-form-item label="按钮KEY">
+          <el-input v-model="formButtonFieldForm.id" clearable />
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-select
+            disabled
+            v-model="formButtonFieldForm.typeType"
+            placeholder="请选择字段类型"
+            clearable
+            @change="changeFieldTypeType"
+          >
+            <el-option v-for="(value, key) of fieldType" :key="key" :label="value" :value="key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="formButtonFieldForm.typeType === 'custom'" label="类型名称">
+          <el-input v-model="formButtonFieldForm.type" clearable />
+        </el-form-item>
+        <el-form-item label="名称">
+          <el-input v-model="formButtonFieldForm.name" clearable />
+        </el-form-item>
+      </el-form>
+      <!-- 底部按钮 -->
+      <div class="element-drawer__button">
+        <el-button size="small" @click="formButtonModelVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="handleSaveFormButton">保 存</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog
       v-model="fieldOptionModelVisible"
@@ -193,12 +294,15 @@
 </template>
 
 <script>
-import { Plus } from '@element-plus/icons-vue'
+import { Plus, Coin, Menu } from '@element-plus/icons-vue'
+
 export default {
   name: 'ElementForm',
   setup() {
     return {
       Plus,
+      Coin,
+      Menu,
     }
   },
   props: {
@@ -211,10 +315,20 @@ export default {
   },
   data() {
     return {
+      formType: 'formKey',
       formKey: '',
       businessKey: '',
       optionModelTitle: '',
       fieldList: [],
+      normalFieldButton: {
+        agree: { typeType: 'string', type: 'string', id: 'agree', name: '同意' },
+        reject: { typeType: 'string', type: 'string', id: 'reject', name: '拒绝' },
+        abolition: { typeType: 'string', type: 'string', id: 'abolition', name: '废止（退回到发起人）' },
+        transfer: { typeType: 'string', type: 'string', id: 'transfer', name: '转办' },
+        delegateTask: { typeType: 'string', type: 'string', id: 'delegateTask', name: '加签（委派）' },
+        suspended: { typeType: 'string', type: 'string', id: 'suspended', name: '挂起' },
+      },
+      fieldButtonList: [],
       formFieldForm: {},
       fieldType: {
         long: '长整型',
@@ -233,6 +347,11 @@ export default {
       fieldEnumList: [], // 枚举值列表
       fieldConstraintsList: [], // 约束条件列表
       fieldPropertiesList: [], // 绑定属性列表
+
+      formButtonData: [], // 表单按钮弹出框
+      formButtonModelVisible: false, // 表单按钮弹出框
+      formButtonFieldForm: { typeType: 'string', type: 'string' }, // 当前激活的按钮配置项数据
+      formButtonFieldIndex: -1, // 编辑中的字段配置项， -1 为新增
     }
   },
   watch: {
@@ -244,6 +363,9 @@ export default {
     },
   },
   methods: {
+    handleChangeFormType() {
+      this.formKey = ''
+    },
     resetFormList() {
       this.bpmnELement = window.bpmnInstances.bpmnElement
       this.formKey = this.bpmnELement.businessObject.formKey
@@ -260,15 +382,28 @@ export default {
         this.formData = {}
         console.log(error)
       }
+      // 获取元素表单按钮配置 或者 创建新的表单配置
+      try {
+        this.formButtonData =
+          this.elExtensionElements.values.filter((ex) => {
+            return ex.$type === `${this.prefix}:FormProperty`
+          }) || window.bpmnInstances.moddle.create(`${this.prefix}:FormProperty`, [])
+      } catch (error) {
+        this.formButtonData = []
+        console.log(error)
+      }
 
       // 业务标识 businessKey， 绑定在 formData 中
       this.businessKey = this.formData.businessKey
 
       // 保留剩余扩展元素，便于后面更新该元素对应属性
-      this.otherExtensions = this.elExtensionElements.values.filter((ex) => ex.$type !== `${this.prefix}:FormData`)
+      this.otherExtensions = this.elExtensionElements.values.filter((ex) => {
+        return ex.$type !== `${this.prefix}:FormProperty` && ex.$type !== `${this.prefix}:FormData`
+      })
 
       // 复制原始值，填充表格
       this.fieldList = JSON.parse(JSON.stringify(this.formData.fields || []))
+      this.fieldButtonList = JSON.parse(JSON.stringify(this.formButtonData || []))
 
       // 更新元素扩展属性，避免后续报错
       this.updateElementExtensions()
@@ -285,7 +420,48 @@ export default {
     changeFieldTypeType(type) {
       this.formFieldForm['type'] = type === 'custom' ? '' : type
     },
-
+    handleEditFormButton(field, index) {
+      this.formButtonFieldIndex = index
+      this.formButtonFieldForm = field
+      this.formButtonModelVisible = true
+    },
+    handleRemoveFormButton(field, index) {
+      this.fieldButtonList.splice(index, 1)
+      let _index = this.formButtonData.findIndex((value) => {
+        return value.id === field.id
+      })
+      if (_index > -1) {
+        this.formButtonData.splice(_index, 1)
+      }
+      this.updateElementExtensions()
+    },
+    handleCommand(command) {
+      this.formButtonFieldForm = this.normalFieldButton[command]
+      this.handleSaveFormButton()
+    },
+    handleOpenFormButtonForm() {
+      this.formButtonModelVisible = true
+    },
+    handleSaveFormButton() {
+      const { id, type, name } = this.formButtonFieldForm
+      const formProperty = window.bpmnInstances.moddle.create(`${this.prefix}:FormProperty`, { id, type, name })
+      // 更新数组 与 表单配置实例
+      if (this.formButtonFieldIndex === -1) {
+        let uniqueArr = this.fieldButtonList.findIndex((value) => {
+          return value.id === this.formButtonFieldForm.id
+        })
+        if (uniqueArr === -1) {
+          this.fieldButtonList.push(this.formButtonFieldForm)
+          this.formButtonData && this.formButtonData.push(formProperty)
+        }
+        this.formButtonFieldForm = []
+      } else {
+        this.fieldButtonList.splice(this.formButtonFieldIndex, 1, this.formButtonFieldForm)
+        this.formButtonData.splice(this.formButtonFieldIndex, 1, formProperty)
+      }
+      this.updateElementExtensions()
+      this.formButtonModelVisible = false
+    },
     // 打开字段详情侧边栏
     openFieldForm(field, index) {
       this.formFieldIndex = index
@@ -414,7 +590,7 @@ export default {
     updateElementExtensions() {
       // 更新回扩展元素
       const newElExtensionElements = window.bpmnInstances.moddle.create(`bpmn:ExtensionElements`, {
-        values: this.otherExtensions.concat(this.formData),
+        values: this.otherExtensions.concat(this.formData).concat(this.formButtonData),
       })
       // 更新到元素上
       window.bpmnInstances.modeling.updateProperties(this.bpmnELement, {

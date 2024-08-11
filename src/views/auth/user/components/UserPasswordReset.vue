@@ -89,7 +89,7 @@ const handleUserRestPasswordDataFormSubmit = () => {
     await userResetPassword(fromData)
     ElMessage.success({
       message: t('common.success'),
-      duration: 500,
+      duration: 1000,
       onClose: () => {
         visible.value = false
       },

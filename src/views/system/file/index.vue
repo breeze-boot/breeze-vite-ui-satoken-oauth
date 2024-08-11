@@ -239,7 +239,7 @@ const handleDelete = async (rows: FileRecords) => {
   await deleteFile(fileIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },

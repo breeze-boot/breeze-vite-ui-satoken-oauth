@@ -53,7 +53,7 @@ const getInfo = async (id: number) => {
   if (treePermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
-      duration: 500,
+      duration: 1000,
     })
     return
   }
@@ -62,7 +62,7 @@ const getInfo = async (id: number) => {
   if (rolesPermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
-      duration: 500,
+      duration: 1000,
     })
     return
   }
@@ -82,12 +82,12 @@ const handleRoleDataFormSubmit = async () => {
     checkedKeys.push(...halfCheckedKeys)
   }
   await saveRoleMenuColumn({
-    roleId: currentClickRoleId.value,
-    menu: checkedKeys,
+    roleId: currentClickRoleId.value as number,
+    menu: checkedKeys as string[],
   })
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       visible.value = false
     },

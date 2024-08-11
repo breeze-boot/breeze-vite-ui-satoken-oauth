@@ -27,7 +27,7 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const roleDataFormRef = ref()
 const roleDataForm = ref<RoleForm>({})
 const permissionOption = ref<SelectData[]>()
@@ -141,7 +141,7 @@ const handleRoleDataFormSubmit = () => {
       await editRole(id, roleDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -151,7 +151,7 @@ const handleRoleDataFormSubmit = () => {
       await addRole(roleDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

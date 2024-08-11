@@ -163,7 +163,7 @@ const handleMenuDataFormSubmit = () => {
       await editMenu(id, menuDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -173,7 +173,7 @@ const handleMenuDataFormSubmit = () => {
       await addMenu(menuDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

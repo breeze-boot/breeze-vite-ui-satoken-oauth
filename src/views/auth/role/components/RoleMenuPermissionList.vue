@@ -58,7 +58,7 @@ const getInfo = async (id: number) => {
   if (treePermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
-      duration: 500,
+      duration: 1000,
     })
     return
   }
@@ -67,7 +67,7 @@ const getInfo = async (id: number) => {
   if (rolesPermissionResponse.code !== '0000') {
     ElMessage.warning({
       message: t('common.reloadFail'),
-      duration: 500,
+      duration: 1000,
     })
     return
   }
@@ -92,7 +92,7 @@ const handleRoleDataFormSubmit = async () => {
   })
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       visible.value = false
     },

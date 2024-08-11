@@ -2,7 +2,7 @@ export const template = (isTaskListener) => {
   return `
   <div class="panel-tab__content">
     <el-table :data="elementListenersList" size="small" border>
-      <el-table-column label="序号" width="50px" type="index" />
+      <el-table-column  align="center" label="序号" width="50px" type="index" />
       <el-table-column label="事件类型" min-width="100px" prop="event" />
       <el-table-column label="监听器类型" min-width="100px" show-overflow-tooltip :formatter="row => listenerTypeObject[row.listenerType]" />
       <el-table-column label="操作" width="90px">
@@ -119,7 +119,7 @@ export const template = (isTaskListener) => {
         <el-button size="small" type="primary" @click="openListenerFieldForm(null)">添加字段</el-button>
       </p>
       <el-table :data="fieldsListOfListener" size="small" max-height="240" border fit style="flex: none">
-        <el-table-column label="序号" width="50px" type="index" />
+        <el-table-column  align="center" label="序号" width="50px" type="index" />
         <el-table-column label="字段名称" min-width="100px" prop="name" />
         <el-table-column label="字段类型" min-width="80px" show-overflow-tooltip :formatter="row => fieldTypeObject[row.fieldType]" />
         <el-table-column label="字段值/表达式" min-width="100px" show-overflow-tooltip :formatter="row => row.string || row.expression" />

@@ -52,7 +52,7 @@ const initWebSocket = () => {
     Authorization: localStorage.getItem('access_token'),
     username: userStore.userInfo.username,
   }
-  const socket = new SockJS('/ws?tenantId=' + userStore.userInfo.tenantId || '1')
+  const socket = new SockJS('/ws?X-Tenant-Id=' + userStore.userInfo.tenantId || '1')
   msgStore.stompClient = Stomp.over(socket)
   msgStore.stompClient.connect(
     header,

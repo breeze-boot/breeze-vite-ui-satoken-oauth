@@ -1,10 +1,10 @@
 <template>
   <div class="panel-tab__content">
     <el-table :data="elementPropertyList" size="small" max-height="240" border fit>
-      <el-table-column label="序号" width="50px" type="index" />
+      <el-table-column align="center" label="序号" width="50px" type="index" />
       <el-table-column label="属性名" prop="name" min-width="100px" show-overflow-tooltip />
       <el-table-column label="属性值" prop="value" min-width="100px" show-overflow-tooltip />
-      <el-table-column label="操作" width="90px">
+      <el-table-column label="操作" width="95px">
         <template v-slot="{ row, $index }">
           <el-button link type="primary" @click="openAttributesForm(row, $index)">编辑</el-button>
           <el-divider direction="vertical" />
@@ -38,9 +38,12 @@ import { Plus } from '@element-plus/icons-vue'
 export default {
   name: 'ElementProperties',
   setup() {
-    return {
-      Plus,
-    }
+    return {}
+  },
+  computed: {
+    Plus() {
+      return Plus
+    },
   },
   props: {
     id: String,

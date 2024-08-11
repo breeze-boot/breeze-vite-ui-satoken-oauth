@@ -36,9 +36,12 @@ import { Plus } from '@element-plus/icons-vue'
 export default {
   name: 'ReceiveTask',
   setup() {
-    return {
-      Plus,
-    }
+    return {}
+  },
+  computed: {
+    Plus() {
+      return Plus
+    },
   },
   props: {
     id: String,

@@ -74,8 +74,7 @@ export default {
   methods: {
     resetTaskForm() {
       for (let key in this.defaultTaskForm) {
-        let value = this.bpmnElement?.businessObject[key] || this.defaultTaskForm[key]
-        this.scriptTaskForm[key] = value
+        this.scriptTaskForm[key] = this.bpmnElement?.businessObject[key] || this.defaultTaskForm[key]
       }
       this.scriptTaskForm['scriptType'] = this.scriptTaskForm.script ? 'inline' : 'external'
     },

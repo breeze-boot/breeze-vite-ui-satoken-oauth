@@ -40,6 +40,8 @@ router.beforeEach(async (to, from, next) => {
   } else {
     if (whiteRoute.includes(to.path) || to.path == '/login') {
       next()
+    } else if (Object.keys(to.query).length > 0) {
+      next({ path: '/login', query: { redirect: '/home' } })
     } else {
       next({ path: '/login', query: { redirect: to.path } })
     }

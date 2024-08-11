@@ -10,6 +10,8 @@ import { useRoute, useRouter } from 'vue-router'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
 import useTabsStore from '@/store/modules/tabs.ts'
 import VueJsoneditor from 'vue3-ts-jsoneditor'
+import { FormItemRule } from 'element-plus/es/components/form'
+import { Arrayable } from 'element-plus/es/utils'
 
 defineOptions({
   name: 'TableItem',
@@ -72,10 +74,10 @@ const switchLoading = ref(false)
 /**
  * switch点击事件
  */
-const beforeSwitchChange = (): boolean => {
+const handleBeforeSwitchChange = (): boolean => {
   switchState.switchStatus = true
   switchLoading.value = false
-  return switchState.switchStatus
+  return switchState.switchStatus as boolean
 }
 
 /**
@@ -87,12 +89,12 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
     if (!switchOption.api) return
     const _data: any = {}
     _data[switchOption.pk] = row[switchOption.pk]
-    _data[switchOption.status] = row[switchOption.status]
+    if (switchOption?.status) _data[switchOption.status] = row[switchOption.status]
     const response: any = await switchOption.api(_data)
     switchLoading.value = false
     ElMessage.success({
       message: response.message,
-      duration: 500,
+      duration: 1000,
       onClose: () => {
         $emit('reloadDataList')
       },
@@ -261,7 +263,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'input'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules"
+      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
       :prop="`rows[${scope.$index}][${tableField.prop}]`"
     >
       <span v-if="editId != scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
@@ -286,7 +288,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'radio'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules"
+      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
       :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
     >
       <div>
@@ -316,7 +318,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'select'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules"
+      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
       :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
     >
       <el-select
@@ -354,7 +356,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
         :style="tableField.switch?.style || '--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949'"
         :active-value="tableField.switch?.activeValue || 1"
         :inactive-value="tableField.switch?.inactiveValue || 0"
-        :before-change="beforeSwitchChange"
+        :before-change="handleBeforeSwitchChange"
         @change="handleChangeSwitch(scope.row, tableField.switch)"
       />
     </el-tooltip>
@@ -435,6 +437,10 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
 
   .el-form-item {
     --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0 !important;
 
     .input-span {
       cursor: pointer;
@@ -443,11 +449,6 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       height: var(--el-input-inner-height);
       line-height: var(--el-input-inner-height);
     }
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0 !important;
   }
 }
 </style>

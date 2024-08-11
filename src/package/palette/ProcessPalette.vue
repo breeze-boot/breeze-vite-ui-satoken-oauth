@@ -127,6 +127,7 @@ export default {
 .my-process-palette {
   box-sizing: border-box;
   padding: 8px;
+
   .custom-button {
     box-sizing: border-box;
     padding: 4px 8px;
@@ -134,6 +135,7 @@ export default {
     border: 1px solid rgba(24, 144, 255, 0.8);
     cursor: pointer;
     margin-bottom: 8px;
+
     &:first-child {
       margin-top: 8px;
     }

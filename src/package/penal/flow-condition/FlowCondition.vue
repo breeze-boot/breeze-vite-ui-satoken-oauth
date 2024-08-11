@@ -8,6 +8,7 @@
           <el-option label="条件流转路径" value="condition" />
         </el-select>
       </el-form-item>
+
       <el-form-item label="条件格式" v-if="flowConditionForm.type === 'condition'" key="condition">
         <el-select v-model="flowConditionForm.conditionType">
           <el-option label="表达式" value="expression" />
@@ -19,8 +20,22 @@
         v-if="flowConditionForm.conditionType && flowConditionForm.conditionType === 'expression'"
         key="express"
       >
-        <el-input v-model="flowConditionForm.body" clearable @change="updateFlowCondition" />
+        <el-input v-model="flowConditionForm.body" clearable @change="updateFlowCondition">
+          <template #append>
+            <el-select
+              class="input_select"
+              @change="updateFlowCondition"
+              v-model="flowConditionForm.body"
+              placeholder="可选"
+              style="width: 70px"
+            >
+              <el-option label="${!pass}" value="${!pass}" />
+              <el-option label="${pass}" value="${pass}" />
+            </el-select>
+          </template>
+        </el-input>
       </el-form-item>
+
       <template v-if="flowConditionForm.conditionType && flowConditionForm.conditionType === 'script'">
         <el-form-item label="脚本语言" key="language">
           <el-input v-model="flowConditionForm.language" clearable @change="updateFlowCondition" />

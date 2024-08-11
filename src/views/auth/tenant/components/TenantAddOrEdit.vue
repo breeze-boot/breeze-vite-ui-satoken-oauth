@@ -95,7 +95,7 @@ const handleTenantDataFormSubmit = () => {
       await editTenant(id, tenantDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -105,7 +105,7 @@ const handleTenantDataFormSubmit = () => {
       await addTenant(tenantDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

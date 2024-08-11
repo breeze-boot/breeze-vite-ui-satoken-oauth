@@ -1,7 +1,7 @@
 <template>
   <div class="panel-tab__content">
     <el-table :data="elementListenersList" size="small" border>
-      <el-table-column label="序号" width="50px" type="index" />
+      <el-table-column align="center" label="序号" width="50px" type="index" />
       <el-table-column
         label="事件类型"
         min-width="80px"
@@ -156,7 +156,7 @@
         <el-button size="small" type="primary" @click="openListenerFieldForm(null)">添加字段</el-button>
       </p>
       <el-table :data="fieldsListOfListener" size="small" max-height="240" border fit style="flex: none">
-        <el-table-column label="序号" width="50px" type="index" />
+        <el-table-column align="center" label="序号" width="50px" type="index" />
         <el-table-column label="字段名称" min-width="100px" prop="name" />
         <el-table-column
           label="字段类型"
@@ -235,8 +235,15 @@
 import { createListenerObject, updateElementExtensions } from '../../utils'
 import { initListenerForm, initListenerType, eventType, listenerType, fieldType } from './utilSelf'
 
+import { Plus, Menu } from '@element-plus/icons-vue'
 export default {
   name: 'UserTaskListeners',
+  setup() {
+    return {
+      Plus,
+      Menu,
+    }
+  },
   props: {
     id: String,
     type: String,

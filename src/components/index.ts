@@ -17,6 +17,7 @@ import FileUpload from '@/components/Upload/FileUpload/index.vue'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
 import WangEditor from '@/components/WangEditor/index.vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
+import TodoTask from '@/components/TodoTask/index.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
@@ -32,6 +33,7 @@ const components: { [name: string]: Component } = {
   FileUploadButton,
   WangEditor,
   ProcessViewer,
+  TodoTask,
 }
 
 export default {

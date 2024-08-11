@@ -26,6 +26,12 @@
   border-top: 1px solid var(--base-main-theme);
   padding: 8px 16px;
 
+  .input_select {
+    .el-select__selected-item {
+      display: none !important;
+    }
+  }
+
   .panel-tab__content--title {
     display: flex;
     justify-content: space-between;
@@ -109,6 +115,18 @@
 
 .element-drawer__button > .el-button {
   width: 100%;
+}
+
+.element-drawer__button > .el-dropdown {
+  width: auto;
+}
+
+.element-drawer__button > .el-dropdown > .el-button-group {
+  width: 100%;
+}
+
+.element-drawer__button > .el-dropdown > .el-button-group > .el-button:not(.el-dropdown__caret-button) {
+  width: 90.5%;
 }
 
 .el-collapse-item__content {

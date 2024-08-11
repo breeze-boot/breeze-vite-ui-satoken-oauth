@@ -23,6 +23,7 @@ export default {
     system_msg: '系统消息',
     confirm: '确认',
     cancel: '取消',
+    void: '作废',
     search: '查询',
     reset: '重置',
     import: '导入',

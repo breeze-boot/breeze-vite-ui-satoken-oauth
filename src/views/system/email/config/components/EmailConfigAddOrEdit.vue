@@ -144,7 +144,7 @@ const handleDataFormSubmit = () => {
       await editEmailConfig(id, emailDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -154,7 +154,7 @@ const handleDataFormSubmit = () => {
       await addEmailConfig(emailDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

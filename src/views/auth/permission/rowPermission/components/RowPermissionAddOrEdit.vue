@@ -124,7 +124,7 @@ const handlePermissionDataFormSubmit = () => {
       await editPermission(id, rowPermissionDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')
@@ -134,7 +134,7 @@ const handlePermissionDataFormSubmit = () => {
       await addPermission(rowPermissionDataForm.value)
       ElMessage.success({
         message: t('common.success'),
-        duration: 500,
+        duration: 1000,
         onClose: () => {
           visible.value = false
           $emit('reloadDataList')

@@ -171,7 +171,7 @@ const handleDelete = async (rows: DictItemRecords) => {
   await deleteDictItem(dictIds)
   ElMessage.success({
     message: t('common.success'),
-    duration: 500,
+    duration: 1000,
     onClose: () => {
       reloadList()
     },
