@@ -180,7 +180,7 @@ const handleDelete = async (rows: LogRecords) => {
   const logIds = rows.map((item: any) => item.id)
   await deleteLog(logIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

@@ -6,9 +6,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElForm, ElMessage } from 'element-plus'
-import { page, exportExcel, deletePlatform } from '@/api/auth/platform'
-import type { PlatformRecords } from '@/api/auth/platform/type.ts'
-import type { PlatformRecord, PlatformQuery } from '@/api/auth/platform/type.ts'
+import { deletePlatform, exportExcel, page } from '@/api/auth/platform'
+import type { PlatformQuery, PlatformRecord, PlatformRecords } from '@/api/auth/platform/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/PlatformAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
@@ -198,7 +197,7 @@ const handleDelete = async (rows: PlatformRecords) => {
   const platformIds = rows.map((item: any) => item.id)
   await deletePlatform(platformIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

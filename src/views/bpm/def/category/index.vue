@@ -172,7 +172,7 @@ const handleDelete = async (rows: CategoryRecords) => {
   const categoryIds = rows.map((item: any) => item.id)
   await deleteCategory(categoryIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

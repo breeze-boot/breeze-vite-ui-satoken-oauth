@@ -7,7 +7,7 @@ import { AxiosPromise } from 'axios'
 import { CompletedResponseData, CompletedQuery } from './type'
 
 enum API {
-  TODO_RESTFUL_URL = '/bpm/v1/task',
+  COMPLETED_RESTFUL_URL = '/bpm/v1/task',
 }
 
 /**
@@ -17,7 +17,7 @@ enum API {
  */
 export function list(params: CompletedQuery): AxiosPromise<CompletedResponseData> {
   return request({
-    url: API.TODO_RESTFUL_URL + '/listCompletedTask',
+    url: API.COMPLETED_RESTFUL_URL + '/listCompletedTask',
     method: 'get',
     params: params,
   })

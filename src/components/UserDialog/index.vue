@@ -1,5 +1,5 @@
 <script>
-import { page } from '@/api/auth/user'
+import { page } from '@/api/bpm/user'
 
 export default {
   name: 'UserDialog',
@@ -7,6 +7,18 @@ export default {
     modelValue: {
       type: Boolean,
       default: false,
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    userCheck: {
+      type: String,
+      default: '',
+    },
+    userChecks: {
+      type: Array,
+      default: () => [],
     },
     single: {
       type: Boolean,
@@ -16,7 +28,7 @@ export default {
   data() {
     return {
       userList: [],
-      checkUserCode: '',
+      checkUser: '',
       singleSelectValue: undefined,
       pagerQuery: {
         query: {
@@ -42,15 +54,18 @@ export default {
   mounted() {
     this.getList()
   },
+  updated() {
+    this.handleCheck()
+  },
   methods: {
     async getList() {
-      const response = await page(this.pagerQuery.query)
-      this.userList = response.data.records
-      this.pagerQuery.query.total = Number(response.data.total)
+      const response = await page(this.pagerQuery?.query)
+      this.userList = response.data?.records
+      this.pagerQuery.query.total = Number(response.data?.total)
     },
     handleCheckUser() {
       this.visible = false
-      this.$emit('updateUserData', this.checkUserCode)
+      this.$emit('updateUserData', this.checkUser || '')
     },
     /**
      * 页码改变事件
@@ -77,7 +92,19 @@ export default {
       if (this.single) {
         return
       }
-      this.checkUserCode = row.map((item) => item.userCode)
+      this.checkUser = row.map((item) => item.userCode)
+    },
+    handleCheck() {
+      if (this.single) {
+        this.singleSelectValue = this.userList.findIndex((item) => item['id'] === this.userCheck)
+        return
+      }
+      const row = this.userList.filter((item) => this.userChecks.indexOf(item['id']) > -1)
+      if (row) {
+        row.forEach((item) => {
+          this.$refs.userCheckTableRef?.toggleRowSelection(item, undefined)
+        })
+      }
     },
     /**
      * 当前页改变事件
@@ -86,7 +113,7 @@ export default {
      */
     handleRowClick(row) {
       if (this.single) {
-        this.checkUserCode = row.userCode
+        this.checkUser = row.id
         const index = this.userList.findIndex((item) => item['id'] === row['id'])
         if (index !== -1) {
           this.singleSelectValue = index
@@ -94,18 +121,21 @@ export default {
         return
       }
       if (row) {
-        this.$refs.userCheckTableRef.toggleRowSelection(row, undefined)
+        this.$refs.userCheckTableRef?.toggleRowSelection(row, undefined)
       } else {
-        this.$refs.userCheckTableRef.clearSelection()
+        this.$refs.userCheckTableRef?.clearSelection()
       }
     },
+    beforeUnmount() {
+      this.checkUser = ''
+      this.userList = []
+    },
   },
-  beforeUnmount() {},
 }
 </script>
 
 <template>
-  <el-dialog v-model="visible" title="用户" width="800">
+  <el-dialog v-model="visible" :title="title" width="800">
     <el-table
       ref="userCheckTableRef"
       @selection-change="handleSelectionChange"
@@ -123,9 +153,8 @@ export default {
         </template>
       </el-table-column>
       <el-table-column label="序号" fixed align="center" type="index" width=" 66" />
-      <el-table-column prop="amountName" label="用户姓名" />
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="userCode" label="用户编码" />
+      <el-table-column prop="displayName" label="用户姓名" />
+      <el-table-column prop="id" label="用户名" />
     </el-table>
     <div class="table-pagination">
       <el-pagination

@@ -148,7 +148,7 @@ const handleDelete = async (rows: MenuColumnRecords) => {
   const permissionIds = rows.map((item: any) => item.id)
   await deleteMenuColumn(permissionIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

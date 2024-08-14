@@ -282,7 +282,7 @@ const handleDelete = async (rows: ClientRecords) => {
   const clientIds = rows.map((item: any) => item.id)
   await deleteClient(clientIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

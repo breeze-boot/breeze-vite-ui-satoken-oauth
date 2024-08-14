@@ -6,7 +6,6 @@
 import { computed, ref } from 'vue'
 import NoVue3Cron from '@/components/NoVue3Cron/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
-const settings = useSettingStore().settings
 
 defineOptions({
   name: 'CronSelect',
@@ -24,6 +23,7 @@ const props = defineProps({
 })
 
 const cronPopover = ref<boolean>()
+const settings = useSettingStore().settings
 
 /**
  * 当前语言

@@ -101,7 +101,7 @@ const handleJobDataFormSubmit = () => {
     if (id) {
       await editJob(jobDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -111,7 +111,7 @@ const handleJobDataFormSubmit = () => {
     } else {
       await addJob(jobDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

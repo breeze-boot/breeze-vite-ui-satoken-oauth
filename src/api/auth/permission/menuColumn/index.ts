@@ -10,7 +10,6 @@ import { ColumnCacheData, ResponseData } from '@/types/types.ts'
 enum API {
   MENU_COLUMN_RESTFUL_URL = '/auth/v1/menuColumn',
   ROLE_MENU_COLUMN_URL = '/auth/v1/roleMenuColumn',
-  ROLE_MENU_COLUMN_RESTFUL_URL = '/auth/v1/roleMenuColumn',
 }
 
 /**
@@ -82,7 +81,7 @@ export function saveMenuColumn(data: ColumnCacheData) {
  */
 export function saveRoleMenuColumn(data: RoleMenuColumnForm) {
   return request({
-    url: `${API.ROLE_MENU_COLUMN_RESTFUL_URL}`,
+    url: `${API.ROLE_MENU_COLUMN_URL}`,
     method: 'post',
     data,
   })

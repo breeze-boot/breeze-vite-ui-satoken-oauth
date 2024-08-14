@@ -47,6 +47,11 @@ export const listenerType = {
   scriptListener: '脚本',
 }
 
+export const serviceListenerType = {
+  classListener: 'Java 类',
+  delegateExpressionListener: '代理表达式',
+}
+
 export const eventType = {
   create: '创建',
   assignment: '指派',

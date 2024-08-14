@@ -78,6 +78,15 @@
         </template>
         <element-listeners :id="elementId" :type="elementType" />
       </el-collapse-item>
+      <el-collapse-item name="serviceListeners" key="serviceListeners">
+        <template #title>
+          <div class="panel-tab__title">
+            <el-icon><bell-filled /></el-icon>
+            服务任务监听
+          </div>
+        </template>
+        <service-task-listeners :id="elementId" :type="elementType" />
+      </el-collapse-item>
       <template v-if="elementType === 'UserTask'">
         <el-collapse-item name="taskListeners" key="taskListeners">
           <template #title>
@@ -121,6 +130,7 @@ import ElementListeners from '@/package/penal/listeners/ElementListeners.vue'
 import ElementProperties from '@/package/penal/properties/ElementProperties.vue'
 import ElementForm from '@/package/penal/form/ElementForm.vue'
 import UserTaskListeners from '@/package/penal/listeners/UserTaskListeners.vue'
+import ServiceTaskListeners from '@/package/penal/listeners/ServiceTaskListeners.vue'
 import Log from '@/package/Log'
 /**
  * 侧边栏
@@ -132,6 +142,7 @@ export default {
   name: 'MyPropertiesPanel',
   components: {
     UserTaskListeners,
+    ServiceTaskListeners,
     ElementForm,
     ElementProperties,
     ElementListeners,

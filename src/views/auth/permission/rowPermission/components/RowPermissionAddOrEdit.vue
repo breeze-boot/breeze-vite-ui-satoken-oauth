@@ -123,7 +123,7 @@ const handlePermissionDataFormSubmit = () => {
     if (id) {
       await editPermission(id, rowPermissionDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -133,7 +133,7 @@ const handlePermissionDataFormSubmit = () => {
     } else {
       await addPermission(rowPermissionDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

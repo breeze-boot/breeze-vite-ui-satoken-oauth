@@ -94,7 +94,7 @@ const handlePostDataFormSubmit = () => {
     if (id) {
       await editPost(id, postDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -104,7 +104,7 @@ const handlePostDataFormSubmit = () => {
     } else {
       await addPost(postDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

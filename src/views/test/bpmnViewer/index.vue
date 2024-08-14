@@ -20,7 +20,7 @@ const xmlStr = ref<string>(
 </script>
 
 <template>
-  <ProcessViewer :xml="xmlStr" />
+  <process-viewer :xml="xmlStr" xml-nodes="{}" />
 </template>
 
 <style lang="scss" scoped></style>

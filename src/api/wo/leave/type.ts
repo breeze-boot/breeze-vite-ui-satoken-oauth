@@ -38,3 +38,15 @@ export interface LeaveResponseData extends ResponseData {
 export interface LeaveQuery extends PageQuery {
   title: string
 }
+
+/**
+ * 请假工单表单类型声明
+ */
+export interface LeaveForm {
+  id: number
+  title: string
+  code: string
+  startDate: string
+  endDate: string
+  reason: string
+}

@@ -1,4 +1,5 @@
 <template>
+  <!-- 任务监听器-->
   <div class="panel-tab__content">
     <el-table :data="elementListenersList" size="small" border>
       <el-table-column align="center" label="序号" width="50px" type="index" />
@@ -15,7 +16,7 @@
         show-overflow-tooltip
         :formatter="(row) => listenerTypeObject[row.listenerType]"
       />
-      <el-table-column label="操作" width="90px">
+      <el-table-column label="操作1" width="100px">
         <template v-slot="{ row, $index }">
           <el-button link type="primary" @click="openListenerForm(row, $index)">编辑</el-button>
           <el-divider direction="vertical" />
@@ -27,7 +28,7 @@
       <el-button size="small" type="primary" :icon="Plus" @click="openListenerForm(null)">添加监听器</el-button>
     </div>
 
-    <!-- 监听器 编辑/创建 部分 -->
+    <!-- 任务监听器 编辑/创建 部分 -->
     <el-drawer
       v-model="listenerFormModelVisible"
       title="任务监听器"
@@ -187,7 +188,7 @@
       </div>
     </el-drawer>
 
-    <!-- 注入西段 编辑/创建 部分 -->
+    <!-- 注入字段 编辑/创建 部分 -->
     <el-dialog title="字段配置" v-model="listenerFieldFormModelVisible" width="600px" append-to-body destroy-on-close>
       <el-form
         :model="listenerFieldForm"

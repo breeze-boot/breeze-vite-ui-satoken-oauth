@@ -162,7 +162,7 @@ const handleMenuDataFormSubmit = () => {
     if (id) {
       await editMenu(id, menuDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -172,7 +172,7 @@ const handleMenuDataFormSubmit = () => {
     } else {
       await addMenu(menuDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

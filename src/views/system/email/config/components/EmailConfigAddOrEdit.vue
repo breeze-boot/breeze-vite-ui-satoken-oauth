@@ -143,7 +143,7 @@ const handleDataFormSubmit = () => {
     if (id) {
       await editEmailConfig(id, emailDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -153,7 +153,7 @@ const handleDataFormSubmit = () => {
     } else {
       await addEmailConfig(emailDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

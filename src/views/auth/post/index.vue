@@ -183,7 +183,7 @@ const handleDelete = async (rows: PostRecords) => {
   const postIds = rows.map((item: any) => item.id)
   await deletePost(postIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

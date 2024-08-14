@@ -101,7 +101,6 @@ export function exportExcel(params: BpmDefinitionRecord): AxiosPromise<any> {
  * @param params
  */
 export function suspendedDefinition(params: any): AxiosPromise<ResponseData> {
-  debugger
   return request({
     url: API.DEFINITION_RESTFUL_URL + `/suspendedDefinition`,
     method: 'put',

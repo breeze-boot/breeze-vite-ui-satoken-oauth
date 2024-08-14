@@ -6,7 +6,7 @@
 <!-- 测试TodoTask -->
 <script setup lang="ts">
 import { ref } from 'vue'
-import TodoTask from '@/components/TodoTask/index.vue'
+import ProcessTask from '@/components/ProcessTask/index.vue'
 
 defineOptions({
   name: 'TodoTask',
@@ -18,7 +18,7 @@ const procDefKey = ref<string>()
 </script>
 
 <template>
-  <todo-task :businessKey="businessKey" :procDefKey="procDefKey" />
+  <process-task :businessKey="businessKey" :procDefKey="procDefKey" />
 </template>
 
 <style lang="scss" scoped></style>

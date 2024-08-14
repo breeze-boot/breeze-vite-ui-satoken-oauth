@@ -173,10 +173,10 @@ const handleInfo = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: MsgUserRecords) => {
-  const MsgUserIds = rows.map((item: any) => item.id)
-  await deleteMsgUser(MsgUserIds)
+  const msgUserIds = rows.map((item: any) => item.id)
+  await deleteMsgUser(msgUserIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

@@ -188,7 +188,7 @@ const handleDelete = async (rows: RowPermissionRecords) => {
   const permissionIds = rows.map((item: any) => item.id)
   await deletePermission(permissionIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

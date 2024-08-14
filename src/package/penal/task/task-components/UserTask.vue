@@ -61,10 +61,12 @@
   <user-dialog
     ref="assigneeUserDialog"
     :single="true"
+    title="用户列表"
     v-model:modelValue="assigneeUserDialogVisible"
+    :user-check="userTaskForm.assignee"
     @updateUserData="
-      (userCode) => {
-        userTaskForm.assignee = userCode
+      (username) => {
+        userTaskForm.assignee = username
         updateElementTask('assignee')
       }
     "
@@ -72,10 +74,12 @@
   <user-dialog
     ref="candidateUserDialog"
     :single="false"
+    title="用户列表"
     v-model:modelValue="candidateUserDialogVisible"
+    :user-checks="userTaskForm.candidateUsers"
     @updateUserData="
-      (userCode) => {
-        userTaskForm.candidateUsers = userCode
+      (username) => {
+        userTaskForm.candidateUsers = username
         updateElementTask('candidateUsers')
       }
     "
@@ -83,7 +87,9 @@
   <role-dialog
     ref="candidateGroupsDialog"
     :single="false"
+    title="角色列表"
     v-model:modelValue="candidateGroupsDialogVisible"
+    :role-checks="userTaskForm.candidateGroups"
     @updateRoleData="
       (roleCode) => {
         userTaskForm.candidateGroups = roleCode
@@ -94,9 +100,9 @@
 </template>
 
 <script>
-import UserDialog from './components/UserDialog.vue'
-import RoleDialog from './components/RoleDialog.vue'
 import { Search } from '@element-plus/icons-vue'
+import UserDialog from '@/components/UserDialog/index.vue'
+import RoleDialog from '@/components/RoleDialog/index.vue'
 
 export default {
   name: 'UserTask',

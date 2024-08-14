@@ -5,7 +5,7 @@
 <!-- 用户管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, open, exportExcel, deleteUser, editAvatar } from '@/api/auth/user'
+import { page, open, exportExcel, deleteUser, editAvatar, syncUser } from '@/api/auth/user'
 import AddOrEdit from './components/UserAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
@@ -87,6 +87,13 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:user:export'],
       event: 'exportAll',
       icon: 'excel',
+    },
+    {
+      type: 'default',
+      label: t('common.syncUser'),
+      event: 'syncUser',
+      icon: 'syncUser',
+      eventHandle: () => handleSyncUser(),
     },
   ],
   // 表格字段配置
@@ -174,9 +181,9 @@ const tableInfo = reactive<TableInfo>({
       label: t('user.fields.userCode'),
     },
     {
-      prop: 'amountName',
+      prop: 'displayName',
       showOverflowTooltip: true,
-      label: t('user.fields.amountName'),
+      label: t('user.fields.displayName'),
     },
     {
       prop: 'idCard',
@@ -374,7 +381,7 @@ const handleUpdateCurrentRow = async (row: any) => {
   // 若是一对多的文件上传，可以自定义回调逻辑
   await editAvatar(data as UserRecord)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.modify') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       handleUpdateBiz(row)
@@ -396,7 +403,7 @@ const handleUpdateBiz = async (row: any) => {
 
     await editFile(column.fileId, data as FileRecord)
     ElMessage.success({
-      message: t('common.success'),
+      message: `${t('common.modify') + t('common.success')}`,
       duration: 1000,
       onClose: () => {
         reloadList()
@@ -414,7 +421,21 @@ const handleDelete = async (rows: UserRecords) => {
   const userIds = rows.map((item: any) => item.id)
   await deleteUser(userIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
+    duration: 1000,
+    onClose: () => {
+      reloadList()
+    },
+  })
+}
+
+/**
+ * 同步用户
+ */
+const handleSyncUser = async () => {
+  await syncUser()
+  ElMessage.success({
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

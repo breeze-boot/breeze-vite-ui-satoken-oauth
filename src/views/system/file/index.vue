@@ -238,7 +238,7 @@ const handleDelete = async (rows: FileRecords) => {
   const fileIds = rows.map((item: any) => item.id)
   await deleteFile(fileIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

@@ -40,6 +40,30 @@ export const constantChildRoutes = [
     },
   },
   {
+    path: '/wo/startApproval',
+    name: 'TodoApproval',
+    component: () => import('@/views/wo/leave/startApproval/index.vue'),
+    meta: {
+      title: '开始审批',
+      icon: 'startApproval',
+      hidden: true,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
+    path: '/task/todoApproval',
+    name: 'TodoApproval',
+    component: () => import('@/views/bpm/todoApproval/index.vue'),
+    meta: {
+      title: '审批流程',
+      icon: 'todoApproval',
+      hidden: true,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
     path: '/404',
     name: '404',
     component: () => import('@/views/404/index.vue'),

@@ -94,11 +94,10 @@ const handleDataFormSubmit = () => {
     }
     categoryDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
     const id = categoryDataForm.value.id
-    debugger
     if (id) {
       await editCategory(id, categoryDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -108,7 +107,7 @@ const handleDataFormSubmit = () => {
     } else {
       await addCategory(categoryDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

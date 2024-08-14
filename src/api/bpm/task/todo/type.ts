@@ -10,15 +10,15 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
 export interface TodoRecord {
   id?: number
   taskName?: string
-  owner?: string
-  definitionKey?: string
-  procInstId?: string
-  taskId?: string
-  procDefId?: string
-  procDefKey?: string
-  businessKey?: string
-  applyUser?: string
-  applyUserName?: string
+  owner: string
+  procInstId: string
+  taskId: string
+  procDefId: string
+  procDefKey: string
+  businessKey: string
+  delegationState: string
+  applyUser: string
+  applyUserName: string
   userList?: string[]
   status?: string
   comment?: string

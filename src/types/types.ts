@@ -85,7 +85,7 @@ export interface UserInfoData {
   deptId: number
   deptName: string
   userCode: string
-  amountName: string
+  displayName: string
   avatar: string
   phone: string
   sex: number

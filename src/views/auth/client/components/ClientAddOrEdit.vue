@@ -139,7 +139,7 @@ const handleClientDataFormSubmit = () => {
     if (id) {
       await editClient(id, clientDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -149,7 +149,7 @@ const handleClientDataFormSubmit = () => {
     } else {
       await addClient(clientDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false

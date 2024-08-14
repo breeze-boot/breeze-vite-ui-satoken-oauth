@@ -1,53 +1,85 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { defineAsyncComponent, nextTick, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
-import BpmInfo from '@/components/TodoTask/bpmInfo/index.vue'
+import BpmInfo from '@/components/ProcessTask/ProcessInfo/index.vue'
+import UserDialog from '@/components/UserDialog/index.vue'
 import { getBpmDefinitionXml } from '@/api/bpm/def/definition'
 import { suspendedInstance } from '@/api/bpm/def/instance'
 import {
+  abolition,
   agree,
+  claim,
+  delegateTask,
+  getFlowButtonInfo,
+  getTaskInfo,
+  listFlowApproveInfo,
   reject,
   resolveTask,
-  claim,
-  unClaim,
-  listFlowApproveInfo,
-  getFlowButtonInfo,
-  delegateTask,
   transferTask,
-  abolition,
+  unClaim,
 } from '@/api/bpm/task/todo'
 import { ElMessage } from 'element-plus'
 import { Button } from '@/types/types.ts'
 import useUserStore from '@/store/modules/user'
-import { ApproveListRecord } from '@/api/bpm/task/todo/type.ts'
+import { ApproveListRecord, TodoRecord } from '@/api/bpm/task/todo/type.ts'
+import { useI18n } from 'vue-i18n'
 
-const props = defineProps({
-  taskInfo: {
-    type: Object<any>,
-    default: () => {},
-  },
-  buttons: {
-    type: Array<Button>,
-    default: () => [],
-  },
+const $emit = defineEmits(['approveClickCallBack'])
+
+const { t } = useI18n()
+let form = shallowRef()
+let delegateUserDialogVisible = ref<boolean>()
+let transferUserDialogVisible = ref<boolean>()
+let taskInfo = ref<TodoRecord>({
+  applyUser: '',
+  applyUserName: '',
+  businessKey: '',
+  delegationState: '',
+  owner: '',
+  procDefId: '',
+  procDefKey: '',
+  procInstId: '',
+  taskId: '',
 })
-const $emit = defineEmits(['approveClickCallBack', 'update:buttons', 'update:startUser'])
-const userStore = useUserStore()
-
 const $router = useRouter()
 const loading = ref<boolean>(false)
 const btnLoading = ref<boolean>(false)
 const tabName = ref<string>('approval')
+const buttons = ref<Button[]>([])
+const startUser = ref<string>()
 const xmlStr = ref<string>('')
 const xmlNodes = ref<any>({})
 const tableData = ref<ApproveListRecord[]>([])
+const userStore = useUserStore()
+
+const initApprove = async (taskId: string) => {
+  const response: any = await getTaskInfo(taskId)
+  if (response.code != '0000') {
+    ElMessage.warning('任务不存在')
+  }
+  taskInfo.value = response.data
+  await flowButtonInfo()
+
+  form.value = defineAsyncComponent(() => {
+    return import(`/src/views/${taskInfo.value.formKey as string}.vue`)
+  })
+}
+
+const initStartApprove = async (procDefKey: string, businessKey: string, formKey: string) => {
+  await flowStartButtonInfo(procDefKey, businessKey)
+
+  form.value = defineAsyncComponent(() => {
+    return import(`/src/views/${formKey as string}.vue`)
+  })
+}
 
 /**
  * 获取信息
  */
 const handleChangeType = async (value: string) => {
+  await flowButtonInfo()
   if (value === 'approval') {
     tabName.value = value
     return
@@ -63,21 +95,46 @@ const handleChangeType = async (value: string) => {
     return
   }
 }
-const taskButton = computed({
-  get: () => {
-    return props.buttons
-  },
-  set: (value) => {
-    $emit('update:buttons', value)
-  },
-})
+/**
+ * 获取流程的按钮信息
+ */
+const flowButtonInfo = async () => {
+  const response: any = await getFlowButtonInfo(
+    taskInfo.value.procDefKey,
+    taskInfo.value.businessKey,
+    taskInfo.value.procInstId,
+  )
+  if (response.code !== '0000') {
+    ElMessage.warning('按钮获取失败')
+    return
+  }
+  nextTick(() => {
+    buttons.value = response.data.buttons
+    startUser.value = response.data.startUser
+  })
+}
+
+/**
+ * 获取流程的按钮信息
+ */
+const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
+  const response: any = await getFlowButtonInfo(procDefKey, businessKey, '')
+  if (response.code !== '0000') {
+    ElMessage.warning('按钮获取失败')
+    return
+  }
+  nextTick(() => {
+    buttons.value = response.data.buttons
+    startUser.value = response.data.startUser
+  })
+}
 
 /**
  * 获取信息
  */
 const historyProcessDefinitionXml = async () => {
-  if (!props.taskInfo.procInstId) return
-  const response: any = await getBpmDefinitionXml(props.taskInfo.procInstId)
+  if (!taskInfo.value.procInstId) return
+  const response: any = await getBpmDefinitionXml(taskInfo.value.procInstId)
   if (response.code !== '0000') {
     ElMessage.warning('流程图获取失败')
     return
@@ -87,26 +144,10 @@ const historyProcessDefinitionXml = async () => {
 }
 
 /**
- * 获取流程的按钮信息
- */
-const flowButtonInfo = async () => {
-  const response: any = await getFlowButtonInfo(
-    props.taskInfo.procDefKey,
-    props.taskInfo.businessKey,
-    props.taskInfo.procInstId,
-  )
-  if (response.code !== '0000') {
-    ElMessage.warning('按钮获取失败')
-    return
-  }
-  taskButton.value = response.data.buttons
-}
-
-/**
  * 获取审批记录信息
  */
 const approveList = async () => {
-  const response: any = await listFlowApproveInfo(props.taskInfo.procDefKey, props.taskInfo.businessKey)
+  const response: any = await listFlowApproveInfo(taskInfo.value.procDefKey, taskInfo.value.businessKey)
   if (response.code !== '0000') {
     ElMessage.warning('审批记录获取失败')
     return
@@ -118,7 +159,7 @@ const approveList = async () => {
  * 加签审批通过
  */
 const approveResolveTask = async () => {
-  const response: any = await resolveTask(props.taskInfo.taskId)
+  const response: any = await resolveTask(taskInfo.value.taskId)
   if (response.code !== '0000') {
     ElMessage.warning('审批失败')
   }
@@ -133,8 +174,8 @@ const approveAgree = async () => {
   const response: any = await agree({
     comment: '同意',
     pass: true,
-    procInstId: props.taskInfo.procInstId,
-    taskId: props.taskInfo.taskId,
+    procInstId: taskInfo.value.procInstId,
+    taskId: taskInfo.value.taskId,
     variables: {},
   })
   if (response.code !== '0000') {
@@ -151,8 +192,8 @@ const approveAbolition = async () => {
   const response: any = await abolition({
     comment: '废止流程',
     pass: true,
-    procInstId: props.taskInfo.procInstId,
-    taskId: props.taskInfo.taskId,
+    procInstId: taskInfo.value.procInstId,
+    taskId: taskInfo.value.taskId,
     variables: {},
   })
   if (response.code !== '0000') {
@@ -169,8 +210,8 @@ const approveReject = async () => {
   const response: any = await reject({
     comment: '拒绝',
     pass: false,
-    procInstId: props.taskInfo.procInstId,
-    taskId: props.taskInfo.taskId,
+    procInstId: taskInfo.value.procInstId,
+    taskId: taskInfo.value.taskId,
     variables: {},
   })
   if (response.code !== '0000') {
@@ -184,7 +225,7 @@ const approveReject = async () => {
  * 签收
  */
 const approveClaim = async () => {
-  const response: any = await claim(props.taskInfo.taskId)
+  const response: any = await claim(taskInfo.value.taskId)
   if (response.code !== '0000') {
     ElMessage.warning('签收失败')
   }
@@ -197,7 +238,7 @@ const approveClaim = async () => {
  * 反签收
  */
 const approveUnClaim = async () => {
-  const response: any = await unClaim(props.taskInfo.taskId)
+  const response: any = await unClaim(taskInfo.value.taskId)
   if (response.code !== '0000') {
     ElMessage.warning('签收失败')
   }
@@ -209,8 +250,8 @@ const approveUnClaim = async () => {
 /**
  * 加签
  */
-const approveDelegateTask = async () => {
-  const response: any = await delegateTask(props.taskInfo.taskId, 'user4')
+const approveDelegateTask = async (username: string) => {
+  const response: any = await delegateTask(taskInfo.value.taskId, username)
   if (response.code !== '0000') {
     ElMessage.warning('加签失败')
   }
@@ -220,11 +261,18 @@ const approveDelegateTask = async () => {
 }
 
 /**
+ * 加签审批
+ */
+const handleApproveDelegateTask = async () => {
+  delegateUserDialogVisible.value = true
+}
+
+/**
  * 暂停
  */
 const approveSuspendedInstance = async () => {
   const response: any = await suspendedInstance({
-    procInstId: props.taskInfo.procInstId,
+    procInstId: taskInfo.value.procInstId,
   })
   if (response.code !== '0000') {
     ElMessage.warning('暂停失败')
@@ -235,16 +283,23 @@ const approveSuspendedInstance = async () => {
 }
 
 /**
- * 转签
+ * 转签审批
  */
-const approveTransferTask = async () => {
-  const response: any = await transferTask(props.taskInfo.taskId, 'user4')
+const approveTransferTask = async (username: string) => {
+  const response: any = await transferTask(taskInfo.value.taskId, username)
   if (response.code !== '0000') {
     ElMessage.warning('审批失败')
   }
   await flowButtonInfo()
   await handleChangeType(tabName.value)
   btnLoading.value = false
+}
+
+/**
+ * 转签
+ */
+const handleApproveTransferTask = async () => {
+  transferUserDialogVisible.value = true
 }
 
 const handleApproveClick = (item: Button) => {
@@ -254,7 +309,7 @@ const handleApproveClick = (item: Button) => {
       approveAbolition()
       break
     case 'agree':
-      if (props.taskInfo.delegationState === 'PENDING') {
+      if (taskInfo.value.delegationState === 'PENDING') {
         approveResolveTask()
       } else {
         approveAgree()
@@ -270,13 +325,12 @@ const handleApproveClick = (item: Button) => {
       approveUnClaim()
       break
     case 'transfer':
-      approveTransferTask()
+      handleApproveTransferTask()
       break
     case 'delegateTask':
-      approveDelegateTask()
+      handleApproveDelegateTask()
       break
     case 'suspended':
-      debugger
       approveSuspendedInstance()
       break
   }
@@ -287,7 +341,7 @@ const goBack = () => {
   $router.back()
 }
 
-defineExpose({})
+defineExpose({ initApprove, initStartApprove })
 </script>
 <template>
   <el-card shadow="never">
@@ -299,14 +353,14 @@ defineExpose({})
       </template>
       <template #extra>
         <div class="flex items-center">
-          <template v-for="item in taskButton" :key="item.key">
+          <template v-for="item in buttons" :key="item.key">
             <template v-if="item.key === 'abolition'">
               <svg-button
                 type="primary"
                 class="ml-2"
                 :label="item.name"
                 :loading="btnLoading"
-                v-if="taskInfo.startUser != userStore.userInfo.username"
+                v-if="startUser === userStore.userInfo.username"
                 @svg-btn-click="handleApproveClick(item)"
               />
             </template>
@@ -316,7 +370,6 @@ defineExpose({})
                 class="ml-2"
                 :label="item.name"
                 :loading="btnLoading"
-                v-if="taskInfo.startUser != userStore.userInfo.username"
                 @svg-btn-click="handleApproveClick(item)"
               />
             </template>
@@ -334,7 +387,8 @@ defineExpose({})
         </el-radio-group>
         <el-row v-if="tabName === 'approval'" :gutter="23">
           <el-col :span="23">
-            <slot name="formSlot" />
+            <component v-model="taskInfo.businessKey" v-if="form" :is="form" />
+            <slot v-else name="formSlot" />
           </el-col>
         </el-row>
         <el-row v-if="tabName === 'approvalNode'" :gutter="23">
@@ -348,5 +402,28 @@ defineExpose({})
       </div>
     </el-page-header>
   </el-card>
+
+  <user-dialog
+    ref="transferUserRef"
+    :title="t('bpmn.fields.userList')"
+    :single="true"
+    v-model:modelValue="transferUserDialogVisible"
+    @updateUserData="
+      (username) => {
+        approveTransferTask(username)
+      }
+    "
+  />
+  <user-dialog
+    ref="delegateUserRef"
+    :title="t('bpmn.fields.userList')"
+    :single="true"
+    v-model:modelValue="delegateUserDialogVisible"
+    @updateUserData="
+      (username) => {
+        approveDelegateTask(username)
+      }
+    "
+  />
 </template>
 <style></style>

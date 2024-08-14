@@ -189,7 +189,7 @@ const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
 const handleDelete = async (row: DeptRecord) => {
   await deleteDept(JSONBigInt.parse(row.id))
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

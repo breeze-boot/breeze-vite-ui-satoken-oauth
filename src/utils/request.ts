@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import pinia from '@/store'
 import { ElMessage } from 'element-plus'
 import JSONBigInt from 'json-bigint'
@@ -7,12 +7,12 @@ import router from '@/router'
 import useUserStore from '@/store/modules/user'
 import { LoginResponseData } from '@/api/login/type.ts'
 import { convertBigNumberToString } from '@/utils/common.ts'
+import i18n from '@/i18n/index'
 
 let isRefreshing: boolean = false // 标记是否正在刷新token
-let refreshTimes: number = 1
+let refreshTimes: number = 0
 let requests: any[] = [] // 存储待重发的请求
 let userStore: any = undefined
-import i18n from '@/i18n/index'
 
 /**
  * 创建axios实例
@@ -124,8 +124,8 @@ const handleRefreshToken = async (error: any) => {
  * @param error
  */
 const handle401Error = async (error: any) => {
-  if (refreshTimes == 2) {
-    refreshTimes = 1
+  if (refreshTimes == 1) {
+    refreshTimes = 0
     ElMessage.error(i18n.global.t('axios.reLogin'))
     await redirectToLogin()
     return
@@ -162,15 +162,19 @@ request.interceptors.response.use(
     if (response.data instanceof ArrayBuffer) {
       return response
     }
+
     switch (code) {
       case '0000':
         return response.data
       case '0001':
         ElMessage.warning(message)
-        break
+        return Promise.reject(response.data)
       case '0002':
         ElMessage.warning(message)
-        break
+        return Promise.reject(response.data)
+      case '0003':
+        ElMessage.warning(message)
+        return Promise.reject(response.data)
       case undefined:
         // 没有code时正常返回数据
         return access_token ? response.data : response
@@ -191,6 +195,7 @@ request.interceptors.response.use(
             return Promise.reject(error)
         }
       }
+      // 返回其他请求头
       switch (error.response.status) {
         case 401:
           return handle401Error(error)

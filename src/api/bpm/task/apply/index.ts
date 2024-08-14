@@ -7,7 +7,7 @@ import { AxiosPromise } from 'axios'
 import { ApplyResponseData, ApplyQuery } from './type'
 
 enum API {
-  TODO_RESTFUL_URL = '/bpm/v1/task',
+  USER_APPLY_RESTFUL_URL = '/bpm/v1/task',
 }
 
 /**
@@ -17,7 +17,7 @@ enum API {
  */
 export function list(params: ApplyQuery): AxiosPromise<ApplyResponseData> {
   return request({
-    url: API.TODO_RESTFUL_URL + '/listApplyUserTask',
+    url: API.USER_APPLY_RESTFUL_URL + '/listApplyUserTask',
     method: 'get',
     params: params,
   })

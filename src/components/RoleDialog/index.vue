@@ -1,5 +1,5 @@
 <script>
-import { page } from '@/api/auth/role'
+import { page } from '@/api/bpm/group'
 
 export default {
   name: 'RoleDialog',
@@ -7,6 +7,18 @@ export default {
     modelValue: {
       type: Boolean,
       default: false,
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    roleCheck: {
+      type: String,
+      default: '',
+    },
+    roleChecks: {
+      type: Array,
+      default: () => [],
     },
     single: {
       type: Boolean,
@@ -16,7 +28,7 @@ export default {
   data() {
     return {
       roleList: [],
-      checkRoleCode: '',
+      checkRole: '',
       singleSelectValue: undefined,
       pagerQuery: {
         query: {
@@ -42,6 +54,9 @@ export default {
   mounted() {
     this.getList()
   },
+  updated() {
+    this.handleCheck()
+  },
   methods: {
     async getList() {
       const response = await page(this.pagerQuery.query)
@@ -50,7 +65,7 @@ export default {
     },
     handleCheckRole() {
       this.visible = false
-      this.$emit('updateRoleData', this.checkRoleCode)
+      this.$emit('updateRoleData', this.checkRole || '')
     },
     /**
      * 页码改变事件
@@ -77,7 +92,19 @@ export default {
       if (this.single) {
         return
       }
-      this.checkRoleCode = row.map((item) => item.roleCode)
+      this.checkRole = row.map((item) => item.id)
+    },
+    handleCheck() {
+      if (this.single) {
+        this.singleSelectValue = this.userList.findIndex((item) => item['id'] === this.roleCheck)
+        return
+      }
+      const row = this.roleList.filter((item) => this.roleChecks.indexOf(item['id']) > -1)
+      if (row) {
+        row.forEach((item) => {
+          this.$refs.roleCheckTableRef?.toggleRowSelection(item, undefined)
+        })
+      }
     },
     /**
      * 当前页改变事件
@@ -86,7 +113,7 @@ export default {
      */
     handleRowClick(row) {
       if (this.single) {
-        this.checkRoleCode = row.roleCode
+        this.checkRole = row.roleCode
         const index = this.roleList.findIndex((item) => item['id'] === row['id'])
         if (index !== -1) {
           this.singleSelectValue = index
@@ -94,18 +121,21 @@ export default {
         return
       }
       if (row) {
-        this.$refs.roleCheckTableRef.toggleRowSelection(row, undefined)
+        this.$refs.roleCheckTableRef?.toggleRowSelection(row, undefined)
       } else {
-        this.$refs.roleCheckTableRef.clearSelection()
+        this.$refs.roleCheckTableRef?.clearSelection()
       }
     },
   },
-  beforeUnmount() {},
+  beforeUnmount() {
+    this.checkRole = []
+    this.roleList = []
+  },
 }
 </script>
 
 <template>
-  <el-dialog v-model="visible" title="角色" width="800">
+  <el-dialog v-model="visible" :title="title" width="800">
     <el-table
       ref="roleCheckTableRef"
       @selection-change="handleSelectionChange"
@@ -123,8 +153,8 @@ export default {
         </template>
       </el-table-column>
       <el-table-column label="序号" fixed align="center" type="index" width=" 66" />
-      <el-table-column prop="roleName" label="角色名" />
-      <el-table-column prop="roleCode" label="角色编码" />
+      <el-table-column prop="id" label="角色编码" />
+      <el-table-column prop="name" label="角色名" />
     </el-table>
     <div class="table-pagination">
       <el-pagination

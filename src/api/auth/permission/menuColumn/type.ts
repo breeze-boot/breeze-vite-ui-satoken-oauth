@@ -2,7 +2,7 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
  */
-import { ColumnCacheData, PageQuery, ResponseData } from '@/types/types.ts'
+import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
  * 菜单列列表类型声明

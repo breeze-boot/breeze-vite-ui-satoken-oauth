@@ -15,7 +15,7 @@ export interface UserRecord {
   username?: string
   userCode?: string
   email?: string
-  amountName?: string
+  displayName?: string
   deptId?: number[]
   postId?: number[]
   idCard?: string
@@ -104,7 +104,7 @@ export interface UserForm {
   username?: string
   userCode?: string
   email?: string
-  amountName?: string
+  displayName?: string
   deptId?: number[]
   postId?: number[]
   idCard?: string

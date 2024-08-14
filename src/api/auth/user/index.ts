@@ -116,6 +116,16 @@ export function deleteUser(ids: number[]): AxiosPromise<ResponseData> {
 }
 
 /**
+ * 同步用户
+ */
+export function syncUser(): AxiosPromise<ResponseData> {
+  return request({
+    url: `${API.USER_RESTFUL_URL}/syncFlowableUser`,
+    method: 'get',
+  })
+}
+
+/**
  * 导出
  *
  * @param params

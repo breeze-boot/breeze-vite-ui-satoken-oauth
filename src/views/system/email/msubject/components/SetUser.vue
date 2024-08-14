@@ -160,7 +160,7 @@ const handleUserDataFormSubmit = async () => {
   }
   await setEmailUser(id, setUserMSubjectForm.value)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.modify') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       visible.value = false

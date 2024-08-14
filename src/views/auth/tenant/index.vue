@@ -183,7 +183,7 @@ const handleDelete = async (rows: TenantRecords) => {
   const tenantIds = rows.map((item: any) => item.id)
   await deleteTenant(tenantIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

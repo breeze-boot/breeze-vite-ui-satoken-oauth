@@ -136,10 +136,10 @@ const rules = ref({
       trigger: 'blur',
     },
   ],
-  amountName: [
+  displayName: [
     {
       required: true,
-      message: t('user.rules.amountName'),
+      message: t('user.rules.displayName'),
       trigger: 'blur',
     },
   ],
@@ -224,7 +224,7 @@ const handleUserDataFormSubmit = () => {
     if (id) {
       await editUser(id, userDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -234,7 +234,7 @@ const handleUserDataFormSubmit = () => {
     } else {
       await addUser(userDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -315,12 +315,12 @@ defineExpose({
       <el-form-item label-width="125px" :label="$t('user.fields.email')" prop="email">
         <el-input v-model="userDataForm.email" autocomplete="off" clearable :placeholder="$t('user.fields.email')" />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.amountName')" prop="amountName">
+      <el-form-item label-width="125px" :label="$t('user.fields.displayName')" prop="displayName">
         <el-input
-          v-model="userDataForm.amountName"
+          v-model="userDataForm.displayName"
           autocomplete="off"
           clearable
-          :placeholder="$t('user.fields.amountName')"
+          :placeholder="$t('user.fields.displayName')"
         />
       </el-form-item>
       <el-form-item label-width="125px" class="dept" :label="$t('user.fields.dept')" prop="deptId">

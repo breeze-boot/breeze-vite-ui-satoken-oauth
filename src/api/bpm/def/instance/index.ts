@@ -69,7 +69,6 @@ export function exportExcel(params: InstanceRecord): AxiosPromise<any> {
  * @param params
  */
 export function suspendedInstance(params: any): AxiosPromise<ResponseData> {
-  debugger
   return request({
     url: API.INSTANCE_RESTFUL_URL + `/suspendedInstance`,
     method: 'put',

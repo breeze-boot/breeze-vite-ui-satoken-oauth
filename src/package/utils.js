@@ -36,6 +36,18 @@ export function createListenerObject(options, isTask, prefix) {
   return window.bpmnInstances.moddle.create(`${prefix}:${isTask ? 'TaskListener' : 'ExecutionListener'}`, listenerObj)
 }
 
+// 创建字段实例
+export function createFormObject(fields, prefix) {
+  const formObj = Object.create(null)
+  // 注入字段
+  if (fields) {
+    formObj.fields = fields.map((field) => {
+      return createFieldObject(field, prefix)
+    })
+  }
+  return formObj.fields
+}
+
 // 创建 监听器的注入字段 实例
 export function createFieldObject(option, prefix) {
   const { name, fieldType, string, expression } = option

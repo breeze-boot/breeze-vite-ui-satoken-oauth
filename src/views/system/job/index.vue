@@ -259,7 +259,7 @@ const handleDelete = async (rows: JobRecords) => {
   const jobIds = rows.map((item: any) => item.id)
   await deleteJob(jobIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

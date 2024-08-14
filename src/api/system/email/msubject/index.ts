@@ -17,7 +17,7 @@ import { ResponseData } from '@/types/types.ts'
 enum API {
   EMAIL_RESULT_URL = '/sys/v1/mSubject',
   SET_EMAIL_USER_URL = '/sys/v1/mSubject/setEmailUser',
-  LIST_TO_EMAIL_USER_URL = '/sys/v1/mSubject/listCcEmailUser',
+  LIST_TO_EMAIL_USER_URL = '/sys/v1/mSubject/listToEmailUser',
   LIST_CC_EMAIL_USER_URL = '/sys/v1/mSubject/listCcEmailUser',
 }
 

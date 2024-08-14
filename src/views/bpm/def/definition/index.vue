@@ -232,7 +232,7 @@ const handleDelete = async (rows: BpmDefinitionRecords) => {
   })
   await deleteDefinition(definitions)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()

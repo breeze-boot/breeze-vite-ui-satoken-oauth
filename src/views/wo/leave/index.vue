@@ -6,12 +6,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElForm, ElMessage } from 'element-plus'
-import { page, exportExcel, deleteLeave } from '@/api/wo/leave'
-import type { LeaveRecord, LeaveQuery, LeaveRecords } from '@/api/wo/leave/type.ts'
+import { deleteLeave, exportExcel, page } from '@/api/wo/leave'
+import type { LeaveQuery, LeaveRecord, LeaveRecords } from '@/api/wo/leave/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/LeaveAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   name: 'Leave',
@@ -28,6 +29,7 @@ const queryParams = reactive<LeaveQuery>({
   current: 1,
   size: 10,
 })
+const $router = useRouter()
 
 let checkedRows = reactive<string[]>([])
 let currentRow = reactive<LeaveRecord>({})
@@ -71,6 +73,13 @@ const tableInfo = reactive<TableInfo>({
       permission: ['wo:leave:export'],
       event: 'exportAll',
       icon: 'excel',
+    },
+    {
+      type: 'primary',
+      label: t('common.startFlow'),
+      event: 'startFlow',
+      icon: 'startFlow',
+      eventHandle: (row: LeaveRecord) => handleStartFlow(row),
     },
   ],
   // 表格字段配置
@@ -172,10 +181,25 @@ const handleDelete = async (rows: LeaveRecords) => {
   const leaveIds = rows.map((item: any) => item.id)
   await deleteLeave(leaveIds)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.delete') + t('common.success')}`,
     duration: 1000,
     onClose: () => {
       reloadList()
+    },
+  })
+}
+
+/**
+ * 发起审批
+ *
+ * @param row 行数据
+ */
+const handleStartFlow = async (row: LeaveRecord) => {
+  await $router.push({
+    path: '/wo/startApproval',
+    query: {
+      businessKey: row.todoCode,
+      path: '/wo/leave/components/LeaveInfo.vue',
     },
   })
 }

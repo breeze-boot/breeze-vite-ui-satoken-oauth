@@ -81,7 +81,7 @@ const handleDictDataFormSubmit = () => {
     if (id) {
       await editDict(id, dictDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.modify') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
@@ -91,7 +91,7 @@ const handleDictDataFormSubmit = () => {
     } else {
       await addDict(dictDataForm.value)
       ElMessage.success({
-        message: t('common.success'),
+        message: `${t('common.save') + t('common.success')}`,
         duration: 1000,
         onClose: () => {
           visible.value = false
