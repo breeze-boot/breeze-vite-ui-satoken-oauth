@@ -92,7 +92,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-card>
+  <el-dialog v-model="visible" width="38%" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form
       :model="leaveDataForm"
       :rules="rules"
@@ -104,5 +104,5 @@ defineExpose({
         <el-input v-model="leaveDataForm.todoCode" :placeholder="$t('leave.fields.title')" />
       </el-form-item>
     </el-form>
-  </el-card>
+  </el-dialog>
 </template>

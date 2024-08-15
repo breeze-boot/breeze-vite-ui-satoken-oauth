@@ -9,9 +9,11 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  */
 export interface LeaveRecord {
   id?: number
-  todoName?: string
-  todoCode?: string
-  description?: string
+  title?: string
+  code?: string
+  startDate?: string
+  endDate?: string
+  reason?: string
 }
 
 /**

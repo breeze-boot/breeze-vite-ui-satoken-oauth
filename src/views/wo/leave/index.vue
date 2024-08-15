@@ -195,12 +195,10 @@ const handleDelete = async (rows: LeaveRecords) => {
  * @param row 行数据
  */
 const handleStartFlow = async (row: LeaveRecord) => {
+  debugger
   await $router.push({
-    path: '/wo/startApproval',
-    query: {
-      businessKey: row.todoCode,
-      path: '/wo/leave/components/LeaveInfo.vue',
-    },
+    path: '/wo/startApproval1',
+    query: {},
   })
 }
 

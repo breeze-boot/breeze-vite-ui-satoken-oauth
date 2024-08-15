@@ -50,7 +50,7 @@ const tabName = ref<string>('approval')
 const buttons = ref<Button[]>([])
 const startUser = ref<string>()
 const xmlStr = ref<string>('')
-const xmlNodes = ref<any>({})
+const xmlNodes = ref<any>()
 const tableData = ref<ApproveListRecord[]>([])
 const userStore = useUserStore()
 
@@ -63,16 +63,13 @@ const initApprove = async (taskId: string) => {
   await flowButtonInfo()
 
   form.value = defineAsyncComponent(() => {
+    /* @vite-ignore */
     return import(`/src/views/${taskInfo.value.formKey as string}.vue`)
   })
 }
 
-const initStartApprove = async (procDefKey: string, businessKey: string, formKey: string) => {
+const initStartApprove = async (procDefKey: string, businessKey: string) => {
   await flowStartButtonInfo(procDefKey, businessKey)
-
-  form.value = defineAsyncComponent(() => {
-    return import(`/src/views/${formKey as string}.vue`)
-  })
 }
 
 /**
@@ -409,7 +406,7 @@ defineExpose({ initApprove, initStartApprove })
     :single="true"
     v-model:modelValue="transferUserDialogVisible"
     @updateUserData="
-      (username) => {
+      (username: string) => {
         approveTransferTask(username)
       }
     "
@@ -420,7 +417,7 @@ defineExpose({ initApprove, initStartApprove })
     :single="true"
     v-model:modelValue="delegateUserDialogVisible"
     @updateUserData="
-      (username) => {
+      (username: string) => {
         approveDelegateTask(username)
       }
     "
