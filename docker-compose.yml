@@ -9,18 +9,20 @@ services:
     ports:
       - "443:443"
       - "80:80"
+      - "17521:17521"
     expose:
       - "443"
       - "80"
+      - "17521"
     volumes:
       - ./dist:/usr/local/breeze/breeze-ui
-      - ./docker/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/logs:/var/log/nginx
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/logs:/var/log/nginx
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - breeze-boot_breeze-net
+      - breeze-net
 
 networks:
-  breeze-boot_breeze-net:
+  breeze-net:
     external: true

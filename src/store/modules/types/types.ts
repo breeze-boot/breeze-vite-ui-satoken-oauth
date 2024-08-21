@@ -6,6 +6,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import type { Tab, UserInfoData, Tabs, Settings, Dicts } from '@/types/types'
 import { ColumnCacheData, Theme } from '@/types/types'
+import { Client } from '@stomp/stompjs'
 
 /**
  * 用户保存类型
@@ -49,7 +50,7 @@ export interface SettingState {
  * stomp保存类型
  */
 export interface MsgState {
-  stompClient: any
+  stompClient: Client | undefined
 }
 
 /**

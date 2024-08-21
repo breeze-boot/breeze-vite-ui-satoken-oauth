@@ -90,26 +90,24 @@ const handleSendMsgFormSubmit = async () => {
     }
 
     if (currentMethod.value === 'USER') {
-      msgStore.stompClient.send(
-        '/msg/asyncSendMsgToUser',
-        { tenantId: userStore.userInfo.tenantId || '1' },
-        JSON.stringify({
+      msgStore.stompClient?.publish({
+        destination: '/message/asyncSendMsgToUser',
+        body: JSON.stringify({
           tenantId: userStore.userInfo.tenantId || '1',
           msgId: currentMsgId.value,
           userIds: sendMsgDataForm.value.userId,
         }),
-      )
+      })
     }
     if (currentMethod.value === 'DEPT') {
-      msgStore.stompClient.send(
-        '/msg/syncSendMsgDeptUser',
-        { tenantId: userStore.userInfo.tenantId || '1' },
-        JSON.stringify({
+      msgStore.stompClient?.publish({
+        destination: '/message/syncSendMsgDeptUser',
+        body: JSON.stringify({
           tenantId: userStore.userInfo.tenantId || '1',
           msgId: currentMsgId.value,
           deptId: sendMsgDataForm.value.deptId,
         }),
-      )
+      })
     }
   })
 }

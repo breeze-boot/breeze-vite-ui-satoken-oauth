@@ -3,8 +3,7 @@
  * @since: 2024-03-17
 -->
 <script setup lang="ts">
-import SockJS from 'sockjs-client'
-import Stomp from 'stompjs'
+import { Client } from '@stomp/stompjs'
 import useUserStore from '@/store/modules/user'
 import { onMounted, onUnmounted } from 'vue'
 import { ElNotification } from 'element-plus'
@@ -12,8 +11,6 @@ import useMsgStore from '@/store/modules/msg.ts'
 
 let userStore = useUserStore()
 let msgStore = useMsgStore()
-
-let reConnectTime: any = () => {}
 
 onMounted(() => {
   initWebSocket()
@@ -24,55 +21,60 @@ onUnmounted(() => {
 })
 
 /**
+ * 关闭
+ */
+const closeWebsocket = async () => {
+  if (!msgStore.stompClient) {
+    return
+  }
+  await msgStore.stompClient?.deactivate()
+}
+
+/**
+ * 初始化
+ */
+const initWebSocket = async () => {
+  const socket =
+    import.meta.env.VITE_APP_WS_API +
+    '/ws?X-Tenant-Id=' +
+    (userStore.userInfo.tenantId || '1') +
+    '&username=' +
+    userStore.userInfo.username
+
+  msgStore.stompClient = new Client({
+    brokerURL: socket,
+    debug: function (str) {
+      console.log('stomp js . str:', str)
+    },
+    connectHeaders: {
+      Authorization: userStore.accessToken,
+      username: userStore.userInfo.username,
+    },
+    onWebSocketClose: function () {
+      msgStore.stompClient?.deactivate()
+    },
+    onStompError: function (frame) {
+      console.log('onStompError:' + frame.body)
+    },
+    onConnect: () => {
+      subscribeTopic()
+      subscribe()
+    },
+  })
+  msgStore.stompClient.activate()
+}
+
+/**
  * 点对点订阅 - 订阅用户消息
  * 前缀 /user
  * 前后端确定的广播消息通道/queue/userMsg
  */
 const subscribe = () => {
-  msgStore.stompClient.subscribe('/user/queue/userMsg', notice())
-}
-
-/**
- * 关闭
- */
-const closeWebsocket = () => {
-  clearInterval(reConnectTime)
-  if (msgStore.stompClient !== null) {
-    msgStore.stompClient.disconnect(() => {
-      msgStore.stompClient = undefined
-      console.debug('关闭连接')
-    })
+  if (!msgStore.stompClient) {
+    console.log('🐛~ stomp Client is null:')
+    return
   }
-}
-/**
- * 初始化
- */
-const initWebSocket = () => {
-  const header = {
-    Authorization: localStorage.getItem('access_token'),
-    username: userStore.userInfo.username,
-  }
-  const socket = new SockJS('/ws?X-Tenant-Id=' + userStore.userInfo.tenantId || '1')
-  msgStore.stompClient = Stomp.over(socket)
-  msgStore.stompClient.connect(
-    header,
-    () => {
-      subscribeTopic()
-      subscribe()
-    },
-    (err: any) => {
-      // 监听错误信息并且发起重连
-      console.error('socketErrorMsg : ', err)
-      if (reConnectTime) {
-        clearInterval(reConnectTime)
-      }
-      // 重新连接一次
-      reConnectTime = setTimeout(() => {
-        console.debug('重新连接>>>>>>>>>>')
-        initWebSocket()
-      }, 60000)
-    },
-  )
+  msgStore.stompClient?.subscribe('/user/queue/userMsg', notice())
 }
 
 /**
@@ -81,7 +83,11 @@ const initWebSocket = () => {
  * 前后端确定的广播消息通道/msg
  */
 const subscribeTopic = () => {
-  msgStore.stompClient.subscribe('/topic/msg', notice())
+  if (!msgStore.stompClient) {
+    console.log('stomp Client is null:')
+    return
+  }
+  msgStore.stompClient?.subscribe('/topic/message', notice())
 }
 
 /**
@@ -101,4 +107,4 @@ function notice() {
   }
 }
 </script>
-<template></template>
+<template>{{}}</template>

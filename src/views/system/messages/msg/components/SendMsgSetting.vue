@@ -66,11 +66,10 @@ const handleSendMsgMethodFormSubmit = async () => {
     if (!currentMsgId.value) return
     if (sendMsgMethodDataForm.value.method === 'ALL') {
       // 发送给全部请求
-      msgStore.stompClient.send(
-        '/msg/asyncSendBroadcastMsg',
-        { tenantId: userStore.userInfo.tenantId || '1' },
-        JSON.stringify({ tenantId: userStore.userInfo.tenantId || '1', msgId: currentMsgId.value }),
-      )
+      msgStore.stompClient?.publish({
+        destination: '/message/asyncSendBroadcastMsg',
+        body: JSON.stringify({ tenantId: userStore.userInfo.tenantId || '1', msgId: currentMsgId.value }),
+      })
       return
     }
     sendMsgRef.value.init(sendMsgMethodDataForm.value.method, currentMsgId.value)

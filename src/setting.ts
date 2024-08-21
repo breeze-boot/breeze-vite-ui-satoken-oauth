@@ -25,5 +25,4 @@ export default {
   watermarkContent: ['BREEZE', 'VUE3'],
   defaultLanguage: 'zhCn',
   size: 'small',
-  printClientUrl: 'http://127.0.0.1:17521',
 }

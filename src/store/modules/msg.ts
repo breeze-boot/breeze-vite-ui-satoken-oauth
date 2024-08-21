@@ -4,13 +4,13 @@
  */
 
 import { defineStore } from 'pinia'
-import Stomp from 'stompjs'
 import { MsgState } from '@/store/modules/types/types.ts'
+import { Client } from '@stomp/stompjs'
 
 const useMsgStore = defineStore('Msg', {
   state: (): MsgState => {
     return {
-      stompClient: {} as Stomp.Client,
+      stompClient: {} as Client,
     }
   },
   actions: {},
