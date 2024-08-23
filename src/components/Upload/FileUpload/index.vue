@@ -145,9 +145,9 @@ const beforeFileUpload = (rawFile: UploadRawFile) => {
       <em>click to upload</em>
     </div>
 
-    <el-button type="primary" v-else>{{ $t('common.upload') }}</el-button>
+    <el-button type="primary" v-else>{{ t('common.upload') }}</el-button>
     <template #tip>
-      <div class="el-upload__tip">{{ $t('common.rules.fileSize') }} {{ props.fileSize }} M.</div>
+      <div class="el-upload__tip">{{ t('common.rules.fileSize') }} {{ props.fileSize }} M.</div>
     </template>
   </el-upload>
 </template>

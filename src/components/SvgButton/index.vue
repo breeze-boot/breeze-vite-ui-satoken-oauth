@@ -3,6 +3,8 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import SvgIcon from '@/components/SvgIcon/index.vue'
+
 defineOptions({
   name: 'SvgButton',
   inheritAttrs: false,

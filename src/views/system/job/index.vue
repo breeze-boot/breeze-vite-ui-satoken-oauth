@@ -7,6 +7,8 @@
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteJob, runJobNow, open } from '@/api/system/job'
 import AddOrEdit from './components/JobAddOrEdit.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import JLog from './components/JLog.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { JobRecords } from '@/api/system/job/type.ts'
@@ -45,8 +47,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: ['CONCURRENT', 'MISFIRE_POLICY', 'JOB_GROUP', 'JOB_STATUS'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -335,10 +335,10 @@ const handleSelectionChange = (rows: JobRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -348,7 +348,6 @@ const handleSelectionChange = (rows: JobRecords) => {
     ref="jobTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

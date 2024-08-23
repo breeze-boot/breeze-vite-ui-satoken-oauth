@@ -7,6 +7,8 @@
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deletePost } from '@/api/auth/post'
 import AddOrEdit from './components/PostAddOrEdit.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { PostRecords } from '@/api/auth/post/type.ts'
 import { PostRecord, PostQuery } from '@/api/auth/post/type.ts'
@@ -42,8 +44,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -244,10 +244,10 @@ const handleSelectionChange = (rows: PostRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -257,7 +257,6 @@ const handleSelectionChange = (rows: PostRecords) => {
     ref="postTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

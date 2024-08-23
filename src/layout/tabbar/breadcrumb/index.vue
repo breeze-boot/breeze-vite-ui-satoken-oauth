@@ -3,13 +3,14 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
 import variables from '@/styles/variables.module.scss'
 import { ArrowRight, Fold, Expand } from '@element-plus/icons-vue'
 import useSettingStore from '@/store/modules/setting'
-import { useRoute } from 'vue-router'
 
 const $route = useRoute()
-let settings = useSettingStore().settings
+let { settings } = storeToRefs(useSettingStore())
 </script>
 
 <template>

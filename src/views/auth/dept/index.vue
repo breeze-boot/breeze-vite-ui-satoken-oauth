@@ -6,6 +6,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { list, exportExcel, deleteDept } from '@/api/auth/dept'
+import BTreeTable from '@/components/Table/BTreeTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/DeptAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { DeptRecords } from '@/api/auth/dept/type.ts'
@@ -40,8 +42,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'multi',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -251,10 +251,10 @@ const handleSelectionChange = (rows: DeptRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -265,7 +265,6 @@ const handleSelectionChange = (rows: DeptRecords) => {
     :export-api="exportExcel"
     :list-api="list"
     :pager="false"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

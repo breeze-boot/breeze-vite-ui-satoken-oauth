@@ -353,8 +353,8 @@ defineExpose({
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
-          <el-radio :value="0">{{ $t('user.fields.sexInfo.woman') }}</el-radio>
-          <el-radio :value="1">{{ $t('user.fields.sexInfo.man') }}</el-radio>
+          <el-radio :value="0">{{ t('user.fields.sexInfo.woman') }}</el-radio>
+          <el-radio :value="1">{{ t('user.fields.sexInfo.man') }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('user.fields.idCard')" prop="idCard">
@@ -371,8 +371,8 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleUserDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleUserDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>

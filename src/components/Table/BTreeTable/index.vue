@@ -2,16 +2,18 @@
 import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
 import { Btn, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { watch, unref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
-import { useDict } from '@/hooks/dict'
 import TableItem from '@/components/Table/TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import useColumnStore from '@/store/modules/column.ts'
 import { useRoute } from 'vue-router'
 import { ColumnCacheData } from '@/types/types.ts'
+import SvgButton from '@/components/SvgButton/index.vue'
+import useSettingStore from '@/store/modules/setting.ts'
 
 defineOptions({
   name: 'BTreeTable',
@@ -21,11 +23,6 @@ defineOptions({
 const props = defineProps({
   // 表格顶部按钮
   tbHeaderBtn: {
-    type: Array,
-    default: () => [],
-  },
-  // 表格使用的字典
-  dict: {
     type: Array,
     default: () => [],
   },
@@ -113,32 +110,36 @@ const props = defineProps({
 const treeTableRef = ref<any>()
 let $route = useRoute()
 const columnStore = useColumnStore()
+const { theme } = storeToRefs(useSettingStore())
 const { t } = useI18n()
 const $emit = defineEmits(['handle-row-db-click', 'selection-change'])
-const tableInfo = reactive({
-  loading: false,
-  // 分页信息
-  pagerQuery: {
-    layout: 'total,sizes,prev,pager,next,jumper',
-    pageSizes: [10, 20, 50, 100, 200, 300, 500, 600],
-    // 分页查询条件
-    query: {
-      // 总条数
-      total: 0,
-      // 当前页
-      current: 1,
-      // 每页条数
-      size: 10,
-    },
-  },
-  // 显示的列
-  showFieldList: [] as Field[],
-  // 是否展开
-  expandAll: false,
-  // 表格的值
-  rows: [],
+// 分页信息
+const pagerInfo = ref({
+  layout: 'total,sizes,prev,pager,next,jumper',
+  pageSizes: [10, 20, 50, 100, 200, 300, 500, 600],
+})
+// 分页查询条件
+const pagerQuery = ref({
+  // 总条数
+  total: 0,
+  // 当前页
+  current: 1,
+  // 每页条数
+  size: 10,
 })
 
+const tableInfo = ref({
+  loading: false,
+  // 是否展开
+  expandAll: false,
+  // 显示的列
+  showFieldList: [] as Field[],
+})
+
+const tableData = ref({
+  // 表格的值
+  rows: [] as any[],
+})
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
 
@@ -180,7 +181,7 @@ const handleBtnOperate = props.handleBtn || false
  * 初始化事件
  */
 const initColumn = async () => {
-  tableInfo.showFieldList = []
+  tableInfo.value.showFieldList = []
   // 路由名称就是菜单组件名称
   const routeName: string = $route.name as string
   const columns: string[] = (await columnStore.getColumnByMenu(routeName)) as string[]
@@ -196,12 +197,12 @@ const initColumn = async () => {
       visible: item.hidden || true,
     }
 
-    if (columns.indexOf(camelCaseToUnderscore(tempItem.prop)) != -1) {
+    if (columns.indexOf(camelCaseToUnderscore(tempItem.prop)) !== -1) {
       tempItem.hidden = true
       tempItem.disabled = true
       tempItem.visible = false
     }
-    tableInfo.showFieldList.push(tempItem)
+    tableInfo.value.showFieldList.push(tempItem)
   })
 }
 
@@ -209,7 +210,7 @@ const initColumn = async () => {
  * 表格显示列计算属性
  */
 const tableField = computed(() => {
-  return tableInfo.showFieldList.filter((item) => !item.hidden)
+  return tableInfo.value.showFieldList.filter((item) => !item.hidden)
 })
 
 /**
@@ -223,11 +224,6 @@ const tableStyle = computed(() => ({ width: props.tableWidth }))
 const enablePager = ref(props.pager)
 
 /**
- * 表格渲染需要的字典
- */
-const dict = useDict(...props.dict)
-
-/**
  * 初始化表格顶部按钮设置
  */
 const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
@@ -237,10 +233,10 @@ const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
  */
 const expandAll = computed({
   get: () => {
-    return tableInfo.expandAll
+    return tableInfo.value.expandAll
   },
   set: (value) => {
-    tableInfo.expandAll = value
+    tableInfo.value.expandAll = value
   },
 })
 
@@ -255,24 +251,24 @@ const handleParams = () => {
     }
   }
   // 根据分页条件，整个查询
-  return props.pager ? { ...obj, ...tableInfo.pagerQuery.query } : obj
+  return props.pager ? { ...obj, ...pagerQuery.value } : obj
 }
 
 /**
  * 获取数据
  */
 const getList = () => {
-  tableInfo.loading = true
+  tableInfo.value.loading = true
   singleSelectValue.value = undefined
   if (!props.listApi) return
   props.listApi(handleParams()).then((response: any) => {
     if (response.code === '0000') {
-      tableInfo.rows = []
+      tableData.value.rows = []
       if (props.pager) {
-        tableInfo.rows = response.data.records
-        tableInfo.pagerQuery.query.total = Number(response.data.total)
+        tableData.value.rows = response.data.records
+        pagerQuery.value.total = Number(response.data.total)
       } else {
-        tableInfo.rows = response.data
+        tableData.value.rows = response.data
       }
       // 设置当前选中项
       if (props.checkedRows) {
@@ -282,14 +278,16 @@ const getList = () => {
       ElMessage.warning(response.message)
     }
     onEnd()
-    tableInfo.loading = false
+    tableInfo.value.loading = false
     handleDoExpandTableRowView()
   })
 }
 
 const setCheckedList = () => {
   props.checkedRows.forEach((selected: any) => {
-    const row = tableInfo.rows.find((item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected)
+    const row = tableData.value.rows.find(
+      (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
+    )
     nextTick(() => {
       if (!row) return
       treeTableRef.value.toggleRowSelection(row, true)
@@ -303,7 +301,7 @@ const setCheckedList = () => {
  * @param size
  */
 const handleSizeChange = (size: number) => {
-  tableInfo.pagerQuery.query.size = size
+  pagerQuery.value.size = size
   getList()
 }
 
@@ -313,7 +311,7 @@ const handleSizeChange = (size: number) => {
  * @param current
  */
 const handleCurrentChange = (current: number) => {
-  tableInfo.pagerQuery.query.current = current
+  pagerQuery.value.current = current
   getList()
 }
 
@@ -333,7 +331,7 @@ const handleSelectionChange = (rows: any) => {
  * @param row
  */
 const handleRowClick = (row: any) => {
-  const index = (tableInfo.rows as []).findIndex((item: any) => item[props.pk] === row[props.pk])
+  const index = (tableData.value.rows as []).findIndex((item: any) => item[props.pk] === row[props.pk])
   if (index !== -1) {
     singleSelectValue.value = index
   }
@@ -473,7 +471,7 @@ const expandedKeys = ref<any[]>([])
 const handleDoExpandTableRowView = () => {
   if (expandedRows.value.length > 0) {
     let idList = expandedRows.value.map((ele: any) => ele.id)
-    handleGetOpenRowId(tableInfo.rows, idList)
+    handleGetOpenRowId(tableData.value.rows, idList)
   }
 }
 const handleExpandChange = (_expandedRows: any, expanded: boolean) => {
@@ -521,7 +519,7 @@ const handleSetColumnVisible = async (value: boolean, field: Field) => {
 watch(
   () => props.reloadCurrentPage,
   () => {
-    tableInfo.pagerQuery.query.current = 1
+    pagerQuery.value.current = 1
     getList()
   },
 )
@@ -660,7 +658,7 @@ const handleSliderChange = (row: any) => {
       <el-table
         ref="treeTableRef"
         :fit="true"
-        :data="tableInfo.rows"
+        :data="tableData.rows"
         :max-height="tableHeight"
         :height="tableHeight"
         v-loading="tableInfo.loading"
@@ -747,13 +745,12 @@ const handleSliderChange = (row: any) => {
                       column: _.column,
                     }"
                     :table-field="_item"
-                    :dict="dict"
                     :key="_index"
                   />
                 </template>
               </el-table-column>
             </template>
-            <TableItem @reload-data-list="getList" :scope="scope" :table-field="item" :dict="dict" :key="index" />
+            <TableItem @reload-data-list="getList" :scope="scope" :table-field="item" :key="index" />
           </template>
         </el-table-column>
 
@@ -789,11 +786,12 @@ const handleSliderChange = (row: any) => {
     <template v-if="enablePager">
       <div class="table-pagination">
         <el-pagination
-          v-model:current-page="tableInfo.pagerQuery.query.current"
-          :page-size="tableInfo.pagerQuery.query.size"
-          :total="tableInfo.pagerQuery.query.total"
-          :page-sizes="tableInfo.pagerQuery.pageSizes"
-          :layout="tableInfo.pagerQuery.layout"
+          v-model:current-page="pagerQuery.current"
+          v-model:page-size="pagerQuery.size"
+          :size="theme.size"
+          :total="pagerQuery.total"
+          :page-sizes="pagerInfo.pageSizes"
+          :layout="pagerInfo.layout"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />

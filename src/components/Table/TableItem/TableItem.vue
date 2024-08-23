@@ -12,6 +12,7 @@ import useTabsStore from '@/store/modules/tabs.ts'
 import VueJsoneditor from 'vue3-ts-jsoneditor'
 import { FormItemRule } from 'element-plus/es/components/form'
 import { Arrayable } from 'element-plus/es/utils'
+import { useDict } from '@/hooks/dict'
 
 defineOptions({
   name: 'TableItem',
@@ -27,14 +28,13 @@ interface Scope {
 const $router = useRouter()
 const $route = useRoute()
 const tabStore = useTabsStore()
-const props = defineProps(['tableField', 'scope', 'dict'])
+const props = defineProps(['tableField', 'scope'])
 const $emit = defineEmits(['reloadDataList'])
 
 /**
  * 表格字段
  */
 const tableField = ref<Field>(props.tableField as Field)
-const dict = ref(props.dict)
 const scope = ref<Scope>(props.scope)
 
 interface switchType {
@@ -266,7 +266,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
       :prop="`rows[${scope.$index}][${tableField.prop}]`"
     >
-      <span v-if="editId != scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
+      <span v-if="editId !== scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
         {{ scope.row[tableField.prop] }}
       </span>
       <el-input
@@ -373,9 +373,9 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <div v-else-if="tableField.type === 'dict' && tableField.dict">
     <el-tag
       v-if="scope.row?.[tableField.prop] !== undefined"
-      :type="dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.type || 'info'"
+      :type="useDict(tableField.dict)[tableField.dict].value[scope.row?.[tableField.prop]]?.type || 'info'"
     >
-      {{ dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.label }}
+      {{ useDict(tableField.dict)[tableField.dict].value[scope.row?.[tableField.prop]]?.label }}
     </el-tag>
   </div>
 

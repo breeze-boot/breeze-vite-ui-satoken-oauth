@@ -3,10 +3,10 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import useSettingStore from '@/store/modules/setting'
-import useTabStore from '@/store/modules/tabs'
 import { watch, ref, nextTick, computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import useSettingStore from '@/store/modules/setting'
+import useTabStore from '@/store/modules/tabs'
 
 let { refresh } = storeToRefs(useSettingStore())
 let tabStore = useTabStore()

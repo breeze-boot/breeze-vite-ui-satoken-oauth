@@ -8,6 +8,8 @@
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { listUserRoles, page } from '@/api/auth/role'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
@@ -47,8 +49,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'multi',
-  // 字典
-  dict: [],
   // 选中的行
   checkedRows: [],
   // 表格字段配置
@@ -142,7 +142,7 @@ defineExpose({
 <template>
   <el-drawer size="50%" v-model="visible" :title="t('user.common.roleSettings')" :direction="direction">
     <template #header>
-      <h4>{{ $t('user.common.roleSettings') }}</h4>
+      <h4>{{ t('user.common.roleSettings') }}</h4>
     </template>
     <template #default>
       <search-container-box>
@@ -169,10 +169,10 @@ defineExpose({
 
           <el-form-item>
             <el-button type="primary" :icon="Search" @click="handleQuery">
-              {{ $t('common.search') }}
+              {{ t('common.search') }}
             </el-button>
             <el-button type="success" :icon="Refresh" @click="resetQuery">
-              {{ $t('common.reset') }}
+              {{ t('common.reset') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -181,7 +181,6 @@ defineExpose({
       <b-table
         ref="userRoleTableRef"
         :list-api="page"
-        :dict="tableInfo.dict"
         :checked-rows="tableInfo.checkedRows"
         :tableIndex="tableInfo.tableIndex"
         :query="queryParams"
@@ -196,9 +195,9 @@ defineExpose({
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
         <el-button v-has="['auth:user:set:role']" type="primary" @click="handleUserRoleSettingsDataFormSubmit()">
-          {{ $t('common.confirm') }}
+          {{ t('common.confirm') }}
         </el-button>
       </div>
     </template>

@@ -7,11 +7,12 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
+import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
 import { TableInfo } from '@/components/Table/types/types.ts'
+import BTable from '@/components/Table/BTable/index.vue'
+import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
 import { ElMessage } from 'element-plus'
-import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
 
 defineOptions({
   name: 'DictItem',
@@ -41,8 +42,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'multi',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -204,14 +203,13 @@ defineExpose({
 <template>
   <el-drawer size="50%" v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
     <template #header>
-      <h4>{{ $t('dictItem.common.dictItemViewing') }}</h4>
+      <h4>{{ t('dictItem.common.dictItemViewing') }}</h4>
     </template>
     <template #default>
       <b-table
         ref="dictItemTableRef"
         :pager="false"
         :list-api="list"
-        :dict="tableInfo.dict"
         :tableIndex="tableInfo.tableIndex"
         :query="queryParams"
         :refresh="tableInfo.refresh"
@@ -226,7 +224,7 @@ defineExpose({
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
       </div>
     </template>
   </el-drawer>

@@ -6,6 +6,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { list, exportExcel, deleteMenu } from '@/api/auth/menu'
+import BTreeTable from '@/components/Table/BTreeTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/MenuAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { MenuRecords } from '@/api/auth/menu/type.ts'
@@ -65,8 +67,6 @@ const tableInfo = reactive<TableInfo>({
       icon: 'excel',
     },
   ],
-  // 字典
-  dict: ['HIDDEN', 'MENU_TYPE', 'HREF', 'KEEPALIVE'],
   // 表格字段配置
   fieldList: [
     {
@@ -310,10 +310,10 @@ const handleSelectionChange = (rows: MenuRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -324,7 +324,6 @@ const handleSelectionChange = (rows: MenuRecords) => {
     :export-api="exportExcel"
     :list-api="list"
     :pager="false"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

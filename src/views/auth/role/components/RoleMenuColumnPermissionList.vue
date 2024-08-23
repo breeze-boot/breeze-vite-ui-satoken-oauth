@@ -158,13 +158,13 @@ defineExpose({
       </el-tree>
     </el-container>
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
       <el-button
         v-has="['auth:menu:column:permission:modify', 'ROLE_ADMIN']"
         type="primary"
         @click="handleRoleDataFormSubmit()"
       >
-        {{ $t('common.confirm') }}
+        {{ t('common.confirm') }}
       </el-button>
     </template>
   </el-dialog>

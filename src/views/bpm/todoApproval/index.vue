@@ -22,7 +22,7 @@ onMounted(async () => {
   if (!$route.query.taskId) {
     return
   }
-  await todoTaskRef.value.initApprove($route.query.taskId)
+  await todoTaskRef.value.initApprove($route.query.taskId as string)
 })
 
 /**

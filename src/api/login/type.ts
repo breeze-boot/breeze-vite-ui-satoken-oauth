@@ -7,6 +7,7 @@ import { PermissionDatas, ResponseData, UserInfoData } from '@/types/types.ts'
 export interface UserLoginForm {
   username?: string
   password?: string
+  captchaVerification?: string
 }
 
 export interface LoginResponseData {

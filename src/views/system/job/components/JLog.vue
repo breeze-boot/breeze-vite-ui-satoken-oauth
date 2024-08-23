@@ -37,8 +37,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'multi',
-  // 字典
-  dict: ['JOB_STATUS'],
   // 表格字段配置
   fieldList: [
     {
@@ -143,13 +141,12 @@ defineExpose({
 <template>
   <el-drawer size="80%" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
     <template #header>
-      <h4>{{ $t('jLog.common.jLogViewing') }}</h4>
+      <h4>{{ t('jLog.common.jLogViewing') }}</h4>
     </template>
     <template #default>
       <b-table
         ref="jLogTableRef"
         :list-api="page"
-        :dict="tableInfo.dict"
         :tableIndex="tableInfo.tableIndex"
         :query="queryParams"
         :refresh="tableInfo.refresh"
@@ -164,7 +161,7 @@ defineExpose({
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
       </div>
     </template>
   </el-drawer>

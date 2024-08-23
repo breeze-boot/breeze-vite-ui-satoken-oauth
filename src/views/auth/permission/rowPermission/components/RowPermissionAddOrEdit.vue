@@ -209,8 +209,8 @@ defineExpose({
       </el-form-item>
       <el-form-item label-width="125px" :label="$t('rowPermission.fields.customizesType')" prop="customizesType">
         <el-radio-group v-model="rowPermissionDataForm.customizesType">
-          <el-radio value="USER" border>{{ $t('rowPermission.fields.user') }}</el-radio>
-          <el-radio value="DEPT" border>{{ $t('rowPermission.fields.dept') }}</el-radio>
+          <el-radio value="USER" border>{{ t('rowPermission.fields.user') }}</el-radio>
+          <el-radio value="DEPT" border>{{ t('rowPermission.fields.dept') }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -246,8 +246,8 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handlePermissionDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handlePermissionDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>

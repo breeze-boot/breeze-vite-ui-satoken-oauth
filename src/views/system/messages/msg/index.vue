@@ -6,6 +6,9 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteMsg } from '@/api/system/messages/msg'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
+import SendMsgSetting from '@/views/system/messages/msg/components/SendMsgSetting.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import AddOrEdit from './components/MsgAddOrEdit.vue'
 import type { MsgRecords } from '@/api/system/messages/msg/type.ts'
@@ -13,7 +16,6 @@ import { MsgRecord, MsgQuery } from '@/api/system/messages/msg/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import SendMsgSetting from '@/views/system/messages/msg/components/SendMsgSetting.vue'
 
 defineOptions({
   name: 'Msg',
@@ -42,8 +44,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -265,10 +265,10 @@ const handleSelectionChange = (rows: MsgRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -278,7 +278,6 @@ const handleSelectionChange = (rows: MsgRecords) => {
     ref="templateTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

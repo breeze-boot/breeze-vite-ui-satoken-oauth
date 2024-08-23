@@ -7,6 +7,8 @@
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteRole } from '@/api/auth/role'
 import AddOrEdit from './components/RoleAddOrEdit.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import RoleMenuPermissionList from './components/RoleMenuPermissionList.vue'
 import RoleMenuColumnPermissionList from './components/RoleMenuColumnPermissionList.vue'
 import { ElForm, ElMessage } from 'element-plus'
@@ -46,8 +48,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -304,10 +304,10 @@ const handleSelectionChange = (rows: RoleRecords) => {
 
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -317,7 +317,6 @@ const handleSelectionChange = (rows: RoleRecords) => {
     ref="roleTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

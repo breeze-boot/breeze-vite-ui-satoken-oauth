@@ -3,42 +3,21 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import Menu from '@/layout/menuItem/index.vue'
 import Logo from '@/layout/logo/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
-import { computed } from 'vue'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
 
-let { settings, theme } = settingStore
+let { settings, theme } = storeToRefs(settingStore)
 let menuStore = useMenuStore()
 let $route = useRoute()
 let $router = useRouter()
-
-/**
- * 菜单位置
- */
-const menuLayout = computed(() => {
-  return theme.menuLayout
-})
-
-/**
- * 菜单位置
- */
-const isCollapse = computed(() => {
-  return settings.isCollapse
-})
-
-/**
- * 获取菜单路由
- */
-const menuRoutes = computed(() => {
-  return menuStore.menuRoutes
-})
 
 /**
  * 菜单点击回调
@@ -48,7 +27,7 @@ const menuRoutes = computed(() => {
 const selectMenu = async (index: string) => {
   const menuInfo = menuStore.getMenuInfo('path', index)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
-  if (menuLayout.value !== '' && menuInfo?.meta?.type === 1) {
+  if (theme.value.menuLayout !== '' && menuInfo?.meta?.type === 1) {
     await $router.push({ path: index, query: {} })
     tabsStore.setTab($route)
   }
@@ -62,11 +41,11 @@ const selectMenu = async (index: string) => {
       mode="horizontal"
       :default-active="$route.path"
       background-color="transparent"
-      :collapse="isCollapse"
+      :collapse="settings.isCollapse"
       @select="selectMenu"
     >
-      <Logo v-if="menuLayout !== 'mix'" />
-      <Menu :layout="menuLayout" position="top" :menuList="menuRoutes" />
+      <Logo v-if="theme.menuLayout !== 'mix'" />
+      <Menu :layout="theme.menuLayout" position="top" :menuList="menuStore.menuRoutes" />
     </el-menu>
   </el-scrollbar>
 </template>

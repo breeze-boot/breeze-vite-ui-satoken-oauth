@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import pinia from '@/store'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus'
 import JSONBigInt from 'json-bigint'
 import { StorageName } from '@/types/types'
 import router from '@/router'
@@ -170,7 +170,10 @@ request.interceptors.response.use(
         ElMessage.warning(message)
         return Promise.reject(response.data)
       case '0002':
-        ElMessage.warning(message)
+        ElNotification({
+          type: 'error',
+          message: message,
+        })
         return Promise.reject(response.data)
       case '0003':
         ElMessage.warning(message)

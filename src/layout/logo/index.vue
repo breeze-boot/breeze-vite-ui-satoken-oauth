@@ -3,10 +3,10 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
 
-let settingStore = useSettingStore()
-const { settings } = settingStore
+let { settings } = storeToRefs(useSettingStore())
 </script>
 
 <template>

@@ -149,7 +149,7 @@ const handleUserDataFormSubmit = async () => {
 
   let userIds: number[] = []
   currentRows.forEach((row: UserRecord) => {
-    if (row.id != null) {
+    if (row.id !== null) {
       userIds.push(row.id)
     }
   })
@@ -206,10 +206,10 @@ defineExpose({
 
         <el-form-item>
           <el-button type="primary" :icon="Search" @click="handleQuery">
-            {{ $t('common.search') }}
+            {{ t('common.search') }}
           </el-button>
           <el-button type="success" :icon="Refresh" @click="resetQuery">
-            {{ $t('common.reset') }}
+            {{ t('common.reset') }}
           </el-button>
         </el-form-item>
       </el-form>

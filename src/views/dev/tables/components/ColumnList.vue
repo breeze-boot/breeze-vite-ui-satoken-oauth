@@ -7,6 +7,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { listColumns } from '@/api/dev/tables/index.ts'
+import BTable from '@/components/Table/BTable/index.vue'
 import { useI18n } from 'vue-i18n'
 import { TableInfo } from '@/components/Table/types/types.ts'
 
@@ -29,8 +30,6 @@ const tableInfo: TableInfo = {
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [],
   // 表格字段配置

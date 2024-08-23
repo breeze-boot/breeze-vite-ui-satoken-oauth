@@ -56,15 +56,14 @@ const userStore = useUserStore()
 
 const initApprove = async (taskId: string) => {
   const response: any = await getTaskInfo(taskId)
-  if (response.code != '0000') {
+  if (response.code !== '0000') {
     ElMessage.warning('任务不存在')
   }
   taskInfo.value = response.data
   await flowButtonInfo()
 
   form.value = defineAsyncComponent(() => {
-    /* @vite-ignore */
-    return import(`/src/views/${taskInfo.value.formKey as string}.vue`)
+    return import(`/src/views/ ${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
   })
 }
 

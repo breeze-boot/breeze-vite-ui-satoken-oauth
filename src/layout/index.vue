@@ -3,11 +3,12 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { watchEffect, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import LeftMenu from './leftMenu/index.vue'
 import TabBar from './tabbar/index.vue'
 import Main from './main/index.vue'
 import useSettingStore from '@/store/modules/setting'
-import { watchEffect, computed } from 'vue'
 import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
 import { useWindowSize } from '@vueuse/core'
 import websocket from '@/layout/websocket/index.vue'
@@ -16,17 +17,8 @@ import { DEVICE } from '@/utils/common.ts'
 import variables from '@/styles/variables.module.scss'
 
 let settingStore = useSettingStore()
-const { theme, settings } = useSettingStore()
+const { theme, settings } = storeToRefs(settingStore)
 const { width } = useWindowSize()
-
-/**
- * 菜单位置计算属性
- */
-const menuLayout = computed(() => theme.menuLayout)
-/**
- * 计算获取菜单数据
- */
-const isCollapse = computed(() => settings.isCollapse)
 
 /**
  * 动态获取tab的样式
@@ -34,10 +26,11 @@ const isCollapse = computed(() => settings.isCollapse)
 const tabStyle = computed(() => {
   return {
     background: variables.baseMainTheme,
-    left: menuLayout.value !== 'top' ? (!isCollapse.value ? variables.baseLeftMenuWidth : '56px') : '0px',
+    left:
+      theme.value.menuLayout !== 'top' ? (!settings.value.isCollapse ? variables.baseLeftMenuWidth : '56px') : '0px',
     width:
-      menuLayout.value !== 'top'
-        ? isCollapse.value
+      theme.value.menuLayout !== 'top'
+        ? settings.value.isCollapse
           ? 'calc(100% - 56px)'
           : 'calc(100% - ' + variables.baseLeftMenuWidth + ')'
         : '100%',
@@ -46,7 +39,7 @@ const tabStyle = computed(() => {
 
 const WIDTH: number = 992
 watchEffect(() => {
-  let _menuLayout: MenuLayout = menuLayout.value
+  let _menuLayout: MenuLayout = theme.value.menuLayout
   if (width.value > WIDTH) {
     settingStore.settings.isCollapse = false
     settingStore.setDevice(DEVICE.PC)

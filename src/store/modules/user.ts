@@ -55,6 +55,7 @@ const useUserStore = defineStore('User', {
       const LoginForm = {
         username: data.username!.trim() as string,
         password: encrypt(data.password!.trim(), SALES) as string,
+        captchaVerification: encodeURIComponent(data.captchaVerification as string),
       }
       const response: LoginResponseData = await userLogin(LoginForm, GrantType.PASSWORD)
       if (response) {
@@ -85,6 +86,9 @@ const useUserStore = defineStore('User', {
      * token刷新方法
      */
     async toRefreshToken(): Promise<LoginResponseData> {
+      if (!this.refreshToken) {
+        throw Error('refresh token is null ')
+      }
       const response: LoginResponseData = await refreshToken(this.refreshToken, GrantType.REFRESH_TOKEN)
       if (response) {
         // 持久化

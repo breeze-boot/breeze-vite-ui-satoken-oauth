@@ -28,7 +28,6 @@ const leaveDataForm = ref<LeaveForm>({ id: 0, code: '', endDate: '', reason: '',
 const rules = ref({})
 
 onMounted(async () => {
-  debugger
   await todoTaskRef.value.initStartApprove('leave', leaveDataForm.value.code as string)
 })
 

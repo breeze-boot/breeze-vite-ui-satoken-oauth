@@ -5,13 +5,15 @@
 <script setup lang="ts">
 import { User, Lock } from '@element-plus/icons-vue'
 import { reactive, computed, ref, onMounted } from 'vue'
-import { useRouter, useRoute, LocationQueryRaw } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ElNotification } from 'element-plus'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useColumnStore from '@/store/modules/column'
 import useSettingStore from '@/store/modules/setting'
 import { storeToRefs } from 'pinia'
+import Verify from '@/components/anj-plus/Verify.vue'
+import { UserLoginForm } from '@/api/login/type.ts'
 
 let settingStore = useSettingStore()
 let columnStore = useColumnStore()
@@ -33,6 +35,18 @@ onMounted(() => {
   userStore.logout()
 })
 
+const verify = ref(null)
+const captchaType = ref('clickWord')
+const handleCheck = () => {
+  handleOnShow('blockPuzzle')
+  // handleOnShow('clickWord')
+}
+
+const handleOnShow = (type: any) => {
+  captchaType.value = type
+  verify.value?.show()
+}
+
 /**
  * 切换日间/夜间模式
  */
@@ -52,7 +66,7 @@ const changeThemeColor = () => {
   document.documentElement.style.setProperty('--el-color-primary', theme.value.themeColor)
 }
 
-const loginFormData = reactive({
+const loginFormData = reactive<UserLoginForm>({
   username: 'admin',
   password: '123456',
 })
@@ -109,8 +123,9 @@ const rules = {
 /**
  * 登录请求
  */
-const handleLogin = async () => {
+const handleLogin = async (data: any) => {
   await loginFormRef.value.validate()
+  loginFormData.captchaVerification = data.captchaVerification
   loading.value = true
   try {
     await userStore.userLogin(loginFormData)
@@ -127,10 +142,6 @@ const handleLogin = async () => {
     loading.value = false
   } catch (error) {
     loading.value = false
-    ElNotification({
-      type: 'error',
-      message: (error as Error).message || '',
-    })
   }
 }
 </script>
@@ -140,113 +151,85 @@ const handleLogin = async () => {
     :font="theme.themeModel === 'dark' ? theme.lightFont : theme.darkFont"
     :content="theme.watermarkContent"
   >
-    <div class="login_container" @keyup.enter="handleLogin">
-      <el-row :gutter="24" style="margin: 0">
-        <el-col
-          :span="8"
-          :xs="{ span: 1 }"
-          :sm="{ span: 1 }"
-          :md="{ span: 6 }"
-          :lg="{ span: 8 }"
-          :xl="{ span: 8 }"
-          class="layout"
-        ></el-col>
-        <el-col
-          :span="8"
-          :xs="{ span: 22 }"
-          :sm="{ span: 22 }"
-          :md="{ span: 12 }"
-          :lg="{ span: 8 }"
-          :xl="{ span: 8 }"
-          class="layout"
-        >
-          <el-card class="login-form-card">
-            <h1>{{ title }}</h1>
-            <el-form :model="loginFormData" :rules="rules" ref="loginFormRef">
-              <el-form-item prop="username">
-                <el-input
-                  :prefix-icon="User"
-                  v-model="loginFormData.username"
-                  size="large"
-                  clearable
-                  placeholder="Username"
-                ></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input
-                  type="password"
-                  :prefix-icon="Lock"
-                  show-password
-                  v-model="loginFormData.password"
-                  size="large"
-                  placeholder="Password"
-                  clearable
-                ></el-input>
-              </el-form-item>
-            </el-form>
-            <el-form-item>
-              <el-button
-                @keyup.enter="handleLogin()"
-                :loading="loading"
-                size="large"
-                class="login_btn"
-                type="primary"
-                @click="handleLogin"
-              >
-                登录
-              </el-button>
-            </el-form-item>
-          </el-card>
-        </el-col>
-        <el-col
-          :span="8"
-          :xs="{ span: 1 }"
-          :sm="{ span: 1 }"
-          :md="{ span: 6 }"
-          :lg="{ span: 8 }"
-          :xl="{ span: 8 }"
-          class="layout"
-        ></el-col>
-      </el-row>
+    <div class="login_container" @keyup.enter="handleCheck">
+      <el-card class="login-form-card">
+        <h1>{{ title }}</h1>
+        <el-form :model="loginFormData" :rules="rules" ref="loginFormRef">
+          <el-form-item prop="username">
+            <el-input
+              :prefix-icon="User"
+              v-model="loginFormData.username"
+              size="large"
+              clearable
+              placeholder="Username"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              type="password"
+              :prefix-icon="Lock"
+              show-password
+              v-model="loginFormData.password"
+              size="large"
+              placeholder="Password"
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <el-form-item>
+          <el-button
+            @keyup.enter="handleCheck"
+            :loading="loading"
+            size="large"
+            class="login_btn"
+            type="primary"
+            @click="handleCheck"
+          >
+            登录
+          </el-button>
+        </el-form-item>
+      </el-card>
+
+      <Verify
+        mode="pop"
+        @success="handleLogin"
+        :captchaType="captchaType"
+        :imgSize="{ width: '400px', height: '200px' }"
+        ref="verify"
+      ></Verify>
     </div>
   </el-watermark>
 </template>
 
 <style lang="scss" scoped>
 .login_container {
-  position: fixed;
   width: 100%;
   height: 100vh;
   background-image: radial-gradient(circle at 48.7% 44.3%, rgb(254, 254, 254) 10.5%, rgb(181, 239, 249) 50%);
 
-  .layout {
-    position: relative;
-    height: 100vh;
+  .login-form-card {
+    border: none;
+    position: absolute;
+    top: 25vh;
+    left: 50%;
+    width: 28rem;
+    padding: 30px 10px;
+    background-color: var(--login-theme);
+    transform: translateX(-50%);
 
-    .login-form-card {
-      border: none;
-      position: absolute;
-      top: 25vh;
-      left: 50%;
-      width: 70%;
-      padding: 30px 10px;
-      background-color: var(--login-theme);
-      transform: translateX(-50%);
+    h1 {
+      margin-top: -10px;
+      margin-bottom: 40px;
+      font-size: 40px;
+      font-weight: 700;
+      text-align: center;
+      background: linear-gradient(to right, blue, rgb(35 60 70));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-      h1 {
-        margin-top: -10px;
-        margin-bottom: 40px;
-        font-size: 40px;
-        font-weight: 700;
-        text-align: center;
-        background: linear-gradient(to right, blue, rgb(35 60 70));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .login_btn {
-        width: 100%;
-      }
+    .login_btn {
+      width: 100%;
     }
   }
 }

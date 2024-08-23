@@ -10,6 +10,8 @@ import { page, exportExcel, deleteEmailConfig, open } from '@/api/system/email/e
 import type { EmailConfigRecords, EmailConfigRecord, EmailConfigQuery } from '@/api/system/email/emailConfig/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/EmailConfigAddOrEdit.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
@@ -38,8 +40,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: [],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -279,10 +279,10 @@ const handleSelectionChange = (row: EmailConfigRecord) => {
 
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -292,7 +292,6 @@ const handleSelectionChange = (row: EmailConfigRecord) => {
     ref="emailTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :default-sort="tableInfo.defaultSort"

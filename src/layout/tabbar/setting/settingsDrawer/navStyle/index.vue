@@ -3,23 +3,17 @@
  * @since: 2024-01-31
 -->
 <script setup lang="ts" name="navStyle">
+import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
-import { computed } from 'vue'
 
 let settingStore = useSettingStore()
-let { theme } = settingStore
-
-/**
- * 动态当前布局
- */
-const menuLayout = computed(() => theme.menuLayout)
+let { theme } = storeToRefs(settingStore)
 
 /**
  * 改变布局
  */
 const handleClickMenuStyle = (item: string) => {
-  theme.menuLayout = item
-  settingStore.setMenuLayout(theme.menuLayout)
+  settingStore.setMenuLayout(item)
 }
 </script>
 
@@ -27,7 +21,7 @@ const handleClickMenuStyle = (item: string) => {
   <div
     class="layout-left"
     :style="
-      menuLayout === 'left'
+      theme.menuLayout === 'left'
         ? {
             boxShadow: '2px 2px 10px rgba(162, 162, 162, 0.8)',
           }
@@ -44,7 +38,7 @@ const handleClickMenuStyle = (item: string) => {
   <div
     class="layout-top"
     :style="
-      menuLayout === 'top'
+      theme.menuLayout === 'top'
         ? {
             boxShadow: '2px 2px 10px rgba(162, 162, 162, 0.8)',
           }
@@ -58,7 +52,7 @@ const handleClickMenuStyle = (item: string) => {
   <div
     class="layout-mix"
     :style="
-      menuLayout === 'mix'
+      theme.menuLayout === 'mix'
         ? {
             boxShadow: '2px 2px 10px rgba(162, 162, 162, 0.8)',
           }

@@ -18,6 +18,7 @@ import FileUploadButton from '@/components/FileUploadButton/index.vue'
 import WangEditor from '@/components/WangEditor/index.vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
 import ProcessTask from '@/components/ProcessTask/index.vue'
+import Verify from '@/components/anj-plus/Verify.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
@@ -34,6 +35,7 @@ const components: { [name: string]: Component } = {
   WangEditor,
   ProcessViewer,
   ProcessTask,
+  Verify,
 }
 
 export default {

@@ -3,27 +3,22 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import useSettingStore from '@/store/modules/setting.ts'
 import BreadCrumb from './breadcrumb/index.vue'
 import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'
-import useSettingStore from '@/store/modules/setting.ts'
-import { computed } from 'vue'
 import Tab from '@/layout/tabbar/tab/index.vue'
 
-const { theme } = useSettingStore()
-
-/**
- * 菜单布局计算属性
- */
-const menuLayout = computed(() => theme.menuLayout)
+const { theme, device } = storeToRefs(useSettingStore())
 </script>
 
 <template>
   <el-header class="el-header-container">
     <div class="toolbar">
       <div class="toolbar-left">
-        <TopMenu v-if="menuLayout !== 'left'" />
-        <BreadCrumb v-else />
+        <TopMenu v-if="theme.menuLayout !== 'left'" />
+        <BreadCrumb v-if="theme.menuLayout === 'left' && device === 'pc'" />
       </div>
       <div class="toolbar-right">
         <Setting />

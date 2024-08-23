@@ -5,6 +5,7 @@ import { UploadRawFile, UploadRequestOptions, UploadUserFile } from '@/component
 import { FileParam } from '@/api/system/file/type.ts'
 import { uploadMinioS3 } from '@/api/system/file'
 import { useI18n } from 'vue-i18n'
+import SvgButton from '@/components/SvgButton/index.vue'
 
 const { t } = useI18n()
 const props = defineProps({
@@ -137,9 +138,9 @@ const beforeFileUpload = (rawFile: UploadRawFile) => {
       :limit="props.fileLimit"
       :on-exceed="handleExceed"
     >
-      <el-button type="primary">{{ $t('common.upload') }}</el-button>
+      <el-button type="primary">{{ t('common.upload') }}</el-button>
       <template #tip>
-        <div class="el-upload__tip">{{ $t('common.rules.fileSize') }} {{ props.fileSize }} M.</div>
+        <div class="el-upload__tip">{{ t('common.rules.fileSize') }} {{ props.fileSize }} M.</div>
       </template>
     </el-upload>
   </el-popover>

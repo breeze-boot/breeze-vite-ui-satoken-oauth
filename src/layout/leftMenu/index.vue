@@ -3,6 +3,7 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import Menu from '@/layout/menuItem/index.vue'
 import Logo from '@/layout/logo/index.vue'
 import useSettingStore from '@/store/modules/setting'
@@ -16,7 +17,7 @@ let $router = useRouter()
 let $route = useRoute()
 let menuStore = useMenuStore()
 let tabStore = useTabsStore()
-let { theme, settings } = useSettingStore()
+let { theme, settings } = storeToRefs(useSettingStore())
 
 onMounted(async () => {
   await menuStore.setMenuChildren(
@@ -26,19 +27,9 @@ onMounted(async () => {
 })
 
 /**
- * 菜单位置计算属性
- */
-const menuLayout = computed(() => theme.menuLayout)
-
-/**
  * 计算获取菜单数据
  */
-const menuList = computed(() => (menuLayout.value === 'mix' ? menuStore.mixMenuRoutes : menuStore.menuRoutes))
-
-/**
- * 计算获取菜单数据
- */
-const isCollapse = computed(() => settings.isCollapse)
+const menuList = computed(() => (theme.value.menuLayout === 'mix' ? menuStore.mixMenuRoutes : menuStore.menuRoutes))
 
 /**
  * 菜单选择事件
@@ -46,14 +37,14 @@ const isCollapse = computed(() => settings.isCollapse)
  * @param index
  */
 const selectMenu = async (index: string) => {
-  if (menuLayout.value !== 'top') {
+  if (theme.value.menuLayout !== 'top') {
     await $router.push({ path: index })
     tabStore.setTab($route)
   }
 }
 
 watch(
-  () => theme.menuLayout,
+  () => theme.value.menuLayout,
   () => {
     $router.push({ path: $route.path, query: {} })
   },
@@ -61,11 +52,20 @@ watch(
 </script>
 
 <template>
-  <el-aside v-if="menuLayout !== 'top'" :width="variables.baseLeftMenuWidth" :class="{ isCollapse: isCollapse }">
+  <el-aside
+    v-if="theme.menuLayout !== 'top'"
+    :width="variables.baseLeftMenuWidth"
+    :class="{ isCollapse: settings.isCollapse }"
+  >
     <el-scrollbar>
-      <el-menu background-color="transparent" :default-active="$route.path" :collapse="isCollapse" @select="selectMenu">
+      <el-menu
+        background-color="transparent"
+        :default-active="$route.path"
+        :collapse="settings.isCollapse"
+        @select="selectMenu"
+      >
         <Logo />
-        <Menu :layout="menuLayout" position="noTop" :menuList="menuList" />
+        <Menu :layout="theme.menuLayout" position="noTop" :menuList="menuList" />
       </el-menu>
     </el-scrollbar>
   </el-aside>

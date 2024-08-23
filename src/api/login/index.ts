@@ -38,7 +38,7 @@ export function listPermission(i18n: string): AxiosPromise<PermissionResponseDat
 export const userLogin = (userLoginForm: UserLoginForm, grantType: GrantType) =>
   request.post<any, any>(
     API.AUTH_URL +
-      `?grant_type=${grantType}&username=${userLoginForm.username}&password=${userLoginForm.password}&scope=user_info`,
+      `?grant_type=${grantType}&username=${userLoginForm.username}&password=${userLoginForm.password}&scope=user_info&captchaVerification=${userLoginForm.captchaVerification}`,
     {},
     {
       headers: {

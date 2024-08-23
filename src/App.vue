@@ -3,13 +3,13 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { ElConfigProvider } from 'element-plus'
 import useSettingStore from '@/store/modules/setting'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
 
-let settingStore = useSettingStore()
-const { settings, theme } = settingStore
+let { settings, theme } = storeToRefs(useSettingStore())
 </script>
 
 <template>

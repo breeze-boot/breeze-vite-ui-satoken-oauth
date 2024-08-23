@@ -18,7 +18,9 @@ const dictStore = useDictStore(pinia)
 export function useDict(...args: any[]): any {
   const dict = ref<Dicts>({})
   return ((): any => {
-    args.forEach((code: string) => {
+    if (args.length === 0) return
+    args.forEach((code: any) => {
+      if (typeof code !== 'string') throw Error('字段配置参数错误')
       dict.value[code] = {}
       const _dict: Dict = dictStore.getDict(code)
       if (_dict) {

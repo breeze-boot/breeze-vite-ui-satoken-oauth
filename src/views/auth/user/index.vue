@@ -7,6 +7,8 @@
 import { reactive, ref } from 'vue'
 import { page, open, exportExcel, deleteUser, editAvatar, syncUser } from '@/api/auth/user'
 import AddOrEdit from './components/UserAddOrEdit.vue'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { UserRecords } from '@/api/auth/user/type.ts'
 import { UserRecord, UserQuery } from '@/api/auth/user/type.ts'
@@ -54,8 +56,6 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
-  // 字典
-  dict: ['IS_LOCK', 'SEX'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -509,10 +509,10 @@ const handleSelectionChange = (rows: UserRecords) => {
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ $t('common.search') }}
+          {{ t('common.search') }}
         </el-button>
         <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ $t('common.reset') }}
+          {{ t('common.reset') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -522,7 +522,6 @@ const handleSelectionChange = (rows: UserRecords) => {
     ref="userTableRef"
     :export-api="exportExcel"
     :list-api="page"
-    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

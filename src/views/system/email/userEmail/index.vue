@@ -5,8 +5,9 @@
 
 <!-- 发送人用户查询 -->
 <script lang="ts" setup>
-import { ref, reactive, onMounted, UnwrapRef } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import BTable from '@/components/Table/BTable/index.vue'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { EmailSetUserQuery } from '@/api/system/email/msubject/type.ts'
 import { listToEmail, listCcEmail } from '@/api/system/email/msubject'

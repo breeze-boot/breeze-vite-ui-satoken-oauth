@@ -35,7 +35,6 @@ export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
 export interface TableInfo {
   refresh: number
   mountedRefresh?: boolean
-  dict?: string[]
   rows?: []
   pager?: boolean
   select?: 'multi' | 'single'

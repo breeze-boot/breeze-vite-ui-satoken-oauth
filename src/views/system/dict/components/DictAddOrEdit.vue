@@ -122,20 +122,21 @@ defineExpose({
       @keyup.enter="handleDictDataFormSubmit()"
       label-width="125px"
     >
-      <el-form-item label-width="125px" :label="$t('dict.fields.dictCode')" prop="dictCode">
-        <el-input
-          v-model="dictDataForm.dictCode"
-          autocomplete="off"
-          clearable
-          :placeholder="$t('dict.fields.dictCode')"
-        />
-      </el-form-item>
       <el-form-item label-width="125px" :label="$t('dict.fields.dictName')" prop="dictName">
         <el-input
           v-model="dictDataForm.dictName"
           autocomplete="off"
           clearable
           :placeholder="$t('dict.fields.dictName')"
+        />
+      </el-form-item>
+
+      <el-form-item label-width="125px" :label="$t('dict.fields.dictCode')" prop="dictCode">
+        <el-input
+          v-model="dictDataForm.dictCode"
+          autocomplete="off"
+          clearable
+          :placeholder="$t('dict.fields.dictCode')"
         />
       </el-form-item>
 
@@ -150,8 +151,8 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDictDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+      <el-button type="primary" @click="handleDictDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>
