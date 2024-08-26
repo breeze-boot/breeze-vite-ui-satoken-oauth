@@ -19,7 +19,7 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const leaveDataFormRef = ref()
 const leaveDataForm = ref<LeaveRecord>({})
 const rules = ref({})

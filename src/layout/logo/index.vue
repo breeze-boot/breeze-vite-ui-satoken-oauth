@@ -23,9 +23,9 @@ let { settings } = storeToRefs(useSettingStore())
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  width: 95%;
+  width: auto;
   height: 50px;
-  padding-left: 5px;
+  padding: 0 10px;
   overflow: hidden;
   font-size: $base-logo-font-size;
   font-weight: $base-logo-font-weight;

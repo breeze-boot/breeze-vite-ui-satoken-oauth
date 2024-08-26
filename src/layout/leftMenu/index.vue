@@ -4,7 +4,7 @@
 -->
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import Menu from '@/layout/menuItem/index.vue'
+import MenuItem from '@/layout/menuItem/index.vue'
 import Logo from '@/layout/logo/index.vue'
 import useSettingStore from '@/store/modules/setting'
 import useMenuStore from '@/store/modules/menu'
@@ -65,7 +65,7 @@ watch(
         @select="selectMenu"
       >
         <Logo />
-        <Menu :layout="theme.menuLayout" position="noTop" :menuList="menuList" />
+        <menu-item v-for="item in menuList" :key="item.path" :layout="theme.menuLayout" position="noTop" :menu="item" />
       </el-menu>
     </el-scrollbar>
   </el-aside>

@@ -23,7 +23,7 @@ defineOptions({
 const userList = ref<Option[]>()
 const deptOption = ref<SelectData[]>()
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const sendMsgFormRef = ref()
 const sendMsgDataForm = ref<any>({})
 const currentMsgId = ref<number>()
@@ -150,9 +150,9 @@ defineExpose({
       :rules="rules"
       ref="sendMsgFormRef"
       @keyup.enter="handleSendMsgFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
-      <el-form-item label-width="100px" :label="t('msg.fields.deptId')" prop="deptId">
+      <el-form-item :label="t('msg.fields.deptId')" prop="deptId">
         <el-cascader
           tag-type="info"
           @change="handleChangeDept"
@@ -166,7 +166,7 @@ defineExpose({
         />
       </el-form-item>
 
-      <el-form-item v-if="currentMethod === 'USER'" label-width="100px" :label="t('msg.fields.userId')" prop="userId">
+      <el-form-item v-if="currentMethod === 'USER'" :label="t('msg.fields.userId')" prop="userId">
         <el-transfer
           :titles="[t('common.toBeSelectedColumns'), t('common.selectedColumns')]"
           v-model="sendMsgDataForm.userId"

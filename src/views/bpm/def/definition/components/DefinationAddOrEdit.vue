@@ -13,7 +13,6 @@ import type { BpmDefinitionForm } from '@/api/bpm/def/definition/type.ts'
 import { SelectData } from '@/types/types.ts'
 import { selectCategory } from '@/api/bpm/def/category'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import useUserStore from '@/store/modules/user.ts'
 
 defineOptions({
   name: 'DefinitionAddOrEdit',
@@ -26,6 +25,7 @@ const visibleDesigner = ref<boolean>(false)
 const categoryOption = ref<SelectData[]>()
 const bpmnXml = ref<string>('')
 const reloadIndex = ref(0)
+const loading = ref<boolean>(false)
 const flowDesignerRef = ref(null)
 const flowForm = reactive<any>({
   modelId: '',
@@ -34,7 +34,7 @@ const flowForm = reactive<any>({
 })
 
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const definitionDataFormRef = ref()
 const definitionDataForm = ref<BpmDefinitionForm>({
   procDefName: '',
@@ -142,13 +142,13 @@ const handleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
-    definitionDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
     await deployDefinition(definitionDataForm.value)
     ElMessage.success({
       message: t('common.success'),
       duration: 1000,
       onClose: () => {
         visible.value = false
+        loading.value = false
         $emit('reloadDataList')
       },
     })
@@ -163,7 +163,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="t('common.design')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -173,19 +173,20 @@ defineExpose({
       :rules="rules"
       ref="definitionDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="120px"
+      label-width="70px"
     >
-      <el-form-item label-width="110px" :label="t('definition.fields.procDefName')" prop="procDefName">
+      <el-form-item :label="t('definition.fields.procDefName')" prop="procDefName">
         <el-input disabled v-model="definitionDataForm.procDefName" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('definition.fields.procDefKey')" prop="procDefKey">
+      <el-form-item :label="t('definition.fields.procDefKey')" prop="procDefKey">
         <el-input disabled v-model="definitionDataForm.procDefKey" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('category.fields.categoryCode')" prop="categoryCode">
+      <el-form-item :label="t('category.fields.categoryCode')" prop="categoryCode">
         <el-select
           v-model="definitionDataForm.categoryCode"
           collapse-tags
           filterable
+          clearable
           :placeholder="$t('category.fields.categoryCode')"
         >
           <el-option
@@ -204,7 +205,7 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 

@@ -20,7 +20,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const categoryDataFormRef = ref()
 const categoryDataForm = ref<CategoryForm>({ categoryCode: '', categoryName: '', tenantId: '' })
 const rules = ref({
@@ -93,6 +94,7 @@ const handleDataFormSubmit = () => {
       return false
     }
     categoryDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
+    loading.value = true
     const id = categoryDataForm.value.id
     if (id) {
       await editCategory(id, categoryDataForm.value)
@@ -101,6 +103,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -111,6 +114,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -126,7 +130,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!categoryDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -147,7 +151,7 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>

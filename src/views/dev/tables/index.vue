@@ -21,7 +21,7 @@ const columnListRef = ref(ElForm)
 const tableInfoTableRef = ref()
 
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const currentRow = ref<any>()
 const tableInfo = reactive<TableInfo>({
   // 刷新标识

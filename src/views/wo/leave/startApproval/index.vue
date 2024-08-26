@@ -22,7 +22,7 @@ const todoTaskRef = ref()
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const leaveDataFormRef = ref()
 const leaveDataForm = ref<LeaveForm>({ id: 0, code: '', endDate: '', reason: '', startDate: '', title: '' })
 const rules = ref({})

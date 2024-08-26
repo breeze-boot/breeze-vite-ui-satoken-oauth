@@ -8,6 +8,7 @@ import { SettingState } from '@/store/modules/types/types.ts'
 import setting from '@/setting.ts'
 import { Settings, Theme } from '@/types/types.ts'
 import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
+import { DEVICE } from '@/utils/common.ts'
 
 const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
@@ -58,6 +59,16 @@ const useSettingStore = defineStore('SettingStore', {
     setDevice(value: string) {
       this.device = value
       CookiesStorage.set(CookiesKey.DEVICE, value)
+      if (value === DEVICE.MOBILE) {
+        this.settings.isCollapse = true
+        this.setMenuLayout('left')
+      } else if (value === DEVICE.PAD) {
+        this.setMenuLayout('left')
+        this.settings.isCollapse = true
+      } else if (value === DEVICE.PC) {
+        this.setMenuLayout(this.theme.menuLayout)
+        this.settings.isCollapse = false
+      }
     },
   },
 })

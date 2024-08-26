@@ -19,7 +19,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const mSubjectDataFormRef = ref()
 const mSubjectDataForm = ref<MSubjectForm>({ subject: '', content: '', ccUserId: [], cc: '', to: '', toUserId: [] })
 const rules = ref({
@@ -76,6 +77,7 @@ const handleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = mSubjectDataForm.value.id
     if (id) {
       await editMSubject(id, mSubjectDataForm.value)
@@ -84,6 +86,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -94,6 +97,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -109,7 +113,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!mSubjectDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -119,15 +123,15 @@ defineExpose({
       :rules="rules"
       ref="mSubjectDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="120px"
+      label-width="70px"
     >
-      <el-form-item label-width="110px" :label="t('mSubject.fields.subject')" prop="subject">
+      <el-form-item :label="t('mSubject.fields.subject')" prop="subject">
         <el-input v-model="mSubjectDataForm.subject" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('mSubject.fields.content')" prop="content">
+      <el-form-item :label="t('mSubject.fields.content')" prop="content">
         <el-input v-model="mSubjectDataForm.content" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('mSubject.fields.status')" prop="status" style="text-align: left">
+      <el-form-item :label="t('mSubject.fields.status')" prop="status" style="text-align: left">
         <el-switch
           v-model="mSubjectDataForm.status"
           :active-value="1"
@@ -140,7 +144,9 @@ defineExpose({
     <template #footer>
       <div style="flex: auto">
         <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+        <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">
+          {{ t('common.confirm') }}
+        </el-button>
       </div>
     </template>
   </el-dialog>

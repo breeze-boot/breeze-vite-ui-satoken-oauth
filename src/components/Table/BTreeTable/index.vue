@@ -191,7 +191,7 @@ const initColumn = async () => {
       key: index,
       fixed: item.fixed || false,
       align: item.align || 'center',
-      width: item.width || '',
+      width: typeof item.width === 'string' ? item.width.replace('px', '').replace('%', '') : item.width || '',
       hidden: item.hidden || false,
       disabled: item.disabled || false,
       visible: item.hidden || true,

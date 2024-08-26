@@ -131,7 +131,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    minWidth: 400,
+    width: 300,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -145,22 +145,6 @@ const tableInfo = reactive<TableInfo>({
         permission: ['sys:mSubject:modify'],
         eventHandle: (row: MSubjectRecord) => handleUpdate(row),
       },
-      // 设置邮箱发送人
-      {
-        label: t('mSubject.common.setTo'),
-        type: 'warning',
-        icon: 'view',
-        event: 'view',
-        eventHandle: (row: MSubjectRecord) => handleSetTo(row),
-      },
-      // 设置邮箱抄送人
-      {
-        label: t('mSubject.common.setCc'),
-        type: 'warning',
-        icon: 'view',
-        event: 'view',
-        eventHandle: (row: MSubjectRecord) => handleSetCc(row),
-      },
       // 查看
       {
         label: t('common.info'),
@@ -169,6 +153,22 @@ const tableInfo = reactive<TableInfo>({
         event: 'view',
         permission: ['sys:mSubject:info'],
         eventHandle: (row: MSubjectRecord) => handleInfo(row),
+      },
+      // 设置邮箱发送人
+      {
+        label: t('mSubject.common.setTo'),
+        type: 'success',
+        icon: 'view',
+        event: 'view',
+        eventHandle: (row: MSubjectRecord) => handleSetTo(row),
+      },
+      // 设置邮箱抄送人
+      {
+        label: t('mSubject.common.setCc'),
+        type: 'success',
+        icon: 'view',
+        event: 'view',
+        eventHandle: (row: MSubjectRecord) => handleSetCc(row),
       },
       // 删除
       {

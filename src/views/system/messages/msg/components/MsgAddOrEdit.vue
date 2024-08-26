@@ -21,7 +21,7 @@ defineOptions({
 const { MSG_TYPE, MSG_LEVEL } = useDict('MSG_TYPE', 'MSG_LEVEL')
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const msgDataFormRef = ref()
 const msgDataForm = ref<MsgForm>({ code: '', content: '', title: '', level: 'info', type: 0 })
 
@@ -133,7 +133,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!msgDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -143,17 +143,17 @@ defineExpose({
       :rules="rules"
       ref="msgDataFormRef"
       @keyup.enter="handleMsgDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
-      <el-form-item label-width="125px" :label="$t('msg.fields.title')" prop="title">
+      <el-form-item :label="$t('msg.fields.title')" prop="title">
         <el-input v-model="msgDataForm.title" autocomplete="off" clearable :placeholder="$t('msg.fields.title')" />
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('msg.fields.code')" prop="code">
+      <el-form-item :label="$t('msg.fields.code')" prop="code">
         <el-input v-model="msgDataForm.code" autocomplete="off" clearable :placeholder="$t('msg.fields.code')" />
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('msg.fields.type')" prop="type">
+      <el-form-item :label="$t('msg.fields.type')" prop="type">
         <el-radio-group v-model="msgDataForm.type">
           <el-radio-button v-for="item in MSG_TYPE" :key="item.value" :label="item.value">
             {{ item.label }}
@@ -161,7 +161,7 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('msg.fields.level')" prop="level">
+      <el-form-item :label="$t('msg.fields.level')" prop="level">
         <el-radio-group v-model="msgDataForm.level">
           <el-radio-button v-for="item in MSG_LEVEL" :key="item.value" :label="item.value">
             {{ item.label }}
@@ -169,7 +169,7 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('msg.fields.level')" prop="level">
+      <el-form-item :label="$t('msg.fields.level')" prop="level">
         <el-input
           v-model="msgDataForm.content"
           style="width: 450px"

@@ -12,23 +12,29 @@ import Notice from './notice/index.vue'
 import FullScreen from './fullScreen/index.vue'
 import Refresh from './refresh/index.vue'
 import Tenant from './tenant/index.vue'
+import useSettingStore from '@/store/modules/setting.ts'
+import { storeToRefs } from 'pinia'
+import { DEVICE } from '@/utils/common.ts'
+
+let settingStore = useSettingStore()
+const { device } = storeToRefs(settingStore)
 </script>
 
 <template>
   <!-- 搜索 -->
-  <search-dialog />
+  <search-dialog v-if="device !== DEVICE.MOBILE" />
   <!-- 国际化 -->
-  <i18n />
+  <i18n v-if="device !== DEVICE.MOBILE" />
   <!-- 字体大小 -->
-  <font-size />
+  <font-size v-if="device !== DEVICE.MOBILE" />
   <!-- 刷新 -->
-  <refresh />
+  <refresh v-if="device !== DEVICE.MOBILE" />
   <!-- 全屏 -->
-  <full-screen />
+  <full-screen v-if="device !== DEVICE.MOBILE" />
   <!-- 消息 -->
-  <notice />
+  <notice v-if="device !== DEVICE.MOBILE" />
   <!-- 设置抽屉 -->
-  <settings-drawer />
+  <settings-drawer v-if="device !== DEVICE.MOBILE" />
   <!-- 租户 -->
   <tenant />
   <!-- 登录人 -->

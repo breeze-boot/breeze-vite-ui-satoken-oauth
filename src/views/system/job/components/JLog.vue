@@ -18,7 +18,7 @@ defineOptions({
 
 const direction = ref('rtl')
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const jLogTableRef = ref()
 
 let currentRows = reactive<JLogRecords>([])

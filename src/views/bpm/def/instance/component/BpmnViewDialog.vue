@@ -16,7 +16,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const xmlStr = ref<string>()
 const xmlNodes = ref<any>()
 

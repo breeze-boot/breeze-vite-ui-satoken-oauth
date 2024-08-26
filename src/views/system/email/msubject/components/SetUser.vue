@@ -23,7 +23,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const userTableRef = ref()
 const userQueryFormRef = ref()
 const setUserMSubjectForm = ref<SetUserMSubjectForm>({ ccUserId: [], toUserId: [] })
@@ -146,7 +147,7 @@ const handleSelectionChange = (rows: UserRecords) => {
 const handleUserDataFormSubmit = async () => {
   if (!currentRows || currentRows.length === 0) return
   const id = queryParams.value.id
-
+  loading.value = true
   let userIds: number[] = []
   currentRows.forEach((row: UserRecord) => {
     if (row.id !== null) {
@@ -164,6 +165,7 @@ const handleUserDataFormSubmit = async () => {
     duration: 1000,
     onClose: () => {
       visible.value = false
+      loading.value = false
       $emit('reloadDataList')
     },
   })
@@ -230,8 +232,10 @@ defineExpose({
       @selection-change="handleSelectionChange"
     />
     <template #footer>
-      <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleUserDataFormSubmit()">{{ $t('common.confirm') }}</el-button>
+      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleUserDataFormSubmit()">
+        { t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

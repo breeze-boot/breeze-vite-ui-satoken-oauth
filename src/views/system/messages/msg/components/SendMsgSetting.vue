@@ -23,7 +23,7 @@ const methodOptions = ref<SelectData[]>([
   { value: 'DEPT', label: '指定部门' },
 ])
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const currentMsgId = ref<number>()
 const sendMsgMethodFormRef = ref()
 const sendMsgRef = ref()

@@ -28,6 +28,9 @@ export function useDict(...args: any[]): any {
       } else {
         // 远程获取
         listDict(code).then((response: any) => {
+          if (response.code !== '0000') {
+            throw Error('字典加载失败')
+          }
           const result: Dict = {}
           response.data.forEach((item: DictItem): void => {
             result[item.value as number] = { label: item.label, value: item.value, type: item.type }

@@ -19,7 +19,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const tenantDataFormRef = ref()
 const tenantDataForm = ref<TenantForm>({})
 const rules = ref({
@@ -90,6 +91,7 @@ const handleTenantDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = tenantDataForm.value.id
     if (id) {
       await editTenant(id, tenantDataForm.value)
@@ -98,6 +100,7 @@ const handleTenantDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -108,6 +111,7 @@ const handleTenantDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -123,7 +127,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="500"
     :title="!tenantDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -133,9 +137,9 @@ defineExpose({
       :rules="rules"
       ref="tenantDataFormRef"
       @keyup.enter="handleTenantDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
-      <el-form-item label-width="125px" :label="$t('tenant.fields.tenantCode')" prop="tenantCode">
+      <el-form-item :label="$t('tenant.fields.tenantCode')" prop="tenantCode">
         <el-input
           v-model="tenantDataForm.tenantCode"
           autocomplete="off"
@@ -143,7 +147,7 @@ defineExpose({
           :placeholder="$t('tenant.fields.tenantCode')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('tenant.fields.tenantName')" prop="tenantName">
+      <el-form-item :label="$t('tenant.fields.tenantName')" prop="tenantName">
         <el-input
           v-model="tenantDataForm.tenantName"
           autocomplete="off"
@@ -154,7 +158,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleTenantDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleTenantDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

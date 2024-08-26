@@ -25,7 +25,8 @@ defineOptions({
 
 const direction = ref('rtl')
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const userRoleTableRef = ref()
 const roleQueryFormRef = ref()
 const userSetRoleDataForm = ref<UserSetRoleForm>({ userId: 0, roleIds: [] })
@@ -121,6 +122,7 @@ const handleSelectionChange = (rows: RoleRecords) => {
  * 表单提交
  */
 const handleUserRoleSettingsDataFormSubmit = async () => {
+  loading.value = true
   userSetRoleDataForm.value.roleIds = currentRows.map((item: any) => item.id)
   const response: any = await userSetRole(userSetRoleDataForm.value)
   if (response.code === '0000') {
@@ -129,6 +131,7 @@ const handleUserRoleSettingsDataFormSubmit = async () => {
       duration: 1000,
       onClose: () => {
         visible.value = false
+        loading.value = false
       },
     })
   }
@@ -196,7 +199,12 @@ defineExpose({
     <template #footer>
       <div style="flex: auto">
         <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-        <el-button v-has="['auth:user:set:role']" type="primary" @click="handleUserRoleSettingsDataFormSubmit()">
+        <el-button
+          v-has="['auth:user:set:role']"
+          type="primary"
+          :loading="loading"
+          @click="handleUserRoleSettingsDataFormSubmit()"
+        >
           {{ t('common.confirm') }}
         </el-button>
       </div>

@@ -4,12 +4,13 @@
 -->
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import Menu from '@/layout/menuItem/index.vue'
-import Logo from '@/layout/logo/index.vue'
+import MenuItem from '@/layout/menuItem/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
+import Logo from '@/layout/logo/index.vue'
+import { useWindowSize } from '@vueuse/core'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
@@ -18,7 +19,7 @@ let { settings, theme } = storeToRefs(settingStore)
 let menuStore = useMenuStore()
 let $route = useRoute()
 let $router = useRouter()
-
+const { width } = useWindowSize()
 /**
  * 菜单点击回调
  *
@@ -43,9 +44,18 @@ const selectMenu = async (index: string) => {
       background-color="transparent"
       :collapse="settings.isCollapse"
       @select="selectMenu"
+      :style="{
+        maxWidth: width - 100 + 'px',
+      }"
     >
       <Logo v-if="theme.menuLayout !== 'mix'" />
-      <Menu :layout="theme.menuLayout" position="top" :menuList="menuStore.menuRoutes" />
+      <menu-item
+        v-for="item in menuStore.menuRoutes"
+        :key="item.path"
+        :layout="theme.menuLayout"
+        position="top"
+        :menu="item"
+      />
     </el-menu>
   </el-scrollbar>
 </template>

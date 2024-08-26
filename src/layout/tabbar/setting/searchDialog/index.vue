@@ -91,7 +91,7 @@ const toggleOpenSearch = () => {
 
 <style lang="scss" scoped>
 .dialog_search {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;

@@ -23,7 +23,8 @@ const treeSetting = reactive({
 })
 
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const rolePermissionTreeRef = ref<InstanceType<typeof ElTree>>()
 const roleTreeData = ref<MenuTreeRecord[]>([])
 const currentClickRoleId = ref<string | number>()
@@ -81,6 +82,7 @@ const handleRoleDataFormSubmit = async () => {
   if (halfCheckedKeys.length > 0) {
     checkedKeys.push(...halfCheckedKeys)
   }
+  loading.value = true
   await saveRoleMenuColumn({
     roleId: currentClickRoleId.value as number,
     menu: checkedKeys as string[],
@@ -90,6 +92,7 @@ const handleRoleDataFormSubmit = async () => {
     duration: 1000,
     onClose: () => {
       visible.value = false
+      loading.value = false
     },
   })
 }
@@ -111,7 +114,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="t('role.common.menuColumnPermission')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -162,6 +165,7 @@ defineExpose({
       <el-button
         v-has="['auth:menu:column:permission:modify', 'ROLE_ADMIN']"
         type="primary"
+        :loading="loading"
         @click="handleRoleDataFormSubmit()"
       >
         {{ t('common.confirm') }}

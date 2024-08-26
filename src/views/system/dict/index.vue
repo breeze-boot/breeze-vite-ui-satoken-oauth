@@ -113,7 +113,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    minWidth: 350,
+    width: 210,
     label: t('common.operate'),
     fixed: 'right',
     link: true,

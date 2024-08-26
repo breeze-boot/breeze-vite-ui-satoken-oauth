@@ -58,11 +58,11 @@ export interface ColumnSort {
  * 操作类型
  */
 export interface HandleBtn {
-  minWidth: number | 200
+  minWidth?: number | 210
   label: string | '操作'
-  fixed: 'right' | 'left'
+  fixed?: 'right' | 'left'
   align?: string
-  width?: string
+  width?: string | number
   link?: boolean
   btList?: Btn[]
 }

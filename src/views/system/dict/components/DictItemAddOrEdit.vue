@@ -19,7 +19,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const dictItemDataFormRef = ref()
 const dictItemDataForm = ref<DictItemForm>({ type: '', label: '', value: '', id: 0 })
 
@@ -95,6 +96,7 @@ const handleDictItemDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     dictItemDataForm.value.value = dictItemDataForm.value.value.trim()
     const id = dictItemDataForm.value.id
     if (id) {
@@ -104,6 +106,7 @@ const handleDictItemDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -114,6 +117,7 @@ const handleDictItemDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -129,7 +133,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!dictItemDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -139,7 +143,7 @@ defineExpose({
       :rules="rules"
       ref="dictItemDataFormRef"
       @keyup.enter="handleDictItemDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
       <el-form-item label-width="125px" :label="$t('dictItem.fields.label')" prop="label">
         <el-input
@@ -178,7 +182,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDictItemDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleDictItemDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

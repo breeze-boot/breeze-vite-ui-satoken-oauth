@@ -178,7 +178,7 @@ const handleSelectionChange = (row: CompletedRecord) => {
 
 <template>
   <search-container-box>
-    <el-form ref="completedQueryFormRef" :model="queryParams" :inline="true">
+    <el-form ref="completedQueryFormRef" label-width="90px" :model="queryParams" :inline="true">
       <!-- 待办任务名 -->
       <el-form-item :label="t('completed.fields.taskName')" prop="taskName">
         <el-input

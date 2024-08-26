@@ -28,6 +28,7 @@ defineOptions({
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const roleDataFormRef = ref()
 const roleDataForm = ref<RoleForm>({})
 const permissionOption = ref<SelectData[]>()
@@ -136,6 +137,7 @@ const handleRoleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = roleDataForm.value.id
     if (id) {
       await editRole(id, roleDataForm.value)
@@ -144,6 +146,7 @@ const handleRoleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -154,6 +157,7 @@ const handleRoleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -169,7 +173,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!roleDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -179,7 +183,7 @@ defineExpose({
       :rules="rules"
       ref="roleDataFormRef"
       @keyup.enter="handleRoleDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
       <el-form-item label-width="125px" :label="$t('role.fields.roleCode')" prop="roleCode">
         <el-input
@@ -209,7 +213,7 @@ defineExpose({
       </el-form-item>
       <el-form-item
         v-if="roleDataForm.rowPermissionType === 'CUSTOMIZES'"
-        label-width="125px"
+        label-width="70px"
         :label="$t('role.fields.rowPermissionIds')"
         prop="rowPermissionIds"
       >
@@ -225,7 +229,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleRoleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleRoleDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

@@ -13,6 +13,7 @@ import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
 import useFormValidation from '@/hooks/formValidation'
+import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
 
 defineOptions({
   name: 'UserAddOrEdit',
@@ -21,7 +22,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const deptOption = ref<SelectData[]>()
 const roleOption = ref<SelectData[]>()
 const postOption = ref<SelectData[]>()
@@ -220,6 +222,7 @@ const handleUserDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = userDataForm.value.id
     if (id) {
       await editUser(id, userDataForm.value)
@@ -228,6 +231,7 @@ const handleUserDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -238,6 +242,7 @@ const handleUserDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -253,7 +258,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!userDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -263,12 +268,12 @@ defineExpose({
       :rules="rules"
       ref="userDataFormRef"
       @keyup.enter="handleUserDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
       <el-form-item label-width="0px" prop="avatar">
         <avatar-upload v-model="userDataForm.avatar" />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.username')" prop="username">
+      <el-form-item :label="$t('user.fields.username')" prop="username">
         <el-input
           v-model="userDataForm.username"
           autocomplete="off"
@@ -276,7 +281,7 @@ defineExpose({
           :placeholder="$t('user.fields.username')"
         />
       </el-form-item>
-      <el-form-item v-if="!userDataForm.id" label-width="125px" :label="$t('user.fields.password')" prop="password">
+      <el-form-item v-if="!userDataForm.id" :label="$t('user.fields.password')" prop="password">
         <el-input
           v-model="userDataForm.password"
           autocomplete="off"
@@ -286,12 +291,7 @@ defineExpose({
           :placeholder="$t('user.fields.password')"
         />
       </el-form-item>
-      <el-form-item
-        v-if="!userDataForm.id"
-        label-width="125px"
-        :label="$t('user.fields.confirmPassword')"
-        prop="confirmPassword"
-      >
+      <el-form-item v-if="!userDataForm.id" :label="$t('user.fields.confirmPassword')" prop="confirmPassword">
         <el-input
           v-model="userDataForm.confirmPassword"
           autocomplete="off"
@@ -301,7 +301,7 @@ defineExpose({
           :placeholder="$t('user.fields.confirmPassword')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.userCode')" prop="userCode">
+      <el-form-item :label="$t('user.fields.userCode')" prop="userCode">
         <el-input
           v-model="userDataForm.userCode"
           autocomplete="off"
@@ -309,13 +309,13 @@ defineExpose({
           :placeholder="$t('user.fields.userCode')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.phone')" prop="phone">
+      <el-form-item :label="$t('user.fields.phone')" prop="phone">
         <el-input v-model="userDataForm.phone" autocomplete="off" clearable :placeholder="$t('user.fields.phone')" />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.email')" prop="email">
+      <el-form-item :label="$t('user.fields.email')" prop="email">
         <el-input v-model="userDataForm.email" autocomplete="off" clearable :placeholder="$t('user.fields.email')" />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.displayName')" prop="displayName">
+      <el-form-item :label="$t('user.fields.displayName')" prop="displayName">
         <el-input
           v-model="userDataForm.displayName"
           autocomplete="off"
@@ -323,7 +323,7 @@ defineExpose({
           :placeholder="$t('user.fields.displayName')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" class="dept" :label="$t('user.fields.dept')" prop="deptId">
+      <el-form-item class="dept" :label="$t('user.fields.dept')" prop="deptId">
         <el-cascader
           tag-type="info"
           v-model="userDataForm.deptId"
@@ -335,12 +335,12 @@ defineExpose({
           :placeholder="$t('user.fields.dept')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.post')" style="text-align: left" prop="postId">
+      <el-form-item :label="$t('user.fields.post')" style="text-align: left" prop="postId">
         <el-select v-model="userDataForm.postId" collapse-tags filterable :placeholder="$t('user.fields.post')">
           <el-option v-for="item in postOption" :key="item.value" :label="item.label" :value="item.value.valueOf()" />
         </el-select>
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.roleIds')" prop="roleIds" style="text-align: left">
+      <el-form-item :label="$t('user.fields.roleIds')" prop="roleIds" style="text-align: left">
         <el-select
           v-model="userDataForm.roleIds"
           multiple
@@ -351,16 +351,16 @@ defineExpose({
           <el-option v-for="item in roleOption" :key="item.value" :label="item.label" :value="item.value.valueOf()" />
         </el-select>
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.sex')" prop="sex" style="text-align: left">
+      <el-form-item :label="$t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
           <el-radio :value="0">{{ t('user.fields.sexInfo.woman') }}</el-radio>
           <el-radio :value="1">{{ t('user.fields.sexInfo.man') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.idCard')" prop="idCard">
+      <el-form-item :label="$t('user.fields.idCard')" prop="idCard">
         <el-input v-model="userDataForm.idCard" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('user.fields.isLock')" prop="isLock" style="text-align: left">
+      <el-form-item :label="$t('user.fields.isLock')" prop="isLock" style="text-align: left">
         <el-switch
           v-model="userDataForm.isLock"
           :active-value="1"
@@ -372,7 +372,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleUserDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleUserDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

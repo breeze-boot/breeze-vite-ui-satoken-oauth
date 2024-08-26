@@ -21,7 +21,7 @@ defineOptions({
 
 const direction = ref('rtl')
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const dictItemTableRef = ref()
 const dictItemAddOrEditRef = ref()
 

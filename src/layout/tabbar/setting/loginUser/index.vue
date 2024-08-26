@@ -6,16 +6,28 @@
 import { computed } from 'vue'
 import useUserStore from '@/store/modules/user.ts'
 import useSettingStore from '@/store/modules/setting.ts'
+import { ElMessageBox } from 'element-plus'
 
 let userStore = useUserStore()
 let settingStore = useSettingStore()
-
 /**
  *退出登录
  */
 const handleLogout = async () => {
-  await userStore.logout()
-  window.location.reload()
+  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    userStore
+      .logout()
+      .then(() => {
+        userStore.logout()
+      })
+      .then(() => {
+        window.location.reload()
+      })
+  })
 }
 
 /**

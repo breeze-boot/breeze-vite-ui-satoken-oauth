@@ -22,7 +22,7 @@ const noticeMsg = ref<MsgUserRecord[]>([])
 const noticeMsgInfo = ref<MsgRecord>({ code: '', content: '', level: '', title: '', type: 0 })
 const closeImage = ref(closePng)
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const currentMsgId = ref<number>(0)
 
 onMounted(() => {

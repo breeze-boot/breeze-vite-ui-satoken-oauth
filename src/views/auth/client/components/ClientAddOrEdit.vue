@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addClient, getClient, editClient, checkClientCode } from '@/api/auth/client'
+import { addClient, checkClientCode, editClient, getClient } from '@/api/auth/client'
 import { ClientForm } from '@/api/auth/client/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
@@ -20,7 +20,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const clientDataFormRef = ref()
 const clientDataForm = ref<ClientForm>({
   authorizationGrantTypes: [],
@@ -135,6 +136,7 @@ const handleClientDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = clientDataForm.value.id
     if (id) {
       await editClient(id, clientDataForm.value)
@@ -143,6 +145,7 @@ const handleClientDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -153,6 +156,7 @@ const handleClientDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -168,7 +172,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!clientDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -178,19 +182,17 @@ defineExpose({
       :rules="rules"
       ref="clientDataFormRef"
       @keyup.enter="handleClientDataFormSubmit()"
-      label-width="125px"
+      label-width="90px"
     >
       <div class="card">
-        <span>基础配置</span>
-        <el-divider />
-        <el-form-item label-width="100px" label="客户端ID" prop="clientId">
+        <el-divider>基础配置</el-divider>
+        <el-form-item label="账户" prop="clientId">
           <el-input v-model="clientDataForm.clientId" autocomplete="off" clearable />
         </el-form-item>
-        <el-form-item label-width="100px" label="客户端名称" prop="clientName">
+        <el-form-item label="名称" prop="clientName">
           <el-input v-model="clientDataForm.clientName" autocomplete="off" clearable />
         </el-form-item>
         <el-form-item
-          label-width="100px"
           label="密钥"
           prop="clientSecret"
           v-if="!clientDataForm.id && !clientDataForm.clientSettings.requireProofKey"
@@ -198,14 +200,13 @@ defineExpose({
           <el-input v-model="clientDataForm.clientSecret" autocomplete="off" clearable />
         </el-form-item>
         <el-form-item
-          label-width="100px"
           label="确认密钥"
           prop="confirmClientSecret"
           v-if="!clientDataForm.id && !clientDataForm.clientSettings.requireProofKey"
         >
           <el-input v-model="clientDataForm.confirmClientSecret" autocomplete="off" clearable />
         </el-form-item>
-        <el-form-item label-width="100px" label="发布日期" prop="clientIdIssuedAt">
+        <el-form-item label="发布日期" prop="clientIdIssuedAt">
           <el-date-picker
             v-model="clientDataForm.clientIdIssuedAt"
             type="datetime"
@@ -215,7 +216,7 @@ defineExpose({
           ></el-date-picker>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="重定向URI" prop="redirectUris">
+        <el-form-item label="重定向URI" prop="redirectUris">
           <el-select
             filterable
             allow-create
@@ -233,13 +234,13 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="权限范围" prop="scopes">
+        <el-form-item label="权限范围" prop="scopes">
           <el-select filterable multiple v-model="clientDataForm.scopes" placeholder="请选择权限范围">
             <el-option v-for="(item, index) in SCOPES" :key="index" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="授权许可类型" prop="authorizationGrantTypes">
+        <el-form-item label="授权许可类型" prop="authorizationGrantTypes">
           <el-select
             filterable
             multiple
@@ -255,7 +256,7 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="身份验证方法" prop="clientAuthenticationMethods">
+        <el-form-item label="身份验证方法" prop="clientAuthenticationMethods">
           <el-select
             filterable
             multiple
@@ -272,7 +273,6 @@ defineExpose({
         </el-form-item>
 
         <el-form-item
-          label-width="100px"
           label="密钥到期时间"
           prop="clientSecretExpiresAt"
           v-if="!clientDataForm.clientSettings.requireProofKey"
@@ -288,9 +288,8 @@ defineExpose({
       </div>
 
       <div class="card">
-        <span>client配置</span>
-        <el-divider />
-        <el-form-item label-width="100px" label="PKCE" prop="requireProofKey">
+        <el-divider>client配置</el-divider>
+        <el-form-item label-width="120px" label="PKCE" prop="requireProofKey">
           <el-switch
             v-model="clientDataForm.clientSettings.requireProofKey"
             :active-value="true"
@@ -300,7 +299,7 @@ defineExpose({
           ></el-switch>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="授权同意页面" prop="requireAuthorizationConsent">
+        <el-form-item label-width="120px" label="授权同意页面" prop="requireAuthorizationConsent">
           <el-switch
             v-model="clientDataForm.clientSettings.requireAuthorizationConsent"
             :active-value="true"
@@ -310,7 +309,7 @@ defineExpose({
           ></el-switch>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="JWK-URL" prop="jwkSetUrl">
+        <el-form-item label-width="120px" label="JWK-URL" prop="jwkSetUrl">
           <el-input
             v-model="clientDataForm.clientSettings.jwkSetUrl"
             autocomplete="off"
@@ -319,7 +318,7 @@ defineExpose({
           />
         </el-form-item>
 
-        <el-form-item label-width="100px" label="JWT签名算法" prop="tokenEndpointAuthenticationSigningAlgorithm">
+        <el-form-item label-width="120px" label="JWT签名算法" prop="tokenEndpointAuthenticationSigningAlgorithm">
           <el-select
             v-model="clientDataForm.clientSettings.tokenEndpointAuthenticationSigningAlgorithm"
             placeholder="请选择JWT的签名算法"
@@ -335,9 +334,8 @@ defineExpose({
       </div>
 
       <div class="card">
-        <span>token配置</span>
-        <el-divider />
-        <el-form-item label-width="100px" label="ID-TOKEN签名算法" prop="idTokenSignatureAlgorithm">
+        <el-divider>token配置</el-divider>
+        <el-form-item label-width="120px" label="ID-TOKEN签名算法" prop="idTokenSignatureAlgorithm">
           <el-select
             v-model="clientDataForm.tokenSettings.idTokenSignatureAlgorithm"
             placeholder="请选择ID-TOKEN签名算法"
@@ -351,7 +349,7 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="访问令牌格式" prop="accessTokenFormat">
+        <el-form-item label-width="120px" label="访问令牌格式" prop="accessTokenFormat">
           <el-select v-model="clientDataForm.tokenSettings.accessTokenFormat" placeholder="请选择访问令牌格式">
             <el-option
               v-for="(item, index) in ACCESS_TOKEN_FORMAT"
@@ -362,7 +360,7 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="刷新令牌" prop="reuseRefreshTokens">
+        <el-form-item label-width="120px" label="刷新令牌" prop="reuseRefreshTokens">
           <el-switch
             v-model="clientDataForm.tokenSettings.reuseRefreshTokens"
             :active-value="true"
@@ -373,9 +371,9 @@ defineExpose({
         </el-form-item>
 
         <el-form-item
-          label-width="100px"
           label="刷新令牌有效时间"
           prop="refreshTokenTimeToLive"
+          label-width="120px"
           v-if="clientDataForm.tokenSettings.reuseRefreshTokens"
         >
           <el-input v-model="clientDataForm.tokenSettings.refreshTokenTimeToLive" autocomplete="off" clearable>
@@ -383,13 +381,13 @@ defineExpose({
           </el-input>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="授权代码有效时间" prop="authorizationCodeTimeToLive">
+        <el-form-item label-width="120px" label="授权代码有效时间" prop="authorizationCodeTimeToLive">
           <el-input v-model="clientDataForm.tokenSettings.authorizationCodeTimeToLive" autocomplete="off" clearable>
             <template v-slot:append>分钟</template>
           </el-input>
         </el-form-item>
 
-        <el-form-item label-width="100px" label="访问令牌有效时间" prop="accessTokenTimeToLive">
+        <el-form-item label-width="120px" label="访问令牌有效时间" prop="accessTokenTimeToLive">
           <el-input v-model="clientDataForm.tokenSettings.accessTokenTimeToLive" autocomplete="off" clearable>
             <template v-slot:append>分钟</template>
           </el-input>
@@ -398,7 +396,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleClientDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleClientDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

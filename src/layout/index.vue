@@ -12,9 +12,9 @@ import useSettingStore from '@/store/modules/setting'
 import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
 import { useWindowSize } from '@vueuse/core'
 import websocket from '@/layout/websocket/index.vue'
-import { MenuLayout } from '@/types/types.ts'
 import { DEVICE } from '@/utils/common.ts'
 import variables from '@/styles/variables.module.scss'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 
 let settingStore = useSettingStore()
 const { theme, settings } = storeToRefs(settingStore)
@@ -39,15 +39,10 @@ const tabStyle = computed(() => {
 
 const WIDTH: number = 992
 watchEffect(() => {
-  let _menuLayout: MenuLayout = theme.value.menuLayout
   if (width.value > WIDTH) {
-    settingStore.settings.isCollapse = false
     settingStore.setDevice(DEVICE.PC)
-    settingStore.setMenuLayout(_menuLayout)
   } else {
-    settingStore.setMenuLayout('left')
     if (width.value >= WIDTH / 2 && width.value < WIDTH) {
-      settingStore.settings.isCollapse = true
       settingStore.setDevice(DEVICE.PAD)
     } else {
       settingStore.setDevice(DEVICE.MOBILE)
@@ -59,8 +54,9 @@ watchEffect(() => {
 <template>
   <el-container class="layout-container">
     <left-menu />
+
     <el-container class="layout-main-container">
-      <TabBar />
+      <tab-bar />
 
       <!-- 内容区域 -->
       <el-main :style="tabStyle">
@@ -74,10 +70,11 @@ watchEffect(() => {
         </el-scrollbar>
       </el-main>
     </el-container>
-
-    <context-menu ref="contextMenuRef" />
-    <websocket />
   </el-container>
+
+  <!-- 全局组件 -->
+  <context-menu ref="contextMenuRef" />
+  <websocket />
 </template>
 
 <style lang="scss" scoped>

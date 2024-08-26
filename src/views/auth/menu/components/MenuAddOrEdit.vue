@@ -25,7 +25,8 @@ defineOptions({
 const { KEEPALIVE, HIDDEN, HREF, MENU_TYPE } = useDict('KEEPALIVE', 'HIDDEN', 'HREF', 'MENU_TYPE')
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const platformOptions = ref<SelectData[]>()
 const menuOptions = ref<SelectData[]>()
 const menuDataFormRef = ref()
@@ -158,6 +159,7 @@ const handleMenuDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = menuDataForm.value.id
     if (id) {
       await editMenu(id, menuDataForm.value)
@@ -166,6 +168,7 @@ const handleMenuDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -176,6 +179,7 @@ const handleMenuDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -191,7 +195,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!menuDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -201,9 +205,9 @@ defineExpose({
       :rules="rules"
       ref="menuDataFormRef"
       @keyup.enter="handleMenuDataFormSubmit()"
-      label-width="120px"
+      label-width="80px"
     >
-      <el-form-item label-width="100px" :label="t('menu.fields.platformId')" prop="platformId" style="text-align: left">
+      <el-form-item :label="t('menu.fields.platformId')" prop="platformId" style="text-align: left">
         <el-select v-model="menuDataForm.platformId" :placeholder="t('menu.fields.platformId')">
           <el-option
             v-for="item in platformOptions"
@@ -213,7 +217,7 @@ defineExpose({
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label-width="100px" :label="t('menu.fields.type')" style="text-align: left" prop="type">
+      <el-form-item :label="t('menu.fields.type')" style="text-align: left" prop="type">
         <el-radio-group v-model="menuDataForm.type">
           <el-radio-button v-for="item in MENU_TYPE" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
@@ -221,13 +225,7 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item
-        v-if="menuDataForm.type === 1"
-        label-width="100px"
-        :label="t('menu.fields.href')"
-        style="text-align: left"
-        prop="href"
-      >
+      <el-form-item v-if="menuDataForm.type === 1" :label="t('menu.fields.href')" style="text-align: left" prop="href">
         <el-radio-group v-model="menuDataForm.href">
           <el-radio-button v-for="item in HREF" :key="item.value" :value="Number(item.value)">
             {{ item.label }}
@@ -237,7 +235,6 @@ defineExpose({
 
       <el-form-item
         v-if="menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.keepAlive')"
         style="text-align: left"
         prop="keepAlive"
@@ -251,7 +248,6 @@ defineExpose({
 
       <el-form-item
         v-if="menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.hidden')"
         style="text-align: left"
         prop="hidden"
@@ -263,7 +259,7 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label-width="100px" class="parentId" :label="t('menu.fields.parentMenu')" prop="parentId">
+      <el-form-item class="parentId" :label="t('menu.fields.parentMenu')" prop="parentId">
         <el-cascader
           v-model="menuDataForm.parentId"
           :options="menuOptions"
@@ -274,17 +270,16 @@ defineExpose({
         ></el-cascader>
       </el-form-item>
 
-      <el-form-item label-width="100px" :label="t('menu.fields.sort')" prop="sort" style="text-align: left">
+      <el-form-item :label="t('menu.fields.sort')" prop="sort" style="text-align: left">
         <el-input-number v-model="menuDataForm.sort" :min="1" :step="1" />
       </el-form-item>
 
-      <el-form-item label-width="100px" :label="t('menu.fields.title')" prop="title">
+      <el-form-item :label="t('menu.fields.title')" prop="title">
         <el-input v-model="menuDataForm.title" autocomplete="off" clearable :placeholder="t('menu.fields.title')" />
       </el-form-item>
 
       <el-form-item
         v-if="menuDataForm.type === 0 || menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.icon')"
         prop="icon"
       >
@@ -293,7 +288,6 @@ defineExpose({
 
       <el-form-item
         v-if="menuDataForm.type === 0 || menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.path')"
         prop="path"
       >
@@ -302,7 +296,6 @@ defineExpose({
 
       <el-form-item
         v-if="menuDataForm.href === 0 && menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.name')"
         prop="name"
       >
@@ -311,7 +304,6 @@ defineExpose({
 
       <el-form-item
         v-if="menuDataForm.href === 0 && menuDataForm.type === 1"
-        label-width="100px"
         :label="t('menu.fields.component')"
         prop="component"
       >
@@ -322,14 +314,12 @@ defineExpose({
           :placeholder="t('menu.fields.component')"
         >
           <template #prepend>src/views</template>
-
           <template #append>.vue</template>
         </el-input>
       </el-form-item>
 
       <el-form-item
         v-if="menuDataForm.type === 1 || menuDataForm.type === 2"
-        label-width="100px"
         :label="t('menu.fields.permission')"
         prop="permission"
       >
@@ -343,7 +333,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleMenuDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleMenuDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

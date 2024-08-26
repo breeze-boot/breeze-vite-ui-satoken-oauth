@@ -21,7 +21,7 @@ defineOptions({
 const queryParams = reactive<any>({ tableName: '', permissionId: '' })
 const disableColumn = ['id', 'is_delete', 'tenant_id', 'delete_by']
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const direction = ref('rtl')
 const tableInfo: TableInfo = {
   // 刷新标识

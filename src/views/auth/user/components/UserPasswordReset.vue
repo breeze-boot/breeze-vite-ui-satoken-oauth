@@ -19,7 +19,8 @@ defineOptions({
 })
 
 const { t } = useI18n()
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const restUserPasswordDataFormRef = ref()
 const userRestPasswordDataForm = ref<UserResetPasswordForm>({})
 const rules = ref({
@@ -86,12 +87,14 @@ const handleUserRestPasswordDataFormSubmit = () => {
       id: userRestPasswordDataForm.value.id,
       password: encrypt(password!.trim(), SALES) as string,
     }
+    loading.value = true
     await userResetPassword(fromData)
     ElMessage.success({
       message: t('common.success'),
       duration: 1000,
       onClose: () => {
         visible.value = false
+        loading.value = false
       },
     })
   })
@@ -105,7 +108,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="t('user.common.resetPassword')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -115,9 +118,9 @@ defineExpose({
       :rules="rules"
       ref="restUserPasswordDataFormRef"
       @keyup.enter="handleUserRestPasswordDataFormSubmit()"
-      label-width="125px"
+      label-width="80px"
     >
-      <el-form-item label-width="160px" :label="$t('user.fields.password')" prop="password">
+      <el-form-item :label="$t('user.fields.password')" prop="password">
         <el-input
           v-model="userRestPasswordDataForm.password"
           autocomplete="off"
@@ -127,7 +130,7 @@ defineExpose({
           :placeholder="$t('user.fields.password')"
         />
       </el-form-item>
-      <el-form-item label-width="160px" :label="$t('user.fields.confirmPassword')" prop="confirmPassword">
+      <el-form-item :label="$t('user.fields.confirmPassword')" prop="confirmPassword">
         <el-input
           v-model="userRestPasswordDataForm.confirmPassword"
           autocomplete="off"
@@ -140,7 +143,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleUserRestPasswordDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleUserRestPasswordDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

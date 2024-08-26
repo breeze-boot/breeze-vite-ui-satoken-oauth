@@ -23,7 +23,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const rowPermissionDataFormRef = ref()
 const rowPermissionDataForm = ref<RowPermissionForm>({ permissions: [] })
 const deptOption = ref<SelectData[]>()
@@ -119,6 +120,7 @@ const handlePermissionDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = rowPermissionDataForm.value.id
     if (id) {
       await editPermission(id, rowPermissionDataForm.value)
@@ -127,6 +129,7 @@ const handlePermissionDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -137,6 +140,7 @@ const handlePermissionDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -189,9 +193,9 @@ defineExpose({
       :rules="rules"
       ref="rowPermissionDataFormRef"
       @keyup.enter="handlePermissionDataFormSubmit()"
-      label-width="125px"
+      label-width="90px"
     >
-      <el-form-item label-width="125px" :label="$t('rowPermission.fields.permissionCode')" prop="permissionCode">
+      <el-form-item :label="$t('rowPermission.fields.permissionCode')" prop="permissionCode">
         <el-input
           v-model="rowPermissionDataForm.permissionCode"
           autocomplete="off"
@@ -199,7 +203,7 @@ defineExpose({
           :placeholder="$t('rowPermission.fields.permissionCode')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('rowPermission.fields.permissionName')" prop="permissionName">
+      <el-form-item :label="$t('rowPermission.fields.permissionName')" prop="permissionName">
         <el-input
           v-model="rowPermissionDataForm.permissionName"
           autocomplete="off"
@@ -207,18 +211,14 @@ defineExpose({
           :placeholder="$t('rowPermission.fields.permissionName')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('rowPermission.fields.customizesType')" prop="customizesType">
+      <el-form-item :label="$t('rowPermission.fields.customizesType')" prop="customizesType">
         <el-radio-group v-model="rowPermissionDataForm.customizesType">
           <el-radio value="USER" border>{{ t('rowPermission.fields.user') }}</el-radio>
           <el-radio value="DEPT" border>{{ t('rowPermission.fields.dept') }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item
-        v-if="rowPermissionDataForm.customizesType === 'USER'"
-        label-width="125px"
-        :label="t('rowPermission.fields.user')"
-      >
+      <el-form-item v-if="rowPermissionDataForm.customizesType === 'USER'" :label="t('rowPermission.fields.user')">
         <el-transfer
           :titles="['待选择用户列表', '已选择用户列表']"
           v-model="rowPermissionDataForm.permissions"
@@ -229,11 +229,7 @@ defineExpose({
         />
       </el-form-item>
 
-      <el-form-item
-        v-if="rowPermissionDataForm.customizesType === 'DEPT'"
-        label-width="125px"
-        :label="t('rowPermission.fields.dept')"
-      >
+      <el-form-item v-if="rowPermissionDataForm.customizesType === 'DEPT'" :label="t('rowPermission.fields.dept')">
         <el-cascader
           tag-type="info"
           v-model="rowPermissionDataForm.permissions"
@@ -247,7 +243,9 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handlePermissionDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handlePermissionDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

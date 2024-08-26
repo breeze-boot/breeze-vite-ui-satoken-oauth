@@ -19,7 +19,8 @@ defineOptions({
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const emailDataFormRef = ref()
 const emailDataForm = ref<EmailConfigForm>({})
 const rules = ref({
@@ -139,6 +140,7 @@ const handleDataFormSubmit = () => {
     if (!valid) {
       return false
     }
+    loading.value = true
     const id = emailDataForm.value.id
     if (id) {
       await editEmailConfig(id, emailDataForm.value)
@@ -147,6 +149,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -157,6 +160,7 @@ const handleDataFormSubmit = () => {
         duration: 1000,
         onClose: () => {
           visible.value = false
+          loading.value = false
           $emit('reloadDataList')
         },
       })
@@ -172,7 +176,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="38%"
+    width="600"
     :title="!emailDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -182,21 +186,21 @@ defineExpose({
       :rules="rules"
       ref="emailDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="120px"
+      label-width="110px"
     >
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.smtpHost')" prop="smtpHost">
+      <el-form-item :label="t('emailConfig.fields.smtpHost')" prop="smtpHost">
         <el-input v-model="emailDataForm.smtpHost" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.port')" prop="port">
+      <el-form-item :label="t('emailConfig.fields.port')" prop="port">
         <el-input v-model="emailDataForm.port" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.username')" prop="username">
+      <el-form-item :label="t('emailConfig.fields.username')" prop="username">
         <el-input v-model="emailDataForm.username" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.password')" prop="password">
+      <el-form-item :label="t('emailConfig.fields.password')" prop="password">
         <el-input v-model="emailDataForm.password" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.encoding')" prop="encoding">
+      <el-form-item :label="t('emailConfig.fields.encoding')" prop="encoding">
         <el-input v-model="emailDataForm.encoding" autocomplete="off" clearable />
       </el-form-item>
       <el-form-item
@@ -206,13 +210,13 @@ defineExpose({
       >
         <el-input v-model="emailDataForm.smtpSocketFactoryClass" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.ssl')" prop="ssl">
+      <el-form-item :label="t('emailConfig.fields.ssl')" prop="ssl">
         <el-input v-model="emailDataForm.ssl" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.protocol')" prop="protocol">
+      <el-form-item :label="t('emailConfig.fields.protocol')" prop="protocol">
         <el-input v-model="emailDataForm.protocol" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.smtpDebug')" prop="smtpDebug">
+      <el-form-item :label="t('emailConfig.fields.smtpDebug')" prop="smtpDebug">
         <el-switch
           v-model="emailDataForm.smtpDebug"
           :active-value="'true'"
@@ -221,7 +225,7 @@ defineExpose({
           inactive-color="#AAAAAA"
         ></el-switch>
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.auth')" prop="auth">
+      <el-form-item :label="t('emailConfig.fields.auth')" prop="auth">
         <el-switch
           v-model="emailDataForm.auth"
           :active-value="'true'"
@@ -230,7 +234,7 @@ defineExpose({
           inactive-color="#AAAAAA"
         ></el-switch>
       </el-form-item>
-      <el-form-item label-width="110px" :label="t('emailConfig.fields.status')" prop="status" style="text-align: left">
+      <el-form-item :label="t('emailConfig.fields.status')" prop="status" style="text-align: left">
         <el-switch
           v-model="emailDataForm.status"
           :active-value="1"
@@ -242,7 +246,7 @@ defineExpose({
     </el-form>
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
     </template>
   </el-dialog>
 </template>

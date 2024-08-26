@@ -9,24 +9,25 @@ import BreadCrumb from './breadcrumb/index.vue'
 import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'
 import Tab from '@/layout/tabbar/tab/index.vue'
+import { DEVICE } from '@/utils/common.ts'
 
 const { theme, device } = storeToRefs(useSettingStore())
 </script>
 
 <template>
   <el-header class="el-header-container">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <TopMenu v-if="theme.menuLayout !== 'left'" />
-        <BreadCrumb v-if="theme.menuLayout === 'left' && device === 'pc'" />
+    <div class="tabbar">
+      <div class="tabbar-left">
+        <top-menu v-if="theme.menuLayout !== 'left'" />
+        <bread-crumb v-if="theme.menuLayout === 'left' && device === DEVICE.PC" />
       </div>
-      <div class="toolbar-right">
-        <Setting />
+      <div class="tabbar-right">
+        <setting />
       </div>
     </div>
 
     <div class="tab-container">
-      <Tab />
+      <tab />
     </div>
   </el-header>
 </template>
@@ -41,31 +42,31 @@ const { theme, device } = storeToRefs(useSettingStore())
   background: var(--base-top-theme);
   height: $base-main-top-height;
 
-  .tab-container {
-    border: 1px solid rgba(238, 238, 238, 0.47);
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 30%;
-  }
-
-  .toolbar {
+  .tabbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 70%;
     width: 100%;
 
-    .toolbar-left {
+    .tabbar-left {
       display: flex;
-      align-items: center;
       margin-left: 10px;
+      align-items: flex-start;
     }
 
-    .toolbar-right {
+    .tabbar-right {
       display: flex;
       align-items: center;
+      justify-items: flex-end;
     }
+  }
+  .tab-container {
+    border: 1px solid rgba(238, 238, 238, 0.47);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
   }
 }
 </style>

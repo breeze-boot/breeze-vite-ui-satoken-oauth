@@ -12,7 +12,7 @@ import { UploadUserFile } from '@/components/Upload/types/types.ts'
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
-const visible = ref(false)
+const visible = ref<boolean>(false)
 const fileDataFormRef = ref()
 const currentFileList = ref<UploadUserFile[]>([])
 
