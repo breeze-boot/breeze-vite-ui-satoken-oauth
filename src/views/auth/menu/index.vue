@@ -43,6 +43,7 @@ const tableInfo = reactive<TableInfo>({
   // 选择框类型
   select: 'multi',
   // 字典
+  dict: ['HIDDEN', 'MENU_TYPE', 'HREF', 'KEEPALIVE'],
   tbHeaderBtn: [
     {
       type: 'primary',
@@ -324,6 +325,7 @@ const handleSelectionChange = (rows: MenuRecords) => {
     :export-api="exportExcel"
     :list-api="list"
     :pager="false"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

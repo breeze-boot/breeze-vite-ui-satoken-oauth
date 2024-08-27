@@ -50,6 +50,8 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
+  // 字典
+  dict: ['FLOW_SUSPENDED'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -64,7 +66,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['bpm:definition:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: BpmDefinitionRecords) => handleDelete(rows),
     },
@@ -136,7 +138,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    width: 210,
+    width: 280,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -319,6 +321,7 @@ const handleSelectionChange = (row: BpmDefinitionRecord) => {
     ref="definitionTableRef"
     :export-api="exportExcel"
     :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :default-sort="tableInfo.defaultSort"

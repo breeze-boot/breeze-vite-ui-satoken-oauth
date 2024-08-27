@@ -56,7 +56,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['bpm:category:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: CategoryRecords) => handleDelete(rows),
     },

@@ -15,6 +15,9 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { getMSubject, setEmailUser } from '@/api/system/email/msubject'
 import JSONBigInt from 'json-bigint'
 import { ElMessage } from 'element-plus'
+import BTable from '@/components/Table/BTable/index.vue'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'SetUser',
@@ -179,7 +182,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="50%"
+    :width="useWidth()"
     :title="t('common.add')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -234,7 +237,7 @@ defineExpose({
     <template #footer>
       <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
       <el-button type="primary" :loading="loading" @click="handleUserDataFormSubmit()">
-        { t('common.confirm') }}
+        {{ t('common.confirm') }}
       </el-button>
     </template>
   </el-dialog>

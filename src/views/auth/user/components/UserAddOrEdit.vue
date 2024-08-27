@@ -14,6 +14,7 @@ import { SelectData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
 import useFormValidation from '@/hooks/formValidation'
 import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'UserAddOrEdit',
@@ -258,7 +259,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!userDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -268,7 +269,7 @@ defineExpose({
       :rules="rules"
       ref="userDataFormRef"
       @keyup.enter="handleUserDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item label-width="0px" prop="avatar">
         <avatar-upload v-model="userDataForm.avatar" />

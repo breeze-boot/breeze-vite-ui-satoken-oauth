@@ -11,6 +11,8 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage, ElTree } from 'element-plus'
 import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
+import SvgButton from '@/components/SvgButton/index.vue'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'RolePermissionList',
@@ -119,7 +121,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="t('role.common.menuPermission')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -130,10 +132,9 @@ defineExpose({
       </div>
       <div>
         <svg-button
-          icon="strictly"
+          :icon="treeSetting.checkStrictly ? 'strictly' : 'strictly'"
           type="default"
           :style="{ margin: '10px 5px' }"
-          :circle="false"
           :label="treeSetting.checkStrictly ? t('role.common.oneCheck') : t('role.common.cascadeCheck')"
           @svg-btn-click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
         />
@@ -190,7 +191,9 @@ defineExpose({
 }
 
 .tree-container {
+  border: 1px solid #eee;
   margin: 0 auto;
+  width: auto;
   height: 500px;
   overflow-y: scroll;
 

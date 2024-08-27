@@ -11,6 +11,7 @@ import { addEmailConfig, getEmailConfig, editEmailConfig } from '@/api/system/em
 import type { EmailConfigForm } from '@/api/system/email/emailConfig/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'EmailConfigAddOrEdit',
@@ -176,7 +177,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!emailDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -186,7 +187,7 @@ defineExpose({
       :rules="rules"
       ref="emailDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="110px"
+      label-width="90px"
     >
       <el-form-item :label="t('emailConfig.fields.smtpHost')" prop="smtpHost">
         <el-input v-model="emailDataForm.smtpHost" autocomplete="off" clearable />
@@ -203,11 +204,7 @@ defineExpose({
       <el-form-item :label="t('emailConfig.fields.encoding')" prop="encoding">
         <el-input v-model="emailDataForm.encoding" autocomplete="off" clearable />
       </el-form-item>
-      <el-form-item
-        label-width="110px"
-        :label="t('emailConfig.fields.smtpSocketFactoryClass')"
-        prop="smtpSocketFactoryClass"
-      >
+      <el-form-item :label="t('emailConfig.fields.smtpSocketFactoryClass')" prop="smtpSocketFactoryClass">
         <el-input v-model="emailDataForm.smtpSocketFactoryClass" autocomplete="off" clearable />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.ssl')" prop="ssl">

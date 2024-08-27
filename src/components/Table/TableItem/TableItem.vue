@@ -12,7 +12,7 @@ import useTabsStore from '@/store/modules/tabs.ts'
 import VueJsoneditor from 'vue3-ts-jsoneditor'
 import { FormItemRule } from 'element-plus/es/components/form'
 import { Arrayable } from 'element-plus/es/utils'
-import { useDict } from '@/hooks/dict'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 
 defineOptions({
   name: 'TableItem',
@@ -28,7 +28,7 @@ interface Scope {
 const $router = useRouter()
 const $route = useRoute()
 const tabStore = useTabsStore()
-const props = defineProps(['tableField', 'scope'])
+const props = defineProps(['tableField', 'scope', 'dict'])
 const $emit = defineEmits(['reloadDataList'])
 
 /**
@@ -36,6 +36,7 @@ const $emit = defineEmits(['reloadDataList'])
  */
 const tableField = ref<Field>(props.tableField as Field)
 const scope = ref<Scope>(props.scope)
+const dict = ref(props.dict)
 
 interface switchType {
   switchStatus: boolean
@@ -373,9 +374,9 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <div v-else-if="tableField.type === 'dict' && tableField.dict">
     <el-tag
       v-if="scope.row?.[tableField.prop] !== undefined"
-      :type="useDict(tableField.dict)[tableField.dict].value[scope.row?.[tableField.prop]]?.type || 'info'"
+      :type="dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.type || 'info'"
     >
-      {{ useDict(tableField.dict)[tableField.dict].value[scope.row?.[tableField.prop]]?.label }}
+      {{ dict[tableField.dict]?.[scope.row?.[tableField.prop]]?.label }}
     </el-tag>
   </div>
 

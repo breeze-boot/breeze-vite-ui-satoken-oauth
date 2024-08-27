@@ -46,6 +46,8 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
+  // 字典
+  dict: ['DICT_STATUS'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -60,7 +62,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['sys:dict:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: DictRecords) => handleDelete(rows),
     },
@@ -113,7 +115,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    width: 210,
+    width: 250,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -297,6 +299,7 @@ const handleSelectionChange = (rows: DictRecords) => {
     ref="dictTableRef"
     :export-api="exportExcel"
     :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

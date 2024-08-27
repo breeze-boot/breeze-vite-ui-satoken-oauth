@@ -20,6 +20,7 @@ import UserRoleSettings from '@/views/auth/user/components/UserRoleSettings.vue'
 import UserPasswordReset from '@/views/auth/user/components/UserPasswordReset.vue'
 import { editFile } from '@/api/system/file'
 import { FileRecord } from '@/api/system/file/type.ts'
+import { saveTypeFile } from '@/utils/download.ts'
 
 defineOptions({
   name: 'User',
@@ -56,6 +57,8 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
+  // 字典
+  dict: ['IS_LOCK', 'SEX'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -70,7 +73,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['auth:user:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: UserRecords) => handleDelete(rows),
     },
@@ -80,6 +83,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:user:export'],
       event: 'exportCurrentPage',
       icon: 'export',
+      eventHandle: () => handleExport(true),
     },
     {
       type: 'default',
@@ -87,6 +91,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['auth:user:export'],
       event: 'exportAll',
       icon: 'excel',
+      eventHandle: () => handleExport(false),
     },
     {
       type: 'default',
@@ -430,6 +435,19 @@ const handleDelete = async (rows: UserRecords) => {
 }
 
 /**
+ * 导出
+ */
+const handleExport = async (currentPage: boolean) => {
+  const _queryParams = queryParams
+  if (!currentPage) {
+    _queryParams.current = 1
+    _queryParams.size = 1000
+  }
+  const response: any = await exportExcel(_queryParams)
+  saveTypeFile(response.data, response.data.type, '用户数据')
+}
+
+/**
  * 同步用户
  */
 const handleSyncUser = async () => {
@@ -522,6 +540,7 @@ const handleSelectionChange = (rows: UserRecords) => {
     ref="userTableRef"
     :export-api="exportExcel"
     :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

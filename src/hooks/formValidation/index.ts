@@ -1,9 +1,6 @@
 import { ElMessage } from 'element-plus'
 import i18n from '@/i18n/index'
 
-/**
- * 定义一个递归函数，用于将对象中的 BigNumber 类型的值转换为字符串类型
- */
 export const check = (obj: any): any => {
   // 如果 obj 是 null 或者不是对象，直接返回 false
   if (obj === null || typeof obj !== 'object') {

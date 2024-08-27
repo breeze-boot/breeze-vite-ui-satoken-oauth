@@ -27,7 +27,7 @@ export interface Btn {
 /**
  * 事件类型
  */
-export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
+export type Event = 'exportAll' | 'export' | 'delete' | 'add' | string
 
 /**
  * 表格类型
@@ -35,7 +35,8 @@ export type Event = 'exportAll' | 'export' | 'del' | 'add' | string
 export interface TableInfo {
   refresh: number
   mountedRefresh?: boolean
-  rows?: []
+  rows?: any[]
+  dict?: string[]
   pager?: boolean
   select?: 'multi' | 'single'
   tbHeaderBtn?: Btn[]

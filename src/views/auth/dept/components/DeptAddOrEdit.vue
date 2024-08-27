@@ -13,6 +13,7 @@ import { useI18n } from 'vue-i18n'
 import type { SelectData } from '@/types/types.ts'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import JSONBigInt from 'json-bigint'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'DeptAddOrEdit',
@@ -171,7 +172,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="500"
+    :width="useWidth()"
     :title="!deptDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

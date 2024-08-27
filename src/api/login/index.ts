@@ -43,6 +43,7 @@ export const userLogin = (userLoginForm: UserLoginForm, grantType: GrantType) =>
     {
       headers: {
         Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+        withCredentials: true,
       },
     },
   )

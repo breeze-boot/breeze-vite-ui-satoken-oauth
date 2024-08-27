@@ -63,7 +63,7 @@ const initApprove = async (taskId: string) => {
   await flowButtonInfo()
 
   form.value = defineAsyncComponent(() => {
-    return import(`/src/views/ ${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
+    return import(`/src/views${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
   })
 }
 

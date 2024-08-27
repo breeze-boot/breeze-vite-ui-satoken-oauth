@@ -42,6 +42,10 @@ export default {
     download: 'download',
     start: 'start',
     upload: 'upload',
+    fold: 'fold',
+    expend: 'expend',
+    close: 'close',
+    mark_reed: 'mark read',
 
     success: 'success',
     fail: 'fail',

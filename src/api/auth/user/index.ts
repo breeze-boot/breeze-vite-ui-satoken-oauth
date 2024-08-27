@@ -128,13 +128,15 @@ export function syncUser(): AxiosPromise<ResponseData> {
 /**
  * 导出
  *
- * @param params
+ * @param data
  */
-export function exportExcel(params: UserQuery): AxiosPromise<any> {
+export function exportExcel(data: UserQuery): AxiosPromise<any> {
   return request({
-    url: API.USER_RESTFUL_URL,
+    url: `${API.USER_RESTFUL_URL}/export`,
     method: 'post',
-    data: params,
+    data: data,
+    // 指定响应类型为二进制流
+    responseType: 'blob',
   })
 }
 

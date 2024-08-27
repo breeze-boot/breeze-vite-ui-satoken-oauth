@@ -62,7 +62,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['auth:role:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: RoleRecords) => handleDelete(rows),
     },
@@ -140,7 +140,7 @@ const tableInfo = reactive<TableInfo>({
       // 设置角色菜单列权限, 具有权限或者超级管理员可以设置
       {
         label: t('role.common.menuColumnPermission'),
-        type: 'success',
+        type: 'primary',
         icon: 'role_permission',
         event: 'role_permission',
         permission: ['auth:menu:column:permission:modify', 'ROLE_ADMIN'],

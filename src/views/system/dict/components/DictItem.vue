@@ -13,6 +13,7 @@ import BTable from '@/components/Table/BTable/index.vue'
 import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
 import { ElMessage } from 'element-plus'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'DictItem',
@@ -56,7 +57,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['sys:dict:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: DictItemRecords) => handleDelete(rows),
     },
@@ -201,7 +202,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer size="50%" v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
+  <el-drawer :size="useWidth()" v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('dictItem.common.dictItemViewing') }}</h4>
     </template>

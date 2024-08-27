@@ -19,6 +19,7 @@ import { RoleForm } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { SelectData } from '@/types/types.ts'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'RoleAddOrEdit',
@@ -173,7 +174,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!roleDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -183,9 +184,9 @@ defineExpose({
       :rules="rules"
       ref="roleDataFormRef"
       @keyup.enter="handleRoleDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
-      <el-form-item label-width="125px" :label="$t('role.fields.roleCode')" prop="roleCode">
+      <el-form-item :label="$t('role.fields.roleCode')" prop="roleCode">
         <el-input
           v-model="roleDataForm.roleCode"
           autocomplete="off"
@@ -193,7 +194,7 @@ defineExpose({
           :placeholder="$t('role.fields.roleCode')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('role.fields.roleName')" prop="roleName">
+      <el-form-item :label="$t('role.fields.roleName')" prop="roleName">
         <el-input
           v-model="roleDataForm.roleName"
           autocomplete="off"
@@ -201,7 +202,7 @@ defineExpose({
           :placeholder="$t('role.fields.roleName')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('role.fields.rowPermissionType')" prop="rowPermissionType">
+      <el-form-item :label="$t('role.fields.rowPermissionType')" prop="rowPermissionType">
         <el-select v-model="roleDataForm.rowPermissionType" :placeholder="$t('role.fields.rowPermissionType')">
           <el-option
             v-for="item in permissionOption"
@@ -213,7 +214,6 @@ defineExpose({
       </el-form-item>
       <el-form-item
         v-if="roleDataForm.rowPermissionType === 'CUSTOMIZES'"
-        label-width="70px"
         :label="$t('role.fields.rowPermissionIds')"
         prop="rowPermissionIds"
       >

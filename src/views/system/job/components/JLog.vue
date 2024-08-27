@@ -10,6 +10,8 @@ import { useI18n } from 'vue-i18n'
 import { page } from '@/api/system/jLog'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { JLogQuery, JLogRecords } from '@/api/system/jLog/type.ts'
+import BTable from '@/components/Table/BTable/index.vue'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'JLog',
@@ -37,6 +39,8 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'multi',
+  // 字典
+  dict: ['JOB_STATUS'],
   // 表格字段配置
   fieldList: [
     {
@@ -139,7 +143,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer size="80%" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
+  <el-drawer :size="useWidth()" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('jLog.common.jLogViewing') }}</h4>
     </template>
@@ -147,6 +151,7 @@ defineExpose({
       <b-table
         ref="jLogTableRef"
         :list-api="page"
+        :dict="tableInfo.dict"
         :tableIndex="tableInfo.tableIndex"
         :query="queryParams"
         :refresh="tableInfo.refresh"

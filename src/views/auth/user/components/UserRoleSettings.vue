@@ -17,6 +17,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { userSetRole } from '@/api/auth/user'
 import { UserSetRoleForm, UserRoleQuery } from '@/api/auth/user/type.ts'
 import { ElMessage } from 'element-plus'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'RoleSettings',
@@ -143,7 +144,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer size="50%" v-model="visible" :title="t('user.common.roleSettings')" :direction="direction">
+  <el-drawer :size="useWidth()" v-model="visible" :title="t('user.common.roleSettings')" :direction="direction">
     <template #header>
       <h4>{{ t('user.common.roleSettings') }}</h4>
     </template>

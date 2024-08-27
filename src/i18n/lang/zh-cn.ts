@@ -42,6 +42,10 @@ export default {
     download: '下载',
     start: '启动',
     upload: '上传',
+    fold: '折叠',
+    expend: '展开',
+    close: '关闭',
+    mark_reed: '标记已读',
 
     success: '成功',
     fail: '失败',

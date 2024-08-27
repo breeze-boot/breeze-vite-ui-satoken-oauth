@@ -48,7 +48,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['auth:menuColumn:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: MenuColumnRecords) => handleDelete(rows),
     },

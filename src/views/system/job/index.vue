@@ -47,6 +47,8 @@ const tableInfo = reactive<TableInfo>({
   tableIndex: true,
   // 选择框类型
   select: 'single',
+  // 字典
+  dict: ['JOB_STATUS', 'MISFIRE_POLICY', 'CONCURRENT'],
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -61,7 +63,7 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['sys:job:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: JobRecords) => handleDelete(rows),
     },
@@ -348,6 +350,7 @@ const handleSelectionChange = (rows: JobRecords) => {
     ref="jobTableRef"
     :export-api="exportExcel"
     :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

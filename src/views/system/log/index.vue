@@ -48,11 +48,13 @@ const tableInfo = reactive<TableInfo>({
       type: 'danger',
       label: t('common.delete'),
       permission: ['sys:log:delete'],
-      event: 'del',
+      event: 'delete',
       icon: 'delete',
       eventHandle: (rows: LogRecords) => handleDelete(rows),
     },
   ],
+  // 字典
+  dict: ['LOG_TYPE', 'DO_TYPE', 'RESULT'],
   // 表格字段配置
   fieldList: [
     {
@@ -287,6 +289,7 @@ const handleSelectionChange = (rows: LogRecords) => {
   <b-table
     ref="logTableRef"
     :list-api="page"
+    :dict="tableInfo.dict"
     :tableIndex="tableInfo.tableIndex"
     :query="queryParams"
     :refresh="tableInfo.refresh"

@@ -12,6 +12,7 @@ import { UserResetPasswordForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 import { encrypt } from '@/utils/common.ts'
 import { SALES } from '@/types/types.ts'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'PasswordReset',
@@ -108,7 +109,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="t('user.common.resetPassword')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -118,7 +119,7 @@ defineExpose({
       :rules="rules"
       ref="restUserPasswordDataFormRef"
       @keyup.enter="handleUserRestPasswordDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item :label="$t('user.fields.password')" prop="password">
         <el-input

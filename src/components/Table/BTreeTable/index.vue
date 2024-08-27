@@ -14,6 +14,7 @@ import { useRoute } from 'vue-router'
 import { ColumnCacheData } from '@/types/types.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
+import { useDict } from '@/hooks/dict'
 
 defineOptions({
   name: 'BTreeTable',
@@ -40,6 +41,11 @@ const props = defineProps({
   listApi: {
     type: Function,
     required: true,
+  },
+  // 表格使用的字典
+  dict: {
+    type: Array,
+    default: () => [],
   },
   // 导出数据的接口
   exportApi: {
@@ -142,6 +148,11 @@ const tableData = ref({
 })
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
+
+/**
+ * 表格渲染需要的字典
+ */
+const dict = useDict(...props.dict)
 
 /**
  * 初始化事件
@@ -546,7 +557,7 @@ const handleSliderChange = (row: any) => {
   <el-popover
     placement="left-start"
     :popper-style="{
-      width: 1000,
+      width: 'auto',
     }"
     ref="tableSettingsPopoverRef"
     :virtual-ref="tableSettingButtonRef"
@@ -587,7 +598,7 @@ const handleSliderChange = (row: any) => {
   <el-popover
     placement="left-start"
     :popper-style="{
-      width: 1000,
+      width: 'auto',
     }"
     ref="tableColumnPermissionPopoverRef"
     :virtual-ref="tableColumnPermissionButtonRef"
@@ -621,10 +632,10 @@ const handleSliderChange = (row: any) => {
           />
           <svg-button
             v-has="['ROLE_ADMIN']"
-            icon="expend"
+            :icon="expandAll ? 'expend' : 'fold'"
             type="success"
             :circle="false"
-            label="全部展开"
+            :label="expandAll ? t('common.expend') : t('common.fold')"
             @svg-btn-click="
               () => {
                 expandAll = !expandAll
@@ -737,20 +748,21 @@ const handleSliderChange = (row: any) => {
                 :fixed="_item.fixed"
               >
                 <template #default="_">
-                  <TableItem
+                  <table-item
                     @reload-data-list="getList"
                     :scope="{
                       row: _.row[item.prop],
                       $index: _.$index,
                       column: _.column,
                     }"
+                    :dict="dict"
                     :table-field="_item"
                     :key="_index"
                   />
                 </template>
               </el-table-column>
             </template>
-            <TableItem @reload-data-list="getList" :scope="scope" :table-field="item" :key="index" />
+            <table-item @reload-data-list="getList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
           </template>
         </el-table-column>
 

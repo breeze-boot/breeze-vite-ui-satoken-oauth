@@ -5,6 +5,7 @@ import { watch, unref } from 'vue'
 import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
+import { useDict } from '@/hooks/dict'
 import { camelCaseToUnderscore, SORT } from '@/utils/common.ts'
 import TableItem from '../TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
@@ -53,6 +54,11 @@ const props = defineProps({
   listApi: {
     type: Function,
     required: true,
+  },
+  // 表格使用的字典
+  dict: {
+    type: Array,
+    default: () => [],
   },
   // 导出数据的接口
   exportApi: {
@@ -175,6 +181,11 @@ const tableData = ref({
 
 let singleSelectValue = ref<undefined | any | number>()
 let currentRows = ref<any>()
+
+/**
+ * 表格渲染需要的字典
+ */
+const dict = useDict(...props.dict)
 
 /**
  * 表格数据
@@ -685,7 +696,7 @@ const handleSliderChange = (row: any) => {
   <el-popover
     placement="left-start"
     :popper-style="{
-      width: 1000,
+      width: 'auto',
     }"
     ref="tableSettingsPopoverRef"
     :virtual-ref="tableSettingButtonRef"
@@ -694,7 +705,7 @@ const handleSliderChange = (row: any) => {
     virtual-triggering
   >
     <VueDraggable v-model="tableInfo.showFieldList" target="tbody" @end="handleOnEnd">
-      <el-table ref="bTableSettings" :data="tableInfo.showFieldList" style="width: 100%" max-height="450">
+      <el-table ref="bTableSettings" :data="tableInfo.showFieldList" style="width: 100%" max-height="350">
         <el-table-column fixed prop="prop" :label="t('settings.fields.prop')" width="150" />
         <el-table-column prop="label" :label="t('settings.fields.label')" width="120" />
         <el-table-column prop="hidden" :label="t('settings.fields.hidden')" width="120">
@@ -729,7 +740,7 @@ const handleSliderChange = (row: any) => {
   <el-popover
     placement="left-start"
     :popper-style="{
-      width: 1000,
+      width: 'auto',
     }"
     ref="tableColumnPermissionPopoverRef"
     :virtual-ref="tableColumnPermissionButtonRef"
@@ -868,20 +879,21 @@ const handleSliderChange = (row: any) => {
                 :fixed="_item.fixed"
               >
                 <template #default="_">
-                  <TableItem
+                  <table-item
                     @reload-data-list="getList"
                     :scope="{
                       row: _.row[item.prop],
                       $index: _.$index,
                       column: _.column,
                     }"
+                    :dict="dict"
                     :table-field="_item"
                     :key="_index"
                   />
                 </template>
               </el-table-column>
             </template>
-            <TableItem @reload-data-list="getList" :scope="scope" :table-field="item" :key="index" />
+            <table-item @reload-data-list="getList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
           </template>
         </el-table-column>
 

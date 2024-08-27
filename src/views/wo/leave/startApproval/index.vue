@@ -81,7 +81,7 @@ const approveClickCallBack = (item: Button) => {
         :rules="rules"
         ref="leaveDataFormRef"
         @keyup.enter="handleDataFormSubmit()"
-        label-width="120px"
+        label-width="90px"
       >
         <el-form-item :label="t('leave.fields.title')">
           <el-input v-model="leaveDataForm.title" />

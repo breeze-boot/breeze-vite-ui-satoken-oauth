@@ -14,6 +14,7 @@ import { UserRecord } from '@/api/auth/user/type.ts'
 import useMsgStore from '@/store/modules/msg.ts'
 import useUserStore from '@/store/modules/user.ts'
 import { ElMessage } from 'element-plus'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'SendMsg',
@@ -139,7 +140,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="45%"
+    :width="useWidth()"
     :title="t('msg.common.sendMsg')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -150,7 +151,7 @@ defineExpose({
       :rules="rules"
       ref="sendMsgFormRef"
       @keyup.enter="handleSendMsgFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item :label="t('msg.fields.deptId')" prop="deptId">
         <el-cascader

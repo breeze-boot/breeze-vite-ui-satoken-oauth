@@ -12,6 +12,7 @@ import { MsgForm } from '@/api/system/messages/msg/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'MsgAddOrEdit',
@@ -133,7 +134,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!msgDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -143,7 +144,7 @@ defineExpose({
       :rules="rules"
       ref="msgDataFormRef"
       @keyup.enter="handleMsgDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item :label="$t('msg.fields.title')" prop="title">
         <el-input v-model="msgDataForm.title" autocomplete="off" clearable :placeholder="$t('msg.fields.title')" />

@@ -13,6 +13,7 @@ import type { BpmDefinitionForm } from '@/api/bpm/def/definition/type.ts'
 import { SelectData } from '@/types/types.ts'
 import { selectCategory } from '@/api/bpm/def/category'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'DefinitionAddOrEdit',
@@ -163,7 +164,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="t('common.design')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -173,7 +174,7 @@ defineExpose({
       :rules="rules"
       ref="definitionDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="70px"
+      label-width="95px"
     >
       <el-form-item :label="t('definition.fields.procDefName')" prop="procDefName">
         <el-input disabled v-model="definitionDataForm.procDefName" autocomplete="off" clearable />

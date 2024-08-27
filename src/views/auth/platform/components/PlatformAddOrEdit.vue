@@ -11,6 +11,7 @@ import { addPlatform, getPlatform, editPlatform, checkPlatformCode } from '@/api
 import type { PlatformForm } from '@/api/auth/platform/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'PlatformAddOrEdit',
@@ -128,7 +129,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="500"
+    :width="useWidth()"
     :title="!platformDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -138,7 +139,7 @@ defineExpose({
       :rules="rules"
       ref="platformDataFormRef"
       @keyup.enter="handleDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item :label="t('platform.fields.platformName')" prop="platformName">
         <el-input v-model="platformDataForm.platformName" autocomplete="off" clearable />

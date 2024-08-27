@@ -11,6 +11,7 @@ import { addDict, getDict, editDict } from '@/api/system/dict'
 import { DictForm } from '@/api/system/dict/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'DictAddOrEdit',
@@ -114,7 +115,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!dictDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -124,9 +125,9 @@ defineExpose({
       :rules="rules"
       ref="dictDataFormRef"
       @keyup.enter="handleDictDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
-      <el-form-item label-width="125px" :label="$t('dict.fields.dictName')" prop="dictName">
+      <el-form-item :label="$t('dict.fields.dictName')" prop="dictName">
         <el-input
           v-model="dictDataForm.dictName"
           autocomplete="off"
@@ -135,7 +136,7 @@ defineExpose({
         />
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('dict.fields.dictCode')" prop="dictCode">
+      <el-form-item :label="$t('dict.fields.dictCode')" prop="dictCode">
         <el-input
           v-model="dictDataForm.dictCode"
           autocomplete="off"
@@ -144,7 +145,7 @@ defineExpose({
         />
       </el-form-item>
 
-      <el-form-item label-width="125px" :label="$t('dict.fields.status')" prop="status">
+      <el-form-item :label="$t('dict.fields.status')" prop="status">
         <el-switch
           v-model="dictDataForm.status"
           :active-value="1"

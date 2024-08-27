@@ -3,7 +3,7 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { watch, onMounted, ref } from 'vue'
+import { onMounted, ref, unref } from 'vue'
 import { closeUserMsg, listUsersMsg, readUserMsg } from '@/api/system/messages/msgUser'
 import useUserStore from '@/store/modules/user'
 import closePng from '@/assets/images/close.png'
@@ -12,18 +12,20 @@ import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { getMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
-import useSettingStore from '@/store/modules/setting.ts'
+import SvgButton from '@/components/SvgButton/index.vue'
+import { ClickOutside as vClickOutside } from 'element-plus'
+import useWidth from '@/hooks/dialogWidth'
 
-const settingStore = useSettingStore()
 const userStore = useUserStore()
-const drawer = ref(false)
-const direction = ref('rtl')
 const noticeMsg = ref<MsgUserRecord[]>([])
 const noticeMsgInfo = ref<MsgRecord>({ code: '', content: '', level: '', title: '', type: 0 })
 const closeImage = ref(closePng)
 const { t } = useI18n()
 const visible = ref<boolean>(false)
 const currentMsgId = ref<number>(0)
+
+const buttonRef = ref()
+const popoverRef = ref()
 
 onMounted(() => {
   initNoticeMsg()
@@ -44,18 +46,8 @@ const initNoticeMsg = async () => {
  */
 const handleShowMsg = async () => {
   await initNoticeMsg()
-  drawer.value = true
+  unref(popoverRef).popperRef?.delayHide?.()
 }
-
-/**
- * 监听方法
- */
-watch(
-  () => settingStore.device,
-  () => {
-    drawer.value = false
-  },
-)
 
 /**
  * 查看消息详情
@@ -76,7 +68,7 @@ const handleCloseMsg = async (msgUser: MsgUserRecord) => {
   // 标识已经关闭
   await closeUserMsg(msgUser.msgId)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.close') + t('common.success')}`,
     duration: 1000,
     onClose: async () => {
       await initNoticeMsg()
@@ -91,7 +83,7 @@ const handleCloseDialog = async () => {
   // 标识已经读取
   await readUserMsg(currentMsgId.value)
   ElMessage.success({
-    message: t('common.success'),
+    message: `${t('common.mark_read') + t('common.success')}`,
     duration: 1000,
     onClose: async () => {
       visible.value = false
@@ -103,14 +95,22 @@ const handleCloseDialog = async () => {
 
 <template>
   <el-badge style="margin: 0 5px" :is-dot="noticeMsg.length > 0">
-    <svg-button icon="notice" :circle="true" @svg-btn-click="handleShowMsg" />
+    <svg-button ref="buttonRef" icon="notice" v-click-outside="handleShowMsg" :circle="true" />
   </el-badge>
 
-  <!--  <svg-button style="margin: 0 5px" icon="notice_forbid" :circle="true" @click="handleGetMsg" />-->
-  <el-drawer :with-header="false" v-model="drawer" :show-close="false" size="20%" :direction="direction">
-    <el-divider>{{ t('common.system_msg') }}</el-divider>
+  <el-popover
+    :popper-style="{
+      width: '400px',
+    }"
+    ref="popoverRef"
+    :virtual-ref="buttonRef"
+    trigger="click"
+    title=""
+    virtual-triggering
+  >
     <div class="msg-box">
-      <div class="msg" v-for="(msg, index) in noticeMsg" :key="index">
+      <el-empty v-if="noticeMsg.length === 0" />
+      <div v-else class="msg" v-for="(msg, index) in noticeMsg" :key="index">
         <div
           class="msg-content"
           :style="{
@@ -127,14 +127,14 @@ const handleCloseDialog = async () => {
             @mouseover="msg.isClose = 1"
             @mouseleave="msg.isClose = 0"
           >
-            <img :src="msg.isClose || index === 0 ? closeImage : ''" style="width: 10px" />
+            <img :src="msg.isClose ? closeImage : ''" style="width: 10px" />
           </div>
         </div>
       </div>
     </div>
-  </el-drawer>
+  </el-popover>
 
-  <el-dialog v-model="visible" width="50%">
+  <el-dialog v-model="visible" :width="useWidth()">
     <div style="text-align: center; height: 600px">
       <h1 class="title">
         {{ noticeMsgInfo.title }}

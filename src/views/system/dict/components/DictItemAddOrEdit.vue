@@ -11,6 +11,7 @@ import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem/in
 import { DictItemForm } from '@/api/system/dictItem/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'DictItemAddOrEdit',
@@ -133,7 +134,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!dictItemDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -143,9 +144,9 @@ defineExpose({
       :rules="rules"
       ref="dictItemDataFormRef"
       @keyup.enter="handleDictItemDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
-      <el-form-item label-width="125px" :label="$t('dictItem.fields.label')" prop="label">
+      <el-form-item :label="$t('dictItem.fields.label')" prop="label">
         <el-input
           v-model="dictItemDataForm.label"
           autocomplete="off"
@@ -153,7 +154,7 @@ defineExpose({
           :placeholder="$t('dictItem.fields.label')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('dictItem.fields.value')" prop="value">
+      <el-form-item :label="$t('dictItem.fields.value')" prop="value">
         <el-input
           v-model="dictItemDataForm.value"
           autocomplete="off"
@@ -161,7 +162,7 @@ defineExpose({
           :placeholder="$t('dictItem.fields.value')"
         />
       </el-form-item>
-      <el-form-item label-width="125px" :label="$t('dictItem.fields.type')" prop="value">
+      <el-form-item :label="$t('dictItem.fields.type')" prop="value">
         <el-select
           v-model="dictItemDataForm.type"
           autocomplete="off"

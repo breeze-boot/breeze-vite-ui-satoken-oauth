@@ -1,5 +1,7 @@
 <script>
 import { page } from '@/api/bpm/user'
+import useWidth from '@/hooks/dialogWidth'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UserDialog',
@@ -27,6 +29,7 @@ export default {
   },
   data() {
     return {
+      t: useI18n(),
       userList: [],
       checkUser: '',
       singleSelectValue: undefined,
@@ -58,6 +61,7 @@ export default {
     this.handleCheck()
   },
   methods: {
+    useWidth,
     async getList() {
       const response = await page(this.pagerQuery?.query)
       this.userList = response.data?.records
@@ -135,7 +139,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title" width="800">
+  <el-dialog v-model="visible" :title="title" :width="useWidth()">
     <el-table
       ref="userCheckTableRef"
       @selection-change="handleSelectionChange"
@@ -170,8 +174,8 @@ export default {
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleCheckUser">Confirm</el-button>
+        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="handleCheckUser()">{{ t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

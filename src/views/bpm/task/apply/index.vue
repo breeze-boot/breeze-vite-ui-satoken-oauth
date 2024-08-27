@@ -11,6 +11,8 @@ import type { ApplyRecord, ApplyQuery } from '@/api/bpm/task/apply/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
+import BTable from '@/components/Table/BTable/index.vue'
 
 defineOptions({
   name: 'Apply',

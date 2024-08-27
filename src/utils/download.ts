@@ -7,3 +7,6 @@ import { saveAs } from 'file-saver'
 export const saveFile = (data: any, name: string) => {
   saveAs(new Blob([data], { type: 'application/octet-stream; charset=UTF-8' }), name)
 }
+export const saveTypeFile = (data: any, type: string, name: string) => {
+  saveAs(new Blob([data], { type: type }), name)
+}

@@ -16,6 +16,7 @@ import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
 import JSONBigInt from 'json-bigint'
 import { selectPlatform } from '@/api/auth/platform'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'MenuAddOrEdit',
@@ -195,7 +196,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="600"
+    :width="useWidth()"
     :title="!menuDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -205,7 +206,7 @@ defineExpose({
       :rules="rules"
       ref="menuDataFormRef"
       @keyup.enter="handleMenuDataFormSubmit()"
-      label-width="80px"
+      label-width="90px"
     >
       <el-form-item :label="t('menu.fields.platformId')" prop="platformId" style="text-align: left">
         <el-select v-model="menuDataForm.platformId" :placeholder="t('menu.fields.platformId')">

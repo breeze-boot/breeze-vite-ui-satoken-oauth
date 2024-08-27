@@ -228,7 +228,6 @@ export default {
         //兼容移动端
         x = e.touches[0].pageX
       }
-      console.log(barArea)
       startLeft.value = Math.floor(x - barArea.value.getBoundingClientRect().left)
       startMoveTime.value = +new Date() //开始滑动的时间
       if (isEnd.value === false) {

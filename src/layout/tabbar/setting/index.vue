@@ -34,7 +34,7 @@ const { device } = storeToRefs(settingStore)
   <!-- 消息 -->
   <notice v-if="device !== DEVICE.MOBILE" />
   <!-- 设置抽屉 -->
-  <settings-drawer v-if="device !== DEVICE.MOBILE" />
+  <settings-drawer v-if="device === DEVICE.PC" />
   <!-- 租户 -->
   <tenant />
   <!-- 登录人 -->

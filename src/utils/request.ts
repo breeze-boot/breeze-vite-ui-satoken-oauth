@@ -20,6 +20,7 @@ let userStore: any = undefined
 const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
+  withCredentials: true,
 })
 
 /**
