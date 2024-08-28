@@ -12,12 +12,6 @@ export default {
       suspended: '暂停',
     },
     confirmMsg: '是否保存',
-    rules: {
-      definitionName: '请输入流程定义名称',
-      categoryCode: '请选择分类编码',
-      definitionKey: '请获取流程定义KEY',
-      definitionKeyCannotStartWithNumber: '不能以数字开头',
-      definitionNameCannotStartWithNumber: '不能以数字开头',
-    },
+    rules: {},
   },
 }

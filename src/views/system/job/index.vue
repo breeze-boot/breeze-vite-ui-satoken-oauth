@@ -328,7 +328,7 @@ const handleSelectionChange = (rows: JobRecords) => {
         <el-select
           @change="handleQuery"
           class="m-2"
-          :placeholder="$t('job.fields.status')"
+          :placeholder="t('job.fields.status')"
           style="width: 240px"
           v-model="queryParams.status"
         >

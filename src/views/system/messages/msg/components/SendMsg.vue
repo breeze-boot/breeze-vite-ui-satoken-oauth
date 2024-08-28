@@ -37,14 +37,14 @@ const rules = ref({
   deptId: [
     {
       required: true,
-      message: t('msg.rules.deptId'),
+      message: t('common.placeholder.enter') + t('msg.fields.deptId'),
       trigger: 'blur',
     },
   ],
   userId: [
     {
       required: true,
-      message: t('msg.rules.userId'),
+      message: t('common.placeholder.enter') + t('msg.fields.userId'),
       trigger: 'blur',
     },
   ],

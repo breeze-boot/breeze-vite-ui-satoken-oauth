@@ -28,7 +28,7 @@ const rules = ref({
   tenantCode: [
     {
       required: true,
-      message: t('tenant.rules.tenantCode'),
+      message: t('common.placeholder.enter') + t('tenant.fields.tenantCode'),
       trigger: 'blur',
     },
     {
@@ -49,7 +49,7 @@ const rules = ref({
   tenantName: [
     {
       required: true,
-      message: t('tenant.rules.tenantName'),
+      message: t('common.placeholder.enter') + t('tenant.fields.tenantName'),
       trigger: 'blur',
     },
   ],
@@ -61,12 +61,13 @@ const rules = ref({
  * @param id
  */
 const init = async (id: number) => {
-  tenantDataForm.value.id = undefined
   visible.value = true
+  tenantDataForm.value.id = undefined
   // 重置表单数据
   if (tenantDataFormRef.value) {
     tenantDataFormRef.value.resetFields()
   }
+
   if (id) {
     await getInfo(id)
   }
@@ -140,20 +141,20 @@ defineExpose({
       @keyup.enter="handleTenantDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('tenant.fields.tenantCode')" prop="tenantCode">
+      <el-form-item :label="t('tenant.fields.tenantCode')" prop="tenantCode">
         <el-input
           v-model="tenantDataForm.tenantCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('tenant.fields.tenantCode')"
+          :placeholder="t('common.placeholder.enter') + t('tenant.fields.tenantCode')"
         />
       </el-form-item>
-      <el-form-item :label="$t('tenant.fields.tenantName')" prop="tenantName">
+      <el-form-item :label="t('tenant.fields.tenantName')" prop="tenantName">
         <el-input
           v-model="tenantDataForm.tenantName"
           autocomplete="off"
           clearable
-          :placeholder="$t('tenant.fields.tenantName')"
+          :placeholder="t('common.placeholder.enter') + t('tenant.fields.tenantName')"
         />
       </el-form-item>
     </el-form>

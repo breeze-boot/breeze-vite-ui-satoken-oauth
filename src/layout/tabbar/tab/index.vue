@@ -82,12 +82,17 @@ const handleSwitchTab = async (pane: any) => {
 <style lang="scss">
 // el scss
 .el-header-tabs-container {
-  .tabs .el-tabs__header {
+  .el-tabs__header {
     margin: 0;
     height: 30px !important;
   }
 
-  .tabs > .el-tabs__content {
+  .el-tabs__nav-prev,
+  .el-tabs__nav-next {
+    line-height: 30px !important;
+  }
+
+  .el-tabs__content {
     display: none;
   }
 
@@ -107,7 +112,7 @@ const handleSwitchTab = async (pane: any) => {
 
       .el-tabs__item {
         width: auto !important;
-        background: rgba(162, 162, 162, 0.1);
+        background: transparent !important;
         padding: 0 10px;
         border-right: none !important;
         border-bottom: none !important;
@@ -124,33 +129,33 @@ const handleSwitchTab = async (pane: any) => {
         position: absolute;
         width: 20px;
         height: 20px;
-        background: rgba(162, 162, 162, 0.1);
+        background: transparent !important;
         z-index: -999;
       }
 
       .el-tabs__item:hover {
-        background: rgba(236, 234, 234, 0.5);
+        background: rgba(236, 234, 234, 0.5) !important;
       }
 
       .el-tabs__item::before {
         left: -20px;
         bottom: 0;
-        background: radial-gradient(circle at 0 0, transparent 20px, rgba(162, 162, 162, 0.1) 20px);
+        background: transparent !important;
       }
 
       .el-tabs__item:hover::before {
-        background: radial-gradient(circle at 0 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px);
+        background: radial-gradient(circle at 0 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px) !important;
         z-index: 999;
       }
 
       .el-tabs__item::after {
         right: -20px;
         bottom: 0;
-        background: radial-gradient(circle at 100% 0, transparent 20px, rgba(162, 162, 162, 0.1) 20px);
+        background: transparent !important;
       }
 
       .el-tabs__item:hover::after {
-        background: radial-gradient(circle at 100% 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px);
+        background: radial-gradient(circle at 100% 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px) !important;
         z-index: 999;
       }
     }

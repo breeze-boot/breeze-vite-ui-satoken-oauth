@@ -1,9 +1,11 @@
 export default {
   client: {
     fields: {
+      basicSettings: '基础配置',
       clientId: '客户端标识',
       clientName: '客户端名',
-      clientSecret: '客户端访问密钥',
+      clientSecret: '客户密钥',
+      confirmClientSecret: '确认密钥',
       clientIdIssuedAt: '发布日期',
       redirectUris: '重定向URI',
       scopes: '权限范围',
@@ -22,10 +24,9 @@ export default {
       accessTokenTimeToLive: '访问令牌时间有效时间',
       reuseRefreshTokens: '使用刷新令牌',
       refreshTokenTimeToLive: '刷新令牌有效时间',
+      minutes: '分钟',
     },
     rules: {
-      clientCode: '请输入客户端编码',
-      clientName: '请输入客户端名称',
       clientCodeExists: '客户端编码已存在',
     },
   },

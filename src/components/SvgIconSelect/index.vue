@@ -88,7 +88,7 @@ const initLoadIcons = () => {
     </template>
     <div class="icon-box">
       <div class="input-line">
-        <el-input @input="handleSearchIcon" v-model="filterText" :placeholder="t('common.placeholder.inputSvgName')" />
+        <el-input @input="handleSearchIcon" v-model="filterText" :placeholder="t('common.placeholder.enterSvgName')" />
       </div>
       <ul class="icon-list">
         <li class="icon-item" v-for="(icon, index) in tempAllIcon" :key="index" @click="handleCheckIcon(icon)">

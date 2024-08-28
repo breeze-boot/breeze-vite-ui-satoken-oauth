@@ -6,9 +6,7 @@ export default {
       description: 'description',
     },
     rules: {
-      platformName: 'Please enter the platform name',
-      platformCode: 'Please enter platform code',
-      platformCodeDuplicate: 'The platform code entered is duplicate',
+      platformCodeExists: 'The input platform code already exists',
     },
   },
 }

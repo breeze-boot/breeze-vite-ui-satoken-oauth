@@ -28,14 +28,14 @@ const rules = ref({
   subject: [
     {
       required: true,
-      message: t('mSubject.rules.subject'),
+      message: t('common.placeholder.enter') + t('mSubject.fields.subject'),
       trigger: 'blur',
     },
   ],
   content: [
     {
       required: true,
-      message: t('mSubject.rules.content'),
+      message: t('common.placeholder.enter') + t('mSubject.fields.content'),
       trigger: 'blur',
     },
   ],

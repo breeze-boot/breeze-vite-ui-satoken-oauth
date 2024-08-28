@@ -28,14 +28,14 @@ const rules = ref({
   platformName: [
     {
       required: true,
-      message: t('platform.rules.platformName'),
+      message: t('common.placeholder.enter') + t('platform.fields.platformName'),
       trigger: 'blur',
     },
   ],
   platformCode: [
     {
       required: true,
-      message: t('platform.rules.platformCode'),
+      message: t('common.placeholder.enter') + t('platform.fields.platformCode'),
       trigger: 'blur',
     },
     {
@@ -48,7 +48,7 @@ const rules = ref({
             callback()
             return
           }
-          callback(new Error(t('platform.rules.platformCodeDuplicate')))
+          callback(new Error(t('platform.rules.platformCodeExists')))
         })
       },
       trigger: 'blur',
@@ -142,10 +142,20 @@ defineExpose({
       label-width="90px"
     >
       <el-form-item :label="t('platform.fields.platformName')" prop="platformName">
-        <el-input v-model="platformDataForm.platformName" autocomplete="off" clearable />
+        <el-input
+          v-model="platformDataForm.platformName"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('platform.fields.platformName')"
+        />
       </el-form-item>
       <el-form-item :label="t('platform.fields.platformCode')" prop="platformCode">
-        <el-input v-model="platformDataForm.platformCode" autocomplete="off" clearable />
+        <el-input
+          v-model="platformDataForm.platformCode"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('platform.fields.platformCode')"
+        />
       </el-form-item>
       <el-form-item :label="t('platform.fields.description')" prop="description">
         <el-input v-model="platformDataForm.description" autocomplete="off" clearable type="textarea" />

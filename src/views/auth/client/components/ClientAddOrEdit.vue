@@ -73,7 +73,7 @@ const rules = ref({
   clientCode: [
     {
       required: true,
-      message: t('client.rules.clientCode'),
+      message: t('common.placeholder.enter') + t('client.fields.clientCode'),
       trigger: 'blur',
     },
     {
@@ -94,7 +94,7 @@ const rules = ref({
   clientName: [
     {
       required: true,
-      message: t('client.rules.clientName'),
+      message: t('common.placeholder.enter') + t('client.fields.clientName'),
       trigger: 'blur',
     },
   ],
@@ -186,45 +186,60 @@ defineExpose({
       label-width="90px"
     >
       <div class="card">
-        <el-divider>基础配置</el-divider>
-        <el-form-item label="账户" prop="clientId">
+        <el-divider>{{ t('client.fields.basicSettings') }}</el-divider>
+        <el-form-item :label="t('client.fields.clientId')" prop="clientId">
           <el-input v-model="clientDataForm.clientId" autocomplete="off" clearable />
         </el-form-item>
-        <el-form-item label="名称" prop="clientName">
-          <el-input v-model="clientDataForm.clientName" autocomplete="off" clearable />
+        <el-form-item :label="t('client.fields.clientName')" prop="clientName">
+          <el-input
+            v-model="clientDataForm.clientName"
+            autocomplete="off"
+            clearable
+            :placeholder="t('common.placeholder.enter') + t('client.fields.clientName')"
+          />
         </el-form-item>
         <el-form-item
-          label="密钥"
+          :label="t('client.fields.clientSecret')"
           prop="clientSecret"
           v-if="!clientDataForm.id && !clientDataForm.clientSettings.requireProofKey"
         >
-          <el-input v-model="clientDataForm.clientSecret" autocomplete="off" clearable />
+          <el-input
+            v-model="clientDataForm.clientSecret"
+            autocomplete="off"
+            clearable
+            :placeholder="t('common.placeholder.enter') + t('client.fields.clientSecret')"
+          />
         </el-form-item>
         <el-form-item
-          label="确认密钥"
+          :label="t('client.fields.confirmClientSecret')"
           prop="confirmClientSecret"
           v-if="!clientDataForm.id && !clientDataForm.clientSettings.requireProofKey"
         >
-          <el-input v-model="clientDataForm.confirmClientSecret" autocomplete="off" clearable />
+          <el-input
+            v-model="clientDataForm.confirmClientSecret"
+            autocomplete="off"
+            clearable
+            :placeholder="t('common.placeholder.enter') + t('client.fields.confirmClientSecret')"
+          />
         </el-form-item>
-        <el-form-item label="发布日期" prop="clientIdIssuedAt">
+        <el-form-item :label="t('client.fields.clientIdIssuedAt')" prop="clientIdIssuedAt">
           <el-date-picker
             v-model="clientDataForm.clientIdIssuedAt"
             type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择发布日期 "
+            :placeholder="t('common.placeholder.choose') + t('client.fields.clientIdIssuedAt')"
             default-time="12:00:00"
           ></el-date-picker>
         </el-form-item>
 
-        <el-form-item label="重定向URI" prop="redirectUris">
+        <el-form-item :label="t('client.fields.redirectUris')" prop="redirectUris">
           <el-select
             filterable
             allow-create
             default-first-option
             multiple
             v-model="clientDataForm.redirectUris"
-            placeholder="请设置重定向URI"
+            :placeholder="t('common.placeholder.enter') + t('client.fields.redirectUris')"
           >
             <el-option
               v-for="(item, index) in REDIRECT_URIS"
@@ -235,18 +250,23 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label="权限范围" prop="scopes">
-          <el-select filterable multiple v-model="clientDataForm.scopes" placeholder="请选择权限范围">
+        <el-form-item :label="t('client.fields.scopes')" prop="scopes">
+          <el-select
+            filterable
+            multiple
+            v-model="clientDataForm.scopes"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.scopes')"
+          >
             <el-option v-for="(item, index) in SCOPES" :key="index" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="授权许可类型" prop="authorizationGrantTypes">
+        <el-form-item :label="t('client.fields.authorizationGrantTypes')" prop="authorizationGrantTypes">
           <el-select
             filterable
             multiple
             v-model="clientDataForm.authorizationGrantTypes"
-            placeholder="请选择授权许可类型"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.authorizationGrantTypes')"
           >
             <el-option
               v-for="(item, index) in AUTHORIZATION_GRANT_TYPES"
@@ -257,12 +277,12 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label="身份验证方法" prop="clientAuthenticationMethods">
+        <el-form-item :label="t('client.fields.authorizationGrantTypes')" prop="clientAuthenticationMethods">
           <el-select
             filterable
             multiple
             v-model="clientDataForm.clientAuthenticationMethods"
-            placeholder="请选择身份验证方法"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.authorizationGrantTypes')"
           >
             <el-option
               v-for="(item, index) in CLIENT_AUTHENTICATION_METHODS"
@@ -274,14 +294,14 @@ defineExpose({
         </el-form-item>
 
         <el-form-item
-          label="密钥到期时间"
+          :label="t('client.fields.clientSecretExpiresAt')"
           prop="clientSecretExpiresAt"
           v-if="!clientDataForm.clientSettings.requireProofKey"
         >
           <el-date-picker
             v-model="clientDataForm.clientSecretExpiresAt"
             type="datetime"
-            placeholder="选择密钥到期时间"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.clientSecretExpiresAt')"
             value-format="yyyy-MM-dd HH:mm:ss"
             default-time="12:00:00"
           ></el-date-picker>
@@ -289,8 +309,8 @@ defineExpose({
       </div>
 
       <div class="card">
-        <el-divider>client配置</el-divider>
-        <el-form-item label-width="120px" label="PKCE" prop="requireProofKey">
+        <el-divider>{{ t('client.fields.clientSettings') }}</el-divider>
+        <el-form-item label-width="120px" :label="t('client.fields.requireProofKey')" prop="requireProofKey">
           <el-switch
             v-model="clientDataForm.clientSettings.requireProofKey"
             :active-value="true"
@@ -300,7 +320,11 @@ defineExpose({
           ></el-switch>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="授权同意页面" prop="requireAuthorizationConsent">
+        <el-form-item
+          label-width="120px"
+          :label="t('client.fields.requireAuthorizationConsent')"
+          prop="requireAuthorizationConsent"
+        >
           <el-switch
             v-model="clientDataForm.clientSettings.requireAuthorizationConsent"
             :active-value="true"
@@ -310,19 +334,25 @@ defineExpose({
           ></el-switch>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="JWK-URL" prop="jwkSetUrl">
+        <el-form-item label-width="120px" :label="t('client.fields.jwkSetUrl')" prop="jwkSetUrl">
           <el-input
             v-model="clientDataForm.clientSettings.jwkSetUrl"
             autocomplete="off"
             clearable
-            placeholder="请输入JWT获取URL"
+            :placeholder="t('common.placeholder.enter') + t('client.fields.jwkSetUrl')"
           />
         </el-form-item>
 
-        <el-form-item label-width="120px" label="JWT签名算法" prop="tokenEndpointAuthenticationSigningAlgorithm">
+        <el-form-item
+          label-width="120px"
+          :label="t('client.fields.tokenEndpointAuthenticationSigningAlgorithm')"
+          prop="tokenEndpointAuthenticationSigningAlgorithm"
+        >
           <el-select
             v-model="clientDataForm.clientSettings.tokenEndpointAuthenticationSigningAlgorithm"
-            placeholder="请选择JWT的签名算法"
+            :placeholder="
+              t('common.placeholder.choose') + t('client.fields.tokenEndpointAuthenticationSigningAlgorithm')
+            "
           >
             <el-option
               v-for="(item, index) in TOKEN_ENDPOINT_AUTHENTICATION_SIGNING_ALGORITHM"
@@ -335,11 +365,15 @@ defineExpose({
       </div>
 
       <div class="card">
-        <el-divider>token配置</el-divider>
-        <el-form-item label-width="120px" label="ID-TOKEN签名算法" prop="idTokenSignatureAlgorithm">
+        <el-divider>{{ t('client.fields.tokenSettings') }}</el-divider>
+        <el-form-item
+          label-width="120px"
+          :label="t('client.fields.idTokenSignatureAlgorithm')"
+          prop="idTokenSignatureAlgorithm"
+        >
           <el-select
             v-model="clientDataForm.tokenSettings.idTokenSignatureAlgorithm"
-            placeholder="请选择ID-TOKEN签名算法"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.idTokenSignatureAlgorithm')"
           >
             <el-option
               v-for="(item, index) in ID_TOKEN_SIGNATURE_ALGORITHM"
@@ -350,8 +384,11 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="访问令牌格式" prop="accessTokenFormat">
-          <el-select v-model="clientDataForm.tokenSettings.accessTokenFormat" placeholder="请选择访问令牌格式">
+        <el-form-item label-width="120px" :label="t('client.fields.accessTokenFormat')" prop="accessTokenFormat">
+          <el-select
+            v-model="clientDataForm.tokenSettings.accessTokenFormat"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.accessTokenFormat')"
+          >
             <el-option
               v-for="(item, index) in ACCESS_TOKEN_FORMAT"
               :key="index"
@@ -361,7 +398,7 @@ defineExpose({
           </el-select>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="刷新令牌" prop="reuseRefreshTokens">
+        <el-form-item label-width="120px" :label="t('client.fields.reuseRefreshTokens')" prop="reuseRefreshTokens">
           <el-switch
             v-model="clientDataForm.tokenSettings.reuseRefreshTokens"
             :active-value="true"
@@ -372,25 +409,38 @@ defineExpose({
         </el-form-item>
 
         <el-form-item
-          label="刷新令牌有效时间"
+          :label="t('client.fields.refreshTokenTimeToLive')"
           prop="refreshTokenTimeToLive"
           label-width="120px"
           v-if="clientDataForm.tokenSettings.reuseRefreshTokens"
         >
-          <el-input v-model="clientDataForm.tokenSettings.refreshTokenTimeToLive" autocomplete="off" clearable>
+          <el-input
+            v-model="clientDataForm.tokenSettings.refreshTokenTimeToLive"
+            autocomplete="off"
+            :placeholder="t('common.placeholder.choose') + t('client.fields.refreshTokenTimeToLive')"
+            clearable
+          >
             <template v-slot:append>分钟</template>
           </el-input>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="授权代码有效时间" prop="authorizationCodeTimeToLive">
+        <el-form-item
+          label-width="120px"
+          :label="t('client.fields.authorizationCodeTimeToLive')"
+          prop="authorizationCodeTimeToLive"
+        >
           <el-input v-model="clientDataForm.tokenSettings.authorizationCodeTimeToLive" autocomplete="off" clearable>
-            <template v-slot:append>分钟</template>
+            <template v-slot:append>{{ t('client.fields.minutes') }}</template>
           </el-input>
         </el-form-item>
 
-        <el-form-item label-width="120px" label="访问令牌有效时间" prop="accessTokenTimeToLive">
+        <el-form-item
+          label-width="120px"
+          :label="t('client.fields.accessTokenTimeToLive')"
+          prop="accessTokenTimeToLive"
+        >
           <el-input v-model="clientDataForm.tokenSettings.accessTokenTimeToLive" autocomplete="off" clearable>
-            <template v-slot:append>分钟</template>
+            <template v-slot:append>{{ t('client.fields.minutes') }}</template>
           </el-input>
         </el-form-item>
       </div>

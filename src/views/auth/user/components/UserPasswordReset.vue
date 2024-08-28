@@ -28,9 +28,14 @@ const rules = ref({
   password: [
     {
       required: true,
+      message: t('common.placeholder.enter') + t('user.fields.password'),
+      trigger: 'blur',
+    },
+    {
+      required: true,
       validator: (rule: any, value: any, callback: any) => {
         if (value === '') {
-          callback(new Error(t('user.rules.password')))
+          callback(new Error(t('user.fields.password')))
         } else {
           if (userRestPasswordDataForm.value.confirmPassword !== '') {
             restUserPasswordDataFormRef.value.validateField('confirmPassword')
@@ -42,6 +47,11 @@ const rules = ref({
     },
   ],
   confirmPassword: [
+    {
+      required: true,
+      message: t('common.placeholder.enter') + t('user.fields.confirmPassword'),
+      trigger: 'blur',
+    },
     {
       required: true,
       validator: (rule: any, value: any, callback: any) => {
@@ -121,24 +131,24 @@ defineExpose({
       @keyup.enter="handleUserRestPasswordDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('user.fields.password')" prop="password">
+      <el-form-item :label="t('user.fields.password')" prop="password">
         <el-input
           v-model="userRestPasswordDataForm.password"
           autocomplete="off"
           clearable
           show-password
           type="password"
-          :placeholder="$t('user.fields.password')"
+          :placeholder="t('user.fields.password')"
         />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.confirmPassword')" prop="confirmPassword">
+      <el-form-item :label="t('user.fields.confirmPassword')" prop="confirmPassword">
         <el-input
           v-model="userRestPasswordDataForm.confirmPassword"
           autocomplete="off"
           clearable
           show-password
           type="password"
-          :placeholder="$t('user.fields.confirmPassword')"
+          :placeholder="t('user.fields.confirmPassword')"
         />
       </el-form-item>
     </el-form>

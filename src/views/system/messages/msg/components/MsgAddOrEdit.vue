@@ -30,35 +30,35 @@ const rules = ref({
   title: [
     {
       required: true,
-      message: t('msg.rules.title'),
+      message: t('common.placeholder.enter') + t('msg.fields.title'),
       trigger: 'blur',
     },
   ],
   code: [
     {
       required: true,
-      message: t('msg.rules.code'),
+      message: t('common.placeholder.enter') + t('msg.fields.code'),
       trigger: 'blur',
     },
   ],
   type: [
     {
       required: true,
-      message: t('msg.rules.type'),
+      message: t('common.placeholder.enter') + t('msg.fields.type'),
       trigger: 'blur',
     },
   ],
   level: [
     {
       required: true,
-      message: t('msg.rules.level'),
+      message: t('common.placeholder.enter') + t('msg.fields.level'),
       trigger: 'blur',
     },
   ],
   content: [
     {
       required: true,
-      message: t('msg.rules.content'),
+      message: t('common.placeholder.enter') + t("msg.fields.content'"),
       trigger: 'blur',
     },
   ],
@@ -71,7 +71,6 @@ const rules = ref({
  */
 const init = async (id: number) => {
   msgDataForm.value.id = undefined
-  visible.value = true
   // 重置表单数据
   if (msgDataFormRef.value) {
     msgDataFormRef.value.resetFields()
@@ -79,6 +78,7 @@ const init = async (id: number) => {
   if (id) {
     await getInfo(id)
   }
+  visible.value = true
 }
 
 /**
@@ -146,15 +146,25 @@ defineExpose({
       @keyup.enter="handleMsgDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('msg.fields.title')" prop="title">
-        <el-input v-model="msgDataForm.title" autocomplete="off" clearable :placeholder="$t('msg.fields.title')" />
+      <el-form-item :label="t('msg.fields.title')" prop="title">
+        <el-input
+          v-model="msgDataForm.title"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('msg.fields.title')"
+        />
       </el-form-item>
 
-      <el-form-item :label="$t('msg.fields.code')" prop="code">
-        <el-input v-model="msgDataForm.code" autocomplete="off" clearable :placeholder="$t('msg.fields.code')" />
+      <el-form-item :label="t('msg.fields.code')" prop="code">
+        <el-input
+          v-model="msgDataForm.code"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('msg.fields.code')"
+        />
       </el-form-item>
 
-      <el-form-item :label="$t('msg.fields.type')" prop="type">
+      <el-form-item :label="t('msg.fields.type')" prop="type">
         <el-radio-group v-model="msgDataForm.type">
           <el-radio-button v-for="item in MSG_TYPE" :key="item.value" :label="item.value">
             {{ item.label }}
@@ -162,7 +172,7 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item :label="$t('msg.fields.level')" prop="level">
+      <el-form-item :label="t('msg.fields.level')" prop="level">
         <el-radio-group v-model="msgDataForm.level">
           <el-radio-button v-for="item in MSG_LEVEL" :key="item.value" :label="item.value">
             {{ item.label }}
@@ -170,13 +180,13 @@ defineExpose({
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item :label="$t('msg.fields.level')" prop="level">
+      <el-form-item :label="t('msg.fields.content')" prop="content">
         <el-input
           v-model="msgDataForm.content"
           style="width: 450px"
           :rows="6"
           type="textarea"
-          :placeholder="$t('msg.fields.content')"
+          :placeholder="t('common.placeholder.enter') + t('msg.fields.content')"
         />
       </el-form-item>
     </el-form>

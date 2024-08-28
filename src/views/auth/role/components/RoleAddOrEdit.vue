@@ -38,7 +38,7 @@ const rules = ref({
   roleCode: [
     {
       required: true,
-      message: t('role.rules.roleCode'),
+      message: t('common.placeholder.enter') + t('role.fields.roleCode'),
       trigger: 'blur',
     },
     {
@@ -59,21 +59,21 @@ const rules = ref({
   roleName: [
     {
       required: true,
-      message: t('role.rules.roleName'),
+      message: t('common.placeholder.enter') + t('role.fields.roleName'),
       trigger: 'blur',
     },
   ],
   rowPermissionType: [
     {
       required: true,
-      message: t('role.rules.rowPermissionType'),
+      message: t('common.placeholder.choose') + t('role.fields.rowPermissionType'),
       trigger: 'change',
     },
   ],
   rowPermissionIds: [
     {
       required: true,
-      message: t('role.rules.rowPermissionIds'),
+      message: t('common.placeholder.choose') + t('role.fields.rowPermissionIds'),
       trigger: 'change',
     },
   ],
@@ -186,24 +186,27 @@ defineExpose({
       @keyup.enter="handleRoleDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('role.fields.roleCode')" prop="roleCode">
+      <el-form-item :label="t('role.fields.roleCode')" prop="roleCode">
         <el-input
           v-model="roleDataForm.roleCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('role.fields.roleCode')"
+          :placeholder="t('common.placeholder.enter') + t('role.fields.roleCode')"
         />
       </el-form-item>
-      <el-form-item :label="$t('role.fields.roleName')" prop="roleName">
+      <el-form-item :label="t('role.fields.roleName')" prop="roleName">
         <el-input
           v-model="roleDataForm.roleName"
           autocomplete="off"
           clearable
-          :placeholder="$t('role.fields.roleName')"
+          :placeholder="t('common.placeholder.enter') + t('role.fields.roleName')"
         />
       </el-form-item>
-      <el-form-item :label="$t('role.fields.rowPermissionType')" prop="rowPermissionType">
-        <el-select v-model="roleDataForm.rowPermissionType" :placeholder="$t('role.fields.rowPermissionType')">
+      <el-form-item :label="t('role.fields.rowPermissionType')" prop="rowPermissionType">
+        <el-select
+          v-model="roleDataForm.rowPermissionType"
+          :placeholder="t('common.placeholder.choose') + t('role.fields.rowPermissionType')"
+        >
           <el-option
             v-for="item in permissionOption"
             :key="item.value"
@@ -214,10 +217,14 @@ defineExpose({
       </el-form-item>
       <el-form-item
         v-if="roleDataForm.rowPermissionType === 'CUSTOMIZES'"
-        :label="$t('role.fields.rowPermissionIds')"
+        :label="t('role.fields.rowPermissionIds')"
         prop="rowPermissionIds"
       >
-        <el-select multiple v-model="roleDataForm.rowPermissionIds" :placeholder="$t('role.fields.rowPermissionIds')">
+        <el-select
+          multiple
+          v-model="roleDataForm.rowPermissionIds"
+          :placeholder="t('common.placeholder.choose') + t('role.fields.rowPermissionIds')"
+        >
           <el-option
             v-for="item in customizeRowPermissionOption"
             :key="item.value"

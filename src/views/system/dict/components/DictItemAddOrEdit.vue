@@ -37,21 +37,21 @@ const rules = ref({
   label: [
     {
       required: true,
-      message: t('dictItem.rules.label'),
+      message: t('common.placeholder.enter') + t('dictItem.fields.label'),
       trigger: 'blur',
     },
   ],
   value: [
     {
       required: true,
-      message: t('dictItem.rules.value'),
+      message: t('common.placeholder.enter') + t('dictItem.fields.value'),
       trigger: 'blur',
     },
   ],
   type: [
     {
       required: true,
-      message: t('dictItem.rules.type'),
+      message: t('common.placeholder.choose') + t('dictItem.fields.type'),
       trigger: 'change',
     },
   ],
@@ -146,28 +146,28 @@ defineExpose({
       @keyup.enter="handleDictItemDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('dictItem.fields.label')" prop="label">
+      <el-form-item :label="t('dictItem.fields.label')" prop="label">
         <el-input
           v-model="dictItemDataForm.label"
           autocomplete="off"
           clearable
-          :placeholder="$t('dictItem.fields.label')"
+          :placeholder="t('dictItem.fields.label')"
         />
       </el-form-item>
-      <el-form-item :label="$t('dictItem.fields.value')" prop="value">
+      <el-form-item :label="t('dictItem.fields.value')" prop="value">
         <el-input
           v-model="dictItemDataForm.value"
           autocomplete="off"
           clearable
-          :placeholder="$t('dictItem.fields.value')"
+          :placeholder="t('dictItem.fields.value')"
         />
       </el-form-item>
-      <el-form-item :label="$t('dictItem.fields.type')" prop="value">
+      <el-form-item :label="t('dictItem.fields.type')" prop="value">
         <el-select
           v-model="dictItemDataForm.type"
           autocomplete="off"
           clearable
-          :placeholder="$t('dictItem.fields.type')"
+          :placeholder="t('dictItem.fields.type')"
           style="width: 240px"
         >
           <el-option v-for="item in tagTypes" :key="item.type" :label="item.type" :value="item.type">

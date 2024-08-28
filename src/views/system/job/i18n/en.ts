@@ -14,10 +14,8 @@ export default {
       jobRunImmediately: 'job run immediately',
     },
     rules: {
-      jobName: 'Please enter the task name',
-      jobGroupName: 'Please select a task group name',
       cronExpression: 'Please set the cron expression',
-      clazzName: 'Please enter the execution class name. Method (parameter)',
+      clazzName: 'Please enter the execution className.MethodName(parameter)',
     },
   },
   jLog: {

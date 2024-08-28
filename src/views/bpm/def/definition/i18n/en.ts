@@ -12,12 +12,6 @@ export default {
       suspended: 'suspended',
     },
     confirmMsg: '是否保存',
-    rules: {
-      definitionName: 'Please enter the definition name',
-      categoryCode: 'Please select category code',
-      definitionKey: 'Please get definition key',
-      definitionKeyCannotStartWithNumber: 'Cannot start with a number',
-      definitionNameCannotStartWithNumber: 'Cannot start with a number',
-    },
+    rules: {},
   },
 }

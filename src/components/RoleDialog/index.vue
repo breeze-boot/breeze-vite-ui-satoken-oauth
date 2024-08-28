@@ -1,7 +1,6 @@
 <script>
 import { page } from '@/api/bpm/group'
 import useWidth from '@/hooks/dialogWidth'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'RoleDialog',
@@ -29,7 +28,6 @@ export default {
   },
   data() {
     return {
-      t: useI18n(),
       roleList: [],
       checkRole: '',
       singleSelectValue: undefined,
@@ -174,8 +172,8 @@ export default {
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleCheckRole">{{ t('common.confirm') }}</el-button>
+        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="handleCheckRole">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

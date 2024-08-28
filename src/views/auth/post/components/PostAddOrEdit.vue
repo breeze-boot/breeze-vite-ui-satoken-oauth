@@ -28,7 +28,7 @@ const rules = ref({
   postCode: [
     {
       required: true,
-      message: t('post.rules.postCode'),
+      message: t('common.placeholder.enter') + t('post.fields.postCode'),
       trigger: 'blur',
     },
     {
@@ -49,7 +49,7 @@ const rules = ref({
   postName: [
     {
       required: true,
-      message: t('post.rules.postName'),
+      message: t('common.placeholder.enter') + t('post.fields.postName'),
       trigger: 'blur',
     },
   ],
@@ -139,20 +139,20 @@ defineExpose({
       @keyup.enter="handlePostDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('post.fields.postCode')" prop="postCode">
+      <el-form-item :label="t('post.fields.postCode')" prop="postCode">
         <el-input
           v-model="postDataForm.postCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('post.fields.postCode')"
+          :placeholder="t('post.fields.postCode')"
         />
       </el-form-item>
-      <el-form-item :label="$t('post.fields.postName')" prop="postName">
+      <el-form-item :label="t('post.fields.postName')" prop="postName">
         <el-input
           v-model="postDataForm.postName"
           autocomplete="off"
           clearable
-          :placeholder="$t('post.fields.postName')"
+          :placeholder="t('post.fields.postName')"
         />
       </el-form-item>
     </el-form>

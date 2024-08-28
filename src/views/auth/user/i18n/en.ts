@@ -29,22 +29,10 @@ export default {
       email: 'email',
       isLock: 'is lock',
     },
-
     rules: {
-      userCode: 'Please enter your user code',
-      username: 'Please enter your user name',
       usernameExists: 'The input username already exists',
-      password: 'Please enter your password',
       passwordAgain: 'Please enter your password again',
       passwordUnanimous: 'The password entered twice is inconsistent',
-      sex: 'Please select a gender',
-      phone: 'Please enter your mobile phone number',
-      email: 'Please enter your email address',
-      idCard: 'Please enter your ID number',
-      displayName: 'Please enter the name that will be displayed after logging in',
-      postId: 'Please select your position',
-      roleIds: 'Please select your role',
-      deptId: 'Please select your dept',
     },
   },
 }

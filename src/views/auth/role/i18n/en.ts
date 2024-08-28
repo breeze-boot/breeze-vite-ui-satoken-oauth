@@ -14,11 +14,6 @@ export default {
       rowPermissionIds: 'row permission',
     },
     rules: {
-      permissionCode: 'Please check a permission',
-      rowPermissionIds: 'Please check a customizes row permission',
-      rolePermission: 'Please select a role permission',
-      roleCode: 'Please enter your role code',
-      roleName: 'Please enter your role name',
       roleCodeExists: 'The input role code already exists',
     },
   },

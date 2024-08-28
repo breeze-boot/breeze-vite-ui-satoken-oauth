@@ -1,7 +1,6 @@
 <script>
 import { page } from '@/api/bpm/user'
 import useWidth from '@/hooks/dialogWidth'
-import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UserDialog',
@@ -29,7 +28,6 @@ export default {
   },
   data() {
     return {
-      t: useI18n(),
       userList: [],
       checkUser: '',
       singleSelectValue: undefined,
@@ -96,7 +94,7 @@ export default {
       if (this.single) {
         return
       }
-      this.checkUser = row.map((item) => item.userCode)
+      this.checkUser = row.map((item) => item.id)
     },
     handleCheck() {
       if (this.single) {
@@ -174,8 +172,8 @@ export default {
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleCheckUser()">{{ t('common.confirm') }}</el-button>
+        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="handleCheckUser()">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

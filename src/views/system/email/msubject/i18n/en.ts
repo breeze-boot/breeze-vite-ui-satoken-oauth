@@ -1,8 +1,8 @@
 export default {
   mSubject: {
     common: {
-      setTo: '设置邮箱发送人',
-      setCc: '设置邮箱抄送人',
+      setTo: 'set to',
+      setCc: 'set cc',
     },
     fields: {
       subject: 'subject',
@@ -11,12 +11,6 @@ export default {
       cc: 'cc',
       status: 'status',
     },
-    rules: {
-      subject: 'Please enter the subject',
-      content: 'Please enter content',
-      to: 'Please enter to',
-      cc: 'Please enter cc',
-      status: 'Please enter status',
-    },
+    rules: {},
   },
 }

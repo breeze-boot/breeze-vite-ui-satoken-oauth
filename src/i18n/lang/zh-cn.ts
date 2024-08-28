@@ -70,10 +70,10 @@ export default {
       fileSize: '上传文件大小必须不能超过',
     },
     placeholder: {
-      inputSvgName: '请输入图标名称',
-      input: '请输入',
+      enterSvgName: '请输入图标名称',
+      enter: '请输入',
       change: '请切换',
-      check: '请选择',
+      choose: '请选择',
       click: '请点击',
     },
   },

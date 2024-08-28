@@ -29,14 +29,14 @@ const rules = ref({
   dictName: [
     {
       required: true,
-      message: t('dict.rules.dictName'),
+      message: t('common.placeholder.enter') + t('dict.fields.dictName'),
       trigger: 'blur',
     },
   ],
   dictCode: [
     {
       required: true,
-      message: t('dict.rules.dictCode'),
+      message: t('common.placeholder.enter') + t('dict.fields.dictCode'),
       trigger: 'change',
     },
   ],
@@ -127,25 +127,25 @@ defineExpose({
       @keyup.enter="handleDictDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('dict.fields.dictName')" prop="dictName">
+      <el-form-item :label="t('dict.fields.dictName')" prop="dictName">
         <el-input
           v-model="dictDataForm.dictName"
           autocomplete="off"
           clearable
-          :placeholder="$t('dict.fields.dictName')"
+          :placeholder="t('common.placeholder.enter') + t('dict.fields.dictName')"
         />
       </el-form-item>
 
-      <el-form-item :label="$t('dict.fields.dictCode')" prop="dictCode">
+      <el-form-item :label="t('dict.fields.dictCode')" prop="dictCode">
         <el-input
           v-model="dictDataForm.dictCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('dict.fields.dictCode')"
+          :placeholder="t('common.placeholder.enter') + t('dict.fields.dictCode')"
         />
       </el-form-item>
 
-      <el-form-item :label="$t('dict.fields.status')" prop="status">
+      <el-form-item :label="t('dict.fields.status')" prop="status">
         <el-switch
           v-model="dictDataForm.status"
           :active-value="1"

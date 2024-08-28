@@ -101,8 +101,8 @@ defineExpose({
       @keyup.enter="handleDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('leave.fields.title')" prop="title">
-        <el-input v-model="leaveDataForm.title" :placeholder="$t('leave.fields.title')" />
+      <el-form-item :label="t('leave.fields.title')" prop="title">
+        <el-input v-model="leaveDataForm.title" :placeholder="t('leave.fields.title')" />
       </el-form-item>
     </el-form>
   </el-dialog>

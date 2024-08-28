@@ -36,7 +36,7 @@ const rules = ref({
   method: [
     {
       required: true,
-      message: t('msg.rules.method'),
+      message: t('common.placeholder.choose') + t('msg.rules.method'),
       trigger: 'change',
     },
   ],
@@ -97,7 +97,11 @@ defineExpose({
       @keyup.enter="handleSendMsgMethodFormSubmit()"
     >
       <el-form-item prop="method">
-        <el-select style="width: 100%" v-model="sendMsgMethodDataForm.method" :placeholder="t('msg.fields.method')">
+        <el-select
+          style="width: 100%"
+          v-model="sendMsgMethodDataForm.method"
+          :placeholder="t('common.placeholder.choose') + t('msg.fields.method')"
+        >
           <el-option v-for="item in methodOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>

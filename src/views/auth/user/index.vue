@@ -518,7 +518,7 @@ const handleSelectionChange = (rows: UserRecords) => {
         <el-select
           @change="handleQuery"
           class="m-2"
-          :placeholder="$t('user.fields.isLock')"
+          :placeholder="t('user.fields.isLock')"
           style="width: 240px"
           v-model="queryParams.isLock"
         >

@@ -70,10 +70,10 @@ export default {
       fileSize: 'the file size can not exceed !',
     },
     placeholder: {
-      inputSvgName: 'please input icon name',
-      input: 'please input ',
+      enterSvgName: 'please enter icon name',
+      enter: 'please enter ',
       change: 'please change ',
-      check: 'please check ',
+      choose: 'please choose ',
       click: 'please click ',
     },
   },

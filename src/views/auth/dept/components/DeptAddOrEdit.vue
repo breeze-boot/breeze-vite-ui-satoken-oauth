@@ -31,21 +31,21 @@ const rules = ref({
   parentId: [
     {
       required: true,
-      message: t('dept.rules.parentId'),
+      message: t('common.placeholder.choose') + t('dept.filed.parentId'),
       trigger: 'blur',
     },
   ],
   deptName: [
     {
       required: true,
-      message: t('dept.rules.deptName'),
+      message: t('common.placeholder.enter') + t('dept.fields.deptName'),
       trigger: 'blur',
     },
   ],
   deptCode: [
     {
       required: true,
-      message: t('dept.rules.deptCode'),
+      message: t('common.placeholder.choose') + t('dept.fields.deptCode'),
       trigger: 'blur',
     },
     {
@@ -187,7 +187,7 @@ defineExpose({
           :show-all-levels="false"
           clearable
           filterable
-          :placeholder="t('dept.fields.superiorDept')"
+          :placeholder="t('common.placeholder.choose') + t('dept.fields.superiorDept')"
         />
       </el-form-item>
       <el-form-item :label="t('dept.fields.deptName')" prop="deptName">
@@ -195,7 +195,7 @@ defineExpose({
           v-model="deptDataForm.deptName"
           autocomplete="off"
           clearable
-          :placeholder="t('dept.fields.deptName')"
+          :placeholder="t('common.placeholder.enter') + t('dept.fields.deptName')"
         />
       </el-form-item>
       <el-form-item :label="t('dept.fields.deptCode')" prop="deptCode">
@@ -203,7 +203,7 @@ defineExpose({
           v-model="deptDataForm.deptCode"
           autocomplete="off"
           clearable
-          :placeholder="t('dept.fields.deptCode')"
+          :placeholder="t('common.placeholder.choose') + t('dept.fields.deptCode')"
         />
       </el-form-item>
     </el-form>

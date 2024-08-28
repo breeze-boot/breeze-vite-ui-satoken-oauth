@@ -1,9 +1,11 @@
 export default {
   client: {
     fields: {
+      basicSettings: 'basic settings',
       clientId: 'client id',
       clientName: 'client name',
       clientSecret: 'client secret',
+      confirmClientSecret: 'confirm client secret',
       clientIdIssuedAt: 'clientIdIssuedAt',
       redirectUris: 'redirectUris',
       scopes: 'scopes',
@@ -22,10 +24,9 @@ export default {
       accessTokenTimeToLive: 'accessTokenTimeToLive',
       reuseRefreshTokens: 'reuseRefreshTokens',
       refreshTokenTimeToLive: 'refreshTokenTimeToLive',
+      minutes: 'minutes',
     },
     rules: {
-      clientCode: 'Please enter your client code',
-      clientName: 'Please enter your client name',
       clientCodeExists: 'The input client code already exists',
     },
   },

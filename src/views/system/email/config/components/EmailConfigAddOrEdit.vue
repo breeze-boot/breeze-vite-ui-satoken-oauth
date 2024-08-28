@@ -28,78 +28,78 @@ const rules = ref({
   smtpHost: [
     {
       required: true,
-      message: t('emailConfig.rules.smtpHost'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.smtpHost'),
       trigger: 'blur',
     },
   ],
   port: [
     {
       required: true,
-      message: t('emailConfig.rules.port'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.port'),
       trigger: 'blur',
     },
   ],
   username: [
     {
       required: true,
-      message: t('emailConfig.rules.username'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.username'),
       trigger: 'blur',
     },
   ],
   password: [
     {
       required: true,
-      message: t('emailConfig.rules.password'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.password'),
       trigger: 'blur',
     },
   ],
   encoding: [
     {
       required: true,
-      message: t('emailConfig.rules.encoding'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.encoding'),
       trigger: 'blur',
     },
   ],
   smtpDebug: [
     {
       required: true,
-      message: t('emailConfig.rules.smtpDebug'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.smtpDebug'),
       trigger: 'blur',
     },
   ],
   smtpSocketFactoryClass: [
     {
       required: true,
-      message: t('emailConfig.rules.smtpSocketFactoryClass'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.smtpSocketFactoryClass'),
       trigger: 'blur',
     },
   ],
   auth: [
     {
       required: true,
-      message: t('emailConfig.rules.auth'),
+      message: t('common.placeholder.enter') + t('emailConfig.fields.auth'),
       trigger: 'blur',
     },
   ],
   protocol: [
     {
       required: true,
-      message: t('emailConfig.rules.protocol'),
-      trigger: 'blur',
+      message: t('common.placeholder.enter') + t('emailConfig.fields.protocol'),
+      trigger: 'change',
     },
   ],
   ssl: [
     {
       required: true,
-      message: t('emailConfig.rules.ssl'),
-      trigger: 'blur',
+      message: t('common.placeholder.enter') + t('emailConfig.fields.ssl'),
+      trigger: 'change',
     },
   ],
   status: [
     {
       required: true,
-      message: t('emailConfig.rules.status'),
-      trigger: 'blur',
+      message: t('common.placeholder.enter') + t('emailConfig.fields.status'),
+      trigger: 'change',
     },
   ],
 })
@@ -190,28 +190,68 @@ defineExpose({
       label-width="90px"
     >
       <el-form-item :label="t('emailConfig.fields.smtpHost')" prop="smtpHost">
-        <el-input v-model="emailDataForm.smtpHost" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.smtpHost"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.smtpHost')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.port')" prop="port">
-        <el-input v-model="emailDataForm.port" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.port"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.smtpHost')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.username')" prop="username">
-        <el-input v-model="emailDataForm.username" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.username"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.username')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.password')" prop="password">
-        <el-input v-model="emailDataForm.password" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.password"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.password')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.encoding')" prop="encoding">
-        <el-input v-model="emailDataForm.encoding" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.encoding"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.encoding')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.smtpSocketFactoryClass')" prop="smtpSocketFactoryClass">
-        <el-input v-model="emailDataForm.smtpSocketFactoryClass" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.smtpSocketFactoryClass"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.smtpSocketFactoryClass')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.ssl')" prop="ssl">
-        <el-input v-model="emailDataForm.ssl" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.ssl"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.ssl')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.protocol')" prop="protocol">
-        <el-input v-model="emailDataForm.protocol" autocomplete="off" clearable />
+        <el-input
+          v-model="emailDataForm.protocol"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('emailConfig.fields.protocol')"
+        />
       </el-form-item>
       <el-form-item :label="t('emailConfig.fields.smtpDebug')" prop="smtpDebug">
         <el-switch

@@ -397,7 +397,7 @@ export default {
       this.businessKey = this.formData.businessKey
 
       // 保留剩余扩展元素，便于后面更新该元素对应属性
-      this.otherExtensions = this.elExtensionElements.values.filter((ex) => {
+      this.otherExtensions = this.elExtensionElements.values?.filter((ex) => {
         return ex.$type !== `${this.prefix}:FormProperty` && ex.$type !== `${this.prefix}:FormData`
       })
 

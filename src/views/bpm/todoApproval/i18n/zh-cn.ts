@@ -1,7 +1,7 @@
 export default {
   bpmn: {
     fields: {
-      userList: 'user list',
+      userList: '用户列表',
     },
   },
 }

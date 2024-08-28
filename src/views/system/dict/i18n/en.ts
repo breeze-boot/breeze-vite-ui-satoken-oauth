@@ -6,10 +6,7 @@ export default {
       status: 'status',
     },
     common: {},
-    rules: {
-      dictCode: 'Please enter the dict code',
-      dictName: 'Please enter the dict name',
-    },
+    rules: {},
   },
   dictItem: {
     fields: {
@@ -20,10 +17,6 @@ export default {
     common: {
       dictItemViewing: 'dict item Viewing',
     },
-    rules: {
-      label: 'Please enter the label',
-      value: 'Please enter the value',
-      type: 'Please select the type',
-    },
+    rules: {},
   },
 }

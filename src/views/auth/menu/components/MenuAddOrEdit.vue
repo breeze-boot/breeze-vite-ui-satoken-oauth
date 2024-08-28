@@ -37,42 +37,42 @@ const rules = ref({
   platformId: [
     {
       required: true,
-      message: t('menu.rules.platformId'),
+      message: t('common.placeholder.choose') + t('menu.fields.platformId'),
       trigger: 'change',
     },
   ],
   name: [
     {
       required: true,
-      message: t('menu.rules.name'),
+      message: t('common.placeholder.enter') + t('menu.fields.name'),
       trigger: 'blur',
     },
   ],
   title: [
     {
       required: true,
-      message: t('menu.rules.title'),
+      message: t('common.placeholder.enter') + t('menu.fields.title'),
       trigger: 'blur',
     },
   ],
   permission: [
     {
       required: false,
-      message: t('menu.rules.permission'),
+      message: t('common.placeholder.enter') + t('menu.fields.permission'),
       trigger: 'blur',
     },
   ],
   path: [
     {
       required: true,
-      message: t('menu.rules.path'),
+      message: t('common.placeholder.enter') + t('menu.fields.path'),
       trigger: 'blur',
     },
   ],
   component: [
     {
       required: true,
-      message: t('menu.rules.component'),
+      message: t('common.placeholder.enter') + t('menu.fields.component'),
       trigger: 'blur',
     },
   ],
@@ -209,7 +209,10 @@ defineExpose({
       label-width="90px"
     >
       <el-form-item :label="t('menu.fields.platformId')" prop="platformId" style="text-align: left">
-        <el-select v-model="menuDataForm.platformId" :placeholder="t('menu.fields.platformId')">
+        <el-select
+          v-model="menuDataForm.platformId"
+          :placeholder="t('common.placeholder.choose') + t('menu.fields.platformId')"
+        >
           <el-option
             v-for="item in platformOptions"
             :key="item.value"
@@ -276,7 +279,12 @@ defineExpose({
       </el-form-item>
 
       <el-form-item :label="t('menu.fields.title')" prop="title">
-        <el-input v-model="menuDataForm.title" autocomplete="off" clearable :placeholder="t('menu.fields.title')" />
+        <el-input
+          v-model="menuDataForm.title"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('menu.fields.title')"
+        />
       </el-form-item>
 
       <el-form-item
@@ -284,7 +292,10 @@ defineExpose({
         :label="t('menu.fields.icon')"
         prop="icon"
       >
-        <svg-icon-select :placeholder="t('menu.fields.icon')" v-model="menuDataForm.icon" />
+        <svg-icon-select
+          :placeholder="t('common.placeholder.choose') + t('menu.fields.icon')"
+          v-model="menuDataForm.icon"
+        />
       </el-form-item>
 
       <el-form-item
@@ -292,7 +303,12 @@ defineExpose({
         :label="t('menu.fields.path')"
         prop="path"
       >
-        <el-input v-model="menuDataForm.path" autocomplete="off" clearable :placeholder="t('menu.fields.path')" />
+        <el-input
+          v-model="menuDataForm.path"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('menu.fields.path')"
+        />
       </el-form-item>
 
       <el-form-item
@@ -300,7 +316,12 @@ defineExpose({
         :label="t('menu.fields.name')"
         prop="name"
       >
-        <el-input v-model="menuDataForm.name" autocomplete="off" clearable :placeholder="t('menu.fields.name')" />
+        <el-input
+          v-model="menuDataForm.name"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('menu.fields.name')"
+        />
       </el-form-item>
 
       <el-form-item
@@ -312,7 +333,7 @@ defineExpose({
           v-model="menuDataForm.component"
           autocomplete="off"
           clearable
-          :placeholder="t('menu.fields.component')"
+          :placeholder="t('common.placeholder.enter') + t('menu.fields.component')"
         >
           <template #prepend>src/views</template>
           <template #append>.vue</template>
@@ -328,7 +349,7 @@ defineExpose({
           v-model="menuDataForm.permission"
           autocomplete="off"
           clearable
-          :placeholder="t('menu.fields.permission')"
+          :placeholder="t('common.placeholder.enter') + t('menu.fields.permission')"
         />
       </el-form-item>
     </el-form>

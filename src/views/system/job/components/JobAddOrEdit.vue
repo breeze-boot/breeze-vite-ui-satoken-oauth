@@ -36,14 +36,14 @@ const rules = ref({
   jobName: [
     {
       required: true,
-      message: t('job.rules.jobName'),
+      message: t('common.placeholder.enter') + t('job.fields.jobName'),
       trigger: 'blur',
     },
   ],
   jobGroupName: [
     {
       required: true,
-      message: t('job.rules.jobGroupName'),
+      message: t('common.placeholder.choose') + t('job.fields.jobGroupName'),
       trigger: 'change',
     },
   ],
@@ -148,42 +148,42 @@ defineExpose({
       @keyup.enter="handleJobDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('job.fields.jobName')" prop="jobName">
-        <el-input v-model="jobDataForm.jobName" autocomplete="off" clearable :placeholder="$t('job.fields.jobName')" />
+      <el-form-item :label="t('job.fields.jobName')" prop="jobName">
+        <el-input v-model="jobDataForm.jobName" autocomplete="off" clearable :placeholder="t('job.fields.jobName')" />
       </el-form-item>
-      <el-form-item :label="$t('job.fields.jobGroupName')" prop="jobGroupName">
+      <el-form-item :label="t('job.fields.jobGroupName')" prop="jobGroupName">
         <el-select
           v-model="jobDataForm.jobGroupName"
           collapse-tags
           filterable
-          :placeholder="$t('job.fields.jobGroupName')"
+          :placeholder="t('job.fields.jobGroupName')"
         >
           <el-option v-for="item in JOB_GROUP" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('job.fields.cronExpression')" prop="cronExpression">
-        <cron-select v-model="jobDataForm.cronExpression" :placeholder="$t('job.fields.cronExpression')" />
+      <el-form-item :label="t('job.fields.cronExpression')" prop="cronExpression">
+        <cron-select v-model="jobDataForm.cronExpression" :placeholder="t('job.fields.cronExpression')" />
       </el-form-item>
-      <el-form-item :label="$t('job.fields.clazzName')" prop="clazzName">
+      <el-form-item :label="t('job.fields.clazzName')" prop="clazzName">
         <el-input
           v-model="jobDataForm.clazzName"
           autocomplete="off"
           clearable
-          :placeholder="$t('job.fields.clazzName')"
+          :placeholder="t('job.fields.clazzName')"
         />
         <span style="color: rgba(189, 38, 38, 0.85); font-size: 0.6rem; margin-top: 6px">
           ** 请设置执行方法【全类名.方法名('string',1, true, 1D, 1L)】或【Bean名.方法名('string',1, true, 1D, 1L)】
         </span>
       </el-form-item>
 
-      <el-form-item :label="$t('job.fields.misfirePolicy')" prop="misfirePolicy">
+      <el-form-item :label="t('job.fields.misfirePolicy')" prop="misfirePolicy">
         <el-radio-group v-model="jobDataForm.misfirePolicy">
           <el-radio v-for="item in MISFIRE_POLICY" :key="item.value" :value="item.value">
             {{ item.label }}
           </el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('job.fields.concurrent')" prop="concurrent">
+      <el-form-item :label="t('job.fields.concurrent')" prop="concurrent">
         <el-switch
           v-model="jobDataForm.concurrent"
           :active-value="1"
@@ -192,7 +192,7 @@ defineExpose({
           inactive-color="#AAAAAA"
         ></el-switch>
       </el-form-item>
-      <el-form-item :label="$t('job.fields.status')" prop="status">
+      <el-form-item :label="t('job.fields.status')" prop="status">
         <el-switch
           v-model="jobDataForm.status"
           :active-value="1"

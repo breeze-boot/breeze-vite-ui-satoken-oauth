@@ -29,14 +29,14 @@ const rules = ref({
   categoryName: [
     {
       required: true,
-      message: t('category.rules.categoryName'),
+      message: t('common.placeholder.enter') + t('category.fields.categoryName'),
       trigger: 'blur',
     },
   ],
   categoryCode: [
     {
       required: true,
-      message: t('category.rules.categoryCode'),
+      message: t('common.placeholder.enter') + t('category.fields.categoryCode'),
       trigger: 'blur',
     },
     {
@@ -69,6 +69,7 @@ const init = async (id: number) => {
   if (categoryDataFormRef.value) {
     categoryDataFormRef.value.resetFields()
   }
+
   if (id) {
     await getInfo(id)
   }
@@ -144,10 +145,20 @@ defineExpose({
       label-width="90px"
     >
       <el-form-item :label="t('category.fields.categoryCode')" prop="categoryCode">
-        <el-input v-model="categoryDataForm.categoryCode" autocomplete="off" clearable />
+        <el-input
+          v-model="categoryDataForm.categoryCode"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('category.fields.categoryCode')"
+        />
       </el-form-item>
       <el-form-item :label="t('category.fields.categoryName')" prop="categoryName">
-        <el-input v-model="categoryDataForm.categoryName" autocomplete="off" clearable />
+        <el-input
+          v-model="categoryDataForm.categoryName"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('category.fields.categoryName')"
+        />
       </el-form-item>
     </el-form>
     <template #footer>

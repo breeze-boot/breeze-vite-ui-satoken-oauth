@@ -5,7 +5,7 @@
 
 <!-- 用户添加修改弹出框 -->
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { addUser, getUser, editUser, selectDept, checkUsername, selectRole, selectPost } from '@/api/auth/user'
 import { UserForm } from '@/api/auth/user/type.ts'
@@ -34,7 +34,7 @@ const rules = ref({
   username: [
     {
       required: true,
-      message: t('user.rules.username'),
+      message: t('common.placeholder.enter') + t('user.fields.username'),
       trigger: 'blur',
     },
     {
@@ -55,42 +55,42 @@ const rules = ref({
   userCode: [
     {
       required: true,
-      message: t('user.rules.userCode'),
+      message: t('common.placeholder.enter') + t('user.fields.userCode'),
       trigger: 'blur',
     },
   ],
   phone: [
     {
       required: true,
-      message: t('user.rules.phone'),
+      message: t('common.placeholder.enter') + t('user.fields.phone'),
       trigger: 'blur',
     },
   ],
   postId: [
     {
       required: true,
-      message: t('user.rules.postId'),
+      message: t('common.placeholder.choose') + t('user.fields.post'),
       trigger: 'change',
     },
   ],
   deptId: [
     {
       required: true,
-      message: t('user.rules.deptId'),
+      message: t('common.placeholder.choose') + t('user.fields.dept'),
       trigger: 'change',
     },
   ],
   roleIds: [
     {
       required: true,
-      message: t('user.rules.roleIds'),
+      message: t('common.placeholder.choose') + t('user.fields.roleIds'),
       trigger: 'change',
     },
   ],
   sex: [
     {
       required: true,
-      message: t('user.rules.sex'),
+      message: t('common.placeholder.choose') + t('user.fields.sex'),
       trigger: 'blur',
     },
   ],
@@ -128,21 +128,21 @@ const rules = ref({
   email: [
     {
       required: true,
-      message: t('user.rules.email'),
+      message: t('common.placeholder.enter') + t('user.fields.email'),
       trigger: 'blur',
     },
   ],
   idCard: [
     {
       required: true,
-      message: t('user.rules.idCard'),
+      message: t('common.placeholder.enter') + t('user.fields.idCard'),
       trigger: 'blur',
     },
   ],
   displayName: [
     {
       required: true,
-      message: t('user.rules.displayName'),
+      message: t('common.placeholder.enter') + t('user.fields.displayName'),
       trigger: 'blur',
     },
   ],
@@ -209,6 +209,8 @@ const getInfo = async (id: number) => {
   const response: any = await getUser(JSONBigInt.parse(id))
   if (response.code === '0000') {
     Object.assign(userDataForm.value, response.data)
+    userDataForm.value.password = ''
+    userDataForm.value.confirmPassword = ''
   }
 }
 
@@ -274,57 +276,67 @@ defineExpose({
       <el-form-item label-width="0px" prop="avatar">
         <avatar-upload v-model="userDataForm.avatar" />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.username')" prop="username">
+      <el-form-item :label="t('user.fields.username')" prop="username">
         <el-input
           v-model="userDataForm.username"
           autocomplete="off"
           clearable
-          :placeholder="$t('user.fields.username')"
+          :placeholder="t('common.placeholder.enter') + t('user.fields.username')"
         />
       </el-form-item>
-      <el-form-item v-if="!userDataForm.id" :label="$t('user.fields.password')" prop="password">
+      <el-form-item v-if="!userDataForm.id" :label="t('user.fields.password')" prop="password">
         <el-input
           v-model="userDataForm.password"
           autocomplete="off"
           clearable
           show-password
           type="password"
-          :placeholder="$t('user.fields.password')"
+          :placeholder="t('common.placeholder.enter') + t('user.fields.password')"
         />
       </el-form-item>
-      <el-form-item v-if="!userDataForm.id" :label="$t('user.fields.confirmPassword')" prop="confirmPassword">
+      <el-form-item v-if="!userDataForm.id" :label="t('user.fields.confirmPassword')" prop="confirmPassword">
         <el-input
           v-model="userDataForm.confirmPassword"
           autocomplete="off"
           clearable
           show-password
           type="password"
-          :placeholder="$t('user.fields.confirmPassword')"
+          :placeholder="t('common.placeholder.enter') + t('user.fields.confirmPassword')"
         />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.userCode')" prop="userCode">
+      <el-form-item :label="t('user.fields.userCode')" prop="userCode">
         <el-input
           v-model="userDataForm.userCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('user.fields.userCode')"
+          :placeholder="t('common.placeholder.enter') + t('user.fields.userCode')"
         />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.phone')" prop="phone">
-        <el-input v-model="userDataForm.phone" autocomplete="off" clearable :placeholder="$t('user.fields.phone')" />
+      <el-form-item :label="t('user.fields.phone')" prop="phone">
+        <el-input
+          v-model="userDataForm.phone"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('user.fields.phone')"
+        />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.email')" prop="email">
-        <el-input v-model="userDataForm.email" autocomplete="off" clearable :placeholder="$t('user.fields.email')" />
+      <el-form-item :label="t('user.fields.email')" prop="email">
+        <el-input
+          v-model="userDataForm.email"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('user.fields.email')"
+        />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.displayName')" prop="displayName">
+      <el-form-item :label="t('user.fields.displayName')" prop="displayName">
         <el-input
           v-model="userDataForm.displayName"
           autocomplete="off"
           clearable
-          :placeholder="$t('user.fields.displayName')"
+          :placeholder="t('common.placeholder.enter') + t('user.fields.displayName')"
         />
       </el-form-item>
-      <el-form-item class="dept" :label="$t('user.fields.dept')" prop="deptId">
+      <el-form-item class="dept" :label="t('user.fields.dept')" prop="deptId">
         <el-cascader
           tag-type="info"
           v-model="userDataForm.deptId"
@@ -333,35 +345,45 @@ defineExpose({
           :show-all-levels="false"
           clearable
           filterable
-          :placeholder="$t('user.fields.dept')"
+          :placeholder="t('common.placeholder.choose') + t('user.fields.dept')"
         />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.post')" style="text-align: left" prop="postId">
-        <el-select v-model="userDataForm.postId" collapse-tags filterable :placeholder="$t('user.fields.post')">
+      <el-form-item :label="t('user.fields.post')" style="text-align: left" prop="postId">
+        <el-select
+          v-model="userDataForm.postId"
+          collapse-tags
+          filterable
+          :placeholder="t('common.placeholder.choose') + t('user.fields.post')"
+        >
           <el-option v-for="item in postOption" :key="item.value" :label="item.label" :value="item.value.valueOf()" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('user.fields.roleIds')" prop="roleIds" style="text-align: left">
+      <el-form-item :label="t('user.fields.roleIds')" prop="roleIds" style="text-align: left">
         <el-select
           v-model="userDataForm.roleIds"
           multiple
           collapse-tags
           collapse-tags-tooltip
-          :placeholder="$t('user.fields.roleIds')"
+          :placeholder="t('common.placeholder.choose') + t('user.fields.roleIds')"
         >
           <el-option v-for="item in roleOption" :key="item.value" :label="item.label" :value="item.value.valueOf()" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('user.fields.sex')" prop="sex" style="text-align: left">
+      <el-form-item :label="t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
           <el-radio :value="0">{{ t('user.fields.sexInfo.woman') }}</el-radio>
           <el-radio :value="1">{{ t('user.fields.sexInfo.man') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('user.fields.idCard')" prop="idCard">
-        <el-input v-model="userDataForm.idCard" autocomplete="off" clearable />
+      <el-form-item :label="t('user.fields.idCard')" prop="idCard">
+        <el-input
+          v-model="userDataForm.idCard"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('user.fields.idCard')"
+        />
       </el-form-item>
-      <el-form-item :label="$t('user.fields.isLock')" prop="isLock" style="text-align: left">
+      <el-form-item :label="t('user.fields.isLock')" prop="isLock" style="text-align: left">
         <el-switch
           v-model="userDataForm.isLock"
           :active-value="1"

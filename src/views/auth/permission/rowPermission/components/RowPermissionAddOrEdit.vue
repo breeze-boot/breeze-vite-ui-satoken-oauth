@@ -15,6 +15,7 @@ import { selectDept } from '@/api/auth/dept'
 import { listUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import { Option, SelectData } from '@/types/types.ts'
+import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'RowPermissionAddOrEdit',
@@ -41,7 +42,7 @@ const rules = ref({
   permissionCode: [
     {
       required: true,
-      message: t('rowPermission.rules.permissionCode'),
+      message: t('common.placeholder.enter') + t('rowPermission.fields.permissionCode'),
       trigger: 'blur',
     },
     {
@@ -63,14 +64,14 @@ const rules = ref({
   permissionName: [
     {
       required: true,
-      message: t('rowPermission.rules.permissionName'),
+      message: t('common.placeholder.enter') + t('rowPermission.fields.permissionName'),
       trigger: 'blur',
     },
   ],
   permissions: [
     {
       required: true,
-      message: t('rowPermission.rules.permissions'),
+      message: t('common.placeholder.choose') + t('rowPermission.fields.permissions'),
       trigger: 'blur',
     },
   ],
@@ -182,43 +183,43 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    width="50%"
+    :width="useWidth()"
     :title="!rowPermissionDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="true"
   >
     <el-form
-      style="height: 550px; padding-bottom: 200px"
+      style="padding-bottom: 10px"
       :model="rowPermissionDataForm"
       :rules="rules"
       ref="rowPermissionDataFormRef"
       @keyup.enter="handlePermissionDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="$t('rowPermission.fields.permissionCode')" prop="permissionCode">
+      <el-form-item :label="t('rowPermission.fields.permissionCode')" prop="permissionCode">
         <el-input
           v-model="rowPermissionDataForm.permissionCode"
           autocomplete="off"
           clearable
-          :placeholder="$t('rowPermission.fields.permissionCode')"
+          :placeholder="t('common.placeholder.enter') + t('rowPermission.fields.permissionCode')"
         />
       </el-form-item>
-      <el-form-item :label="$t('rowPermission.fields.permissionName')" prop="permissionName">
+      <el-form-item :label="t('rowPermission.fields.permissionName')" prop="permissionName">
         <el-input
           v-model="rowPermissionDataForm.permissionName"
           autocomplete="off"
           clearable
-          :placeholder="$t('rowPermission.fields.permissionName')"
+          :placeholder="t('common.placeholder.enter') + t('rowPermission.fields.permissionName')"
         />
       </el-form-item>
-      <el-form-item :label="$t('rowPermission.fields.customizesType')" prop="customizesType">
+      <el-form-item :label="t('rowPermission.fields.customizesType')" prop="customizesType">
         <el-radio-group v-model="rowPermissionDataForm.customizesType">
           <el-radio value="USER" border>{{ t('rowPermission.fields.user') }}</el-radio>
           <el-radio value="DEPT" border>{{ t('rowPermission.fields.dept') }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item v-if="rowPermissionDataForm.customizesType === 'USER'" :label="t('rowPermission.fields.user')">
+      <el-form-item style="text-align: center" v-if="rowPermissionDataForm.customizesType === 'USER'">
         <el-transfer
           :titles="['待选择用户列表', '已选择用户列表']"
           v-model="rowPermissionDataForm.permissions"
@@ -229,7 +230,7 @@ defineExpose({
         />
       </el-form-item>
 
-      <el-form-item v-if="rowPermissionDataForm.customizesType === 'DEPT'" :label="t('rowPermission.fields.dept')">
+      <el-form-item v-if="rowPermissionDataForm.customizesType === 'DEPT'">
         <el-cascader
           tag-type="info"
           v-model="rowPermissionDataForm.permissions"

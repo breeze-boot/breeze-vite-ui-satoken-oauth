@@ -50,7 +50,7 @@ const rules = ref({
   categoryCode: [
     {
       required: true,
-      message: t('definition.rules.categoryCode'),
+      message: t('common.placeholder.enter') + t('definition.fields.categoryCode'),
       trigger: 'change',
     },
   ],
@@ -177,10 +177,22 @@ defineExpose({
       label-width="95px"
     >
       <el-form-item :label="t('definition.fields.procDefName')" prop="procDefName">
-        <el-input disabled v-model="definitionDataForm.procDefName" autocomplete="off" clearable />
+        <el-input
+          disabled
+          v-model="definitionDataForm.procDefName"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('definition.fields.procDefName')"
+        />
       </el-form-item>
       <el-form-item :label="t('definition.fields.procDefKey')" prop="procDefKey">
-        <el-input disabled v-model="definitionDataForm.procDefKey" autocomplete="off" clearable />
+        <el-input
+          disabled
+          v-model="definitionDataForm.procDefKey"
+          autocomplete="off"
+          clearable
+          :placeholder="t('common.placeholder.enter') + t('definition.fields.procDefKey')"
+        />
       </el-form-item>
       <el-form-item :label="t('category.fields.categoryCode')" prop="categoryCode">
         <el-select
@@ -188,7 +200,7 @@ defineExpose({
           collapse-tags
           filterable
           clearable
-          :placeholder="$t('category.fields.categoryCode')"
+          :placeholder="t('common.placeholder.choose') + t('definition.fields.categoryCode')"
         >
           <el-option
             v-for="item in categoryOption"

@@ -7,12 +7,14 @@ import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { RouteRecordRaw, useRouter } from 'vue-router'
 import useMenuStore from '@/store/modules/menu.ts'
+import { useI18n } from 'vue-i18n'
 
 let $router = useRouter()
 let menuStore = useMenuStore()
 const searchDialog = ref<null | any>()
 const routeData = ref<RouteRecordRaw[]>([])
 const routeSearch = ref<any>()
+const { t } = useI18n()
 
 onMounted(() => {
   routeData.value = loadAll()
@@ -77,7 +79,7 @@ const toggleOpenSearch = () => {
         v-model="routeSearch"
         clearable
         class="inline-input"
-        :placeholder="$t('common.pleasEnterMenuName')"
+        :placeholder="t('common.pleasEnterMenuName')"
         @select="handleSelect"
       >
         <template #default="{ item }">
