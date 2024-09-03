@@ -41,6 +41,7 @@ const getImports = (pages: Record<string, any>): any => {
 }
 
 const modules = getImports(pages)
+
 const i18n = createI18n({
   locale: useSettingStore(pinia).settings.language,
   fallbackLocale: 'zhCn', // 设置备用语言

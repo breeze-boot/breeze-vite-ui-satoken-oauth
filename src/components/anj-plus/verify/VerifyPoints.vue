@@ -172,7 +172,7 @@ export default {
             token: backToken.value,
           }
           reqCheck(data).then((res) => {
-            if (res.data.repCode === '0000') {
+            if (res.repCode === '0000') {
               barAreaColor.value = '#4cae4c'
               barAreaBorderColor.value = '#5cb85c'
               text.value = '验证成功'
@@ -229,14 +229,14 @@ export default {
         captchaType: captchaType.value,
       }
       reqGet(data).then((res) => {
-        if (res.data.repCode === '0000') {
-          pointBackImgBase.value = res.data.repData.originalImageBase64
-          backToken.value = res.data.repData.token
-          secretKey.value = res.data.repData.secretKey
-          pointTextList.value = res.data.repData.wordList
+        if (res.repCode === '0000') {
+          pointBackImgBase.value = res.repData.originalImageBase64
+          backToken.value = res.repData.token
+          secretKey.value = res.repData.secretKey
+          pointTextList.value = res.repData.wordList
           text.value = '请依次点击【' + pointTextList.value.join(',') + '】'
         } else {
-          text.value = res.data.repMsg
+          text.value = res.repMsg
         }
       })
     }

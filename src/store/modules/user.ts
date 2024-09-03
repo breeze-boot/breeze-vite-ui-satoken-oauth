@@ -57,25 +57,27 @@ const useUserStore = defineStore('User', {
         password: encrypt(data.password!.trim(), SALES) as string,
         captchaVerification: encodeURIComponent(data.captchaVerification as string),
       }
-      const response: LoginResponseData = await userLogin(LoginForm, GrantType.PASSWORD)
+      const response: any = await userLogin(LoginForm, GrantType.PASSWORD)
+
       if (response) {
+        const { access_token, refresh_token, user_info } = response as LoginResponseData
         // 持久化
-        this.userInfo = response.user_info as UserInfoData
+        this.userInfo = user_info as UserInfoData
         SET_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
 
-        this.tenantId = response.user_info.tenantId as string
+        this.tenantId = user_info.tenantId as string
         SET_STRING_STORAGE(StorageName.XTenantId, this.userInfo.tenantId as string)
 
-        this.refreshToken = response.refresh_token as string
+        this.refreshToken = refresh_token as string
         SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
 
-        this.accessToken = response.access_token as string
+        this.accessToken = access_token as string
         SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken as string)
 
-        this.roleCodes = response.user_info.userRoleCodes as string[]
+        this.roleCodes = user_info.userRoleCodes as string[]
         SET_STORAGE(StorageName.RoleCodes, this.roleCodes as string[])
 
-        this.permissions = filterPermissions(this.userInfo as UserInfoData) as string[]
+        this.permissions = filterPermissions(user_info) as string[]
         SET_STORAGE(StorageName.Permissions, this.permissions as string[])
 
         return response
@@ -89,13 +91,14 @@ const useUserStore = defineStore('User', {
       if (!this.refreshToken) {
         throw Error('refresh token is null ')
       }
-      const response: LoginResponseData = await refreshToken(this.refreshToken, GrantType.REFRESH_TOKEN)
+      const response: any = await refreshToken(this.refreshToken, GrantType.REFRESH_TOKEN)
       if (response) {
+        const { access_token, refresh_token } = response as LoginResponseData
         // 持久化
-        this.refreshToken = response.refresh_token as string
+        this.refreshToken = refresh_token as string
         SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
 
-        this.accessToken = response.access_token as string
+        this.accessToken = access_token as string
         SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken as string)
         return response
       }

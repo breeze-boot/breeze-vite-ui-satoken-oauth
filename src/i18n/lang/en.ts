@@ -5,6 +5,7 @@ export default {
     serverInternalError: 'server Internal Error',
     insufficientPermissionsReLogin: 'insufficient permissions, please log in again',
     requestParameterError: 'request parameter error',
+    preview: 'preview',
     serviceUnavailable: 'the service is unavailable',
     networkRequestNotExist: 'network request does not exist',
     networkError: 'network error',
@@ -47,9 +48,11 @@ export default {
     close: 'close',
     mark_reed: 'mark read',
 
-    success: 'success',
-    fail: 'fail',
-    reloadFail: 'data reload fail',
+    noHandle: 'No events are configured',
+    delTip: ' Please select the line item you want to work on',
+    success: ' success',
+    fail: ' fail',
+    reloadFail: ' data reload fail',
 
     cron: 'cron',
     nextStep: 'next step',

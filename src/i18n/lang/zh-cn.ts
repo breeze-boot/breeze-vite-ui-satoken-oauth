@@ -5,6 +5,7 @@ export default {
     serverInternalError: '服务器内部错误',
     insufficientPermissionsReLogin: '权限不足，请重新登录',
     requestParameterError: '请求参数错误',
+    preview: '预览模式',
     serviceUnavailable: '服务不可用',
     networkRequestNotExist: '网络请求不存在',
     networkError: '网络错误',
@@ -47,6 +48,8 @@ export default {
     close: '关闭',
     mark_reed: '标记已读',
 
+    noHandle: ' 未配置事件',
+    delTip: '请选择要操作的行项目',
     success: '成功',
     fail: '失败',
     reloadFail: '数据加载失败',

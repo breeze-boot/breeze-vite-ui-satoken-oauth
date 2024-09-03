@@ -36,7 +36,7 @@ const rules = ref({
   method: [
     {
       required: true,
-      message: t('common.placeholder.choose') + t('msg.rules.method'),
+      message: t('common.placeholder.choose') + t('msg.fields.method'),
       trigger: 'change',
     },
   ],
@@ -69,6 +69,10 @@ const handleSendMsgMethodFormSubmit = async () => {
       // 发送给全部请求
       msgStore.stompClient?.publish({
         destination: '/message/asyncSendBroadcastMsg',
+        headers: {
+          Authorization: userStore.accessToken,
+          username: userStore.userInfo.username,
+        },
         body: JSON.stringify({ tenantId: userStore.userInfo.tenantId || '1', msgId: currentMsgId.value }),
       })
       return

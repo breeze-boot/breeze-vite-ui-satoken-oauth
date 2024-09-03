@@ -394,20 +394,25 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
 const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
   switch (btn.event) {
     case 'delete' || 'remove':
+      debugger
+      if (!rows) {
+        ElMessage.warning(t('common.delTip'))
+        return
+      }
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
       })
       break
     case 'edit':
       handleCheckBeforeClickBtn().then(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
       })
       break
     case 'export':
       handleExport(handleParams())
       break
     default:
-      btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning('未配置事件')
+      btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
       break
   }
 }

@@ -281,7 +281,7 @@ export default {
           token: backToken.value,
         }
         reqCheck(data).then((res) => {
-          if (res.data.repCode === '0000') {
+          if (res.repCode === '0000') {
             moveBlockBackgroundColor.value = '#5cb85c'
             leftBarBorderColor.value = '#5cb85c'
             iconColor.value = '#fff'
@@ -354,14 +354,14 @@ export default {
         captchaType: captchaType.value,
       }
       reqGet(data).then((res) => {
-        if (res.data.repCode === '0000') {
-          backImgBase.value = res.data.repData.originalImageBase64
-          blockBackImgBase.value = res.data.repData.jigsawImageBase64
-          backToken.value = res.data.repData.token
-          secretKey.value = res.data.repData.secretKey
+        if (res.repCode === '0000') {
+          backImgBase.value = res.repData.originalImageBase64
+          blockBackImgBase.value = res.repData.jigsawImageBase64
+          backToken.value = res.repData.token
+          secretKey.value = res.repData.secretKey
           return
         }
-        tipWords.value = res.data.repMsg
+        tipWords.value = res.repMsg
       })
     }
 

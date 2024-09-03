@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import pinia from '@/store'
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import JSONBigInt from 'json-bigint'
 import { StorageName } from '@/types/types'
 import router from '@/router'
@@ -50,27 +50,31 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
   }
   config.headers[StorageName.XTenantId] = userStore.tenantId || '1'
+  config.headers[StorageName.AcceptLanguage] = i18n.global.locale.value
   return config
 })
 
 const handleNetworkError = (error: any): void => {
-  let message = i18n.global.t('axios.networkError')
+  let message: string = ''
   if (error.response) {
     switch (error.response.status) {
       case 404:
-        message = i18n.global.t('axios.networkRequestNotExist')
+        message = error.response.data.message || i18n.global.t('axios.networkRequestNotExist')
         break
       case 503:
-        message = i18n.global.t('axios.serviceUnavailable')
+        message = error.response.data.message || i18n.global.t('axios.serviceUnavailable')
         break
       case 400:
-        message = i18n.global.t('axios.requestParameterError')
+        message = error.response.data.message || i18n.global.t('axios.requestParameterError')
+        break
+      case 405:
+        message = error.response.data.message || i18n.global.t('axios.preview')
         break
       case 403:
-        message = i18n.global.t('axios.insufficientPermissionsReLogin')
+        message = error.response.data.message || i18n.global.t('axios.insufficientPermissionsReLogin')
         break
       case 500:
-        message = i18n.global.t('axios.serverInternalError')
+        message = error.response.data.message || i18n.global.t('axios.serverInternalError')
         break
       default:
         message = i18n.global.t('axios.unknownError')
@@ -131,14 +135,6 @@ const handle401Error = async (error: any) => {
     await redirectToLogin()
     return
   }
-
-  const { code, message } = error.response.data
-  if (code === 'A102') {
-    await redirectToLogin()
-    ElMessage.error(message)
-    return Promise.reject(error.response.data)
-  }
-
   return await handleRefreshToken(error)
 }
 /**
@@ -157,37 +153,16 @@ const handle403Error = async (error: any) => {
  */
 request.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { code, message, access_token } = response.data
-
+    const { data } = response
     // 响应数据为二进制流处理(Excel导出)
-    if (response.data instanceof ArrayBuffer) {
+    if (data instanceof ArrayBuffer) {
       return response
     }
-
-    switch (code) {
-      case '0000':
-        return response.data
-      case '0001':
-        ElMessage.warning(message)
-        return Promise.reject(response.data)
-      case '0002':
-        ElNotification({
-          type: 'error',
-          message: message,
-        })
-        return Promise.reject(response.data)
-      case '0003':
-        ElMessage.warning(message)
-        return Promise.reject(response.data)
-      case undefined:
-        // 没有code时正常返回数据
-        return access_token ? response.data : response
-      default:
-        ElMessage.error(message || i18n.global.t('axios.systemAbnormality'))
-    }
+    return data
   },
   async (error: any) => {
     if (axios.isAxiosError(error)) {
+      debugger
       if (!error.response) {
         switch (error.code) {
           case 'ECONNABORTED':

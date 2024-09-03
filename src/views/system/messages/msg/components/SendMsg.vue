@@ -93,6 +93,10 @@ const handleSendMsgFormSubmit = async () => {
     if (currentMethod.value === 'USER') {
       msgStore.stompClient?.publish({
         destination: '/message/asyncSendMsgToUser',
+        headers: {
+          Authorization: userStore.accessToken,
+          username: userStore.userInfo.username,
+        },
         body: JSON.stringify({
           tenantId: userStore.userInfo.tenantId || '1',
           msgId: currentMsgId.value,
@@ -103,6 +107,10 @@ const handleSendMsgFormSubmit = async () => {
     if (currentMethod.value === 'DEPT') {
       msgStore.stompClient?.publish({
         destination: '/message/syncSendMsgDeptUser',
+        headers: {
+          Authorization: userStore.accessToken,
+          username: userStore.userInfo.username,
+        },
         body: JSON.stringify({
           tenantId: userStore.userInfo.tenantId || '1',
           msgId: currentMsgId.value,
