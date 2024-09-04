@@ -4,22 +4,22 @@
 -->
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import MenuItem from '@/layout/menuItem/index.vue'
+import MenuItem from '@/layout/components/menuItem/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
-import Logo from '@/layout/logo/index.vue'
+import Logo from '@/layout/components/logo/index.vue'
 import { useWindowSize } from '@vueuse/core'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
-
 let { settings, theme } = storeToRefs(settingStore)
 let menuStore = useMenuStore()
 let $route = useRoute()
 let $router = useRouter()
 const { width } = useWindowSize()
+
 /**
  * 菜单点击回调
  *
@@ -28,10 +28,13 @@ const { width } = useWindowSize()
 const selectMenu = async (index: string) => {
   const menuInfo = menuStore.getMenuInfo('path', index)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
-  if (theme.value.menuLayout !== '' && menuInfo?.meta?.type === 1) {
+  if (menuInfo?.meta?.type === 1) {
     await $router.push({ path: index, query: {} })
-    tabsStore.setTab($route)
+    await menuStore.setMenuChildren([menuInfo] as RouteRecordRaw[])
+  } else {
+    await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
   }
+  tabsStore.setTab($route)
 }
 </script>
 

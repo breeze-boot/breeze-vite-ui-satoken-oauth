@@ -15,6 +15,10 @@ let { tenantId } = storeToRefs(useUserStore())
 let _tenantId = ref<string>('')
 let { refresh } = storeToRefs(useSettingStore())
 
+onMounted(async () => {
+  await initTenant()
+})
+
 /**
  * 初始化租户下拉框
  */
@@ -26,14 +30,11 @@ const initTenant = async () => {
   }
 }
 
-onMounted(async () => {
-  await initTenant()
-})
-
 const handleChangeTenant = () => {
   useUserStore().storeTenantId(_tenantId.value)
   updateRefresh()
 }
+
 /**
  * 刷新
  */

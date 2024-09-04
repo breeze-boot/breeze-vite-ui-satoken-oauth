@@ -133,8 +133,20 @@ const useMenuStore = defineStore('Menu', {
      * @param state
      */
     getOneLevelMenuInfo: (state: MenuState) => {
-      return (attr: keyof RouteRecordRaw, value: string) =>
-        state.menuRoutes.find((item: RouteRecordRaw): boolean => item[attr] === value)
+      return (attr: keyof RouteRecordRaw, value: string) => {
+        return state.menuRoutes.find((item: RouteRecordRaw): boolean => {
+          return item[attr] === value
+        })
+      }
+    },
+    /**
+     * 获取当前混合模式的左侧菜单信息
+     */
+    getMixLeftMenuInfo: () => {
+      return () => {
+        // 子菜单路由信息
+        return new Promise((resolve) => resolve(GET_OBJ_STORAGE(StorageName.mixMenuRoutes)))
+      }
     },
     /**
      * 递归获取菜单信息

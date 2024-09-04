@@ -217,7 +217,7 @@ export interface Theme {
   size: string
 }
 
-export type MenuLayout = 'left' | 'top' | 'mix' | string
+export type MenuLayout = 'vertical' | 'horizontal' | 'mix' | 'columns' | string
 
 /**
  * Tab类型

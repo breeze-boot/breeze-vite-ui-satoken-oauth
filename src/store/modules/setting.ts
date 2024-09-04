@@ -6,7 +6,7 @@
 import { defineStore } from 'pinia'
 import { SettingState } from '@/store/modules/types/types.ts'
 import setting from '@/setting.ts'
-import { Settings, Theme } from '@/types/types.ts'
+import { MenuLayout, Settings, Theme } from '@/types/types.ts'
 import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
 import { DEVICE } from '@/utils/common.ts'
 
@@ -52,7 +52,7 @@ const useSettingStore = defineStore('SettingStore', {
       this.theme.themeColor = value
       CookiesStorage.set(CookiesKey.THEME_COLOR, value)
     },
-    setMenuLayout(value: string) {
+    setMenuLayout(value: MenuLayout) {
       this.theme.menuLayout = value
       CookiesStorage.set(CookiesKey.MENU_LAYOUT, value)
     },
@@ -61,9 +61,9 @@ const useSettingStore = defineStore('SettingStore', {
       CookiesStorage.set(CookiesKey.DEVICE, value)
       if (value === DEVICE.MOBILE) {
         this.settings.isCollapse = true
-        this.setMenuLayout('left')
+        this.setMenuLayout('vertical')
       } else if (value === DEVICE.PAD) {
-        this.setMenuLayout('left')
+        this.setMenuLayout('vertical')
         this.settings.isCollapse = true
       } else if (value === DEVICE.PC) {
         this.setMenuLayout(this.theme.menuLayout)

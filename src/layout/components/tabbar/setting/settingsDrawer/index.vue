@@ -81,7 +81,7 @@ const changeThemeColor = () => {
 </script>
 
 <template>
-  <el-drawer v-model="drawer" :show-close="false" size="25%" :direction="direction">
+  <el-drawer v-model="drawer" :show-close="false" size="350px" :direction="direction">
     <el-form>
       <el-divider>主题颜色</el-divider>
       <el-form-item label="主题颜色">
@@ -104,9 +104,7 @@ const changeThemeColor = () => {
         />
       </el-form-item>
       <el-divider>导航栏布局</el-divider>
-      <el-form-item label="顶部导航栏">
-        <nav-style />
-      </el-form-item>
+      <nav-style />
     </el-form>
   </el-drawer>
   <el-button style="margin: 0 5px" circle :icon="Setting" @click="openSetting" />

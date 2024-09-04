@@ -4,7 +4,7 @@
 -->
 <script setup lang="ts">
 import { Client } from '@stomp/stompjs'
-import useUserStore from '@/store/modules/user'
+import useUserStore from '@/store/modules/user.ts'
 import { onMounted, onUnmounted } from 'vue'
 import { ElNotification } from 'element-plus'
 import useMsgStore from '@/store/modules/msg.ts'

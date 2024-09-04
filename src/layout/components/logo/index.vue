@@ -6,13 +6,26 @@
 import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
 
+const props = defineProps({
+  title: {
+    type: Boolean,
+    default: true,
+  },
+  logoImg: {
+    type: Boolean,
+    default: true,
+  },
+})
+
 let { settings } = storeToRefs(useSettingStore())
 </script>
 
 <template>
   <div class="logo" v-if="settings.logoHidden">
-    <img :src="settings.logoUrl" alt="" />
-    <span class="title">
+    <div class="logo-img" v-show="props.logoImg">
+      <img :src="settings.logoUrl" alt="" />
+    </div>
+    <span class="title" v-show="props.title && !settings.isCollapse">
       {{ settings.title }}
     </span>
   </div>
@@ -23,6 +36,7 @@ let { settings } = storeToRefs(useSettingStore())
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  justify-content: center;
   width: auto;
   height: 50px;
   padding: 0 10px;
@@ -30,17 +44,17 @@ let { settings } = storeToRefs(useSettingStore())
   font-size: $base-logo-font-size;
   font-weight: $base-logo-font-weight;
 
-  img {
-    display: inline-block;
-    widows: 30;
-    height: auto;
-    border-radius: 10px;
+  .logo-img {
+    img {
+      display: inline-block;
+      height: auto;
+      border-radius: 10px;
+    }
   }
 
   .title {
     color: var(--base-text-color);
     display: inline-block;
-    margin: 2px 0 0 18px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -3,39 +3,27 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { watchEffect, computed } from 'vue'
+import { watchEffect, defineAsyncComponent } from 'vue'
 import { storeToRefs } from 'pinia'
-import LeftMenu from './leftMenu/index.vue'
-import TabBar from './tabbar/index.vue'
-import Main from './main/index.vue'
-import useSettingStore from '@/store/modules/setting'
-import ContextMenu from '@/layout/tabbar/tab/contextMenu/index.vue'
 import { useWindowSize } from '@vueuse/core'
-import websocket from '@/layout/websocket/index.vue'
+import useSettingStore from '@/store/modules/setting'
+import ContextMenu from '@/layout/components/tabbar/tab/contextMenu/index.vue'
+import websocket from '@/layout/components/websocket/index.vue'
 import { DEVICE } from '@/utils/common.ts'
-import variables from '@/styles/variables.module.scss'
-import SvgIcon from '@/components/SvgIcon/index.vue'
+import { MenuLayout } from '@/types/types.ts'
 
+let { theme } = storeToRefs(useSettingStore())
 let settingStore = useSettingStore()
-const { theme, settings } = storeToRefs(settingStore)
 const { width } = useWindowSize()
 
-/**
- * 动态获取tab的样式
- */
-const tabStyle = computed(() => {
-  return {
-    background: variables.baseMainTheme,
-    left:
-      theme.value.menuLayout !== 'top' ? (!settings.value.isCollapse ? variables.baseLeftMenuWidth : '56px') : '0px',
-    width:
-      theme.value.menuLayout !== 'top'
-        ? settings.value.isCollapse
-          ? 'calc(100% - 56px)'
-          : 'calc(100% - ' + variables.baseLeftMenuWidth + ')'
-        : '100%',
-  }
-})
+type LayoutDict = Record<MenuLayout, any>
+
+const layoutDict: LayoutDict = {
+  horizontal: defineAsyncComponent(() => import('@/layout/horizontal/index.vue')),
+  columns: defineAsyncComponent(() => import('@/layout/columns/index.vue')),
+  mix: defineAsyncComponent(() => import('@/layout/mix/index.vue')),
+  vertical: defineAsyncComponent(() => import('@/layout/vertical/index.vue')),
+}
 
 const WIDTH: number = 992
 watchEffect(() => {
@@ -52,63 +40,32 @@ watchEffect(() => {
 </script>
 
 <template>
-  <el-container class="layout-container">
-    <left-menu />
-
-    <el-container class="layout-main-container">
-      <tab-bar />
-
-      <!-- 内容区域 -->
-      <el-main :style="tabStyle">
-        <el-scrollbar class="scrollbar">
-          <el-backtop :visibility-height="100" target=".scrollbar .el-scrollbar__wrap" :bottom="100">
-            <div class="backTop">
-              <svg-icon name="back-top" width="1.5rem" height="1.5rem" />
-            </div>
-          </el-backtop>
-          <Main />
-        </el-scrollbar>
-      </el-main>
-    </el-container>
-  </el-container>
+  <transition name="slide-fade">
+    <component :is="layoutDict[theme.menuLayout]" />
+  </transition>
 
   <!-- 全局组件 -->
   <context-menu ref="contextMenuRef" />
+  <!-- 全局组件 -->
   <websocket />
 </template>
 
 <style lang="scss" scoped>
-.layout-container {
-  height: 100vh;
-
-  --el-main-top-height: 90px;
-
-  .layout-main-container {
-    flex-direction: column !important;
-
-    // 内容区域
-    .el-main {
-      position: absolute;
-      top: $base-main-top-height;
-      left: 200px;
-      width: calc(100% - $base-left-menu-width);
-      height: calc(100vh - $base-main-top-height);
-      padding: 20px;
-      transition: all 0.3s;
-    }
-
-    .backTop {
-      height: 100%;
-      width: 100%;
-      background-color: transparent;
-      text-align: center;
-      line-height: 40px;
-      color: #1989fa;
-    }
-  }
+/*
+    进入和离开动画可以使用不同
+    持续时间和速度曲线。
+  */
+.slide-fade-enter-active {
+  transition: opacity 0.1s ease-in;
 }
 
-.isCollapse {
-  width: 56px;
+.slide-fade-leave-active {
+  transition: all 0.1s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

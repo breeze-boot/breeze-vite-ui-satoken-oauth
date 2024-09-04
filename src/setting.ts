@@ -7,13 +7,13 @@ import { DEVICE } from '@/utils/common.ts'
  */
 export default {
   title: 'Breeze-Vite-UI',
-  defaultIsCollapse: false,
+  defaultIsCollapse: true,
   defaultDevice: DEVICE.PC,
   defaultShowAvatar: false,
   defaultLogoUrl: logoUrl,
   defaultEnableWatermark: true,
   defaultLogoHidden: true,
-  defaultMenuLayout: 'left',
+  defaultMenuLayout: 'vertical',
   defaultThemeColor: 'rgb(64, 158, 255)',
   defaultEnableDark: 'light',
   lightFont: reactive({

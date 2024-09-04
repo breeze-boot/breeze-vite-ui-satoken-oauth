@@ -394,7 +394,6 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
 const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
   switch (btn.event) {
     case 'delete' || 'remove':
-      debugger
       if (!rows) {
         ElMessage.warning(t('common.delTip'))
         return

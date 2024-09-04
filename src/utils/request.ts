@@ -162,7 +162,6 @@ request.interceptors.response.use(
   },
   async (error: any) => {
     if (axios.isAxiosError(error)) {
-      debugger
       if (!error.response) {
         switch (error.code) {
           case 'ECONNABORTED':

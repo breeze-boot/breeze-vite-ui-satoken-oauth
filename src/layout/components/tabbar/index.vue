@@ -8,7 +8,7 @@ import useSettingStore from '@/store/modules/setting.ts'
 import BreadCrumb from './breadcrumb/index.vue'
 import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'
-import Tab from '@/layout/tabbar/tab/index.vue'
+import Tab from '@/layout/components/tabbar/tab/index.vue'
 import { DEVICE } from '@/utils/common.ts'
 
 const { theme, device } = storeToRefs(useSettingStore())
@@ -18,8 +18,10 @@ const { theme, device } = storeToRefs(useSettingStore())
   <el-header class="el-header-container">
     <div class="tabbar">
       <div class="tabbar-left">
-        <top-menu v-if="theme.menuLayout !== 'left'" />
-        <bread-crumb v-if="theme.menuLayout === 'left' && device === DEVICE.PC" />
+        <top-menu v-if="theme.menuLayout !== 'vertical' && theme.menuLayout !== 'columns'" />
+        <bread-crumb
+          v-if="(theme.menuLayout === 'vertical' || theme.menuLayout === 'columns') && device === DEVICE.PC"
+        />
       </div>
       <div class="tabbar-right">
         <setting />
@@ -61,6 +63,7 @@ const { theme, device } = storeToRefs(useSettingStore())
       justify-items: flex-end;
     }
   }
+
   .tab-container {
     border: 1px solid rgba(238, 238, 238, 0.47);
     position: absolute;

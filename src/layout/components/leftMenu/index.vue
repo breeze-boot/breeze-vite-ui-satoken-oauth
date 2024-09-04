@@ -1,11 +1,12 @@
 <!--
  * @author: gaoweixuan
  * @since: 2023-11-12
+ * @desc: 弃用
 -->
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import MenuItem from '@/layout/menuItem/index.vue'
-import Logo from '@/layout/logo/index.vue'
+import MenuItem from '@/layout/components/menuItem/index.vue'
+import Logo from '@/layout/components/logo/index.vue'
 import useSettingStore from '@/store/modules/setting'
 import useMenuStore from '@/store/modules/menu'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
@@ -20,9 +21,8 @@ let tabStore = useTabsStore()
 let { theme, settings } = storeToRefs(useSettingStore())
 
 onMounted(async () => {
-  await menuStore.setMenuChildren(
-    menuStore.getOneLevelMenuInfo('path', tabStore.currentTab.path)?.children as RouteRecordRaw[],
-  )
+  const mixLeftMenuInfo = (await menuStore.getMixLeftMenuInfo()) as RouteRecordRaw[]
+  await menuStore.setMenuChildren(mixLeftMenuInfo)
   tabStore.setTab($route)
 })
 
@@ -52,11 +52,7 @@ watch(
 </script>
 
 <template>
-  <el-aside
-    v-if="theme.menuLayout !== 'top'"
-    :width="variables.baseLeftMenuWidth"
-    :class="{ isCollapse: settings.isCollapse }"
-  >
+  <el-aside :width="variables.baseLeftMenuWidth" :class="{ isCollapse: settings.isCollapse }">
     <el-scrollbar>
       <el-menu
         background-color="transparent"
