@@ -109,7 +109,7 @@ const useTabsStore = defineStore('Tabs', {
     /**
      * 删除全部
      */
-    removeAllTab: function (): void {
+    removeAllTab(): void {
       this.currentTabName = constantTab.name
       this.currentTab = constantTab
       this.tabs = [constantTab]
@@ -117,7 +117,7 @@ const useTabsStore = defineStore('Tabs', {
     /**
      * 删除当前
      */
-    removeCurrentTab: function (): void {
+    removeCurrentTab(): void {
       // 检查索引是否在数组范围内
       const activeName: Tab = this.currentTab
       const currentIndex: number = this.tabs.findIndex((item: Tab): boolean => {
@@ -130,7 +130,7 @@ const useTabsStore = defineStore('Tabs', {
         this.currentTabName = nextTab.name
       }
     },
-    removeOtherTab: function (): void {
+    removeOtherTab(): void {
       this.removeRightTab()
       this.removeLeftTab()
     },

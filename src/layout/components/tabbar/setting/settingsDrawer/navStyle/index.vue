@@ -6,6 +6,7 @@
 import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
 import { MenuLayout } from '@/types/types.ts'
+import { LAYOUT } from '@/utils/common.ts'
 
 let settingStore = useSettingStore()
 let { theme } = storeToRefs(settingStore)
@@ -23,13 +24,13 @@ const handleClickMenuStyle = (item: string) => {
     <div
       class="layout-vertical"
       :style="
-        theme.menuLayout === 'vertical'
+        theme.menuLayout === LAYOUT.VERTICAL
           ? {
               boxShadow: '2px 2px 5px rgba(61, 61, 61, 0.5)',
             }
           : {}
       "
-      @click="handleClickMenuStyle('vertical')"
+      @click="handleClickMenuStyle(LAYOUT.VERTICAL)"
     >
       <div class="aside"></div>
       <div class="main">
@@ -41,13 +42,13 @@ const handleClickMenuStyle = (item: string) => {
     <div
       class="layout-horizontal"
       :style="
-        theme.menuLayout === 'horizontal'
+        theme.menuLayout === LAYOUT.HORIZONTAL
           ? {
               boxShadow: '2px 2px 5px rgba(61, 61, 61, 0.5)',
             }
           : {}
       "
-      @click="handleClickMenuStyle('horizontal')"
+      @click="handleClickMenuStyle(LAYOUT.HORIZONTAL)"
     >
       <div class="header"></div>
       <div class="main"></div>
@@ -56,13 +57,13 @@ const handleClickMenuStyle = (item: string) => {
     <div
       class="layout-mix"
       :style="
-        theme.menuLayout === 'mix'
+        theme.menuLayout === LAYOUT.MIX
           ? {
               boxShadow: '2px 2px 5px rgba(61, 61, 61, 0.5)',
             }
           : {}
       "
-      @click="handleClickMenuStyle('mix')"
+      @click="handleClickMenuStyle(LAYOUT.MIX)"
     >
       <div class="header"></div>
       <div class="main">
@@ -74,13 +75,13 @@ const handleClickMenuStyle = (item: string) => {
     <div
       class="layout-columns"
       :style="
-        theme.menuLayout === 'columns'
+        theme.menuLayout === LAYOUT.COLUMNS
           ? {
               boxShadow: '2px 2px 5px rgba(61, 61, 61, 0.5)',
             }
           : {}
       "
-      @click="handleClickMenuStyle('columns')"
+      @click="handleClickMenuStyle(LAYOUT.COLUMNS)"
     >
       <div class="aside"></div>
       <div class="aside"></div>

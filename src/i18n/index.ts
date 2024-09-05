@@ -3,6 +3,7 @@ import zhCn from './lang/zh-cn'
 import en from './lang/en'
 import useSettingStore from '@/store/modules/setting.ts'
 import pinia from '@/store'
+import { LANGUAGE } from '@/utils/common.ts'
 
 const pages: Record<string, any> = import.meta.glob('./../../**/**/**/i18n/*.ts', { eager: true })
 
@@ -44,10 +45,10 @@ const modules = getImports(pages)
 
 const i18n = createI18n({
   locale: useSettingStore(pinia).settings.language,
-  fallbackLocale: 'zhCn', // 设置备用语言
+  fallbackLocale: LANGUAGE.ZH_CN, // 设置备用语言
   messages: {
-    zhCn: modules['zhCn'],
-    en: modules['en'],
+    zhCn: modules[LANGUAGE.ZH_CN],
+    en: modules[LANGUAGE.EN],
   },
   legacy: false,
   globalInjection: true,

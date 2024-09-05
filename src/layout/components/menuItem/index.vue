@@ -4,6 +4,7 @@
 -->
 <script setup lang="ts" name="MenuItem">
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import { LAYOUT } from '@/utils/common.ts'
 
 const props = defineProps(['menu', 'layout', 'position'])
 </script>
@@ -28,7 +29,7 @@ const props = defineProps(['menu', 'layout', 'position'])
   </el-menu-item>
 
   <!-- 不是混合菜单 含有子菜单时 -->
-  <el-sub-menu v-if="props.layout !== 'mix' && menu?.meta?.type === 0" :index="menu.path">
+  <el-sub-menu v-if="props.layout !== LAYOUT.MIX && menu?.meta?.type === 0" :index="menu.path">
     <template #title>
       <svg-icon :name="menu?.meta.icon" />
       <span>{{ menu?.meta.title }}</span>
@@ -38,7 +39,7 @@ const props = defineProps(['menu', 'layout', 'position'])
   </el-sub-menu>
 
   <!-- 混合菜单的左侧菜单 有子菜单时 -->
-  <el-menu-item v-if="props.layout === 'mix' && menu?.meta?.type === 0" :index="menu.path">
+  <el-menu-item v-if="props.layout === LAYOUT.MIX && menu?.meta?.type === 0" :index="menu.path">
     <template #title>
       <svg-icon :name="menu?.meta.icon" />
       <span>{{ menu?.meta.title }}</span>

@@ -7,6 +7,7 @@
  * =====================
  */
 import { RouteRecordRaw } from 'vue-router'
+import { LAYOUT } from '@/utils/common.ts'
 
 /**
  * 分页查询参数
@@ -217,7 +218,7 @@ export interface Theme {
   size: string
 }
 
-export type MenuLayout = 'vertical' | 'horizontal' | 'mix' | 'columns' | string
+export type MenuLayout = LAYOUT
 
 /**
  * Tab类型

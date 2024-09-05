@@ -22,9 +22,25 @@ export enum SORT {
 }
 
 export enum DEVICE {
-  PC = 'pc',
+  PC = 'PC',
   PAD = 'PAD',
   MOBILE = 'MOBILE',
+}
+
+export enum LAYOUT {
+  VERTICAL = 'vertical',
+  HORIZONTAL = 'horizontal',
+  MIX = 'mix',
+  COLUMNS = 'columns',
+}
+
+export enum THEME {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
+export enum LANGUAGE {
+  ZH_CN = 'zhCn',
+  EN = 'en',
 }
 
 export const camelCaseToUnderscore = (val: string) => {

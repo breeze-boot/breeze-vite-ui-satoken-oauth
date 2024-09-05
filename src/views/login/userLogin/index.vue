@@ -14,6 +14,7 @@ import useSettingStore from '@/store/modules/setting'
 import { storeToRefs } from 'pinia'
 import Verify from '@/components/anj-plus/Verify.vue'
 import { UserLoginForm } from '@/api/login/type.ts'
+import { THEME } from '@/utils/common.ts'
 
 let settingStore = useSettingStore()
 let columnStore = useColumnStore()
@@ -52,11 +53,11 @@ const handleOnShow = (type: any) => {
  */
 const changeDark = () => {
   let html = document.documentElement
-  if (theme.value.themeModel !== 'dark') {
-    html.classList.remove('dark')
+  if (theme.value.themeModel !== THEME.DARK) {
+    html.classList.remove(THEME.DARK)
     return
   }
-  html.classList.add('dark')
+  html.classList.add(THEME.DARK)
 }
 
 /**
@@ -148,7 +149,7 @@ const handleLogin = async (data: any) => {
 
 <template>
   <el-watermark
-    :font="theme.themeModel === 'dark' ? theme.lightFont : theme.darkFont"
+    :font="theme.themeModel === THEME.DARK ? theme.lightFont : theme.darkFont"
     :content="theme.watermarkContent"
   >
     <div class="login_container" @keyup.enter="handleCheck">

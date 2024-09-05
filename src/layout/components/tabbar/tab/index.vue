@@ -35,7 +35,7 @@ const handleSwitchTab = async (pane: any) => {
   const routeName: string = pane.paneName
   const menuInfo = menuStore.getMenuInfo('name', routeName)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
-  tabsStore.currentTab = await tabsStore.getCurrentTab(routeName)
+  tabsStore.currentTab = tabsStore.getCurrentTab(routeName)
   if (!tabsStore.currentTab.fullPath) return
   await $router.push({
     path: tabsStore.currentTab.fullPath,
@@ -51,7 +51,7 @@ const handleSwitchTab = async (pane: any) => {
       type="card"
       class="tabs"
       v-right-menu="''"
-      closable
+      :closable="tabsStore.currentTabName !== 'Home'"
       @tab-click="handleSwitchTab"
       @tab-remove="removeTab"
     >
@@ -61,6 +61,7 @@ const handleSwitchTab = async (pane: any) => {
     </el-tabs>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .el-header-tabs-container {
   position: relative;

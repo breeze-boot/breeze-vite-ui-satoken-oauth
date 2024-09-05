@@ -8,7 +8,7 @@ import { SettingState } from '@/store/modules/types/types.ts'
 import setting from '@/setting.ts'
 import { MenuLayout, Settings, Theme } from '@/types/types.ts'
 import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
-import { DEVICE } from '@/utils/common.ts'
+import { DEVICE, LAYOUT } from '@/utils/common.ts'
 
 const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
@@ -22,8 +22,8 @@ const useSettingStore = defineStore('SettingStore', {
         menuLayout: CookiesStorage.get(CookiesKey.MENU_LAYOUT) || setting.defaultMenuLayout,
         themeColor: CookiesStorage.get(CookiesKey.THEME_COLOR) || setting.defaultThemeColor,
         size: CookiesStorage.get(CookiesKey.SIZE) || setting.size,
-        lightFont: setting.lightFont,
-        darkFont: setting.darkFont,
+        lightFont: setting.defaultLightFont,
+        darkFont: setting.defaultDarkFont,
       } as Theme,
       settings: {
         title: setting.title,
@@ -61,9 +61,9 @@ const useSettingStore = defineStore('SettingStore', {
       CookiesStorage.set(CookiesKey.DEVICE, value)
       if (value === DEVICE.MOBILE) {
         this.settings.isCollapse = true
-        this.setMenuLayout('vertical')
+        this.setMenuLayout(LAYOUT.VERTICAL)
       } else if (value === DEVICE.PAD) {
-        this.setMenuLayout('vertical')
+        this.setMenuLayout(LAYOUT.VERTICAL)
         this.settings.isCollapse = true
       } else if (value === DEVICE.PC) {
         this.setMenuLayout(this.theme.menuLayout)

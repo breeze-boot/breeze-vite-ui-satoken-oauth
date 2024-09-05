@@ -13,6 +13,7 @@ import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import { onMounted, computed, watch } from 'vue'
 import useTabsStore from '@/store/modules/tabs.ts'
 import variables from '@/styles/variables.module.scss'
+import { LAYOUT } from '@/utils/common.ts'
 
 let $router = useRouter()
 let $route = useRoute()
@@ -29,7 +30,9 @@ onMounted(async () => {
 /**
  * 计算获取菜单数据
  */
-const menuList = computed(() => (theme.value.menuLayout === 'mix' ? menuStore.mixMenuRoutes : menuStore.menuRoutes))
+const menuList = computed(() =>
+  theme.value.menuLayout === LAYOUT.MIX ? menuStore.mixMenuRoutes : menuStore.menuRoutes,
+)
 
 /**
  * 菜单选择事件
@@ -37,7 +40,7 @@ const menuList = computed(() => (theme.value.menuLayout === 'mix' ? menuStore.mi
  * @param index
  */
 const selectMenu = async (index: string) => {
-  if (theme.value.menuLayout !== 'top') {
+  if (theme.value.menuLayout !== LAYOUT.HORIZONTAL) {
     await $router.push({ path: index })
     tabStore.setTab($route)
   }

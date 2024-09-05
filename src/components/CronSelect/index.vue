@@ -6,6 +6,7 @@
 import { computed, ref } from 'vue'
 import NoVue3Cron from '@/components/NoVue3Cron/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
+import { LANGUAGE } from '@/utils/common.ts'
 
 defineOptions({
   name: 'CronSelect',
@@ -29,7 +30,7 @@ const settings = useSettingStore().settings
  * 当前语言
  */
 const language = computed(() => {
-  return settings.language === 'zhCn' ? 'cn' : 'en'
+  return settings.language === LANGUAGE.ZH_CN ? 'cn' : LANGUAGE.EN
 })
 
 const $emit = defineEmits(['update:modelValue'])

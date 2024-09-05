@@ -11,6 +11,7 @@ import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import Logo from '@/layout/components/logo/index.vue'
 import { useWindowSize } from '@vueuse/core'
+import { LAYOUT } from '@/utils/common.ts'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
@@ -51,7 +52,7 @@ const selectMenu = async (index: string) => {
         maxWidth: width - 100 + 'px',
       }"
     >
-      <Logo v-if="theme.menuLayout !== 'mix'" />
+      <Logo v-if="theme.menuLayout !== LAYOUT.MIX" />
       <menu-item
         v-for="item in menuStore.menuRoutes"
         :key="item.path"

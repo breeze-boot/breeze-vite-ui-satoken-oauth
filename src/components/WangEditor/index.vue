@@ -7,6 +7,7 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IDomEditor } from '@wangeditor/editor'
 import { i18nChangeLanguage } from '@wangeditor/editor'
 import '@wangeditor/editor/dist/css/style.css'
+import { LANGUAGE } from '@/utils/common.ts'
 
 defineOptions({
   name: 'WangEditor',
@@ -28,7 +29,7 @@ const props = defineProps({
  * 当前语言
  */
 const language = computed(() => {
-  return useSettingStore().settings.language === 'zhCn' ? 'zh-CN' : 'en'
+  return useSettingStore().settings.language === LANGUAGE.ZH_CN ? 'zh-CN' : LANGUAGE.EN
 })
 
 /**

@@ -9,7 +9,7 @@ import BreadCrumb from './breadcrumb/index.vue'
 import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'
 import Tab from '@/layout/components/tabbar/tab/index.vue'
-import { DEVICE } from '@/utils/common.ts'
+import { DEVICE, LAYOUT } from '@/utils/common.ts'
 
 const { theme, device } = storeToRefs(useSettingStore())
 </script>
@@ -18,9 +18,9 @@ const { theme, device } = storeToRefs(useSettingStore())
   <el-header class="el-header-container">
     <div class="tabbar">
       <div class="tabbar-left">
-        <top-menu v-if="theme.menuLayout !== 'vertical' && theme.menuLayout !== 'columns'" />
+        <top-menu v-if="theme.menuLayout !== LAYOUT.VERTICAL && theme.menuLayout !== LAYOUT.COLUMNS" />
         <bread-crumb
-          v-if="(theme.menuLayout === 'vertical' || theme.menuLayout === 'columns') && device === DEVICE.PC"
+          v-if="(theme.menuLayout === LAYOUT.VERTICAL || theme.menuLayout === LAYOUT.COLUMNS) && device === DEVICE.PC"
         />
       </div>
       <div class="tabbar-right">

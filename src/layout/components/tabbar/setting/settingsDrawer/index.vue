@@ -8,6 +8,7 @@ import useSettingStore from '@/store/modules/setting.ts'
 import { Setting } from '@element-plus/icons-vue'
 import navStyle from './navStyle/index.vue'
 import { storeToRefs } from 'pinia'
+import { THEME } from '@/utils/common.ts'
 
 let settingStore = useSettingStore()
 let { theme } = storeToRefs(settingStore)
@@ -64,11 +65,11 @@ watch(
 const changeDark = () => {
   let html = document.documentElement
   settingStore.setThemeModel(darkSwitch.value)
-  if (darkSwitch.value !== 'dark') {
-    html.classList.remove('dark')
+  if (darkSwitch.value !== THEME.DARK) {
+    html.classList.remove(THEME.DARK)
     return
   }
-  html.classList.add('dark')
+  html.classList.add(THEME.DARK)
 }
 
 /**
