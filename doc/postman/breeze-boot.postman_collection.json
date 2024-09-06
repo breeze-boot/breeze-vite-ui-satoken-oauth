@@ -1,891 +1,788 @@
 {
-	"info": {
-		"_postman_id": "09045f36-fc30-41be-8a4f-4a929993a9f8",
-		"name": "breeze-boot",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29818170"
-	},
-	"item": [
-		{
-			"name": "auth",
-			"item": [
-				{
-					"name": "oidc",
-					"item": [
-						{
-							"name": "授权码认证",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&scope=openid&state=KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D&redirect_uri=http://www.baidu.com&nonce=1m_P8HkIxsNv6ZthuqzQS4Yx1rkCxCJJDfx0qOtz5dY",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze"
-										},
-										{
-											"key": "scope",
-											"value": "openid"
-										},
-										{
-											"key": "state",
-											"value": "KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "nonce",
-											"value": "1m_P8HkIxsNv6ZthuqzQS4Yx1rkCxCJJDfx0qOtz5dY"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "授权码获取token",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&redirect_uri=http://www.baidu.com&code=JjnKEXc0TP9JcUM00SwZLdDWZqLtpuL1k5UfcAOYRf4s8c7OAvOSFP3757iBadlnCpxNXk1adOSUKC29dTp8ehu1PiX6DFmeH0P5xcwIknQCIyFO4gPWIBYbJEylgu0f&state=KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "authorization_code"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "code",
-											"value": "JjnKEXc0TP9JcUM00SwZLdDWZqLtpuL1k5UfcAOYRf4s8c7OAvOSFP3757iBadlnCpxNXk1adOSUKC29dTp8ehu1PiX6DFmeH0P5xcwIknQCIyFO4gPWIBYbJEylgu0f"
-										},
-										{
-											"key": "state",
-											"value": "KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "simple",
-					"item": [
-						{
-							"name": "获取授权码code",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&redirect_uri=http://www.baidu.com&scope=read",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "scope",
-											"value": "read"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "授权码获取token",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&redirect_uri=http://www.baidu.com&code=S7KL5aCg25DnyCOtzTlf_Hv6JHa9Z_DthhR34hB_VY5Umal-tuFmRDRJZ7dclQqm8K7Is7SGMQX3UrE0pgFPrLif4fhoOhNnldL946-6ZwvtU2QGS1Q4iFez682o90vb",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "authorization_code"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "code",
-											"value": "S7KL5aCg25DnyCOtzTlf_Hv6JHa9Z_DthhR34hB_VY5Umal-tuFmRDRJZ7dclQqm8K7Is7SGMQX3UrE0pgFPrLif4fhoOhNnldL946-6ZwvtU2QGS1Q4iFez682o90vb"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "read&write",
-					"item": [
-						{
-							"name": "获取授权码code",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&redirect_uri=http://www.baidu.com&scope=read",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "scope",
-											"value": "read"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "授权码获取token",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&code=abXp1eH5KJfCdzKDIHMUGVU8Zxs2nP9KTu6LSUgmlTw56ch9brmhcHpx35hm6Av5y_Mh0zs7UXNRV-uTTvqjICw54O7cZrcbExF098lSATr9usPmyYD9f3FofuwQJSqh&redirect_uri=http://www.baidu.com",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "authorization_code"
-										},
-										{
-											"key": "code",
-											"value": "abXp1eH5KJfCdzKDIHMUGVU8Zxs2nP9KTu6LSUgmlTw56ch9brmhcHpx35hm6Av5y_Mh0zs7UXNRV-uTTvqjICw54O7cZrcbExF098lSATr9usPmyYD9f3FofuwQJSqh"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "cient-credentials",
-					"item": [
-						{
-							"name": "获取token",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=client_credentials&scope=read",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "client_credentials"
-										},
-										{
-											"key": "scope",
-											"value": "read"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "pkce",
-					"item": [
-						{
-							"name": "浏览器获取code",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze-pkce&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/breeze-pkce&scope=read&code_challenge=fpLBFJn9QQaome60V9uCd71vCd0p5oPzOucE4S-inK4&code_challenge_method=S256&X-Tenant-Id=1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze-pkce"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://127.0.0.1:8080/login/oauth2/code/breeze-pkce"
-										},
-										{
-											"key": "scope",
-											"value": "read"
-										},
-										{
-											"key": "code_challenge",
-											"value": "fpLBFJn9QQaome60V9uCd71vCd0p5oPzOucE4S-inK4"
-										},
-										{
-											"key": "code_challenge_method",
-											"value": "S256"
-										},
-										{
-											"key": "X-Tenant-Id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "授权码获取token",
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&client_id=breeze-pkce&redirect_uri=http://www.baidu.com&code_verifier=breeze&code=6nRYezIXcSzntZEWtSH3-oYeGC3CH6yQCujVMh1X0VbeEj0fvCQnG2bN4IV6JPzJTJcgvk4aJiISarGtSDOWM3TekFC5b-bc9eVBEp7ZFyDN0e_G8Of_qdOuR9lKQnWc&X-Tenant-Id=1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "authorization_code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze-pkce"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "code_verifier",
-											"value": "breeze"
-										},
-										{
-											"key": "code",
-											"value": "6nRYezIXcSzntZEWtSH3-oYeGC3CH6yQCujVMh1X0VbeEj0fvCQnG2bN4IV6JPzJTJcgvk4aJiISarGtSDOWM3TekFC5b-bc9eVBEp7ZFyDN0e_G8Of_qdOuR9lKQnWc"
-										},
-										{
-											"key": "X-Tenant-Id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "opaque",
-					"item": [
-						{
-							"name": "浏览器获取code",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze-opaque&redirect_uri=http://www.baidu.com&scope=openid",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"authorize"
-									],
-									"query": [
-										{
-											"key": "response_type",
-											"value": "code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze-opaque"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "scope",
-											"value": "openid"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "授权码获取token",
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&client_id=breeze-opaque&redirect_uri=http://www.baidu.com&code=iU7Pt8z20vp_jAU6Y2f6bM3e0KflisWlvwwSHZ3iygAZy003DDb5wtPS3lkGQ76cnRfV5ZAJtVtSEr64bh3QjNNNpESFECPeGkI_cYQLidyznNsifbAU1LqSv9swPktr",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "authorization_code"
-										},
-										{
-											"key": "client_id",
-											"value": "breeze-opaque"
-										},
-										{
-											"key": "redirect_uri",
-											"value": "http://www.baidu.com"
-										},
-										{
-											"key": "code",
-											"value": "iU7Pt8z20vp_jAU6Y2f6bM3e0KflisWlvwwSHZ3iygAZy003DDb5wtPS3lkGQ76cnRfV5ZAJtVtSEr64bh3QjNNNpESFECPeGkI_cYQLidyznNsifbAU1LqSv9swPktr"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "password",
-					"item": [
-						{
-							"name": "密码模式",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "X-TENANT-ID",
-										"value": "1",
-										"type": "default",
-										"disabled": true
-									}
-								],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=password&username=admin&password=yXVUkR45PFz0UfpbDB8/ew==&scope=user_info&X-Tenant-Id=1",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "password"
-										},
-										{
-											"key": "username",
-											"value": "admin"
-										},
-										{
-											"key": "password",
-											"value": "yXVUkR45PFz0UfpbDB8/ew=="
-										},
-										{
-											"key": "scope",
-											"value": "user_info"
-										},
-										{
-											"key": "X-Tenant-Id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "密码刷新",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=K32VRsadjVBPXzVtOTjZddbQG453k9XCz3fKOsMp6xXGE0jVYUH3JQfe4J-gGRdlp8sezJKq9hr26rRMc76ooPJbAwIUm1cVhi8qCBsK1mznDZ2xd9keq9v-NuGAzZTV",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "refresh_token"
-										},
-										{
-											"key": "refresh_token",
-											"value": "K32VRsadjVBPXzVtOTjZddbQG453k9XCz3fKOsMp6xXGE0jVYUH3JQfe4J-gGRdlp8sezJKq9hr26rRMc76ooPJbAwIUm1cVhi8qCBsK1mznDZ2xd9keq9v-NuGAzZTV"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "sms",
-					"item": [
-						{
-							"name": "手机验证码模式",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "TENANT_ID",
-										"value": "1",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=sms_code&phone=17812345671&code=123456&scope=profile",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "sms_code"
-										},
-										{
-											"key": "phone",
-											"value": "17812345671"
-										},
-										{
-											"key": "code",
-											"value": "123456"
-										},
-										{
-											"key": "scope",
-											"value": "profile"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "密码刷新",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "secret",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "messaging-client",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "refresh_token"
-										},
-										{
-											"key": "refresh_token",
-											"value": "ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "email",
-					"item": [
-						{
-							"name": "邮箱验证码模式",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "username",
-											"value": "breeze",
-											"type": "string"
-										},
-										{
-											"key": "password",
-											"value": "breeze",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [
-									{
-										"key": "TENANT_ID",
-										"value": "1",
-										"type": "default"
-									}
-								],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=email_code&email=breeze-cloud@foxmail.com&code=123456&scope=profile",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "email_code"
-										},
-										{
-											"key": "email",
-											"value": "breeze-cloud@foxmail.com"
-										},
-										{
-											"key": "code",
-											"value": "123456"
-										},
-										{
-											"key": "scope",
-											"value": "profile"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "密码刷新",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "secret",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "messaging-client",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "9000",
-									"path": [
-										"oauth2",
-										"token"
-									],
-									"query": [
-										{
-											"key": "grant_type",
-											"value": "refresh_token"
-										},
-										{
-											"key": "refresh_token",
-											"value": "ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "09045f36-fc30-41be-8a4f-4a929993a9f8",
+    "name": "breeze-boot",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29818170"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "oidc",
+          "item": [
+            {
+              "name": "授权码认证",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&scope=openid&state=KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D&redirect_uri=http://www.baidu.com&nonce=1m_P8HkIxsNv6ZthuqzQS4Yx1rkCxCJJDfx0qOtz5dY",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "authorize"],
+                  "query": [
+                    {
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "openid"
+                    },
+                    {
+                      "key": "state",
+                      "value": "KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "nonce",
+                      "value": "1m_P8HkIxsNv6ZthuqzQS4Yx1rkCxCJJDfx0qOtz5dY"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "授权码获取token",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&redirect_uri=http://www.baidu.com&code=JjnKEXc0TP9JcUM00SwZLdDWZqLtpuL1k5UfcAOYRf4s8c7OAvOSFP3757iBadlnCpxNXk1adOSUKC29dTp8ehu1PiX6DFmeH0P5xcwIknQCIyFO4gPWIBYbJEylgu0f&state=KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "code",
+                      "value": "JjnKEXc0TP9JcUM00SwZLdDWZqLtpuL1k5UfcAOYRf4s8c7OAvOSFP3757iBadlnCpxNXk1adOSUKC29dTp8ehu1PiX6DFmeH0P5xcwIknQCIyFO4gPWIBYbJEylgu0f"
+                    },
+                    {
+                      "key": "state",
+                      "value": "KxnBJF434gArDfhkmLGbneHFOU6DK-SA3g4g3ijuceA%3D"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "simple",
+          "item": [
+            {
+              "name": "获取授权码code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&redirect_uri=http://www.baidu.com&scope=read",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "authorize"],
+                  "query": [
+                    {
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "read"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "授权码获取token",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&redirect_uri=http://www.baidu.com&code=S7KL5aCg25DnyCOtzTlf_Hv6JHa9Z_DthhR34hB_VY5Umal-tuFmRDRJZ7dclQqm8K7Is7SGMQX3UrE0pgFPrLif4fhoOhNnldL946-6ZwvtU2QGS1Q4iFez682o90vb",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "code",
+                      "value": "S7KL5aCg25DnyCOtzTlf_Hv6JHa9Z_DthhR34hB_VY5Umal-tuFmRDRJZ7dclQqm8K7Is7SGMQX3UrE0pgFPrLif4fhoOhNnldL946-6ZwvtU2QGS1Q4iFez682o90vb"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "read&write",
+          "item": [
+            {
+              "name": "获取授权码code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze&redirect_uri=http://www.baidu.com&scope=read",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "authorize"],
+                  "query": [
+                    {
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "read"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "授权码获取token",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&code=abXp1eH5KJfCdzKDIHMUGVU8Zxs2nP9KTu6LSUgmlTw56ch9brmhcHpx35hm6Av5y_Mh0zs7UXNRV-uTTvqjICw54O7cZrcbExF098lSATr9usPmyYD9f3FofuwQJSqh&redirect_uri=http://www.baidu.com",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "key": "code",
+                      "value": "abXp1eH5KJfCdzKDIHMUGVU8Zxs2nP9KTu6LSUgmlTw56ch9brmhcHpx35hm6Av5y_Mh0zs7UXNRV-uTTvqjICw54O7cZrcbExF098lSATr9usPmyYD9f3FofuwQJSqh"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "cient-credentials",
+          "item": [
+            {
+              "name": "获取token",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=client_credentials&scope=read",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "client_credentials"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "read"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "pkce",
+          "item": [
+            {
+              "name": "浏览器获取code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze-pkce&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/breeze-pkce&scope=read&code_challenge=fpLBFJn9QQaome60V9uCd71vCd0p5oPzOucE4S-inK4&code_challenge_method=S256&X-Tenant-Id=1",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "authorize"],
+                  "query": [
+                    {
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze-pkce"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://127.0.0.1:8080/login/oauth2/code/breeze-pkce"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "read"
+                    },
+                    {
+                      "key": "code_challenge",
+                      "value": "fpLBFJn9QQaome60V9uCd71vCd0p5oPzOucE4S-inK4"
+                    },
+                    {
+                      "key": "code_challenge_method",
+                      "value": "S256"
+                    },
+                    {
+                      "key": "X-Tenant-Id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "授权码获取token",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&client_id=breeze-pkce&redirect_uri=http://www.baidu.com&code_verifier=breeze&code=6nRYezIXcSzntZEWtSH3-oYeGC3CH6yQCujVMh1X0VbeEj0fvCQnG2bN4IV6JPzJTJcgvk4aJiISarGtSDOWM3TekFC5b-bc9eVBEp7ZFyDN0e_G8Of_qdOuR9lKQnWc&X-Tenant-Id=1",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze-pkce"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "code_verifier",
+                      "value": "breeze"
+                    },
+                    {
+                      "key": "code",
+                      "value": "6nRYezIXcSzntZEWtSH3-oYeGC3CH6yQCujVMh1X0VbeEj0fvCQnG2bN4IV6JPzJTJcgvk4aJiISarGtSDOWM3TekFC5b-bc9eVBEp7ZFyDN0e_G8Of_qdOuR9lKQnWc"
+                    },
+                    {
+                      "key": "X-Tenant-Id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "opaque",
+          "item": [
+            {
+              "name": "浏览器获取code",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/authorize?response_type=code&client_id=breeze-opaque&redirect_uri=http://www.baidu.com&scope=openid",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "authorize"],
+                  "query": [
+                    {
+                      "key": "response_type",
+                      "value": "code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze-opaque"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "openid"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "授权码获取token",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:9000/oauth2/token?grant_type=authorization_code&client_id=breeze-opaque&redirect_uri=http://www.baidu.com&code=iU7Pt8z20vp_jAU6Y2f6bM3e0KflisWlvwwSHZ3iygAZy003DDb5wtPS3lkGQ76cnRfV5ZAJtVtSEr64bh3QjNNNpESFECPeGkI_cYQLidyznNsifbAU1LqSv9swPktr",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "authorization_code"
+                    },
+                    {
+                      "key": "client_id",
+                      "value": "breeze-opaque"
+                    },
+                    {
+                      "key": "redirect_uri",
+                      "value": "http://www.baidu.com"
+                    },
+                    {
+                      "key": "code",
+                      "value": "iU7Pt8z20vp_jAU6Y2f6bM3e0KflisWlvwwSHZ3iygAZy003DDb5wtPS3lkGQ76cnRfV5ZAJtVtSEr64bh3QjNNNpESFECPeGkI_cYQLidyznNsifbAU1LqSv9swPktr"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "password",
+          "item": [
+            {
+              "name": "密码模式",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-TENANT-ID",
+                    "value": "1",
+                    "type": "default",
+                    "disabled": true
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=password&username=admin&password=yXVUkR45PFz0UfpbDB8/ew==&scope=user_info&X-Tenant-Id=1",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "password"
+                    },
+                    {
+                      "key": "username",
+                      "value": "admin"
+                    },
+                    {
+                      "key": "password",
+                      "value": "yXVUkR45PFz0UfpbDB8/ew=="
+                    },
+                    {
+                      "key": "scope",
+                      "value": "user_info"
+                    },
+                    {
+                      "key": "X-Tenant-Id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "密码刷新",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=K32VRsadjVBPXzVtOTjZddbQG453k9XCz3fKOsMp6xXGE0jVYUH3JQfe4J-gGRdlp8sezJKq9hr26rRMc76ooPJbAwIUm1cVhi8qCBsK1mznDZ2xd9keq9v-NuGAzZTV",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "refresh_token"
+                    },
+                    {
+                      "key": "refresh_token",
+                      "value": "K32VRsadjVBPXzVtOTjZddbQG453k9XCz3fKOsMp6xXGE0jVYUH3JQfe4J-gGRdlp8sezJKq9hr26rRMc76ooPJbAwIUm1cVhi8qCBsK1mznDZ2xd9keq9v-NuGAzZTV"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "sms",
+          "item": [
+            {
+              "name": "手机验证码模式",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "TENANT_ID",
+                    "value": "1",
+                    "type": "default"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=sms_code&phone=17812345671&code=123456&scope=profile",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "sms_code"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "17812345671"
+                    },
+                    {
+                      "key": "code",
+                      "value": "123456"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "profile"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "密码刷新",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "secret",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "messaging-client",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "refresh_token"
+                    },
+                    {
+                      "key": "refresh_token",
+                      "value": "ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "email",
+          "item": [
+            {
+              "name": "邮箱验证码模式",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "breeze",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "breeze",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "TENANT_ID",
+                    "value": "1",
+                    "type": "default"
+                  }
+                ],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=email_code&email=breeze-cloud@foxmail.com&code=123456&scope=profile",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "email_code"
+                    },
+                    {
+                      "key": "email",
+                      "value": "breeze-cloud@foxmail.com"
+                    },
+                    {
+                      "key": "code",
+                      "value": "123456"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "profile"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "密码刷新",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "secret",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "messaging-client",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://127.0.0.1:9000/oauth2/token?grant_type=refresh_token&refresh_token=ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5",
+                  "protocol": "http",
+                  "host": ["127", "0", "0", "1"],
+                  "port": "9000",
+                  "path": ["oauth2", "token"],
+                  "query": [
+                    {
+                      "key": "grant_type",
+                      "value": "refresh_token"
+                    },
+                    {
+                      "key": "refresh_token",
+                      "value": "ZtPs7TAm6HbvUaVj0SKlcnZzNoyAtLz_sMC9NdFNtf268wJCd2mqccdHG8_UVdt14bB92wqJFzHaCUAGTdFmph6YkxUUn25qyQhV2Gea1aANg4Dz_RWAqClm_pDm9gl5"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

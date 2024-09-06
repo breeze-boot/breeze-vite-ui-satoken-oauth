@@ -1,4 +1,5 @@
 # breeze-vite-ui
+
 ### 平台简介
 
 ##### Breeze-vite-ui 是基于Vue 3 + TypeScript + Vite + Element Plus
@@ -20,7 +21,9 @@ TypeScript 默认无法处理 .vue 导入的类型信息，因此我们将 tsc C
 
 - [WebStorm](https://www.jetbrains.com/webstorm/download)
 - [Idea](https://www.jetbrains.com/idea/download) + Vue插件
+
 ### 特别鸣谢：
+
 - [验证码： https://gitee.com/anji-plus/captcha](https://gitee.com/anji-plus/captcha)
 - [流程设计器： https://gitee.com/MiyueSC/bpmn-process-designer](https://gitee.com/MiyueSC/bpmn-process-designer)
 - [流程设计器：VUE3版本 https://gitee.com/xlys998/bpmn-vue3](https://gitee.com/xlys998/bpmn-vue3)
@@ -30,16 +33,29 @@ TypeScript 默认无法处理 .vue 导入的类型信息，因此我们将 tsc C
 ### 前端界面相关
 
 ### 登录页
+
 ![login.png](doc/images/login.png)
+
 ### 首页
+
 ![home.png](doc/images/home.png)
+
 ### 布局1
+
 ![img_1.png](doc/images/img_1.png)
+
 ### 布局2
+
 ![img_2.png](doc/images/img_2.png)
+
 ### 布局3
+
 ![img_3.png](doc/images/img_3.png)
+
 ### 布局4
+
 ![img_4.png](doc/images/img_4.png)
+
 ### flowable bpmn
+
 ![flowable bpmn](doc/images/flowable.jpg)
