@@ -19,14 +19,9 @@ const handleLogout = async () => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    userStore
-      .logout()
-      .then(() => {
-        userStore.logout()
-      })
-      .then(() => {
-        window.location.reload()
-      })
+    userStore.logout().then(() => {
+      window.location.reload()
+    })
   })
 }
 

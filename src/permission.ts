@@ -8,7 +8,7 @@ import useMenuStore from '@/store/modules/menu'
 
 nprogress.configure({ showSpinner: false })
 
-const whiteRoute: string[] = ['/redirect']
+const whiteRoute: string[] = ['/redirect', '/login']
 const userStore = useUserStore(pinia)
 const menuStore = useMenuStore(pinia)
 
@@ -37,14 +37,13 @@ router.beforeEach(async (to, from, next) => {
         }
       }
     }
+    return
+  }
+
+  if (whiteRoute.includes(to.path)) {
+    next()
   } else {
-    if (whiteRoute.includes(to.path) || to.path == '/login') {
-      next()
-    } else if (Object.keys(to.query).length > 0) {
-      next({ path: '/login', query: { redirect: '/home' } })
-    } else {
-      next({ path: '/login', query: { redirect: to.path } })
-    }
+    next({ path: '/login', query: { redirect: to.path, ...to.query } })
   }
 })
 // 全局后置守卫

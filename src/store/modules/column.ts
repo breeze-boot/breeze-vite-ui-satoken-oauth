@@ -32,7 +32,7 @@ const useColumnStore = defineStore('Column', {
     },
     async getColumnByMenu(menu: string) {
       let columns: string[] = []
-      this.columns.forEach((item: ColumnCacheData) => {
+      this.columns?.forEach((item: ColumnCacheData) => {
         if (menu === item.menu) {
           columns = [...item.columns, ...columns]
         }
