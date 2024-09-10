@@ -1,8 +1,8 @@
-# breeze-vite-ui
+# breeze-vite-ui-satoken-oauth
 
 ### 平台简介
 
-##### Breeze-vite-ui 是基于Vue 3 + TypeScript + Vite + Element Plus
+##### Breeze-vite-ui-satoken-oauth 是基于Vue 3 + TypeScript + Vite + Element Plus ，对应后端项目 breeze-boot-satoken-oauth
 
 ## 推荐的开发环境配置
 
@@ -22,11 +22,16 @@ TypeScript 默认无法处理 .vue 导入的类型信息，因此我们将 tsc C
 - [WebStorm](https://www.jetbrains.com/webstorm/download)
 - [Idea](https://www.jetbrains.com/idea/download) + Vue插件
 
+- 后端代码，请移步
+    - [github](https://github.com/Memory1998/breeze-boot-satoken-oauth.git)
+    - [gitee](https://gitee.com/memoryGiter/breeze-boot-satoken-oauth.git)
+  
 ### 特别鸣谢：
 
 - [验证码： https://gitee.com/anji-plus/captcha](https://gitee.com/anji-plus/captcha)
 - [流程设计器： https://gitee.com/MiyueSC/bpmn-process-designer](https://gitee.com/MiyueSC/bpmn-process-designer)
 - [流程设计器：VUE3版本 https://gitee.com/xlys998/bpmn-vue3](https://gitee.com/xlys998/bpmn-vue3)
+- [cron表达式编辑器：VUE3版本 https://github.com/wuchuanpeng/no-vue3-cron](https://github.com/wuchuanpeng/no-vue3-cron)
 
 # 请遵循 Apache 2.0 协议
 
