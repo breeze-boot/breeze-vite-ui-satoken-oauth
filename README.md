@@ -2,7 +2,14 @@
 
 ### 平台简介
 
-##### Breeze-vite-ui-satoken-oauth 是基于Vue 3 + TypeScript + Vite + Element Plus ，对应后端项目 breeze-boot-satoken-oauth
+##### Breeze-vite-ui-satoken-oauth 是一个基于 Vue 3、TypeScript、Vite 和 Element Plus 的权限管理平台。它提供了现代化的用户界面，适用于构建和管理权限系统。对应后端项目 breeze-boot-satoken-oauth。
+
+- 前端采用Vue、Element UI PLUS、VITE、TypeScript。
+- 支持按钮级别的权限控制。
+- 支持加载动态权限菜单。
+- 后端代码，请移步。
+  - [github JDK17](https://github.com/Memory1998/breeze-boot-satoken-oauth.git)
+  - [gitee JDK17](https://gitee.com/memoryGiter/breeze-boot-satoken-oauth.git)
 
 ## 推荐的开发环境配置
 
