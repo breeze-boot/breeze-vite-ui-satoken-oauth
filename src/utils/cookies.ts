@@ -6,6 +6,7 @@ export enum CookiesKey {
   THEME_COLOR = 'THEME_COLOR',
   LANGUAGE = 'LANGUAGE',
   DEVICE = 'DEVICE',
+  XTenantId = 'X-Tenant-Id',
   SIZE = 'SIZE',
 }
 

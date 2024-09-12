@@ -8,6 +8,7 @@ import useUserStore from '@/store/modules/user'
 import { LoginResponseData } from '@/api/login/type.ts'
 import { convertBigNumberToString } from '@/utils/common.ts'
 import i18n from '@/i18n/index'
+import { CookiesKey } from '@/utils/cookies.ts'
 
 let isRefreshing: boolean = false // 标记是否正在刷新token
 let refreshTimes: number = 0
@@ -49,7 +50,7 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (accessToken && !config.headers[StorageName.Authorization]) {
     config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
   }
-  config.headers[StorageName.XTenantId] = userStore.tenantId || '1'
+  config.headers[CookiesKey.XTenantId] = userStore.tenantId
   config.headers[StorageName.AcceptLanguage] = i18n.global.locale.value
   return config
 })

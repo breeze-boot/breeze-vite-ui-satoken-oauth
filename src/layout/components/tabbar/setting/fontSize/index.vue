@@ -4,6 +4,7 @@
 -->
 <script setup lang="ts">
 import useSettingStore from '@/store/modules/setting'
+import SvgButton from '@/components/SvgButton/index.vue'
 
 let settingStore = useSettingStore()
 

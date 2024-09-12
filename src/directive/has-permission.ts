@@ -28,6 +28,13 @@ const filterOptions = async (el: any, options: any) => {
       remove = false
     }
   }
+
+  const userRoleCode: string[] = await userStore.getRoleCodes()
+  for (const item of options.value) {
+    if (userRoleCode.includes(item)) {
+      remove = false
+    }
+  }
   if (remove) {
     // 删除DOM元素
     el.parentNode.removeChild(el)

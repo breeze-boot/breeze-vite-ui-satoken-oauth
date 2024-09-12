@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import useSettingStore from '@/store/modules/setting'
 import { useI18n } from 'vue-i18n'
+import SvgButton from '@/components/SvgButton/index.vue'
 
 const { locale } = useI18n()
 let settingStore = useSettingStore()
