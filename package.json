@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "repository": "https://github.com/breeze-bootbreeze-vite-ui.git",
+  "repository": "https://github.com/breeze-boot/breeze-vite-ui.git",
   "author": "gaoweixuan",
   "license": "Apache 2.0",
   "scripts": {
