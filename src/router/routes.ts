@@ -40,7 +40,7 @@ export const constantChildRoutes = [
     },
   },
   {
-    path: '/wo/startApproval1',
+    path: '/wo/startApproval',
     name: 'StartApproval',
     component: () => import('@/views/wo/leave/startApproval/index.vue'),
     meta: {

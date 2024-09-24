@@ -196,7 +196,7 @@ const handleDelete = async (rows: LeaveRecords) => {
  */
 const handleStartFlow = async (row: LeaveRecord) => {
   await $router.push({
-    path: '/wo/startApproval1',
+    path: '/wo/startApproval',
     query: {},
   })
 }

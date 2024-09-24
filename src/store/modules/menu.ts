@@ -42,13 +42,13 @@ const findRouteByName = (
  * @param pPath
  * @param menus 动态路由
  */
-const formatRouters = ({ pPath, menus }: { pPath: string; menus: any }): RouteRecordRaw[] => {
-  if (menus.length == 0) {
+const formatRouters = ({ pPath, menus = [] }: { pPath: string; menus: any[] }): RouteRecordRaw[] => {
+  if (menus?.length == 0) {
     return []
   }
 
   const fmtRouters = [] as RouteRecordRaw[]
-  menus.forEach((menu: PermissionData): void => {
+  menus?.forEach((menu: PermissionData): void => {
     const { name, path, component, href } = menu
     let { children } = menu
     // 递归格式化children路由
@@ -97,8 +97,8 @@ const useMenuStore = defineStore('Menu', {
      * @returns
      */
     listPermission: async function () {
-      const response = await listPermission(<string>settings.value.language)
-      if (response) {
+      const response: any = await listPermission(<string>settings.value.language)
+      if (response.code === '0000') {
         // 动态路由请求成功后，将路由格式化成vue能识别的路由形式
         const fmtRouters: RouteRecordRaw[] = formatRouters({ pPath: '', menus: response.data })
         // 将格式化好的路由添加到router中

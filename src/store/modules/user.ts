@@ -16,6 +16,7 @@ import {
   SET_STRING_STORAGE,
 } from '@/utils/storage'
 import { AuthoritiesData, AuthoritiesDatas, GrantType, SALES, StorageName, UserInfoData } from '@/types/types'
+import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
 
 /**
  * 过滤出按钮权限
@@ -38,7 +39,7 @@ const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
       userInfo: GET_OBJ_STORAGE(StorageName.UserInfo) as UserInfoData,
-      tenantId: GET_STRING_STORAGE(StorageName.XTenantId) as string,
+      tenantId: CookiesStorage.get(CookiesKey.XTenantId) as string,
       refreshToken: GET_STRING_STORAGE(StorageName.RefreshToken) as string,
       accessToken: GET_STRING_STORAGE(StorageName.AccessToken) as string,
       roleCodes: GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[],
@@ -66,7 +67,7 @@ const useUserStore = defineStore('User', {
         SET_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
 
         this.tenantId = user_info.tenantId as string
-        SET_STRING_STORAGE(StorageName.XTenantId, this.userInfo.tenantId as string)
+        CookiesStorage.set(CookiesKey.XTenantId, this.userInfo.tenantId as string)
 
         this.refreshToken = refresh_token as string
         SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
@@ -128,7 +129,7 @@ const useUserStore = defineStore('User', {
      */
     storeTenantId(tenantId: string) {
       this.tenantId = tenantId
-      SET_STRING_STORAGE(StorageName.XTenantId, tenantId)
+      CookiesStorage.set(CookiesKey.XTenantId, tenantId)
     },
   },
   getters: {
@@ -141,6 +142,18 @@ const useUserStore = defineStore('User', {
       return async (): Promise<string[]> => {
         return (
           state.permissions.length > 0 ? state.permissions : (GET_ARRAY_STORAGE(StorageName.Permissions) as string[])
+        ) as string[]
+      }
+    },
+    /**
+     * 获取权限信息
+     *
+     * @param state
+     */
+    getRoleCodes: (state: UserState) => {
+      return async (): Promise<string[]> => {
+        return (
+          state.roleCodes.length > 0 ? state.roleCodes : (GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[])
         ) as string[]
       }
     },

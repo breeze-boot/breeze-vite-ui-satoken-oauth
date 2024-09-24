@@ -19,33 +19,49 @@ router.beforeEach(async (to, from, next) => {
   document.title = (to.meta.title || '') + ` | ${setting.title}`
   nprogress.start()
 
-  const token: string = userStore.accessToken as string
-  const initMenu: boolean = menuStore.initMenu as boolean
+  const token = userStore.accessToken as string
+  const initMenu = menuStore.initMenu as boolean
+  debugger
+  // 用户已登录
   if (token) {
     if (to.path === '/login') {
-      next({ path: '/' })
-    } else {
-      if (initMenu) {
-        to.matched.length === 0 ? (from.name ? next({ name: from.name }) : next('/404')) : next()
-      } else {
-        try {
-          await menuStore.listPermission()
-          next({ ...to, replace: true })
-        } catch (error) {
-          await userStore.logout()
-          next({ path: '/login', query: { redirect: to.path } })
-        }
+      next({ path: '/' }) // 重定向到主页
+      return
+    }
+
+    if (!initMenu) {
+      try {
+        await menuStore.listPermission()
+        next({ ...to, replace: true }) // 加载菜单后重定向
+        return
+      } catch (error) {
+        await userStore.logout()
+        next({ path: '/login', query: { redirect: to.path } })
+        return
       }
     }
+
+    // 处理无效路由
+    if (to.matched.length === 0) {
+      from.name ? next({ name: from.name }) : next('/404')
+      return
+    }
+
+    // 继续导航
+    next()
     return
   }
 
+  // 用户未登录
   if (whiteRoute.includes(to.path)) {
-    next()
-  } else {
-    next({ path: '/login', query: { redirect: to.path, ...to.query } })
+    next() // 白名单路由直接放行
+    return
   }
+
+  // 重定向到登录
+  next({ path: '/login', query: { redirect: to.path, ...to.query } })
 })
+
 // 全局后置守卫
 
 router.afterEach(() => {
