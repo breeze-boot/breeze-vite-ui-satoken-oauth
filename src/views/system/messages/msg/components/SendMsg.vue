@@ -24,6 +24,7 @@ defineOptions({
 const userList = ref<Option[]>()
 const deptOption = ref<SelectData[]>()
 const { t } = useI18n()
+const loading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 const sendMsgFormRef = ref()
 const sendMsgDataForm = ref<any>({})
@@ -187,8 +188,17 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSendMsgFormSubmit()">
+      <el-button
+        @click="
+          () => {
+            visible = false
+            loading = false
+          }
+        "
+      >
+        {{ t('common.cancel') }}
+      </el-button>
+      <el-button type="primary" :loading="loading" @click="handleSendMsgFormSubmit()">
         {{ t('common.confirm') }}
       </el-button>
     </template>

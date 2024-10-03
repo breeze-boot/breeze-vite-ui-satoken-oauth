@@ -22,6 +22,7 @@ defineOptions({
 const { MSG_TYPE, MSG_LEVEL } = useDict('MSG_TYPE', 'MSG_LEVEL')
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
+const loading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 const msgDataFormRef = ref()
 const msgDataForm = ref<MsgForm>({ code: '', content: '', title: '', level: 'info', type: 0 })
@@ -191,8 +192,19 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleMsgDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button
+        @click="
+          () => {
+            visible = false
+            loading = false
+          }
+        "
+      >
+        {{ t('common.cancel') }}
+      </el-button>
+      <el-button type="primary" :loading="loading" @click="handleMsgDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

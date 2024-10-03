@@ -199,7 +199,16 @@ defineExpose({
     </template>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+        <el-button
+          @click="
+            () => {
+              visible = false
+              loading = false
+            }
+          "
+        >
+          {{ t('common.cancel') }}
+        </el-button>
         <el-button
           v-has="['auth:user:set:role']"
           type="primary"

@@ -15,7 +15,7 @@ let userStore = useUserStore()
   <el-card>
     <div class="box">
       <img :src="userStore.userInfo?.avatar || settings.logoUrl" alt="" class="avatar" />
-      <div class="footer">
+      <div class="header">
         <h3 class="title">
           {{ loadGreetings() }}~
           <span class="gradient">{{ userStore.userInfo?.username }}</span>
@@ -24,7 +24,6 @@ let userStore = useUserStore()
       </div>
     </div>
   </el-card>
-  <div class="bottom"></div>
 </template>
 
 <style lang="scss" scoped>
@@ -37,7 +36,7 @@ let userStore = useUserStore()
     border-radius: 50%;
   }
 
-  .footer {
+  .header {
     margin-top: 15px;
     margin-left: 20px;
 
@@ -64,11 +63,5 @@ let userStore = useUserStore()
       color: #ccc;
     }
   }
-}
-
-.bottom {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
 }
 </style>

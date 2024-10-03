@@ -144,7 +144,16 @@ defineExpose({
     </el-form>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
+        <el-button
+          @click="
+            () => {
+              visible = false
+              loading = false
+            }
+          "
+        >
+          {{ t('common.cancel') }}
+        </el-button>
         <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">
           {{ t('common.confirm') }}
         </el-button>

@@ -24,6 +24,7 @@ const methodOptions = ref<SelectData[]>([
   { value: 'DEPT', label: '指定部门' },
 ])
 const { t } = useI18n()
+const loading = ref<boolean>(false)
 const visible = ref<boolean>(false)
 const currentMsgId = ref<number>()
 const sendMsgMethodFormRef = ref()
@@ -111,8 +112,17 @@ defineExpose({
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="visible = false">{{ t('common.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSendMsgMethodFormSubmit()">
+      <el-button
+        @click="
+          () => {
+            visible = false
+            loading = false
+          }
+        "
+      >
+        {{ t('common.cancel') }}
+      </el-button>
+      <el-button type="primary" :loading="loading" @click="handleSendMsgMethodFormSubmit()">
         {{ t('common.confirm') }}
       </el-button>
     </template>
