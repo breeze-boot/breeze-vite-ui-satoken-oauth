@@ -9,6 +9,7 @@ import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
+import { MENU_TYPE } from '@/utils/common.ts'
 
 const props = defineProps(['menu'])
 
@@ -19,7 +20,7 @@ let $router = useRouter()
 let { settings } = storeToRefs(useSettingStore())
 
 const handleClickMenu = async (menu: any) => {
-  if (menu.meta.type === 1) {
+  if (menu.meta.type === MENU_TYPE.MENU) {
     settings.value.isCollapse = true
     await menuStore.setMenuChildren([menu] as RouteRecordRaw[])
     await $router.push({ path: menu.path, query: {} })
@@ -29,16 +30,29 @@ const handleClickMenu = async (menu: any) => {
     await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
   }
   tabsStore.setTab($route)
+  menuStore.currentMenu = menu
 }
 </script>
 
 <template>
   <div class="left-menu-wrapper" v-if="!props.menu.meta.hidden" @click="handleClickMenu(props.menu)">
     <div class="left-menu-logo">
-      <svg-icon :name="props.menu.meta.icon" height="1.2rem" width="1.2rem" />
+      <svg-icon
+        :color="
+          props.menu.path === menuStore.currentMenu.path ? 'var(--el-color-primary)' : 'var(--el-menu-text-color)'
+        "
+        :name="props.menu.meta.icon"
+        height="1.2rem"
+        width="1.2rem"
+      />
     </div>
 
-    <div class="left-menu-content">
+    <div
+      class="left-menu-content"
+      :style="{
+        color: props.menu.path === menuStore.currentMenu.path ? 'var(--el-color-primary)' : 'var(--el-menu-text-color)',
+      }"
+    >
       <span>{{ props.menu.meta.title }}</span>
     </div>
   </div>

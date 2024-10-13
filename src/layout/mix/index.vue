@@ -54,7 +54,7 @@ const selectMenu = async (index: string) => {
           @select="selectMenu"
         >
           <menu-item
-            v-for="item in menuStore.mixMenuRoutes"
+            v-for="item in menuStore.subMenuRoutes"
             :key="item.path"
             :layout="theme.menuLayout"
             position="noTop"

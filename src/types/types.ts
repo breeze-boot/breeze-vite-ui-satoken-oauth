@@ -162,22 +162,37 @@ export enum StorageName {
 /**
  * pinia 字典保存参数
  *
- * [
- *   {
- *     code  : dictName,
- *     value :
- *        {
- *            label?: string
- *            value?: string
- *            type?: string
- *        },
- *   }
- * ]
+ *                value : {
+ *                            label?: string
+ *                            value?: string
+ *                            type?: string
+ *                         },
+ *                value : {
+ *                            label?: string
+ *                            value?: string
+ *                            type?: string
+ *                         },
  */
 export interface Dict {
   [idx: number]: DictItem
 }
 
+/**
+ * pinia 字典保存参数
+ *
+ *  DICT_CODE : {
+ *                value : {
+ *                            label?: string
+ *                            value?: string
+ *                            type?: string
+ *                         },
+ *                value : {
+ *                            label?: string
+ *                            value?: string
+ *                            type?: string
+ *                         },
+ *              }
+ */
 export interface Dicts {
   [idx: string]: Dict
 }

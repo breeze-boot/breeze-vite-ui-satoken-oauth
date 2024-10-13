@@ -58,6 +58,7 @@ const useUserStore = defineStore('User', {
         password: encrypt(data.password!.trim(), SALES) as string,
         captchaVerification: encodeURIComponent(data.captchaVerification as string),
       }
+      this.tenantId = data.tenantId
       const response: any = await userLogin(LoginForm, GrantType.PASSWORD)
 
       if (response) {

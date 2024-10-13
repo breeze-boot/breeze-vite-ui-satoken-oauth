@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { UserLoginForm, PermissionResponseData } from './type'
+import { PermissionResponseData, UserLoginForm } from './type'
 import { GrantType } from '@/types/types.ts'
 
 enum API {

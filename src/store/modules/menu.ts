@@ -83,8 +83,9 @@ const useMenuStore = defineStore('Menu', {
   state: (): MenuState => {
     return {
       initMenu: false,
+      currentMenu: {} as RouteRecordRaw,
       menuRoutes: constantChildRoutes,
-      mixMenuRoutes: GET_OBJ_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
+      subMenuRoutes: GET_OBJ_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
     }
   },
   /**
@@ -120,9 +121,9 @@ const useMenuStore = defineStore('Menu', {
     setMenuChildren(fmtRouter: RouteRecordRaw[]) {
       // 子菜单路由信息
       return new Promise((resolve) => {
-        this.mixMenuRoutes = fmtRouter as RouteRecordRaw[]
-        SET_STORAGE(StorageName.mixMenuRoutes, this.mixMenuRoutes)
-        resolve(this.mixMenuRoutes)
+        this.subMenuRoutes = fmtRouter as RouteRecordRaw[]
+        SET_STORAGE(StorageName.mixMenuRoutes, this.subMenuRoutes)
+        resolve(this.subMenuRoutes)
       })
     },
   },

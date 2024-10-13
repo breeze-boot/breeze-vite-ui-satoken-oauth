@@ -61,13 +61,7 @@ const selectMenu = async (index: string) => {
           :collapse="settings.isCollapse"
           @select="selectMenu"
         >
-          <menu-item
-            v-for="item in menuStore.mixMenuRoutes"
-            :key="item.path"
-            :layout="theme.menuLayout"
-            position="noTop"
-            :menu="item"
-          />
+          <menu-item v-for="item in menuStore.subMenuRoutes" :key="item.path" :layout="theme.menuLayout" :menu="item" />
         </el-menu>
       </el-scrollbar>
     </el-aside>

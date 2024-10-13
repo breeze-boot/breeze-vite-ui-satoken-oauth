@@ -14,7 +14,6 @@ import { Client } from '@stomp/stompjs'
 export interface UserState {
   userInfo: UserInfoData
   tenantId: string
-  refreshToken: string
   accessToken: string
   roleCodes: string[]
   permissions: string[]
@@ -25,8 +24,9 @@ export interface UserState {
  */
 export interface MenuState {
   initMenu: boolean
+  currentMenu: RouteRecordRaw
   menuRoutes: RouteRecordRaw[]
-  mixMenuRoutes: RouteRecordRaw[]
+  subMenuRoutes: RouteRecordRaw[]
 }
 
 /**

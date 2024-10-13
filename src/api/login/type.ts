@@ -7,6 +7,7 @@ import { PermissionDatas, ResponseData, UserInfoData } from '@/types/types.ts'
 export interface UserLoginForm {
   username?: string
   password?: string
+  tenantId?: number
   captchaVerification?: string
 }
 
@@ -17,10 +18,6 @@ export interface LoginResponseData {
   scope: string
   token_type: string
   expires_in: number
-}
-
-export interface LogoutResponseData extends ResponseData {
-  data: boolean
 }
 
 export interface PermissionResponseData extends ResponseData {

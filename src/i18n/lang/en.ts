@@ -1,6 +1,6 @@
 export default {
   axios: {
-    reLogin: 'refresh failed, please log in again',
+    reLogin: 'please log in again',
     unknownError: 'unknown error',
     serverInternalError: 'server Internal Error',
     insufficientPermissionsReLogin: 'insufficient permissions, please log in again',
@@ -18,6 +18,8 @@ export default {
     goodEvening: 'good evening',
   },
   common: {
+    sureToLogOutExitSystem: 'Are you sure to log out and exit the system',
+    tip: 'tip',
     toBeSelectedColumns: 'to be selected columns',
     selectedColumns: 'selected columns',
     confirm_read: 'confirm read',

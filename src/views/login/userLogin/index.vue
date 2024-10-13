@@ -15,6 +15,8 @@ import { storeToRefs } from 'pinia'
 import Verify from '@/components/anj-plus/Verify.vue'
 import { UserLoginForm } from '@/api/login/type.ts'
 import { THEME } from '@/utils/common.ts'
+import type { SelectData } from '@/types/types.ts'
+import { selectTenant } from '@/api/auth/tenant'
 
 let settingStore = useSettingStore()
 let columnStore = useColumnStore()
@@ -24,21 +26,30 @@ let $router = useRouter()
 let $route = useRoute()
 let loading = ref(false)
 
+const tenantOption = ref<SelectData[]>()
 let userStore = useUserStore()
 let loginFormRef = ref()
+
+const loginFormData = reactive<UserLoginForm>({
+  username: 'admin',
+  password: '123456',
+})
+
+const verify = ref(null)
+const captchaType = ref('clickWord')
 
 /**
  * 初始化
  */
 onMounted(() => {
+  initSelectTenant()
   changeDark()
   changeThemeColor()
   userStore.logout()
 })
 
-const verify = ref(null)
-const captchaType = ref('clickWord')
-const handleCheck = () => {
+const handleCheck = async () => {
+  await loginFormRef.value.validate()
   handleOnShow('blockPuzzle')
   // handleOnShow('clickWord')
 }
@@ -66,11 +77,6 @@ const changeDark = () => {
 const changeThemeColor = () => {
   document.documentElement.style.setProperty('--el-color-primary', theme.value.themeColor)
 }
-
-const loginFormData = reactive<UserLoginForm>({
-  username: 'admin',
-  password: '123456',
-})
 
 /**
  * 标题动态获取计算属性
@@ -119,6 +125,22 @@ const rules = {
       validator: validatorPassword,
     },
   ],
+  tenantId: [
+    {
+      required: true,
+      trigger: 'change',
+    },
+  ],
+}
+
+/**
+ * 初始化租户下拉框数据
+ */
+const initSelectTenant = async () => {
+  const response: any = await selectTenant()
+  if (response.code === '0000') {
+    tenantOption.value = response.data
+  }
 }
 
 /**
@@ -175,6 +197,21 @@ const handleLogin = async (data: any) => {
               placeholder="Password"
               clearable
             ></el-input>
+          </el-form-item>
+          <el-form-item prop="tenantId">
+            <el-select
+              size="large"
+              v-model="loginFormData.tenantId"
+              :popper-append-to-body="false"
+              placeholder="Tenant"
+            >
+              <el-option
+                v-for="item in tenantOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
         <el-form-item>

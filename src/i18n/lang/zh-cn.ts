@@ -1,6 +1,6 @@
 export default {
   axios: {
-    reLogin: '刷新失败，请重新登录',
+    reLogin: '请重新登录',
     unknownError: '未知错误',
     serverInternalError: '服务器内部错误',
     insufficientPermissionsReLogin: '权限不足，请重新登录',
@@ -18,6 +18,8 @@ export default {
     goodEvening: '晚上好',
   },
   common: {
+    sureToLogOutExitSystem: '确定注销并退出系统吗',
+    tip: '提示',
     toBeSelectedColumns: '待选列',
     selectedColumns: '已选择列',
     confirm_read: '确认读取',

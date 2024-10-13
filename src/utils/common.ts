@@ -34,6 +34,17 @@ export enum LAYOUT {
   COLUMNS = 'columns',
 }
 
+export enum MENU_TYPE {
+  FOLDER = 0,
+  MENU = 1,
+  BUTTON = 2,
+}
+
+export enum MENU_HREF {
+  HREF = 1,
+  MENU = 0,
+}
+
 export enum THEME {
   LIGHT = 'light',
   DARK = 'dark',

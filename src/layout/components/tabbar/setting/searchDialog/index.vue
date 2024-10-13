@@ -8,6 +8,7 @@ import { Search } from '@element-plus/icons-vue'
 import { RouteRecordRaw, useRouter } from 'vue-router'
 import useMenuStore from '@/store/modules/menu.ts'
 import { useI18n } from 'vue-i18n'
+import { MENU_TYPE } from '@/utils/common.ts'
 
 let $router = useRouter()
 let menuStore = useMenuStore()
@@ -41,7 +42,7 @@ const treeToArray = (tree: any): RouteRecordRaw[] => {
 
   function traverse(node: RouteRecordRaw, level = 0) {
     let item = { ...node, level }
-    if (item?.meta?.type && item?.meta?.type === 1) {
+    if (item?.meta?.type && item?.meta?.type === MENU_TYPE.MENU) {
       result.push(item)
     }
 

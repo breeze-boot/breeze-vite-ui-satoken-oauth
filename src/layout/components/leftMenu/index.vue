@@ -31,7 +31,7 @@ onMounted(async () => {
  * 计算获取菜单数据
  */
 const menuList = computed(() =>
-  theme.value.menuLayout === LAYOUT.MIX ? menuStore.mixMenuRoutes : menuStore.menuRoutes,
+  theme.value.menuLayout === LAYOUT.MIX ? menuStore.subMenuRoutes : menuStore.menuRoutes,
 )
 
 /**

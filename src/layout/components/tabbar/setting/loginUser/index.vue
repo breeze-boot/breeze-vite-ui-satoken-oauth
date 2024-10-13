@@ -7,16 +7,19 @@ import { computed } from 'vue'
 import useUserStore from '@/store/modules/user.ts'
 import useSettingStore from '@/store/modules/setting.ts'
 import { ElMessageBox } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 let userStore = useUserStore()
 let settingStore = useSettingStore()
+
 /**
  *退出登录
  */
 const handleLogout = async () => {
-  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+  ElMessageBox.confirm(t('common.sureToLogOutExitSystem'), t('common.tip'), {
+    confirmButtonText: t('common.confirm'),
+    cancelButtonText: t('common.cancel'),
     type: 'warning',
   }).then(() => {
     userStore.logout().then(() => {

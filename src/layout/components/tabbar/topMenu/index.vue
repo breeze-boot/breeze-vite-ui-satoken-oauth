@@ -11,7 +11,7 @@ import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import Logo from '@/layout/components/logo/index.vue'
 import { useWindowSize } from '@vueuse/core'
-import { LAYOUT } from '@/utils/common.ts'
+import { LAYOUT, MENU_TYPE } from '@/utils/common.ts'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
@@ -29,7 +29,7 @@ const { width } = useWindowSize()
 const selectMenu = async (index: string) => {
   const menuInfo = menuStore.getMenuInfo('path', index)
   await menuStore.setMenuChildren(menuInfo?.children as RouteRecordRaw[])
-  if (menuInfo?.meta?.type === 1) {
+  if (menuInfo?.meta?.type === MENU_TYPE.MENU) {
     await $router.push({ path: index, query: {} })
     await menuStore.setMenuChildren([menuInfo] as RouteRecordRaw[])
   } else {
