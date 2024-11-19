@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import pinia from '@/store'
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from 'element-plus'
 import JSONBigInt from 'json-bigint'
 import { StorageName } from '@/types/types'
 import router from '@/router'
