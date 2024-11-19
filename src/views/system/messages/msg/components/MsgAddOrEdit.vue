@@ -6,13 +6,13 @@
 <!-- 消息添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addMsg, getMsg, editMsg } from '@/api/system/messages/msg'
 import { MsgForm } from '@/api/system/messages/msg/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'MsgAddOrEdit',
@@ -88,43 +88,31 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getMsg(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getMsg(JSONBigInt.parse(id))
     Object.assign(msgDataForm.value, response.data)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleMsgDataFormSubmit = () => {
-  msgDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    const id = msgDataForm.value.id
-    if (id) {
-      await editMsg(id, msgDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addMsg(msgDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleMsgDataFormSubmit = async () => {
+  await msgDataFormRef.value.validate()
+  loading.value = true
+  const id = msgDataForm.value.id
+  try {
+    id ? await editMsg(id, msgDataForm.value) : await addMsg(msgDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

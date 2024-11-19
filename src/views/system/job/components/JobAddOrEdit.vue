@@ -6,7 +6,6 @@
 <!-- 任务添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addJob, getJob, editJob } from '@/api/system/job'
 import { JobRecord } from '@/api/system/job/type.ts'
 import { useI18n } from 'vue-i18n'
@@ -14,6 +13,7 @@ import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
 import CronSelect from '@/components/CronSelect/index.vue'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'JobAddOrEdit',
@@ -70,13 +70,13 @@ const rules = ref({
  */
 const init = async (id: number) => {
   jobDataForm.value.id = undefined
-  visible.value = true
   // 重置表单数据
   if (jobDataFormRef.value) {
     jobDataFormRef.value.resetFields()
   }
   if (id) {
     await getInfo(id)
+    visible.value = true
   }
 }
 
@@ -86,46 +86,31 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getJob(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getJob(JSONBigInt.parse(id))
     Object.assign(jobDataForm.value, response.data)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleJobDataFormSubmit = () => {
-  jobDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = jobDataForm.value.id
-    if (id) {
-      await editJob(jobDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addJob(jobDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleJobDataFormSubmit = async () => {
+  await jobDataFormRef.value.validate()
+  loading.value = true
+  const id = jobDataForm.value.id
+  try {
+    id ? await editJob(id, jobDataForm.value) : await addJob(jobDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

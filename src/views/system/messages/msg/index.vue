@@ -9,13 +9,14 @@ import { page, exportExcel, deleteMsg } from '@/api/system/messages/msg'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import SendMsgSetting from '@/views/system/messages/msg/components/SendMsgSetting.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import AddOrEdit from './components/MsgAddOrEdit.vue'
 import type { MsgRecords } from '@/api/system/messages/msg/type.ts'
 import { MsgRecord, MsgQuery } from '@/api/system/messages/msg/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Msg',
@@ -220,15 +221,14 @@ const handleUpdate = (row: MsgRecord) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: MsgRecords) => {
-  const msgTemplateIds = rows.map((item: any) => item.id)
-  await deleteMsg(msgTemplateIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const msgTemplateIds = rows.map((item: any) => item.id)
+    await deleteMsg(msgTemplateIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

@@ -3,10 +3,10 @@
  * @since: 2024-03-17
 -->
 <script setup lang="ts">
-import { Client } from '@stomp/stompjs'
-import useUserStore from '@/store/modules/user.ts'
 import { onMounted, onUnmounted } from 'vue'
+import { Client } from '@stomp/stompjs'
 import { ElNotification } from 'element-plus'
+import useUserStore from '@/store/modules/user.ts'
 import useMsgStore from '@/store/modules/msg.ts'
 
 let userStore = useUserStore()

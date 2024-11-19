@@ -5,7 +5,7 @@
 <!-- 用户管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, open, exportExcel, deleteUser, editAvatar, syncUser } from '@/api/auth/user'
+import { page, open, exportExcel, deleteUser, editAvatar } from '@/api/auth/user'
 import AddOrEdit from './components/UserAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
@@ -21,6 +21,7 @@ import UserPasswordReset from '@/views/auth/user/components/UserPasswordReset.vu
 import { editFile } from '@/api/system/file'
 import { FileRecord } from '@/api/system/file/type.ts'
 import { saveTypeFile } from '@/utils/download.ts'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'User',
@@ -92,13 +93,6 @@ const tableInfo = reactive<TableInfo>({
       event: 'exportAll',
       icon: 'excel',
       eventHandle: () => handleExport(false),
-    },
-    {
-      type: 'default',
-      label: t('common.syncUser'),
-      event: 'syncUser',
-      icon: 'syncUser',
-      eventHandle: () => handleSyncUser(),
     },
   ],
   // 表格字段配置
@@ -423,42 +417,31 @@ const handleUpdateBiz = async (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: UserRecords) => {
-  const userIds = rows.map((item: any) => item.id)
-  await deleteUser(userIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const userIds = rows.map((item: any) => item.id)
+    await deleteUser(userIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**
  * 导出
  */
 const handleExport = async (currentPage: boolean) => {
-  const _queryParams = queryParams
-  if (!currentPage) {
-    _queryParams.current = 1
-    _queryParams.size = 1000
+  try {
+    const _queryParams = queryParams
+    if (!currentPage) {
+      _queryParams.current = 1
+      _queryParams.size = 1000
+    }
+    const response: any = await exportExcel(_queryParams)
+    saveTypeFile(response, response.type, '用户数据')
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
-  const response: any = await exportExcel(_queryParams)
-  saveTypeFile(response.data, response.data.type, '用户数据')
-}
-
-/**
- * 同步用户
- */
-const handleSyncUser = async () => {
-  await syncUser()
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
 }
 
 /**

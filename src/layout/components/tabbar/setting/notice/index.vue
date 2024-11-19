@@ -8,13 +8,13 @@ import { closeUserMsg, listUsersMsg, readUserMsg } from '@/api/system/messages/m
 import useUserStore from '@/store/modules/user'
 import closePng from '@/assets/images/close.png'
 import { MsgUserRecord } from '@/api/system/messages/msgUser/type.ts'
-import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { getMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import { ClickOutside as vClickOutside } from 'element-plus'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 const userStore = useUserStore()
 const noticeMsg = ref<MsgUserRecord[]>([])
@@ -35,9 +35,11 @@ onMounted(() => {
  * 初始化消息
  */
 const initNoticeMsg = async () => {
-  const response: any = await listUsersMsg(userStore.userInfo.username)
-  if (response.code === '0000') {
+  try {
+    const response: any = await listUsersMsg(userStore.userInfo.username)
     noticeMsg.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -53,12 +55,15 @@ const handleShowMsg = async () => {
  * 查看消息详情
  */
 const handleShowMsgInfo = async (msgUser: MsgUserRecord) => {
-  currentMsgId.value = msgUser.msgId
-  const response: any = await getMsg(msgUser.msgId)
-  if (response.code === '0000') {
+  try {
+    currentMsgId.value = msgUser.msgId
+    const response: any = await getMsg(msgUser.msgId)
     noticeMsgInfo.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = true
   }
-  visible.value = true
 }
 
 /**
@@ -66,14 +71,13 @@ const handleShowMsgInfo = async (msgUser: MsgUserRecord) => {
  */
 const handleCloseMsg = async (msgUser: MsgUserRecord) => {
   // 标识已经关闭
-  await closeUserMsg(msgUser.msgId)
-  ElMessage.success({
-    message: `${t('common.close') + t('common.success')}`,
-    duration: 1000,
-    onClose: async () => {
-      await initNoticeMsg()
-    },
-  })
+  try {
+    await closeUserMsg(msgUser.msgId)
+    useMessage().success(`${t('common.close') + t('common.success')}`)
+    await initNoticeMsg()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**
@@ -81,15 +85,13 @@ const handleCloseMsg = async (msgUser: MsgUserRecord) => {
  */
 const handleCloseDialog = async () => {
   // 标识已经读取
-  await readUserMsg(currentMsgId.value)
-  ElMessage.success({
-    message: `${t('common.mark_read') + t('common.success')}`,
-    duration: 1000,
-    onClose: async () => {
-      visible.value = false
-      await initNoticeMsg()
-    },
-  })
+  try {
+    await readUserMsg(currentMsgId.value)
+    useMessage().success(`${t('common.mark_read') + t('common.success')}`)
+    await initNoticeMsg()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 </script>
 

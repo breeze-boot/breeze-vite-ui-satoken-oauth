@@ -8,7 +8,7 @@ import { LogResponseData, LogQuery } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  LOG_RESTFUL_URL = '/sys/v1/log',
+  LOGIN_LOG_RESTFUL_URL = '/sys/v1/loginLog',
 }
 
 /**
@@ -18,7 +18,7 @@ enum API {
  */
 export function page(params: LogQuery): AxiosPromise<LogResponseData> {
   return request({
-    url: API.LOG_RESTFUL_URL,
+    url: API.LOGIN_LOG_RESTFUL_URL,
     method: 'get',
     params: params,
   })
@@ -31,7 +31,7 @@ export function page(params: LogQuery): AxiosPromise<LogResponseData> {
  */
 export function deleteLog(ids: number[]): AxiosPromise<ResponseData> {
   return request({
-    url: API.LOG_RESTFUL_URL,
+    url: API.LOGIN_LOG_RESTFUL_URL,
     method: 'delete',
     data: ids,
   })

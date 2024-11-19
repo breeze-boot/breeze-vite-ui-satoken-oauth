@@ -13,6 +13,7 @@ import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RolePermissionList',
@@ -57,26 +58,21 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const treePermissionResponse: any = await listTreePermission([0, 1, 2])
-  if (treePermissionResponse.code !== '0000') {
-    ElMessage.warning({
-      message: t('common.reloadFail'),
-      duration: 1000,
-    })
+  try {
+    const treePermissionResponse: any = await listTreePermission([0, 1, 2])
+    Object.assign(roleTreeData.value, treePermissionResponse.data)
+  } catch (e: any) {
+    ElMessage.warning(t('common.reloadFail'))
     return
   }
-  Object.assign(roleTreeData.value, treePermissionResponse.data)
-  const rolesPermissionResponse: any = await listRolesPermission(id)
-  if (rolesPermissionResponse.code !== '0000') {
-    ElMessage.warning({
-      message: t('common.reloadFail'),
-      duration: 1000,
-    })
-    return
-  }
-  const menuIds = rolesPermissionResponse.data.map((item: any) => item.menuId)
-  if (menuIds) {
-    rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
+  try {
+    const rolesPermissionResponse: any = await listRolesPermission(id)
+    const menuIds = rolesPermissionResponse.data.map((item: any) => item.menuId)
+    if (menuIds) {
+      rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
+    }
+  } catch (e: any) {
+    useMessage().warning(t('common.reloadFail'))
   }
 }
 
@@ -90,18 +86,18 @@ const handleRoleDataFormSubmit = async () => {
     checkedKeys.push(...halfCheckedKeys)
   }
   loading.value = true
-  await modifyPermission({
-    roleId: currentClickRoleId.value,
-    permissionIds: checkedKeys,
-  })
-  ElMessage.success({
-    message: `${t('common.modify') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      visible.value = false
-      loading.value = false
-    },
-  })
+  try {
+    await modifyPermission({
+      roleId: currentClickRoleId.value,
+      permissionIds: checkedKeys,
+    })
+    useMessage().success(`${t('common.success')}`)
+  } catch (e: any) {
+    useMessage().error(`${t('common.fail')}`)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 watch(filterText, (val) => {

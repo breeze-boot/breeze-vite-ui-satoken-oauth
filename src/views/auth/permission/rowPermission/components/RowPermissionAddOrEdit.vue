@@ -6,7 +6,6 @@
 <!-- 权限添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addPermission, getPermission, editPermission, checkPermissionCode } from '@/api/auth/permission/rowPermission'
 import { RowPermissionForm } from '@/api/auth/permission/rowPermission/type.ts'
 import { useI18n } from 'vue-i18n'
@@ -16,6 +15,7 @@ import { listUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import { Option, SelectData } from '@/types/types.ts'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RowPermissionAddOrEdit',
@@ -102,64 +102,51 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getPermission(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getPermission(JSONBigInt.parse(id))
     Object.assign(rowPermissionDataForm.value, response.data)
     if (rowPermissionDataForm.value.customizesType === 'USER') {
       rowPermissionDataForm.value.permissions = rowPermissionDataForm.value.permissions?.filter((per: number) =>
         userList.value?.some((user: Option) => user.key === per),
       )
     }
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handlePermissionDataFormSubmit = () => {
-  rowPermissionDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = rowPermissionDataForm.value.id
-    if (id) {
-      await editPermission(id, rowPermissionDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addPermission(rowPermissionDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handlePermissionDataFormSubmit = async () => {
+  await rowPermissionDataFormRef.value.validate()
+  loading.value = true
+  const id = rowPermissionDataForm.value.id
+  try {
+    id ? await editPermission(id, rowPermissionDataForm.value) : await addPermission(rowPermissionDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 const initDeptSelectData = async () => {
-  const response: any = await selectDept()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectDept()
     deptOption.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 const initUserTransferData = async () => {
-  const response: any = await listUser()
-  const data: Option[] = []
-  if (response.code === '0000') {
+  try {
+    const response: any = await listUser()
+    const data: Option[] = []
     response.data.forEach((user: UserRecord) => {
       data.push({
         label: user.username as string,
@@ -167,8 +154,10 @@ const initUserTransferData = async () => {
         initial: user.userCode as string,
       })
     })
+    userList.value = data
+  } catch (e: any) {
+    console.error(e.message)
   }
-  userList.value = data
 }
 
 const filterMethod = (query: string, item: Option) => {

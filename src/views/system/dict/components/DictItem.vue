@@ -12,8 +12,8 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
-import { ElMessage } from 'element-plus'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'DictItem',
@@ -167,15 +167,14 @@ const handleUpdate = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: DictItemRecords) => {
-  const dictIds = rows.map((item: any) => item.id)
-  await deleteDictItem(dictIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const dictIds = rows.map((item: any) => item.id)
+    await deleteDictItem(dictIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 /**
  * 选中行，设置当前行currentRow

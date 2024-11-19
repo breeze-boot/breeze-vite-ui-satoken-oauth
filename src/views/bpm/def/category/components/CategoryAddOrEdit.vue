@@ -6,13 +6,13 @@
 <!-- 流程分类添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addCategory, getCategory, editCategory, checkCategoryCode } from '@/api/bpm/def/category'
 import type { CategoryForm } from '@/api/bpm/def/category/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import useUserStore from '@/store/modules/user.ts'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'CategoryAddOrEdit',
@@ -81,47 +81,32 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getCategory(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getCategory(JSONBigInt.parse(id))
     Object.assign(categoryDataForm.value, response.data)
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDataFormSubmit = () => {
-  categoryDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    categoryDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
-    loading.value = true
-    const id = categoryDataForm.value.id
-    if (id) {
-      await editCategory(id, categoryDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addCategory(categoryDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleCategoryDataFormSubmit = async () => {
+  await categoryDataFormRef.value.validate()
+  loading.value = true
+  categoryDataForm.value.tenantId = useUserStore().userInfo.tenantId.toString()
+  const id = categoryDataForm.value.id
+  try {
+    id ? await editCategory(id, categoryDataForm.value) : await addCategory(categoryDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({
@@ -172,7 +157,9 @@ defineExpose({
       >
         {{ t('common.cancel') }}
       </el-button>
-      <el-button type="primary" :loading="loading" @click="handleDataFormSubmit()">{{ t('common.confirm') }}</el-button>
+      <el-button type="primary" :loading="loading" @click="handleCategoryDataFormSubmit()">
+        {{ t('common.confirm') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

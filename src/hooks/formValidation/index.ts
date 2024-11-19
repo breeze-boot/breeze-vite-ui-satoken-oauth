@@ -1,5 +1,5 @@
-import { ElMessage } from 'element-plus'
 import i18n from '@/i18n/index'
+import { useMessage } from '@/hooks/message'
 
 export const check = (obj: any): any => {
   // 如果 obj 是 null 或者不是对象，直接返回 false
@@ -32,7 +32,7 @@ export default function useFormValidation() {
   // 检查表单值是否等于 "NAN" 的函数
   function isNANValue(formValue: object) {
     if (check(formValue)) {
-      ElMessage.warning({
+      useMessage().warning({
         message: i18n.global.t('common.fail'),
         duration: 1000,
       })

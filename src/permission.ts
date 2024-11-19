@@ -21,7 +21,6 @@ router.beforeEach(async (to, from, next) => {
 
   const token = userStore.accessToken as string
   const initMenu = menuStore.initMenu as boolean
-  debugger
   // 用户已登录
   if (token) {
     if (to.path === '/login') {

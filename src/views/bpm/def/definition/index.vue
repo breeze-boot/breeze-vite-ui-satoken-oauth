@@ -5,7 +5,7 @@
 <!--  流程定义管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { page, exportExcel, deleteDefinition, startInstance, suspendedDefinition } from '@/api/bpm/def/definition'
@@ -15,6 +15,8 @@ import AddOrEdit from './components/DefinationAddOrEdit.vue'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { RoleRecords } from '@/api/auth/role/type.ts'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Definition',
@@ -228,18 +230,17 @@ const handleInfo = (row: any) => {
  *
  * @param rows 行数据
  */
-const handleDelete = async (rows: BpmDefinitionRecords) => {
-  const definitions: any[] = rows.map((item: any) => {
-    return { procDefKey: item.procDefKey, cascade: true }
-  })
-  await deleteDefinition(definitions)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+const handleDelete = async (rows: RoleRecords) => {
+  try {
+    const definitions: any[] = rows.map((item: any) => {
+      return { procDefKey: item.procDefKey, cascade: true }
+    })
+    await deleteDefinition(definitions)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**
@@ -248,18 +249,17 @@ const handleDelete = async (rows: BpmDefinitionRecords) => {
  * @param row 修改参数
  */
 const handleStart = async (row: BpmDefinitionRecord) => {
-  let startParam: BpmStartForm = {
-    procDefKey: row.procDefKey,
-    businessKey: '',
-    variables: {},
-    isPassFirstNode: false,
-  }
-  const response: any = await startInstance(startParam)
-  if (response.code === '0000') {
-    ElMessage.success({
-      message: `${t('common.start') + t('common.success')}`,
-      duration: 1000,
-    })
+  try {
+    let startParam: BpmStartForm = {
+      procDefKey: row.procDefKey,
+      businessKey: '',
+      variables: {},
+      isPassFirstNode: false,
+    }
+    await startInstance(startParam)
+    useMessage().success(`${t('common.start') + t('common.success')}`)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 

@@ -98,8 +98,8 @@ const useMenuStore = defineStore('Menu', {
      * @returns
      */
     listPermission: async function () {
-      const response: any = await listPermission(<string>settings.value.language)
-      if (response.code === '0000') {
+      try {
+        const response: any = await listPermission(<string>settings.value.language)
         // 动态路由请求成功后，将路由格式化成vue能识别的路由形式
         const fmtRouters: RouteRecordRaw[] = formatRouters({ pPath: '', menus: response.data })
         // 将格式化好的路由添加到router中
@@ -110,8 +110,9 @@ const useMenuStore = defineStore('Menu', {
         })
         this.initMenu = true
         return Promise.resolve()
+      } catch (err: any) {
+        return Promise.reject(new Error(err.message))
       }
-      return Promise.reject(new Error(response))
     },
     /**
      * 设置子节点的菜单

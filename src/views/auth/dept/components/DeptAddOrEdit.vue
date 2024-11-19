@@ -6,7 +6,6 @@
 <!-- 部门添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addDept, getDept, editDept, selectDept, checkDeptCode } from '@/api/auth/dept'
 import type { DeptForm } from '@/api/auth/dept/type.ts'
 import { useI18n } from 'vue-i18n'
@@ -14,6 +13,7 @@ import type { SelectData } from '@/types/types.ts'
 import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import JSONBigInt from 'json-bigint'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'DeptAddOrEdit',
@@ -31,7 +31,7 @@ const rules = ref({
   parentId: [
     {
       required: true,
-      message: t('common.placeholder.choose') + t('dept.filed.parentId'),
+      message: t('common.placeholder.choose') + t('dept.filed.superiorDept'),
       trigger: 'blur',
     },
   ],
@@ -104,8 +104,8 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
  * 初始化部门下拉框数据
  */
 const initSelectDept = async (id?: number) => {
-  const response: any = await selectDept(JSONBigInt.parse(id || 0))
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectDept(JSONBigInt.parse(id || 0))
     deptOption.value = [
       {
         value: ROOT.value,
@@ -113,6 +113,8 @@ const initSelectDept = async (id?: number) => {
         children: response.data,
       },
     ]
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
@@ -122,46 +124,31 @@ const initSelectDept = async (id?: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getDept(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getDept(JSONBigInt.parse(id))
     Object.assign(deptDataForm.value, response.data)
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDeptDataFormSubmit = () => {
-  deptDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = deptDataForm.value.id
-    if (id) {
-      await editDept(id, deptDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addDept(deptDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleDeptDataFormSubmit = async () => {
+  await deptDataFormRef.value.validate()
+  loading.value = true
+  const id = deptDataForm.value.id
+  try {
+    id ? await editDept(id, deptDataForm.value) : await addDept(deptDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

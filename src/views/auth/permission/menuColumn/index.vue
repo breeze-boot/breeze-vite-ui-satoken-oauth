@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteMenuColumn } from '@/api/auth/permission/menuColumn'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import type { MenuColumnRecords } from '@/api/auth/permission/menuColumn/type.ts'
@@ -14,6 +14,7 @@ import { MenuColumnRecord, MenuColumnQuery } from '@/api/auth/permission/menuCol
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'MenuColumn',
@@ -145,15 +146,14 @@ const handleInfo = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: MenuColumnRecords) => {
-  const permissionIds = rows.map((item: any) => item.id)
-  await deleteMenuColumn(permissionIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const permissionIds = rows.map((item: any) => item.id)
+    await deleteMenuColumn(permissionIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

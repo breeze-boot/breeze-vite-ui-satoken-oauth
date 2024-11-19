@@ -40,10 +40,12 @@ const init = async (procInstId: string) => {
  * @param procInstId
  */
 const getInfo = async (procInstId: string) => {
-  const response: any = await getBpmDefinitionXml(procInstId)
-  if (response.code === '0000') {
+  try {
+    const response: any = await getBpmDefinitionXml(procInstId)
     xmlStr.value = response.data.xmlStr
     xmlNodes.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 defineExpose({ init })

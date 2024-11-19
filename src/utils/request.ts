@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import pinia from '@/store'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from "element-plus";
 import JSONBigInt from 'json-bigint'
 import { StorageName } from '@/types/types'
 import router from '@/router'
@@ -55,41 +55,19 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config
 })
 
-const handleNetworkError = (error: any): void => {
-  let message: string = ''
-  if (error.response) {
-    switch (error.response.status) {
-      case 404:
-        message = error.response.data.message || i18n.global.t('axios.networkRequestNotExist')
-        break
-      case 503:
-        message = error.response.data.message || i18n.global.t('axios.serviceUnavailable')
-        break
-      case 400:
-        message = error.response.data.message || i18n.global.t('axios.requestParameterError')
-        break
-      case 405:
-        message = error.response.data.message || i18n.global.t('axios.preview')
-        break
-      case 403:
-        message = error.response.data.message || i18n.global.t('axios.insufficientPermissionsReLogin')
-        break
-      case 500:
-        message = error.response.data.message || i18n.global.t('axios.serverInternalError')
-        break
-      default:
-        message = i18n.global.t('axios.unknownError')
-    }
-  }
-  ElMessage.error(message)
-}
-
 /**
  * 重定向到登录页
  */
 const redirectToLogin = async (): Promise<void> => {
-  await userStore.logout()
-  await router.push({ path: '/login' }).then((): void => {})
+  ElMessageBox.confirm(i18n.global.t('common.sureToLogOutExitSystem'), i18n.global.t('common.tip'), {
+    confirmButtonText: i18n.global.t('common.confirm'),
+    cancelButtonText: i18n.global.t('common.cancel'),
+    type: 'warning',
+  }).then(async () => {
+    await userStore.logout()
+    await redirectToLogin()
+    await router.push({ path: '/login' }).then((): void => {})
+  })
 }
 
 /**
@@ -138,16 +116,6 @@ const handle401Error = async (error: any) => {
   }
   return await handleRefreshToken(error)
 }
-/**
- * 403处理逻辑
- *
- * @param error
- */
-const handle403Error = async (error: any) => {
-  const { message } = error.response.data
-  ElMessage.error(message)
-  return Promise.reject(error.response.data)
-}
 
 /**
  * 响应拦截器
@@ -155,10 +123,6 @@ const handle403Error = async (error: any) => {
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data } = response
-    // 响应数据为二进制流处理(Excel导出)
-    if (data instanceof ArrayBuffer) {
-      return response
-    }
     return data
   },
   async (error: any) => {
@@ -175,18 +139,35 @@ request.interceptors.response.use(
         }
       }
       // 返回其他请求头
-      switch (error.response.status) {
+      const { data, status } = error.response
+      let { message } = error.response.data
+      switch (status) {
         case 401:
           return handle401Error(error)
         case 403:
-          return handle403Error(error)
+          message = message || i18n.global.t('axios.insufficientPermissionsReLogin')
+          break
+        case 404:
+          message = message || i18n.global.t('axios.networkRequestNotExist')
+          break
+        case 503:
+          message = message || i18n.global.t('axios.serviceUnavailable')
+          break
+        case 400:
+          message = message || i18n.global.t('axios.requestParameterError')
+          break
+        case 405:
+          message = message || i18n.global.t('axios.preview')
+          break
+        case 500:
+          message = message || i18n.global.t('axios.serverInternalError')
+          break
         default:
-          handleNetworkError(error)
+          message = message || i18n.global.t('axios.unknownError')
+          break
       }
-      return Promise.reject(error)
-    } else {
-      ElMessage.error(i18n.global.t('axios.systemAbnormality'))
-      return Promise.reject()
+      data.message = message
+      return Promise.reject(data)
     }
   },
 )

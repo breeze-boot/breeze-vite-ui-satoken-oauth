@@ -147,7 +147,7 @@ const useUserStore = defineStore('User', {
       }
     },
     /**
-     * 获取权限信息
+     * 获取角色信息
      *
      * @param state
      */

@@ -6,12 +6,14 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { page, exportExcel, deleteMsgUser } from '@/api/system/messages/msgUser'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { MsgUserRecords } from '@/api/system/messages/msgUser/type.ts'
 import { MsgUserRecord, MsgUserQuery } from '@/api/system/messages/msgUser/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 
 defineOptions({
   name: 'MsgUser',
@@ -171,15 +173,14 @@ const handleInfo = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: MsgUserRecords) => {
-  const msgUserIds = rows.map((item: any) => item.id)
-  await deleteMsgUser(msgUserIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const msgUserIds = rows.map((item: any) => item.id)
+    await deleteMsgUser(msgUserIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

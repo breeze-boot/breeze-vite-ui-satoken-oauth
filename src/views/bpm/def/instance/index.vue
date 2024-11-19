@@ -5,7 +5,7 @@
 <!--  流程实例管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { page, exportExcel, deleteInstance, suspendedInstance } from '@/api/bpm/def/instance'
@@ -16,6 +16,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import BpmnViewDialog from '@/views/bpm/def/instance/component/BpmnViewDialog.vue'
 import BpmnPngViewDialog from '@/views/bpm/def/instance/component/BpmnPngViewDialog.vue'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Instance',
@@ -213,15 +214,14 @@ const handleViewBpmPng = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: InstanceRecords) => {
-  const instanceIds = rows.map((item: any) => item.id)
-  await deleteInstance(instanceIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const instanceIds = rows.map((item: any) => item.id)
+    await deleteInstance(instanceIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

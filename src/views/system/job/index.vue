@@ -10,7 +10,7 @@ import AddOrEdit from './components/JobAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import JLog from './components/JLog.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { JobRecords } from '@/api/system/job/type.ts'
 import { JobRecord, JobQuery } from '@/api/system/job/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
@@ -18,6 +18,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
 import JSONBigInt from 'json-bigint'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Job',
@@ -142,7 +143,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    width: 320,
+    width: 410,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -180,7 +181,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'info',
         icon: 'job_run_immediately',
         event: 'job_run_immediately',
-        permission: [],
+        permission: ['sys:job:run'],
         eventHandle: (row: JobRecord) => handleJobRunImmediately(row),
       },
       // 删除
@@ -258,15 +259,14 @@ const handleUpdate = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: JobRecords) => {
-  const jobIds = rows.map((item: any) => item.id)
-  await deleteJob(jobIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const jobIds = rows.map((item: any) => item.id)
+    await deleteJob(jobIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**
@@ -284,9 +284,11 @@ const handleJobViewLog = (row: JobRecord) => {
  * @param row 行数据
  */
 const handleJobRunImmediately = async (row: JobRecord) => {
-  const response: any = await runJobNow(JSONBigInt.parse(row.id))
-  if (response.code === '0000') {
-    ElMessage.success(t('job.common.jobRunSuccess'))
+  try {
+    await runJobNow(JSONBigInt.parse(row.id))
+    useMessage().success(t('job.common.jobRunSuccess'))
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 

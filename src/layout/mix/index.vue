@@ -6,7 +6,7 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
-import useTabsStore from '@/store/modules/tabs.ts'
+import useTabsStore from '@/store/modules/tabs'
 import useMenuStore from '@/store/modules/menu'
 import useSettingStore from '@/store/modules/setting'
 import TabBar from '@/layout/components/tabbar/index.vue'

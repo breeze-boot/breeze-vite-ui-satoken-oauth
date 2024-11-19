@@ -2,7 +2,7 @@
  * @author: gaoweixuan
  * @since: 2024-01-31
 -->
-<script setup lang="ts" name="navStyle">
+<script setup lang="ts" name="NavStyle">
 import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
 import { MenuLayout } from '@/types/types.ts'
@@ -105,11 +105,11 @@ const handleClickMenuStyle = (item: string) => {
 .layout-horizontal,
 .layout-mix,
 .layout-columns {
-  width: 70px;
+  width: 65px;
   height: 60px;
   border-radius: 5px;
   cursor: pointer;
-  margin: 10%;
+  margin: 1.5%;
 }
 
 .layout-vertical:hover,
@@ -194,6 +194,7 @@ const handleClickMenuStyle = (item: string) => {
     }
   }
 }
+
 .layout-columns {
   display: flex;
 

@@ -6,7 +6,6 @@
 <!-- 角色添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
   addRole,
   getRole,
@@ -20,6 +19,7 @@ import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { SelectData } from '@/types/types.ts'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RoleAddOrEdit',
@@ -104,9 +104,11 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getRole(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getRole(JSONBigInt.parse(id))
     Object.assign(roleDataForm.value, response.data)
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
@@ -114,9 +116,11 @@ const getInfo = async (id: number) => {
  * 初始权限下拉框数据
  */
 const initSelectRowPermissionType = async () => {
-  const response: any = await selectRowPermissionType()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectRowPermissionType()
     permissionOption.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
@@ -124,46 +128,31 @@ const initSelectRowPermissionType = async () => {
  * 初始化自定义行权限下拉框数据
  */
 const initSelectCustomizePermission = async () => {
-  const response: any = await selectCustomizePermission()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectCustomizePermission()
     customizeRowPermissionOption.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleRoleDataFormSubmit = () => {
-  roleDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = roleDataForm.value.id
-    if (id) {
-      await editRole(id, roleDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addRole(roleDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleRoleDataFormSubmit = async () => {
+  await roleDataFormRef.value.validate()
+  loading.value = true
+  const id = roleDataForm.value.id
+  try {
+    id ? await editRole(id, roleDataForm.value) : await addRole(roleDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

@@ -61,10 +61,8 @@ const init = async (msgId: number) => {
  * 表单提交
  */
 const handleSendMsgMethodFormSubmit = async () => {
-  sendMsgMethodFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
+  try {
+    await sendMsgMethodFormRef.value.validate
     if (!currentMsgId.value) return
     if (sendMsgMethodDataForm.value.method === 'ALL') {
       // 发送给全部请求
@@ -79,7 +77,9 @@ const handleSendMsgMethodFormSubmit = async () => {
       return
     }
     sendMsgRef.value.init(sendMsgMethodDataForm.value.method, currentMsgId.value)
-  })
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 defineExpose({

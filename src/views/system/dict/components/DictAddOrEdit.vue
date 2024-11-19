@@ -6,12 +6,12 @@
 <!-- 字典添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addDict, getDict, editDict } from '@/api/system/dict'
 import { DictForm } from '@/api/system/dict/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'DictAddOrEdit',
@@ -65,46 +65,31 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getDict(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getDict(JSONBigInt.parse(id))
     Object.assign(dictDataForm.value, response.data)
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDictDataFormSubmit = () => {
-  dictDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = dictDataForm.value.id
-    if (id) {
-      await editDict(id, dictDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addDict(dictDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleDictDataFormSubmit = async () => {
+  await dictDataFormRef.value.validate()
+  loading.value = true
+  const id = dictDataForm.value.id
+  try {
+    id ? await editDict(id, dictDataForm.value) : await addDict(dictDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

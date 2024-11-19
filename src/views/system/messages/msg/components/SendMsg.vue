@@ -13,8 +13,8 @@ import { listUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import useMsgStore from '@/store/modules/msg.ts'
 import useUserStore from '@/store/modules/user.ts'
-import { ElMessage } from 'element-plus'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'SendMsg',
@@ -69,11 +69,14 @@ const init = async (method: string, msgId: number) => {
 }
 
 const initDeptSelect = async () => {
-  const response: any = await selectDept()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectDept()
     deptOption.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
+
 const handleChangeDept = (deptId: number) => {
   initUserTransferData(deptId)
 }
@@ -82,59 +85,57 @@ const handleChangeDept = (deptId: number) => {
  * 表单提交
  */
 const handleSendMsgFormSubmit = async () => {
-  sendMsgFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    if (!currentMsgId.value) {
-      ElMessage.warning(t('msg.rules.msgId'))
-      return
-    }
+  await sendMsgFormRef.value.validate
+  if (!currentMsgId.value) {
+    useMessage().warning(t('msg.rules.msgId'))
+    return
+  }
 
-    if (currentMethod.value === 'USER') {
-      msgStore.stompClient?.publish({
-        destination: '/message/asyncSendMsgToUser',
-        headers: {
-          Authorization: userStore.accessToken,
-          username: userStore.userInfo.username,
-        },
-        body: JSON.stringify({
-          tenantId: userStore.userInfo.tenantId || '1',
-          msgId: currentMsgId.value,
-          userIds: sendMsgDataForm.value.userId,
-        }),
-      })
-    }
-    if (currentMethod.value === 'DEPT') {
-      msgStore.stompClient?.publish({
-        destination: '/message/syncSendMsgDeptUser',
-        headers: {
-          Authorization: userStore.accessToken,
-          username: userStore.userInfo.username,
-        },
-        body: JSON.stringify({
-          tenantId: userStore.userInfo.tenantId || '1',
-          msgId: currentMsgId.value,
-          deptId: sendMsgDataForm.value.deptId,
-        }),
-      })
-    }
-  })
+  if (currentMethod.value === 'USER') {
+    msgStore.stompClient?.publish({
+      destination: '/message/asyncSendMsgToUser',
+      headers: {
+        Authorization: userStore.accessToken,
+        username: userStore.userInfo.username,
+      },
+      body: JSON.stringify({
+        tenantId: userStore.userInfo.tenantId || '1',
+        msgId: currentMsgId.value,
+        userIds: sendMsgDataForm.value.userId,
+      }),
+    })
+  }
+  if (currentMethod.value === 'DEPT') {
+    msgStore.stompClient?.publish({
+      destination: '/message/syncSendMsgDeptUser',
+      headers: {
+        Authorization: userStore.accessToken,
+        username: userStore.userInfo.username,
+      },
+      body: JSON.stringify({
+        tenantId: userStore.userInfo.tenantId || '1',
+        msgId: currentMsgId.value,
+        deptId: sendMsgDataForm.value.deptId,
+      }),
+    })
+  }
 }
 
 const initUserTransferData = async (deptId?: number) => {
-  const response: any = await listUser(deptId)
-  const data: Option[] = []
-  if (response.code === '0000') {
-    response.data.forEach((user: UserRecord) => {
+  try {
+    const response: any = await listUser(deptId)
+    const data: Option[] = []
+    response.data?.forEach((user: UserRecord) => {
       data.push({
         label: user.username as string,
         key: user.id as number,
         initial: user.userCode as string,
       })
     })
+    userList.value = data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
-  userList.value = data
 }
 
 const filterMethod = (query: string, item: Option) => {

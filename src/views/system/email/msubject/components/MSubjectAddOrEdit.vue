@@ -6,12 +6,12 @@
 <!-- 邮箱主题添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addMSubject, getMSubject, editMSubject } from '@/api/system/email/msubject'
 import type { MSubjectForm } from '@/api/system/email/msubject/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'MSubjectAddOrEdit',
@@ -64,46 +64,31 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getMSubject(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getMSubject(JSONBigInt.parse(id))
     Object.assign(mSubjectDataForm.value, response.data)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDataFormSubmit = () => {
-  mSubjectDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = mSubjectDataForm.value.id
-    if (id) {
-      await editMSubject(id, mSubjectDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addMSubject(mSubjectDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleDataFormSubmit = async () => {
+  await mSubjectDataFormRef.value.validate()
+  loading.value = true
+  const id = mSubjectDataForm.value.id
+  try {
+    id ? await editMSubject(id, mSubjectDataForm.value) : await addMSubject(mSubjectDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

@@ -9,7 +9,7 @@ import { reactive, ref } from 'vue'
 import AddOrEdit from './components/FileAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { FileRecords } from '@/api/system/file/type.ts'
 import { FileRecord, FileQuery } from '@/api/system/file/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
@@ -18,6 +18,7 @@ import { useI18n } from 'vue-i18n'
 import { download } from '@/api/common/comon.ts'
 import JSONBigInt from 'json-bigint'
 import { saveFile } from '@/utils/download.ts'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'File',
@@ -237,15 +238,13 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: FileRecords) => {
-  const fileIds = rows.map((item: any) => item.id)
-  await deleteFile(fileIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const fileIds = rows.map((item: any) => item.id)
+    await deleteFile(fileIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

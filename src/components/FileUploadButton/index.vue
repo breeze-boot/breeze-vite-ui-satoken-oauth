@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { UploadRawFile, UploadRequestOptions, UploadUserFile } from '@/components/Upload/types/types.ts'
 import { FileParam } from '@/api/system/file/type.ts'
 import { uploadMinioS3 } from '@/api/system/file'
 import { useI18n } from 'vue-i18n'
 import SvgButton from '@/components/SvgButton/index.vue'
+import { useMessage } from '@/hooks/message'
 
 const { t } = useI18n()
 const props = defineProps({
@@ -56,11 +57,11 @@ const fileList = computed({
  * @param options
  */
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
-  const fileParam: FileParam = {
-    bizType: props.bizType,
-  } as FileParam
-  const response: any = await uploadMinioS3(options.file, fileParam)
-  if (response.code === '0000') {
+  try {
+    const fileParam: FileParam = {
+      bizType: props.bizType,
+    } as FileParam
+    const response: any = await uploadMinioS3(options.file, fileParam)
     const { path, objectName, fileFormat, fileId, name, url } = response.data
     currentFileList.value.splice(
       currentFileList.value.findIndex((file) => file.uid == (options.file as any).uid),
@@ -75,6 +76,8 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
       } as UploadUserFile,
     )
     fileList.value = currentFileList.value
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 const handleRemove = (file: File, uploadFiles: UploadUserFile[]) => {
@@ -86,7 +89,7 @@ const handlePreview = (uploadFile: UploadUserFile) => {
 }
 
 const handleExceed = () => {
-  ElMessage.warning(t('common.rules.fileLimit') + ' ' + props.fileLimit)
+  useMessage().warning(t('common.rules.fileLimit') + ' ' + props.fileLimit)
 }
 
 const beforeRemove = (uploadFile: UploadUserFile) => {
@@ -97,10 +100,7 @@ const beforeRemove = (uploadFile: UploadUserFile) => {
   })
     .then(() => true)
     .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: t('common.cancel'),
-      })
+      useMessage().info(t('common.cancel'))
     })
 }
 
@@ -111,10 +111,10 @@ const beforeRemove = (uploadFile: UploadUserFile) => {
  */
 const beforeFileUpload = (rawFile: UploadRawFile) => {
   if (!props.fileType.includes(rawFile.type)) {
-    ElMessage.error(t('common.rules.fileFormat'), props.fileType?.join(','))
+    useMessage().error(t('common.rules.fileFormat') + props.fileType?.join(','))
     return false
   } else if (rawFile.size / 1024 / 1024 > props.fileSize) {
-    ElMessage.error(t('common.rules.fileSize'))
+    useMessage().error(t('common.rules.fileSize'))
     return false
   }
   return true

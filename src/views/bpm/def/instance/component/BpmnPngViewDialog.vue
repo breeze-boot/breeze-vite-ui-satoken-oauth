@@ -38,9 +38,11 @@ const init = async (procInstId: string) => {
  * @param procInstId
  */
 const getInfo = async (procInstId: string) => {
-  const response: any = await getBpmDefinitionPng(procInstId)
-  if (response.code === '0000') {
+  try {
+    const response: any = await getBpmDefinitionPng(procInstId)
     xmlSrc.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 defineExpose({ init })

@@ -5,7 +5,7 @@
 <!-- 邮箱管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import { page, exportExcel, deleteEmailConfig, open } from '@/api/system/email/emailConfig'
 import type { EmailConfigRecords, EmailConfigRecord, EmailConfigQuery } from '@/api/system/email/emailConfig/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
@@ -14,6 +14,7 @@ import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'EmailConfig',
@@ -233,15 +234,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: EmailConfigRecords) => {
-  const emailIds = rows.map((item: any) => item.id)
-  await deleteEmailConfig(emailIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const emailIds = rows.map((item: any) => item.id)
+    await deleteEmailConfig(emailIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

@@ -14,6 +14,7 @@ import { useRoute } from 'vue-router'
 import { ColumnCacheData } from '@/types/types.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'BTable',
@@ -358,7 +359,7 @@ const handleParams = (order?: ColumnSort) => {
 /**
  * 获取数据
  */
-const getList = (order?: ColumnSort) => {
+const getList = async (order?: ColumnSort) => {
   singleSelectValue.value = undefined
   currentRows.value = []
 
@@ -374,24 +375,23 @@ const getList = (order?: ColumnSort) => {
 
   if (!props.listApi) return
 
-  tableInfo.value.loading = true
-  props.listApi(handleParams(order)).then((response: any) => {
-    if (response.code === '0000') {
-      tableData.value.rows = []
-      if (props.pager) {
-        tableData.value.rows = response.data.records
-        pagerQuery.value.total = Number(response.data.total)
-      } else {
-        tableData.value.rows = response.data
-      }
-
-      props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
+  try {
+    tableInfo.value.loading = true
+    const response: any = await props.listApi(handleParams(order))
+    tableData.value.rows = []
+    if (props.pager) {
+      tableData.value.rows = response?.data.records
+      pagerQuery.value.total = Number(response?.data.total)
     } else {
-      ElMessage.warning(response.message)
+      tableData.value.rows = response?.data
     }
+    props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
+  } catch (err: any) {
+    useMessage().warning(err.message)
+  } finally {
     handleOnEnd()
     tableInfo.value.loading = false
-  })
+  }
 }
 
 /**
@@ -510,11 +510,11 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
   switch (btn.event) {
     case 'delete' || 'remove':
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
+        btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning('未配置事件')
       })
       break
     default:
-      btn.eventHandle ? btn.eventHandle(row, index) : ElMessage.warning('未配置事件')
+      btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning('未配置事件')
       break
   }
 }
@@ -530,23 +530,23 @@ const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
   switch (btn.event) {
     case 'delete' || 'remove':
       if (!rows) {
-        ElMessage.warning(t('common.delTip'))
+        useMessage().warning(t('common.delTip'))
         return
       }
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
+        btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
       })
       break
     case 'edit':
       handleCheckBeforeClickBtn().then(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
+        btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
       })
       break
     case 'export':
       handleExport(handleParams())
       break
     default:
-      btn.eventHandle ? btn.eventHandle(rows, index) : ElMessage.warning(t('common.noHandle'))
+      btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
       break
   }
 }
@@ -579,7 +579,7 @@ const confirmBox = (func: any) => {
 const handleCheckBeforeClickBtn = () => {
   return new Promise((resolve, reject) => {
     if (!currentRows.value || currentRows.value.length === 0) {
-      ElMessage.warning(t('common.selectLineItem'))
+      useMessage().warning(t('common.selectLineItem'))
       reject()
       return
     }
@@ -594,7 +594,7 @@ const handleCheckBeforeClickBtn = () => {
  */
 const handleExport = (query: any) => {
   if (!props.exportApi) {
-    ElMessage.warning('导出数据错误')
+    useMessage().warning('导出接口未配置')
     return
   }
   console.debug(query)
@@ -832,6 +832,7 @@ const handleSliderChange = (row: any) => {
           type="selection"
           width="60"
         />
+
         <el-table-column
           v-else-if="props.select === 'single'"
           key="singleSelect"
@@ -852,6 +853,7 @@ const handleSliderChange = (row: any) => {
           type="index"
           :width="tableField.length === 0 ? '' : 66"
         />
+
         <el-table-column
           v-for="(item, index) in tableField"
           class-name="input-column"
@@ -883,6 +885,11 @@ const handleSliderChange = (row: any) => {
                 :fixed="_item.fixed"
               >
                 <template #default="_">
+                  <!-- slot自定义列 -->
+                  <template v-if="_item.type === 'slot'">
+                    <slot :name="`col-${_item.prop}`" :row="scope.row" :index="scope.$index" />
+                  </template>
+
                   <table-item
                     @reload-data-list="getList"
                     :scope="{
@@ -897,6 +904,12 @@ const handleSliderChange = (row: any) => {
                 </template>
               </el-table-column>
             </template>
+
+            <!-- slot自定义列 -->
+            <template v-else-if="item.type === 'slot'">
+              <slot :name="`col-${item.prop}`" :row="scope.row" :index="scope.$index" :key="index" />
+            </template>
+
             <table-item @reload-data-list="getList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
           </template>
         </el-table-column>
@@ -968,14 +981,5 @@ const handleSliderChange = (row: any) => {
 
 .table-pagination {
   padding: 10px;
-}
-
-.footer {
-  display: flex;
-  justify-content: flex-end;
-  align-content: center;
-  width: 100%;
-  padding: 30px;
-  height: 20px;
 }
 </style>

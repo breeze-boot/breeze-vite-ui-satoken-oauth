@@ -9,7 +9,7 @@ import { list, exportExcel, deleteDept } from '@/api/auth/dept'
 import BTreeTable from '@/components/Table/BTreeTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/DeptAddOrEdit.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { DeptRecords } from '@/api/auth/dept/type.ts'
 import { DeptRecord, DeptQuery } from '@/api/auth/dept/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
@@ -17,6 +17,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { DIALOG_FLAG } from '@/utils/common.ts'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Dept',
@@ -187,14 +188,13 @@ const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
  * @param row 行数据
  */
 const handleDelete = async (row: DeptRecord) => {
-  await deleteDept(JSONBigInt.parse(row.id))
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    await deleteDept(JSONBigInt.parse(row.id))
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

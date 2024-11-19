@@ -16,8 +16,8 @@ import JSONBigInt from 'json-bigint'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { userSetRole } from '@/api/auth/user'
 import { UserSetRoleForm, UserRoleQuery } from '@/api/auth/user/type.ts'
-import { ElMessage } from 'element-plus'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RoleSettings',
@@ -103,10 +103,12 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await listUserRoles(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await listUserRoles(JSONBigInt.parse(id))
     tableInfo.checkedRows = response.data
     tableInfo.refresh = Math.random()
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -125,16 +127,14 @@ const handleSelectionChange = (rows: RoleRecords) => {
 const handleUserRoleSettingsDataFormSubmit = async () => {
   loading.value = true
   userSetRoleDataForm.value.roleIds = currentRows.map((item: any) => item.id)
-  const response: any = await userSetRole(userSetRoleDataForm.value)
-  if (response.code === '0000') {
-    ElMessage.success({
-      message: t('common.success'),
-      duration: 1000,
-      onClose: () => {
-        visible.value = false
-        loading.value = false
-      },
-    })
+  try {
+    await userSetRole(userSetRoleDataForm.value)
+    useMessage().success(`${t('common.success')}`)
+  } catch (e: any) {
+    useMessage().error(`${t('common.fail')}`)
+  } finally {
+    visible.value = false
+    loading.value = false
   }
 }
 

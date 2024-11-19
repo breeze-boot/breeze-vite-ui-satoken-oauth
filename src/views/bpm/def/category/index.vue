@@ -5,7 +5,7 @@
 <!-- 分类管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { page, exportExcel, deleteCategory } from '@/api/bpm/def/category'
@@ -15,6 +15,7 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/CategoryAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'FlowCategory',
@@ -169,15 +170,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: CategoryRecords) => {
-  const categoryIds = rows.map((item: any) => item.id)
-  await deleteCategory(categoryIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const categoryIds = rows.map((item: any) => item.id)
+    await deleteCategory(categoryIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

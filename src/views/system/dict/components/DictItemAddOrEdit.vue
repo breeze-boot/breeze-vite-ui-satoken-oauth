@@ -6,12 +6,12 @@
 <!-- 字典项添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemForm } from '@/api/system/dictItem/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'DictItemAddOrEdit',
@@ -83,47 +83,31 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getDictItem(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getDictItem(JSONBigInt.parse(id))
     Object.assign(dictItemDataForm.value, response.data)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDictItemDataFormSubmit = () => {
-  dictItemDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    dictItemDataForm.value.value = dictItemDataForm.value.value.trim()
-    const id = dictItemDataForm.value.id
-    if (id) {
-      await editDictItem(id, dictItemDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addDictItem(dictItemDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleDictItemDataFormSubmit = async () => {
+  await dictItemDataFormRef.value.validate()
+  loading.value = true
+  const id = dictItemDataForm.value.id
+  try {
+    id ? await editDictItem(id, dictItemDataForm.value) : await addDictItem(dictItemDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

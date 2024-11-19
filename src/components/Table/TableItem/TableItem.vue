@@ -13,6 +13,7 @@ import VueJsoneditor from 'vue3-ts-jsoneditor'
 import { FormItemRule } from 'element-plus/es/components/form'
 import { Arrayable } from 'element-plus/es/utils'
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'TableItem',
@@ -67,7 +68,7 @@ const inputBlur = (item: Field, row: any) => {
     tableField.value.formOptions?.handleBlur ? tableField.value.formOptions?.handleBlur(scope.value.row) : () => {}
     return
   }
-  ElMessage.warning('请输入正确的值')
+  useMessage().warning('请输入正确的值')
 }
 
 const switchLoading = ref(false)
@@ -91,15 +92,14 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
     const _data: any = {}
     _data[switchOption.pk] = row[switchOption.pk]
     if (switchOption?.status) _data[switchOption.status] = row[switchOption.status]
-    const response: any = await switchOption.api(_data)
-    switchLoading.value = false
-    ElMessage.success({
-      message: response.message,
-      duration: 1000,
-      onClose: () => {
-        $emit('reloadDataList')
-      },
-    })
+    try {
+      const response: any = await switchOption.api(_data)
+      switchLoading.value = false
+      useMessage().success(response.message)
+      $emit('reloadDataList')
+    } catch (err: any) {
+      useMessage().error(err.message)
+    }
   }
 }
 
@@ -196,13 +196,8 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
 </script>
 
 <template>
-  <!-- slot自定义列 -->
-  <template v-if="tableField.type === 'slot'">
-    <slot :name="`col-${tableField.prop}`" :row="scope.row" />
-  </template>
-
   <!-- 长文本 -->
-  <template v-else-if="tableField.type === 'longText'">
+  <template v-if="tableField.type === 'longText'">
     <el-tooltip effect="light" placement="top">
       <template #content>
         <el-input

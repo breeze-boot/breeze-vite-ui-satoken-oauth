@@ -6,7 +6,6 @@
 <!-- 菜单添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { addMenu, editMenu, getMenu, selectMenu } from '@/api/auth/menu'
 import { MenuForm } from '@/api/auth/menu/type.ts'
 import { useI18n } from 'vue-i18n'
@@ -17,6 +16,7 @@ import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
 import JSONBigInt from 'json-bigint'
 import { selectPlatform } from '@/api/auth/platform'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'MenuAddOrEdit',
@@ -117,9 +117,8 @@ const init = async (id: number, flag: DIALOG_FLAG) => {
  * 初始化菜单下拉框数据
  */
 const initSelectMenu = async (id: number | undefined) => {
-  const response: any = await selectMenu(JSONBigInt.parse(id || 0))
-  // 修改上级菜单不能为当前节点
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectMenu(JSONBigInt.parse(id || 0))
     menuOptions.value = [
       {
         value: ROOT.value,
@@ -127,6 +126,8 @@ const initSelectMenu = async (id: number | undefined) => {
         children: response.data,
       },
     ]
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
@@ -134,9 +135,11 @@ const initSelectMenu = async (id: number | undefined) => {
  * 初始化平台下拉框数据
  */
 const initSelectPlatform = async () => {
-  const response: any = await selectPlatform()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectPlatform()
     platformOptions.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
@@ -146,46 +149,31 @@ const initSelectPlatform = async () => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getMenu(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getMenu(JSONBigInt.parse(id))
     Object.assign(menuDataForm.value, response.data)
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleMenuDataFormSubmit = () => {
-  menuDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = menuDataForm.value.id
-    if (id) {
-      await editMenu(id, menuDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addMenu(menuDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+const handleMenuDataFormSubmit = async () => {
+  await menuDataFormRef.value.validate()
+  loading.value = true
+  const id = menuDataForm.value.id
+  try {
+    id ? await editMenu(id, menuDataForm.value) : await addMenu(menuDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

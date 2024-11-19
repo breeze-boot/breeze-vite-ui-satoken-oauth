@@ -82,7 +82,7 @@ export interface Field {
   hidden?: boolean
   input?: InputOption
   key?: number
-  label: string
+  label?: string
   linkInfo?: LinkInfo | LinkInfo2
   minWidth?: string
   prop: string
@@ -94,6 +94,7 @@ export interface Field {
   type?:
     | string
     | 'tag'
+    | 'slot'
     | 'customRowLink'
     | 'rowLink'
     | 'image'

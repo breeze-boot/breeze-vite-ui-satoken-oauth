@@ -8,7 +8,7 @@ import { PageQuery, ResponseData } from '@/types/types.ts'
  * 用户列表类型声明
  */
 export interface UserRecord {
-  id?: number
+  id: number
   avatar?: string
   avatarFileId?: string
   avatarName?: string

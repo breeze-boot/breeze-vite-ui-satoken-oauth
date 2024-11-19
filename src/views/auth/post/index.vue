@@ -9,12 +9,13 @@ import { page, exportExcel, deletePost } from '@/api/auth/post'
 import AddOrEdit from './components/PostAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { PostRecords } from '@/api/auth/post/type.ts'
 import { PostRecord, PostQuery } from '@/api/auth/post/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Post',
@@ -180,15 +181,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: PostRecords) => {
-  const postIds = rows.map((item: any) => item.id)
-  await deletePost(postIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const postIds = rows.map((item: any) => item.id)
+    await deletePost(postIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

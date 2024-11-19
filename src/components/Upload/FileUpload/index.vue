@@ -9,6 +9,7 @@ import { UploadRawFile, UploadRequestOptions, UploadUserFile } from '@/component
 import { FileParam } from '@/api/system/file/type.ts'
 import { uploadMinioS3 } from '@/api/system/file'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'FileUpload',
@@ -64,11 +65,11 @@ const fileList = computed({
  * @param options
  */
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
-  const fileParam: FileParam = {
-    bizType: props.bizType,
-  } as FileParam
-  const response: any = await uploadMinioS3(options.file, fileParam)
-  if (response.code === '0000') {
+  try {
+    const fileParam: FileParam = {
+      bizType: props.bizType,
+    } as FileParam
+    const response: any = await uploadMinioS3(options.file, fileParam)
     const { path, objectName, fileFormat, fileId, name, url } = response.data
     currentFileList.value.splice(
       currentFileList.value.findIndex((file) => file.uid == (options.file as any).uid),
@@ -83,6 +84,8 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
       } as UploadUserFile,
     )
     fileList.value = currentFileList.value
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -91,7 +94,7 @@ const handlePreview = (uploadFile: UploadUserFile) => {
 }
 
 const handleExceed = () => {
-  ElMessage.warning(t('common.rules.fileLimit') + ' ' + props.fileLimit)
+  useMessage().warning(t('common.rules.fileLimit') + ' ' + props.fileLimit)
 }
 
 const beforeRemove = (uploadFile: UploadUserFile) => {

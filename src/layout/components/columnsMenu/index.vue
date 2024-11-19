@@ -3,11 +3,11 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import SvgIcon from '@/components/SvgIcon/index.vue'
 import { storeToRefs } from 'pinia'
+import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
-import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import { MENU_TYPE } from '@/utils/common.ts'
 

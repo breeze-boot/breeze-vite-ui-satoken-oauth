@@ -5,8 +5,7 @@
 
 <!-- 用户添加修改弹出框 -->
 <script lang="ts" setup>
-import { ref, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
 import { addUser, getUser, editUser, selectDept, checkUsername, selectRole, selectPost } from '@/api/auth/user'
 import { UserForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
@@ -15,6 +14,7 @@ import JSONBigInt from 'json-bigint'
 import useFormValidation from '@/hooks/formValidation'
 import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'UserAddOrEdit',
@@ -174,9 +174,11 @@ const init = async (id: number) => {
  * 初始化岗位下拉框数据
  */
 const initSelectPost = async () => {
-  const response: any = await selectPost()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectPost()
     postOption.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -184,9 +186,11 @@ const initSelectPost = async () => {
  * 初始化角色下拉框数据
  */
 const initSelectRole = async () => {
-  const response: any = await selectRole()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectRole()
     roleOption.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -194,9 +198,11 @@ const initSelectRole = async () => {
  * 初始化部门下拉框数据
  */
 const initSelectDept = async () => {
-  const response: any = await selectDept()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectDept()
     deptOption.value = response.data
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -206,51 +212,36 @@ const initSelectDept = async () => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const response: any = await getUser(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getUser(JSONBigInt.parse(id))
     Object.assign(userDataForm.value, response.data)
     userDataForm.value.password = ''
     userDataForm.value.confirmPassword = ''
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleUserDataFormSubmit = () => {
+const handleUserDataFormSubmit = async () => {
   let { isNANValue } = useFormValidation()
   isNANValue(userDataForm.value)
 
-  userDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
-    loading.value = true
-    const id = userDataForm.value.id
-    if (id) {
-      await editUser(id, userDataForm.value)
-      ElMessage.success({
-        message: `${t('common.modify') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    } else {
-      await addUser(userDataForm.value)
-      ElMessage.success({
-        message: `${t('common.save') + t('common.success')}`,
-        duration: 1000,
-        onClose: () => {
-          visible.value = false
-          loading.value = false
-          $emit('reloadDataList')
-        },
-      })
-    }
-  })
+  await userDataFormRef.value.validate()
+  loading.value = true
+  const id = userDataForm.value.id
+  try {
+    id ? await editUser(id, userDataForm.value) : await addUser(userDataForm.value)
+    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

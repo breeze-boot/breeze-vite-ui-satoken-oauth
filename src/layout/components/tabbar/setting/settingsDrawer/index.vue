@@ -2,13 +2,13 @@
  * @author: gaoweixuan
  * @since: 2024-01-31
 -->
-<script setup lang="ts" name="settingsDrawer">
+<script setup lang="ts" name="SettingsDrawer">
 import { onMounted, ref, watch } from 'vue'
-import useSettingStore from '@/store/modules/setting.ts'
-import { Setting } from '@element-plus/icons-vue'
-import navStyle from './navStyle/index.vue'
 import { storeToRefs } from 'pinia'
+import useSettingStore from '@/store/modules/setting.ts'
 import { THEME } from '@/utils/common.ts'
+import { Setting } from '@element-plus/icons-vue'
+import navStyle from '@/layout/components/tabbar/setting/navStyle/index.vue'
 
 let settingStore = useSettingStore()
 let { theme } = storeToRefs(settingStore)
@@ -84,7 +84,7 @@ const changeThemeColor = () => {
 <template>
   <el-drawer v-model="drawer" :show-close="false" size="350px" :direction="direction">
     <el-form>
-      <el-divider>主题颜色</el-divider>
+      <el-divider>主题色调</el-divider>
       <el-form-item label="主题颜色">
         <el-color-picker
           v-model="themeColorPicker"
@@ -93,6 +93,7 @@ const changeThemeColor = () => {
           @change="changeThemeColor"
         />
       </el-form-item>
+
       <el-form-item label="暗黑模式">
         <el-switch
           v-model="darkSwitch"

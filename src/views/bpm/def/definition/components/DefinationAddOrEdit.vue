@@ -12,8 +12,9 @@ import { useI18n } from 'vue-i18n'
 import type { BpmDefinitionForm } from '@/api/bpm/def/definition/type.ts'
 import { SelectData } from '@/types/types.ts'
 import { selectCategory } from '@/api/bpm/def/category'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'DefinitionAddOrEdit',
@@ -118,10 +119,7 @@ const onSaveDesigner = async (xml: string, procDefKey: string, procDefName: stri
       definitionDataForm.value.procDefName = procDefName
     })
     .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: t('common.cancel'),
-      })
+      useMessage().info(`${t('common.cancel')}`)
     })
 }
 
@@ -129,31 +127,29 @@ const onSaveDesigner = async (xml: string, procDefKey: string, procDefName: stri
  * 初始化流程分类下拉框
  */
 const initCategory = async () => {
-  const response: any = await selectCategory()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectCategory()
     categoryOption.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 表单提交
  */
-const handleDataFormSubmit = () => {
-  definitionDataFormRef.value.validate(async (valid: boolean) => {
-    if (!valid) {
-      return false
-    }
+const handleDataFormSubmit = async () => {
+  await definitionDataFormRef.value.validate()
+  try {
     await deployDefinition(definitionDataForm.value)
-    ElMessage.success({
-      message: t('common.success'),
-      duration: 1000,
-      onClose: () => {
-        visible.value = false
-        loading.value = false
-        $emit('reloadDataList')
-      },
-    })
-  })
+    useMessage().success(`${t('common.success')}`)
+    $emit('reloadDataList')
+  } catch (err: any) {
+    useMessage().error(err.message)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 defineExpose({

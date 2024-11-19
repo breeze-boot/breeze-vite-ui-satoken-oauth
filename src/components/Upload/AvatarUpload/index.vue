@@ -9,6 +9,8 @@ import { ElMessage } from 'element-plus'
 import { uploadMinioS3 } from '@/api/system/file'
 import { FileParam } from '@/api/system/file/type.ts'
 import { UploadRawFile, UploadRequestOptions } from '@/components/Upload/types/types.ts'
+import SvgIcon from '@/components/SvgIcon/index.vue'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'AvatarUpload',
@@ -51,12 +53,14 @@ const imageUrl = computed({
  * @param options
  */
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
-  const fileParam: FileParam = {
-    bizType: 'system',
-  } as FileParam
-  const response: any = await uploadMinioS3(options.file, fileParam)
-  if (response.code === '0000') {
+  try {
+    const fileParam: FileParam = {
+      bizType: 'system',
+    } as FileParam
+    const response: any = await uploadMinioS3(options.file, fileParam)
     imageUrl.value = response.data.url
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 

@@ -18,16 +18,20 @@ const useColumnStore = defineStore('Column', {
   },
   actions: {
     async getRolesMenuColumns() {
-      const response: any = await getRolesMenuColumns()
-      if (response.code === '0000') {
+      try {
+        const response: any = await getRolesMenuColumns()
         this.columns = response.data as ColumnCacheData[]
         SET_STORAGE(StorageName.Columns, this.columns)
+      } catch (err: any) {
+        useMessage().error(err.message)
       }
     },
     async setColumnByMenu(data: ColumnCacheData) {
-      const response: any = await saveMenuColumn(data)
-      if (response.code === '0000') {
+      try {
+        await saveMenuColumn(data)
         await this.getRolesMenuColumns()
+      } catch (err: any) {
+        useMessage().error(err.message)
       }
     },
     async getColumnByMenu(menu: string) {

@@ -5,18 +5,18 @@
 <!-- 角色管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, exportExcel, deleteRole } from '@/api/auth/role'
+import { deleteRole, exportExcel, page } from '@/api/auth/role'
 import AddOrEdit from './components/RoleAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import RoleMenuPermissionList from './components/RoleMenuPermissionList.vue'
 import RoleMenuColumnPermissionList from './components/RoleMenuColumnPermissionList.vue'
-import { ElForm, ElMessage } from 'element-plus'
-import type { RoleRecords } from '@/api/auth/role/type.ts'
-import { RoleRecord, RoleQuery } from '@/api/auth/role/type.ts'
+import { ElForm } from 'element-plus'
+import { RoleQuery, RoleRecord, RoleRecords } from '@/api/auth/role/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Role',
@@ -239,15 +239,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: RoleRecords) => {
-  const roleIds = rows.map((item: any) => item.id)
-  await deleteRole(roleIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const roleIds = rows.map((item: any) => item.id)
+    await deleteRole(roleIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

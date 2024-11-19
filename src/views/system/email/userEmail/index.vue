@@ -13,6 +13,8 @@ import { EmailSetUserQuery } from '@/api/system/email/msubject/type.ts'
 import { listToEmail, listCcEmail } from '@/api/system/email/msubject'
 import JSONBigInt from 'json-bigint'
 import { useRoute } from 'vue-router'
+import { convertOptionIdName } from 'echarts/types/src/util/model'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'UserEmail',
@@ -84,16 +86,20 @@ onMounted(async () => {
  */
 const getInfo = async (id: number, column: string) => {
   if (column === 'toEmail') {
-    const response: any = await listToEmail(id)
-    if (response.code === '0000') {
+    try {
+      const response: any = await listToEmail(id)
       tableInfo.rows = response.data
       tableInfo.refresh = Math.random()
+    } catch (err: any) {
+      useMessage().error(err.message)
     }
   } else if (column === 'ccEmail') {
-    const response: any = await listCcEmail(id)
-    if (response.code === '0000') {
+    try {
+      const response: any = await listCcEmail(id)
       tableInfo.rows = response.data
       tableInfo.refresh = Math.random()
+    } catch (err: any) {
+      useMessage().error(err.message)
     }
   }
 }

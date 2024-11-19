@@ -9,12 +9,13 @@ import { page, exportExcel, deleteTenant } from '@/api/auth/tenant'
 import AddOrEdit from './components/TenantAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { TenantRecords } from '@/api/auth/tenant/type.ts'
 import { TenantRecord, TenantQuery } from '@/api/auth/tenant/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Tenant',
@@ -43,7 +44,7 @@ const tableInfo = reactive<TableInfo>({
   refresh: 1,
   tableIndex: true,
   // 选择框类型
-  select: 'single',
+  select: 'multi',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -121,7 +122,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['auth:tenant:delete'],
-        eventHandle: (row: TenantRecord) => handleInfo([row] as TenantRecords),
+        eventHandle: (row: TenantRecord) => handleDelete([row] as TenantRecords),
       },
     ],
   },
@@ -180,15 +181,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: TenantRecords) => {
-  const tenantIds = rows.map((item: any) => item.id)
-  await deleteTenant(tenantIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const tenantIds = rows.map((item: any) => item.id)
+    await deleteTenant(tenantIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

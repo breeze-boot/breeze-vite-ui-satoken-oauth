@@ -21,6 +21,6 @@ onMounted(() => {
 })
 </script>
 
-<template>welcome</template>
+<template>{{}}</template>
 
 <style lang="scss" scoped></style>

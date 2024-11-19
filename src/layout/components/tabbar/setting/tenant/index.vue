@@ -9,6 +9,7 @@ import { storeToRefs } from 'pinia'
 import useSettingStore from '@/store/modules/setting.ts'
 import useUserStore from '@/store/modules/user.ts'
 import { SelectData } from '@/types/types.ts'
+import { useMessage } from '@/hooks/message'
 
 const tenantIdOption = ref<SelectData[]>()
 let { tenantId } = storeToRefs(useUserStore())
@@ -23,10 +24,12 @@ onMounted(async () => {
  * 初始化租户下拉框
  */
 const initTenant = async () => {
-  const response: any = await selectTenant()
-  if (response.code === '0000') {
+  try {
+    const response: any = await selectTenant()
     tenantIdOption.value = response.data
     _tenantId.value = tenantId.value.toString()
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 

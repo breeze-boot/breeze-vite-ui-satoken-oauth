@@ -5,19 +5,20 @@
 <!-- 日志管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, deleteLog } from '@/api/system/log'
+import { page, deleteLog } from '@/api/system/log/loginLog/index.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { ElForm, ElMessage } from 'element-plus'
-import type { LogRecords } from '@/api/system/log/type.ts'
-import { LogRecord, LogQuery } from '@/api/system/log/type.ts'
+import { ElForm } from 'element-plus'
+import type { LogRecords } from '@/api/system/log/loginLog/type.ts'
+import { LogRecord, LogQuery } from '@/api/system/log/loginLog/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
-  name: 'Log',
+  name: 'LoginLog',
   inheritAttrs: false,
 })
 
@@ -47,7 +48,7 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'danger',
       label: t('common.delete'),
-      permission: ['sys:log:delete'],
+      permission: ['sys:loginLog:delete'],
       event: 'delete',
       icon: 'delete',
       eventHandle: (rows: LogRecords) => handleDelete(rows),
@@ -109,7 +110,8 @@ const tableInfo = reactive<TableInfo>({
       label: t('log.fields.ip'),
     },
     {
-      prop: 'createBy',
+      prop: '',
+      type: 'slot',
       showOverflowTooltip: true,
       label: t('log.fields.createBy'),
     },
@@ -126,7 +128,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['sys:log:info'],
+        permission: ['sys:loginLog:info'],
         eventHandle: (rows: LogRecords) => handleInfo(rows),
       },
       // 删除
@@ -135,7 +137,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'danger',
         icon: 'delete',
         event: 'delete',
-        permission: ['sys:log:delete'],
+        permission: ['sys:loginLog:delete'],
         eventHandle: (row: LogRecord) => handleDelete([row] as LogRecords),
       },
     ],
@@ -179,15 +181,14 @@ const handleInfo = (row: any) => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: LogRecords) => {
-  const logIds = rows.map((item: any) => item.id)
-  await deleteLog(logIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const logIds = rows.map((item: any) => item.id)
+    await deleteLog(logIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**
@@ -300,5 +301,9 @@ const handleSelectionChange = (rows: LogRecords) => {
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"
-  />
+  >
+    <template #col-slot="{ row }">
+      <span>{{ row?.createBy }}</span>
+    </template>
+  </b-table>
 </template>

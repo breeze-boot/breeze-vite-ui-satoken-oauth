@@ -9,12 +9,13 @@ import { page, exportExcel, deletePermission } from '@/api/auth/permission/rowPe
 import AddOrEdit from './components/RowPermissionAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { RowPermissionRecords } from '@/api/auth/permission/rowPermission/type.ts'
 import { RowPermissionRecord, RowPermissionQuery } from '@/api/auth/permission/rowPermission/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RowPermission',
@@ -171,15 +172,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: RowPermissionRecords) => {
-  const permissionIds = rows.map((item: any) => item.id)
-  await deletePermission(permissionIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const permissionIds = rows.map((item: any) => item.id)
+    await deletePermission(permissionIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

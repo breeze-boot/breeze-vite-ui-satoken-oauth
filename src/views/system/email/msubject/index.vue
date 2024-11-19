@@ -5,7 +5,7 @@
 <!-- 邮箱主题管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import { page, exportExcel, deleteMSubject, open } from '@/api/system/email/msubject'
 import type { MSubjectRecords } from '@/api/system/email/msubject/type.ts'
 import type { MSubjectRecord, MSubjectQuery } from '@/api/system/email/msubject/type.ts'
@@ -16,6 +16,7 @@ import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import SetUser from '@/views/system/email/msubject/components/SetUser.vue'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'MSubject',
@@ -254,15 +255,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: MSubjectRecords) => {
-  const mSubjectIds = rows.map((item: any) => item.id)
-  await deleteMSubject(mSubjectIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const mSubjectIds = rows.map((item: any) => item.id)
+    await deleteMSubject(mSubjectIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

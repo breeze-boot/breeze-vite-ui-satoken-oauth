@@ -199,12 +199,7 @@ const handleLogin = async (data: any) => {
             ></el-input>
           </el-form-item>
           <el-form-item prop="tenantId">
-            <el-select
-              size="large"
-              v-model="loginFormData.tenantId"
-              :popper-append-to-body="false"
-              placeholder="Tenant"
-            >
+            <el-select size="large" v-model="loginFormData.tenantId" :popper-append-to-body="false">
               <el-option
                 v-for="item in tenantOption"
                 :key="item.value"

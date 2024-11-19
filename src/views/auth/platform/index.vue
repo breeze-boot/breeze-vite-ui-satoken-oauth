@@ -5,7 +5,7 @@
 <!-- 平台管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { deletePlatform, exportExcel, page } from '@/api/auth/platform'
@@ -14,6 +14,7 @@ import { TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/PlatformAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Platform',
@@ -179,15 +180,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: PlatformRecords) => {
-  const platformIds = rows.map((item: any) => item.id)
-  await deletePlatform(platformIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const platformIds = rows.map((item: any) => item.id)
+    await deletePlatform(platformIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

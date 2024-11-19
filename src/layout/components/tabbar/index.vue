@@ -4,7 +4,7 @@
 -->
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import useSettingStore from '@/store/modules/setting.ts'
+import useSettingStore from '@/store/modules/setting'
 import BreadCrumb from './breadcrumb/index.vue'
 import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'

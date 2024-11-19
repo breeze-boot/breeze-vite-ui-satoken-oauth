@@ -10,12 +10,13 @@ import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/DictAddOrEdit.vue'
 import DictItem from './components/DictItem.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { DictRecords } from '@/api/system/dict/type.ts'
 import { DictRecord, DictQuery } from '@/api/system/dict/type.ts'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Dict',
@@ -214,14 +215,13 @@ const handleAdd = () => {
  */
 const handleDelete = async (rows: DictRecords) => {
   const dictIds = rows.map((item: any) => item.id)
-  await deleteDict(dictIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    await deleteDict(dictIds)
+    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    useMessage().error(err.message)
+  }
 }
 
 /**

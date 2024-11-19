@@ -52,11 +52,12 @@ export function addJob(data: JobRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editJob(data: JobRecord): AxiosPromise<ResponseData> {
+export function editJob(id: number, data: JobRecord): AxiosPromise<ResponseData> {
   return request({
-    url: API.JOB_RESTFUL_URL,
+    url: `${API.JOB_RESTFUL_URL}/${id}`,
     method: 'put',
     data: data,
   })

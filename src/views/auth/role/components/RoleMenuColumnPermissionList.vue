@@ -7,17 +7,19 @@
 <script lang="ts" setup>
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { ElMessage, ElTree } from 'element-plus'
+import { ElTree } from 'element-plus'
 import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
 import { listRolesMenuColumnPermission, saveRoleMenuColumn } from '@/api/auth/permission/menuColumn'
 import SvgButton from '@/components/SvgButton/index.vue'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'RolePermissionList',
   inheritAttrs: false,
 })
+
 const filterText = ref('')
 const treeSetting = reactive({
   expandAll: true,
@@ -52,26 +54,23 @@ const init = async (id: number) => {
  * @param id
  */
 const getInfo = async (id: number) => {
-  const treePermissionResponse: any = await listTreePermission([0, 1])
-  if (treePermissionResponse.code !== '0000') {
-    ElMessage.warning({
-      message: t('common.reloadFail'),
-      duration: 1000,
-    })
+  try {
+    const treePermissionResponse: any = await listTreePermission([0, 1])
+    Object.assign(roleTreeData.value, treePermissionResponse.data)
+  } catch (e: any) {
+    useMessage().warning(t('common.reloadFail'))
     return
   }
-  Object.assign(roleTreeData.value, treePermissionResponse.data)
-  const rolesPermissionResponse: any = await listRolesMenuColumnPermission(id)
-  if (rolesPermissionResponse.code !== '0000') {
-    ElMessage.warning({
-      message: t('common.reloadFail'),
-      duration: 1000,
-    })
-    return
-  }
-  const menus = rolesPermissionResponse.data.map((item: any) => item.menu)
-  if (menus) {
-    rolePermissionTreeRef.value.setCheckedKeys(menus, true)
+
+  try {
+    const rolesPermissionResponse: any = await listRolesMenuColumnPermission(id)
+    const menus = rolesPermissionResponse.data.map((item: any) => item.menu)
+    if (menus) {
+      rolePermissionTreeRef.value.setCheckedKeys(menus, true)
+    }
+  } catch (e: any) {
+    useMessage().warning(t('common.reloadFail'))
+    console.error(e.message)
   }
 }
 
@@ -85,18 +84,18 @@ const handleRoleDataFormSubmit = async () => {
     checkedKeys.push(...halfCheckedKeys)
   }
   loading.value = true
-  await saveRoleMenuColumn({
-    roleId: currentClickRoleId.value as number,
-    menu: checkedKeys as string[],
-  })
-  ElMessage.success({
-    message: t('common.success'),
-    duration: 1000,
-    onClose: () => {
-      visible.value = false
-      loading.value = false
-    },
-  })
+  try {
+    await saveRoleMenuColumn({
+      roleId: currentClickRoleId.value as number,
+      menu: checkedKeys as string[],
+    })
+    useMessage().success(`${t('common.success')}`)
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')}`)
+  } finally {
+    visible.value = false
+    loading.value = false
+  }
 }
 
 watch(filterText, (val) => {

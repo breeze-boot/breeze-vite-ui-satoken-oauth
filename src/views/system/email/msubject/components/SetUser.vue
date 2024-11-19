@@ -123,10 +123,12 @@ const init = async (id: number, column: string) => {
  * @param column
  */
 const getInfo = async (id: number, column: string) => {
-  const response: any = await getMSubject(JSONBigInt.parse(id))
-  if (response.code === '0000') {
+  try {
+    const response: any = await getMSubject(JSONBigInt.parse(id))
     tableInfo.checkedRows = response.data[column]
     tableInfo.refresh = Math.random()
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 
@@ -153,8 +155,8 @@ const handleUserDataFormSubmit = async () => {
   loading.value = true
   let userIds: number[] = []
   currentRows.forEach((row: UserRecord) => {
-    if (row.id !== null) {
-      userIds.push(row.id)
+    if (row.id) {
+      userIds.push(row.id as number)
     }
   })
   if (queryParams.value.column === 'toUserId') {
