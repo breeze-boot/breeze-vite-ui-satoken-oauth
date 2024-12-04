@@ -30,6 +30,7 @@ const queryParams = reactive<LeaveQuery>({
   title: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 const $router = useRouter()
 

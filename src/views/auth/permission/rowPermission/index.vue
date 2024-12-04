@@ -34,6 +34,7 @@ const queryParams = reactive<RowPermissionQuery>({
   permissionName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<RowPermissionRecords>([])

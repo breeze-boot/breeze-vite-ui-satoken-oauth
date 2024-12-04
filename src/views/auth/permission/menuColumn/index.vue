@@ -32,6 +32,7 @@ const queryParams = reactive<MenuColumnQuery>({
   column: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedColumns = reactive<MenuColumnRecords>([])

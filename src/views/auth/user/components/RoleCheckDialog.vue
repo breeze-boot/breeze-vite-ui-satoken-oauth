@@ -1,9 +1,12 @@
 <script>
-import { page } from '@/api/bpm/user'
+import { page } from '@/api/auth/role'
 import useWidth from '@/hooks/dialogWidth'
+import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
+import { Refresh, Search } from '@element-plus/icons-vue'
 
 export default {
-  name: 'UserDialog',
+  name: 'RoleCheckDialog',
+  components: { SearchContainerBox },
   props: {
     modelValue: {
       type: Boolean,
@@ -13,11 +16,11 @@ export default {
       type: String,
       default: '',
     },
-    userCheck: {
+    roleCheck: {
       type: String,
       default: '',
     },
-    userChecks: {
+    roleChecks: {
       type: Array,
       default: () => [],
     },
@@ -28,9 +31,13 @@ export default {
   },
   data() {
     return {
-      userList: [],
-      checkUser: [],
+      roleList: [],
+      checkRole: [],
       singleSelectValue: undefined,
+      queryParams: {
+        roleCode: '',
+        roleName: '',
+      },
       pagerQuery: {
         query: {
           size: 10,
@@ -43,6 +50,12 @@ export default {
     }
   },
   computed: {
+    Refresh() {
+      return Refresh
+    },
+    Search() {
+      return Search
+    },
     visible: {
       get() {
         return this.modelValue
@@ -63,19 +76,37 @@ export default {
     }
   },
   beforeUnmount() {
-    this.checkUser = []
-    this.userList = []
+    this.checkRole = []
+    this.roleList = []
   },
   methods: {
     useWidth,
-    async getList() {
-      const response = await page(this.pagerQuery?.query)
-      this.userList = response.data?.records
-      this.pagerQuery.query.total = Number(response.data?.total)
+    /**
+     * 查询
+     */
+    async handleQuery() {
+      await this.getList()
+      await this.handleCheck()
     },
-    handleCheckUser() {
+    /**
+     * 重置查询
+     */
+    resetQuery() {
+      this.$refs.roleQueryFormRef.resetFields()
+      this.handleQuery()
+    },
+    async getList() {
+      try {
+        const response = await page({ ...this.pagerQuery.query, ...this.queryParams })
+        this.roleList = response.data.records
+        this.pagerQuery.query.total = Number(response.data.total)
+      } catch (err) {
+        /* empty */
+      }
+    },
+    handleCheckRole() {
       this.visible = false
-      this.$emit('updateUserData', this.checkUser)
+      this.$emit('updateRoleData', this.checkRole)
     },
     /**
      * 页码改变事件
@@ -101,33 +132,33 @@ export default {
       if (this.single) {
         return
       }
-      this.checkUser = row
+      this.checkRole = row
     },
     handleCheck() {
       if (this.single) {
-        this.singleSelectValue = this.userList.findIndex((item) => item['id'] === this.userCheck)
+        this.singleSelectValue = this.roleList.findIndex((item) => item['id'] === this.roleCheck)
         return
       }
-      const row = this.userList.filter((item) => this.userChecks.indexOf(item['id']) > -1)
+      const row = this.roleList.filter((item) => this.roleChecks.indexOf(item['id']) > -1)
       if (row) {
         row.forEach((item) => {
-          this.$refs.userCheckTableRef?.toggleRowSelection(item, true)
+          this.$refs.roleCheckTableRef?.toggleRowSelection(item, true)
         })
       }
     },
     handleRowClick(row) {
       if (this.single) {
-        this.checkUser = row
-        const index = this.userList.findIndex((item) => item['id'] === row['id'])
+        this.checkRole = row
+        const index = this.roleList.findIndex((item) => item['id'] === row['id'])
         if (index !== -1) {
           this.singleSelectValue = index
         }
         return
       }
       if (row) {
-        this.$refs.userCheckTableRef?.toggleRowSelection(row, undefined)
+        this.$refs.roleCheckTableRef?.toggleRowSelection(row, undefined)
       } else {
-        this.$refs.userCheckTableRef?.clearSelection()
+        this.$refs.roleCheckTableRef?.clearSelection()
       }
     },
   },
@@ -136,12 +167,44 @@ export default {
 
 <template>
   <el-dialog v-model="visible" :title="title" :width="useWidth()">
+    <search-container-box>
+      <el-form ref="roleQueryFormRef" :model="queryParams" :inline="true">
+        <!-- 角色编码 -->
+        <el-form-item :label="$t('role.fields.roleCode')" prop="roleCode">
+          <el-input
+            @keyup.enter="handleQuery"
+            style="width: 200px"
+            :placeholder="$t('role.fields.roleCode')"
+            v-model="queryParams.roleCode"
+          />
+        </el-form-item>
+
+        <!-- 角色名称 -->
+        <el-form-item :label="$t('role.fields.roleName')" prop="roleName">
+          <el-input
+            @keyup.enter="handleQuery"
+            style="width: 200px"
+            :placeholder="$t('role.fields.roleName')"
+            v-model="queryParams.roleName"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="handleQuery">
+            {{ $t('common.search') }}
+          </el-button>
+          <el-button type="success" :icon="Refresh" @click="resetQuery">
+            {{ $t('common.reset') }}
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </search-container-box>
     <el-table
-      ref="userCheckTableRef"
+      ref="roleCheckTableRef"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
       highlight-current-row
-      :data="userList"
+      :data="roleList"
       style="width: 100%"
     >
       <el-table-column v-if="!single" type="selection" width="55" />
@@ -153,8 +216,8 @@ export default {
         </template>
       </el-table-column>
       <el-table-column label="序号" fixed align="center" type="index" width=" 66" />
-      <el-table-column prop="displayName" label="用户姓名" />
-      <el-table-column prop="id" label="用户名" />
+      <el-table-column prop="roleCode" label="角色编码" />
+      <el-table-column prop="roleName" label="角色名" />
     </el-table>
     <div class="table-pagination">
       <el-pagination
@@ -171,7 +234,7 @@ export default {
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleCheckUser()">{{ $t('common.confirm') }}</el-button>
+        <el-button type="primary" @click="handleCheckRole">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

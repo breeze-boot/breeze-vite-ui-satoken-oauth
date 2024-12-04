@@ -34,6 +34,7 @@ const sendMsgSettingRef = ref()
 const queryParams = reactive<MsgQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<MsgRecords>([])

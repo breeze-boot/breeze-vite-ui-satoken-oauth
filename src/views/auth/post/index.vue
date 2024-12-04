@@ -34,6 +34,7 @@ const queryParams = reactive<PostQuery>({
   postName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<PostRecords>([])

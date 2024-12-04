@@ -6,20 +6,14 @@
 <!-- 角色添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import {
-  addRole,
-  getRole,
-  editRole,
-  checkRoleCode,
-  selectRowPermissionType,
-  selectCustomizePermission,
-} from '@/api/auth/role'
+import { addRole, getRole, editRole, checkRoleCode } from '@/api/auth/role'
 import { RoleForm } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { SelectData } from '@/types/types.ts'
 import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
+import { selectCustomizePermission, selectRowPermissionType } from '@/api/auth/permission/rowPermission'
 
 defineOptions({
   name: 'RoleAddOrEdit',

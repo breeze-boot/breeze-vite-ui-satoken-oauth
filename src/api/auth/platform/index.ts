@@ -9,8 +9,6 @@ import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
   PLATFORM_RESTFUL_URL = '/auth/v1/platform',
-  CHECK_PLATFORM_CODE_URL = '/auth/v1/platform/checkPlatformCode',
-  PLATFORM_SELECT_URL = '/sys/v1/common/selectPlatform',
 }
 
 /**
@@ -99,7 +97,7 @@ export function exportExcel(params: PlatformRecord): AxiosPromise<any> {
  */
 export function checkPlatformCode(platformCode: string, platformId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_PLATFORM_CODE_URL,
+    url: `${API.PLATFORM_RESTFUL_URL}/checkPlatformCode`,
     method: 'get',
     params: {
       platformId: platformId,
@@ -114,7 +112,7 @@ export function checkPlatformCode(platformCode: string, platformId?: number): Ax
  */
 export function selectPlatform(): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.PLATFORM_SELECT_URL,
+    url: `${API.PLATFORM_RESTFUL_URL}/selectPlatform`,
     method: 'get',
   })
 }

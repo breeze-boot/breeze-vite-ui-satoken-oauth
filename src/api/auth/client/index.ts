@@ -4,11 +4,10 @@
  */
 import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
-import { ClientResponseData, ClientQuery, ClientRecord, ClientForm } from './type.ts'
+import { ClientResponseData, ClientQuery, ClientForm } from './type.ts'
 
 enum API {
   CLIENT_RESTFUL_URL = '/auth/v1/client',
-  CHECK_CLIENT_CODE_URL = '/auth/v1/client/checkClientCode',
 }
 
 /**
@@ -97,7 +96,7 @@ export function exportExcel(params: ClientQuery): AxiosPromise<ClientResponseDat
  */
 export function checkClientCode(permissionCode: string, permissionId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_CLIENT_CODE_URL,
+    url: `${API.CLIENT_RESTFUL_URL}/checkClientCode`,
     method: 'get',
     params: {
       permissionId,

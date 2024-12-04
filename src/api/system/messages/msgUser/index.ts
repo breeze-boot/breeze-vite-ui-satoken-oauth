@@ -9,9 +9,6 @@ import { ResponseData } from '@/types/types.ts'
 
 enum API {
   MSG_USER_RESTFUL_URL = '/sys/v1/msgUser',
-  LIST_USERS_MSG_URL = '/sys/v1/msgUser/listUsersMsg',
-  CLOSE_USERS_MSG_URL = '/sys/v1/msgUser/close',
-  READ_USERS_MSG_URL = '/sys/v1/msgUser/read',
 }
 
 /**
@@ -60,7 +57,7 @@ export function exportExcel(params: MsgUserQuery): AxiosPromise<any> {
  */
 export function readUserMsg(msgId: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.READ_USERS_MSG_URL}/${msgId}`,
+    url: `${API.MSG_USER_RESTFUL_URL}/read/${msgId}`,
     method: 'put',
   })
 }
@@ -72,7 +69,7 @@ export function readUserMsg(msgId: number): AxiosPromise<ResponseData> {
  */
 export function closeUserMsg(msgId: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.CLOSE_USERS_MSG_URL}/${msgId}`,
+    url: `${API.MSG_USER_RESTFUL_URL}/close/${msgId}`,
     method: 'put',
   })
 }
@@ -84,7 +81,7 @@ export function closeUserMsg(msgId: number): AxiosPromise<ResponseData> {
  */
 export function listUsersMsg(username: string): AxiosPromise<MsgUserResponseData> {
   return request({
-    url: API.LIST_USERS_MSG_URL,
+    url: `${API.MSG_USER_RESTFUL_URL}/listUsersMsg`,
     method: 'get',
     params: {
       username,

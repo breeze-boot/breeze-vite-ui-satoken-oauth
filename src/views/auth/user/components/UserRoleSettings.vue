@@ -7,13 +7,12 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { listUserRoles, page } from '@/api/auth/role'
+import { listUserRoles } from '@/api/auth/role'
+import RoleCheckDialog from './RoleCheckDialog.vue'
 import BTable from '@/components/Table/BTable/index.vue'
-import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { TableInfo } from '@/components/Table/types/types.ts'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
-import { Refresh, Search } from '@element-plus/icons-vue'
 import { userSetRole } from '@/api/auth/user'
 import { UserSetRoleForm, UserRoleQuery } from '@/api/auth/user/type.ts'
 import useWidth from '@/hooks/dialogWidth'
@@ -24,15 +23,13 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const direction = ref('rtl')
 const { t } = useI18n()
 const visible = ref<boolean>(false)
+const roleDialogVisible = ref<boolean>(false)
 const loading = ref<boolean>(false)
+const roleCheckDialogRef = ref()
 const userRoleTableRef = ref()
-const roleQueryFormRef = ref()
 const userSetRoleDataForm = ref<UserSetRoleForm>({ userId: 0, roleIds: [] })
-
-let currentRows = reactive<RoleRecords>([])
 
 /**
  * 查询条件
@@ -43,16 +40,25 @@ const queryParams = reactive<UserRoleQuery>({
   roleName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
+const tableData = ref<RoleRecords>([])
 const tableInfo = reactive<TableInfo>({
   // 刷新标识
   refresh: 1,
-  mountedRefresh: true,
   tableIndex: true,
   // 选择框类型
-  select: 'multi',
-  // 选中的行
-  checkedRows: [],
+  select: 'single',
+  // 表格顶部按钮
+  tbHeaderBtn: [
+    {
+      type: 'primary',
+      label: t('common.add'),
+      event: 'add',
+      icon: 'add',
+      eventHandle: () => handleAdd(),
+    },
+  ],
   // 表格字段配置
   fieldList: [
     {
@@ -69,18 +75,19 @@ const tableInfo = reactive<TableInfo>({
 })
 
 /**
- * 查询
+ * 添加
  */
-const handleQuery = () => {
-  getInfo(queryParams.userId)
+const handleAdd = () => {
+  roleDialogVisible.value = true
 }
 
 /**
- * 重置查询
+ * 选择角色，并实现去重添加到tableData.value
  */
-const resetQuery = () => {
-  roleQueryFormRef.value.resetFields()
-  handleQuery()
+const handleCheckRole = (row: RoleRecords) => {
+  const existingRoles = new Set(tableData.value.map((role) => role.id))
+  const uniqueRoles = row.filter((role) => !existingRoles.has(role.id))
+  tableData.value.push(...uniqueRoles)
 }
 
 /**
@@ -105,7 +112,7 @@ const init = async (id: number) => {
 const getInfo = async (id: number) => {
   try {
     const response: any = await listUserRoles(JSONBigInt.parse(id))
-    tableInfo.checkedRows = response.data
+    tableData.value = response.data
     tableInfo.refresh = Math.random()
   } catch (err: any) {
     useMessage().error(err.message)
@@ -113,20 +120,11 @@ const getInfo = async (id: number) => {
 }
 
 /**
- * 选中行，设置当前行currentRow
- *
- * @param rows 选择的行数据
- */
-const handleSelectionChange = (rows: RoleRecords) => {
-  currentRows = rows
-}
-
-/**
  * 表单提交
  */
 const handleUserRoleSettingsDataFormSubmit = async () => {
   loading.value = true
-  userSetRoleDataForm.value.roleIds = currentRows.map((item: any) => item.id)
+  userSetRoleDataForm.value.roleIds = tableData.value.map((item: any) => item.id)
   try {
     await userSetRole(userSetRoleDataForm.value)
     useMessage().success(`${t('common.success')}`)
@@ -144,59 +142,27 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :size="useWidth()" v-model="visible" :title="t('user.common.roleSettings')" :direction="direction">
-    <template #header>
-      <h4>{{ t('user.common.roleSettings') }}</h4>
-    </template>
-    <template #default>
-      <search-container-box>
-        <el-form ref="roleQueryFormRef" :model="queryParams" :inline="true">
-          <!-- 角色编码 -->
-          <el-form-item :label="t('role.fields.roleCode')" prop="roleCode">
-            <el-input
-              @keyup.enter="handleQuery"
-              style="width: 200px"
-              :placeholder="t('role.fields.roleCode')"
-              v-model="queryParams.roleCode"
-            />
-          </el-form-item>
-
-          <!-- 角色名称 -->
-          <el-form-item :label="t('role.fields.roleName')" prop="roleName">
-            <el-input
-              @keyup.enter="handleQuery"
-              style="width: 200px"
-              :placeholder="t('role.fields.roleName')"
-              v-model="queryParams.roleName"
-            />
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" :icon="Search" @click="handleQuery">
-              {{ t('common.search') }}
-            </el-button>
-            <el-button type="success" :icon="Refresh" @click="resetQuery">
-              {{ t('common.reset') }}
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </search-container-box>
-
-      <b-table
-        ref="userRoleTableRef"
-        :list-api="page"
-        :checked-rows="tableInfo.checkedRows"
-        :tableIndex="tableInfo.tableIndex"
-        :query="queryParams"
-        :refresh="tableInfo.refresh"
-        :mountedRefresh="tableInfo.mountedRefresh"
-        :field-list="tableInfo.fieldList"
-        :select="tableInfo.select"
-        :handle-btn="tableInfo.handleBtn"
-        table-height="80%"
-        @selection-change="handleSelectionChange"
-      />
-    </template>
+  <el-dialog
+    v-model="visible"
+    :width="useWidth()"
+    :title="t('user.common.roleSettings')"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
+    <b-table
+      ref="userRoleTableRef"
+      :checked-rows="tableInfo.checkedRows"
+      :tableIndex="tableInfo.tableIndex"
+      v-model:modelValue="tableData"
+      :query="queryParams"
+      :refresh="tableInfo.refresh"
+      :field-list="tableInfo.fieldList"
+      :tb-header-btn="tableInfo.tbHeaderBtn"
+      :select="tableInfo.select"
+      :handle-btn="tableInfo.handleBtn"
+      :pager="false"
+      table-height="80%"
+    />
     <template #footer>
       <div style="flex: auto">
         <el-button
@@ -219,5 +185,14 @@ defineExpose({
         </el-button>
       </div>
     </template>
-  </el-drawer>
+  </el-dialog>
+
+  <role-check-dialog
+    ref="roleCheckDialogRef"
+    :single="false"
+    title="角色列表"
+    v-model:modelValue="roleDialogVisible"
+    :role-checks="tableData.map((item) => item.id)"
+    @updateRoleData="(row: RoleRecords) => handleCheckRole(row)"
+  />
 </template>

@@ -36,6 +36,7 @@ const queryParams = reactive<DictQuery>({
   dictName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<DictRecords>([])

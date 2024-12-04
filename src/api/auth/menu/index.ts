@@ -7,10 +7,10 @@ import { AxiosPromise } from 'axios'
 import JSONBigInt from 'json-bigint'
 import type { MenuResponseData, MenuQuery, MenuTreeResponseData, MenuForm } from './type'
 import { SelectResponseData } from '@/types/types.ts'
+import { PermissionResponseData } from '@/api/login/type.ts'
 
 enum API {
   MENU_RESTFUL_URL = '/auth/v1/menu',
-  MENU_SELECT_URL = '/sys/v1/common/selectMenu',
 }
 
 /**
@@ -25,6 +25,22 @@ export function list(params: MenuQuery): AxiosPromise<MenuResponseData> {
     params: {
       ...params,
       platformId: JSONBigInt.parse('1111111111111111111'),
+    },
+  })
+}
+
+/**
+ * 获取菜单数据
+ *
+ * @param i18n 国际化标志
+ */
+export function listPermission(i18n: string): AxiosPromise<PermissionResponseData> {
+  return request({
+    url: `${API.MENU_RESTFUL_URL}/listTreeMenu`,
+    method: 'get',
+    params: {
+      platformCode: 'pc',
+      i18n: i18n,
     },
   })
 }
@@ -101,7 +117,7 @@ export function exportExcel(params: MenuQuery): AxiosPromise<MenuResponseData> {
  */
 export function selectMenu(id: number): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.MENU_SELECT_URL,
+    url: `${API.MENU_RESTFUL_URL}/selectMenu`,
     method: 'get',
     params: { id },
   })

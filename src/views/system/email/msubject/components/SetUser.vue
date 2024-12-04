@@ -45,6 +45,7 @@ const queryParams = ref<EmailSetUserQuery>({
   username: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 const tableInfo = reactive<TableInfo>({

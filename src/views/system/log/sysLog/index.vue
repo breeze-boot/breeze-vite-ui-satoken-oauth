@@ -32,6 +32,7 @@ const { RESULT, LOG_TYPE, DO_TYPE } = useDict('RESULT', 'LOG_TYPE', 'DO_TYPE')
 const queryParams = reactive<LogQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<LogRecords>([])

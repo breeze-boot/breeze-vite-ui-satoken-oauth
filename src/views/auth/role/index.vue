@@ -37,6 +37,7 @@ const queryParams = reactive<RoleQuery>({
   roleName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<RoleRecords>([])

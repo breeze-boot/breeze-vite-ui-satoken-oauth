@@ -298,7 +298,7 @@ const getList = async () => {
 const setCheckedList = () => {
   props.checkedRows.forEach((selected: any) => {
     const row = tableData.value.rows.find(
-      (item) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
+      (item) => item[props.pk] === selected[props.pk] || item[props.pk] === selected,
     )
     nextTick(() => {
       if (!row) return

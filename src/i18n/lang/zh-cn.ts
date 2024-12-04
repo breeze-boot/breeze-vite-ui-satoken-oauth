@@ -18,6 +18,8 @@ export default {
     goodEvening: '晚上好',
   },
   common: {
+    cascadeCheck: '级联勾选',
+    oneCheck: '逐个勾选',
     sureToLogOutExitSystem: '确定注销并退出系统吗',
     tip: '提示',
     toBeSelectedColumns: '待选列',

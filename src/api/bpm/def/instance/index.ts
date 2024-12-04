@@ -6,6 +6,7 @@ import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { InstanceResponseData, InstanceQuery, InstanceRecord } from './type'
 import { ResponseData } from '@/types/types.ts'
+import { BpmStartForm } from '@/api/bpm/def/definition/type.ts'
 
 enum API {
   INSTANCE_RESTFUL_URL = '/bpm/v1/instance',
@@ -21,6 +22,19 @@ export function page(params: InstanceQuery): AxiosPromise<InstanceResponseData> 
     url: API.INSTANCE_RESTFUL_URL,
     method: 'get',
     params: params,
+  })
+}
+
+/**
+ * 启动
+ *
+ * @param bpmStartForm
+ */
+export function startInstance(bpmStartForm: BpmStartForm): AxiosPromise<ResponseData> {
+  return request({
+    url: `${API.INSTANCE_RESTFUL_URL}/start`,
+    method: 'post',
+    data: bpmStartForm,
   })
 }
 
@@ -44,7 +58,7 @@ export function deleteInstance(ids: number[]): AxiosPromise<ResponseData> {
  */
 export function voidInstance(procInstId: number): AxiosPromise<ResponseData> {
   return request({
-    url: API.INSTANCE_RESTFUL_URL + `/voidProcess`,
+    url: `${API.INSTANCE_RESTFUL_URL}/voidProcess`,
     method: 'post',
     data: { procInstId },
   })

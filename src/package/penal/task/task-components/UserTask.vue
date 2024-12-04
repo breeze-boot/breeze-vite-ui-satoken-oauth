@@ -65,8 +65,8 @@
     v-model:modelValue="assigneeUserDialogVisible"
     :user-check="userTaskForm.assignee"
     @updateUserData="
-      (username) => {
-        userTaskForm.assignee = username
+      (row) => {
+        userTaskForm.assignee = row.id
         updateElementTask('assignee')
       }
     "
@@ -78,8 +78,8 @@
     v-model:modelValue="candidateUserDialogVisible"
     :user-checks="userTaskForm.candidateUsers"
     @updateUserData="
-      (username) => {
-        userTaskForm.candidateUsers = username
+      (row) => {
+        userTaskForm.candidateUsers = row.map((item) => item.id)
         updateElementTask('candidateUsers')
       }
     "
@@ -91,8 +91,8 @@
     v-model:modelValue="candidateGroupsDialogVisible"
     :role-checks="userTaskForm.candidateGroups"
     @updateRoleData="
-      (roleCode) => {
-        userTaskForm.candidateGroups = roleCode
+      (row) => {
+        userTaskForm.candidateGroups = row.map((item) => item.id)
         updateElementTask('candidateGroups')
       }
     "

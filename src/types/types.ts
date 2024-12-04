@@ -13,8 +13,9 @@ import { LAYOUT } from '@/utils/common.ts'
  * 分页查询参数
  */
 export interface PageQuery {
-  current: number
-  size: number
+  current?: number
+  size?: number
+  total?: number
 }
 
 /**

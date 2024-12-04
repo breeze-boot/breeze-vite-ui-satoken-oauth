@@ -47,6 +47,7 @@ const queryParams = reactive<UserQuery>({
   startTime: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<UserRecords>([])

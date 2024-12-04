@@ -9,8 +9,6 @@ import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
   CATEGORY_RESTFUL_URL = '/bpm/v1/category',
-  CHECK_CATEGORY_CODE_URL = '/bpm/v1/category/checkCategoryCode',
-  CATEGORY_SELECT_URL = '/bpm/v1/common/selectCategory',
 }
 
 /**
@@ -99,7 +97,7 @@ export function exportExcel(params: CategoryRecord): AxiosPromise<any> {
  */
 export function checkCategoryCode(categoryCode: string, categoryId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_CATEGORY_CODE_URL,
+    url: `${API.CATEGORY_RESTFUL_URL}/checkCategoryCode`,
     method: 'get',
     params: {
       categoryId,
@@ -113,7 +111,7 @@ export function checkCategoryCode(categoryCode: string, categoryId?: number): Ax
  */
 export function selectCategory(): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.CATEGORY_SELECT_URL,
+    url: `${API.CATEGORY_RESTFUL_URL}/selectCategory`,
     method: 'get',
   })
 }

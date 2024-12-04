@@ -31,6 +31,7 @@ let currentRows = reactive<JLogRecords>([])
 const queryParams = reactive<JLogQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 const tableInfo = reactive<TableInfo>({
   // 刷新标识

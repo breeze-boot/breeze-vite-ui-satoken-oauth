@@ -13,15 +13,10 @@ import {
   UserSetRoleForm,
   UserForm,
 } from './type'
-import { ResponseData, SelectResponseData } from '@/types/types.ts'
+import { ResponseData } from '@/types/types.ts'
 
 enum API {
   USER_RESTFUL_URL = '/auth/v1/user',
-  CHECK_USERNAME_URL = '/auth/v1/user/checkUsername',
-  SELECT_DEPT_URL = '/sys/v1/common/selectDept',
-  SELECT_POST_URL = '/sys/v1/common/selectPost',
-  SELECT_ROLE_URL = '/sys/v1/common/selectRole',
-  SELECT_USER_LIST_URL = '/sys/v1/common/listUser',
 }
 
 /**
@@ -141,36 +136,6 @@ export function exportExcel(data: UserQuery): AxiosPromise<any> {
 }
 
 /**
- * 部门下拉框
- */
-export function selectDept(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_DEPT_URL,
-    method: 'get',
-  })
-}
-
-/**
- * 角色下拉框
- */
-export function selectRole(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_ROLE_URL,
-    method: 'get',
-  })
-}
-
-/**
- * 岗位下拉框
- */
-export function selectPost(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_POST_URL,
-    method: 'get',
-  })
-}
-
-/**
  * 校验用户名是否重复
  *
  *  @param username
@@ -178,11 +143,28 @@ export function selectPost(): AxiosPromise<SelectResponseData> {
  */
 export function checkUsername(username: string, userId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_USERNAME_URL,
+    url: `${API.USER_RESTFUL_URL}/checkUsername`,
     method: 'get',
     params: {
       userId,
       username,
+    },
+  })
+}
+
+/**
+ * 校验用户账户是否重复
+ *
+ *  @param userCode
+ *  @param userId
+ */
+export function checkUserCode(userCode: string, userId?: number): AxiosPromise<any> {
+  return request({
+    url: `${API.USER_RESTFUL_URL}/checkUserCode`,
+    method: 'get',
+    params: {
+      userId,
+      userCode,
     },
   })
 }
@@ -218,9 +200,9 @@ export function userSetRole(data: UserSetRoleForm): AxiosPromise<ResponseData> {
  *
  * @param deptId
  */
-export function listUser(deptId?: number): AxiosPromise<any> {
+export function listDeptUser(deptId?: number): AxiosPromise<any> {
   return request({
-    url: `${API.SELECT_USER_LIST_URL}`,
+    url: `${API.USER_RESTFUL_URL}/listDeptUser`,
     method: 'get',
     params: {
       deptId,

@@ -65,7 +65,6 @@ const redirectToLogin = async (): Promise<void> => {
     type: 'warning',
   }).then(async () => {
     await userStore.logout()
-    await redirectToLogin()
     await router.push({ path: '/login' }).then((): void => {})
   })
 }
@@ -126,6 +125,10 @@ request.interceptors.response.use(
     return data
   },
   async (error: any) => {
+    if (error.name === 'SyntaxError') {
+      ElMessage.error(`${i18n.global.t('axios.connectionTimedOut')} ${error.message}`)
+      return Promise.reject(error)
+    }
     if (axios.isAxiosError(error)) {
       if (!error.response) {
         switch (error.code) {

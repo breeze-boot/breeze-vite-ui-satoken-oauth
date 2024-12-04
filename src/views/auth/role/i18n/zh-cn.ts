@@ -1,8 +1,6 @@
 export default {
   role: {
     common: {
-      cascadeCheck: '级联勾选',
-      oneCheck: '逐个勾选',
       menuPermission: '菜单权限',
       menuColumnPermission: '菜单列权限',
     },

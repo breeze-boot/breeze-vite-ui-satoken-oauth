@@ -6,13 +6,13 @@
 import { defineStore, storeToRefs } from 'pinia'
 import pinia from '@/store'
 import router from '@/router'
-import { listPermission } from '@/api/login'
 import type { MenuState } from './types/types'
 import { constantChildRoutes } from '@/router/routes'
 import type { RouteRecordRaw } from 'vue-router'
 import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
 import { GET_OBJ_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
+import { listPermission } from '@/api/auth/menu'
 
 const modules = import.meta.glob('@/views/**/**.vue')
 const { settings } = storeToRefs(useSettingStore(pinia))

@@ -30,6 +30,7 @@ export default {
       isLock: '锁定',
     },
     rules: {
+      userCodeExists: '用户账户已存在',
       usernameExists: '用户名已存在',
       passwordAgain: '请再次输入密码',
       passwordUnanimous: '两次输入密码不一致',

@@ -29,6 +29,7 @@ const msgUserQueryFormRef = ref(ElForm)
 const queryParams = reactive<MsgUserQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<MsgUserRecords>([])

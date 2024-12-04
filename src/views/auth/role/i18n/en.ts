@@ -1,8 +1,6 @@
 export default {
   role: {
     common: {
-      cascadeCheck: 'Cascade Check',
-      oneCheck: 'Check one by one',
       menuPermission: 'menu permission',
       menuColumnPermission: 'menu column permission',
     },

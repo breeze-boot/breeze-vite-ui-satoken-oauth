@@ -34,6 +34,7 @@ const queryParams = reactive<FileQuery>({
   name: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<FileRecords>([])

@@ -8,7 +8,7 @@ import { reactive, ref } from 'vue'
 import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { page, exportExcel, deleteDefinition, startInstance, suspendedDefinition } from '@/api/bpm/def/definition'
+import { page, exportExcel, deleteDefinition, suspendedDefinition } from '@/api/bpm/def/definition'
 import type { BpmDefinitionRecords } from '@/api/bpm/def/definition/type.ts'
 import type { BpmDefinitionRecord, BpmDefinitionQuery, BpmStartForm } from '@/api/bpm/def/definition/type.ts'
 import AddOrEdit from './components/DefinationAddOrEdit.vue'
@@ -17,6 +17,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import { useMessage } from '@/hooks/message'
+import { startInstance } from '@/api/bpm/def/instance'
 
 defineOptions({
   name: 'Definition',
@@ -31,6 +32,7 @@ const definitionAddOrEditRef = ref()
 const queryParams = reactive<BpmDefinitionQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<string[]>([])

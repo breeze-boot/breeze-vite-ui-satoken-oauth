@@ -6,7 +6,7 @@
 <!-- 用户添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { addUser, getUser, editUser, selectDept, checkUsername, selectRole, selectPost } from '@/api/auth/user'
+import { addUser, getUser, editUser, checkUsername } from '@/api/auth/user'
 import { UserForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
@@ -15,6 +15,10 @@ import useFormValidation from '@/hooks/formValidation'
 import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
 import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
+import { selectDept } from '@/api/auth/dept'
+import { selectPost } from '@/api/auth/post'
+import { selectRole } from '@/api/auth/role'
+import { useDict } from '@/hooks/dict'
 
 defineOptions({
   name: 'UserAddOrEdit',
@@ -28,6 +32,7 @@ const loading = ref<boolean>(false)
 const deptOption = ref<SelectData[]>()
 const roleOption = ref<SelectData[]>()
 const postOption = ref<SelectData[]>()
+const { SEX } = useDict('SEX')
 const userDataFormRef = ref()
 const userDataForm = ref<UserForm>({})
 const rules = ref({
@@ -161,13 +166,13 @@ const init = async (id: number) => {
     // TODO
     userDataFormRef.value.resetFields()
   }
+  await initSelectDept()
+  await initSelectPost()
+  await initSelectRole()
 
   if (id) {
     await getInfo(id)
   }
-  await initSelectDept()
-  await initSelectPost()
-  await initSelectRole()
 }
 
 /**
@@ -362,8 +367,7 @@ defineExpose({
       </el-form-item>
       <el-form-item :label="t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
-          <el-radio :value="0">{{ t('user.fields.sexInfo.woman') }}</el-radio>
-          <el-radio :value="1">{{ t('user.fields.sexInfo.man') }}</el-radio>
+          <el-radio v-for="(item, index) in SEX" :key="index" :label="item.label" :value="item.value" />
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="t('user.fields.idCard')" prop="idCard">

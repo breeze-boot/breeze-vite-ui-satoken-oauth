@@ -18,6 +18,8 @@ export default {
     goodEvening: 'good evening',
   },
   common: {
+    cascadeCheck: 'Cascade Check',
+    oneCheck: 'Check one by one',
     sureToLogOutExitSystem: 'Are you sure to log out and exit the system',
     tip: 'tip',
     toBeSelectedColumns: 'to be selected columns',

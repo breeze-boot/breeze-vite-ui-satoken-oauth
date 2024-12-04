@@ -30,6 +30,7 @@ export default {
       isLock: 'is lock',
     },
     rules: {
+      userCodeExists: 'The input userCode already exists',
       usernameExists: 'The input username already exists',
       passwordAgain: 'Please enter your password again',
       passwordUnanimous: 'The password entered twice is inconsistent',

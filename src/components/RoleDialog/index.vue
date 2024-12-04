@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       roleList: [],
-      checkRole: '',
+      checkRole: [],
       singleSelectValue: undefined,
       pagerQuery: {
         query: {
@@ -52,11 +52,19 @@ export default {
       },
     },
   },
-  mounted() {
-    this.getList()
+  async mounted() {
+    await this.getList()
+    await this.handleCheck()
   },
-  updated() {
-    this.handleCheck()
+  async updated() {
+    if (this.visible) {
+      await this.getList()
+      await this.handleCheck()
+    }
+  },
+  beforeUnmount() {
+    this.checkRole = []
+    this.roleList = []
   },
   methods: {
     useWidth,
@@ -67,55 +75,49 @@ export default {
     },
     handleCheckRole() {
       this.visible = false
-      this.$emit('updateRoleData', this.checkRole || '')
+      this.$emit('updateRoleData', this.checkRole)
     },
     /**
      * 页码改变事件
      *
      * @param size
      */
-    handleSizeChange(size) {
+    async handleSizeChange(size) {
       this.pagerQuery.query.size = size
+      await this.getList()
+      await this.handleCheck()
     },
     /**
      * 当前页改变事件
      *
      * @param current
      */
-    handleCurrentChange(current) {
+    async handleCurrentChange(current) {
       this.pagerQuery.query.current = current
+      await this.getList()
+      await this.handleCheck()
     },
-    /**
-     * 当前页改变事件
-     *
-     * @param row
-     */
     handleSelectionChange(row) {
       if (this.single) {
         return
       }
-      this.checkRole = row.map((item) => item.id)
+      this.checkRole = row
     },
     handleCheck() {
       if (this.single) {
-        this.singleSelectValue = this.userList.findIndex((item) => item['id'] === this.roleCheck)
+        this.singleSelectValue = this.roleList.findIndex((item) => item['id'] === this.roleCheck)
         return
       }
       const row = this.roleList.filter((item) => this.roleChecks.indexOf(item['id']) > -1)
       if (row) {
         row.forEach((item) => {
-          this.$refs.roleCheckTableRef?.toggleRowSelection(item, undefined)
+          this.$refs.roleCheckTableRef?.toggleRowSelection(item, true)
         })
       }
     },
-    /**
-     * 当前页改变事件
-     *
-     * @param row
-     */
     handleRowClick(row) {
       if (this.single) {
-        this.checkRole = row.roleCode
+        this.checkRole = row
         const index = this.roleList.findIndex((item) => item['id'] === row['id'])
         if (index !== -1) {
           this.singleSelectValue = index
@@ -128,10 +130,6 @@ export default {
         this.$refs.roleCheckTableRef?.clearSelection()
       }
     },
-  },
-  beforeUnmount() {
-    this.checkRole = []
-    this.roleList = []
   },
 }
 </script>

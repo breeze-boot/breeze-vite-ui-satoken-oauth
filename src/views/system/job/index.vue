@@ -37,6 +37,7 @@ const { JOB_STATUS } = useDict('JOB_STATUS')
 const queryParams = reactive<JobQuery>({
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<JobRecords>([])

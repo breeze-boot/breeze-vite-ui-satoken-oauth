@@ -16,9 +16,6 @@ import { ResponseData } from '@/types/types.ts'
 
 enum API {
   EMAIL_RESULT_URL = '/sys/v1/mSubject',
-  SET_EMAIL_USER_URL = '/sys/v1/mSubject/setEmailUser',
-  LIST_TO_EMAIL_USER_URL = '/sys/v1/mSubject/listToEmailUser',
-  LIST_CC_EMAIL_USER_URL = '/sys/v1/mSubject/listCcEmailUser',
 }
 
 /**
@@ -120,7 +117,7 @@ export function open(data: MSubjectSwitchForm): AxiosPromise<ResponseData> {
  */
 export function setEmailUser(id: number, data: SetUserMSubjectForm): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.SET_EMAIL_USER_URL}/${id}`,
+    url: `${API.EMAIL_RESULT_URL}/setEmailUser/${id}`,
     method: 'put',
     data: data,
   })
@@ -133,7 +130,7 @@ export function setEmailUser(id: number, data: SetUserMSubjectForm): AxiosPromis
  */
 export function listToEmail(id: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.LIST_TO_EMAIL_USER_URL}/${id}`,
+    url: `${API.EMAIL_RESULT_URL}/listToEmail/${id}`,
     method: 'get',
   })
 }
@@ -145,7 +142,7 @@ export function listToEmail(id: number): AxiosPromise<ResponseData> {
  */
 export function listCcEmail(id: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.LIST_CC_EMAIL_USER_URL}/${id}`,
+    url: `${API.EMAIL_RESULT_URL}/listCcEmail/${id}`,
     method: 'get',
   })
 }

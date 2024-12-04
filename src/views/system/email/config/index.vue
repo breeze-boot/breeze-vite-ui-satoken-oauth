@@ -30,6 +30,7 @@ const queryParams = reactive<EmailConfigQuery>({
   username: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<string[]>([])

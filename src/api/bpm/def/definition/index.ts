@@ -4,18 +4,11 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import {
-  BpmDefinitionResponseData,
-  BpmDefinitionQuery,
-  BpmDefinitionRecord,
-  BpmDefinitionForm,
-  BpmStartForm,
-} from './type'
+import { BpmDefinitionResponseData, BpmDefinitionQuery, BpmDefinitionRecord, BpmDefinitionForm } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
   DEFINITION_RESTFUL_URL = '/bpm/v1/definition',
-  BPM_INSTANCE_START_URL = '/bpm/v1/instance/start',
 }
 
 /**
@@ -53,19 +46,6 @@ export function deployDefinition(definitionParam: BpmDefinitionForm): AxiosPromi
     url: `${API.DEFINITION_RESTFUL_URL}/v1/design`,
     method: 'post',
     data: definitionParam,
-  })
-}
-
-/**
- * 启动
- *
- * @param bpmStartForm
- */
-export function startInstance(bpmStartForm: BpmStartForm): AxiosPromise<ResponseData> {
-  return request({
-    url: API.BPM_INSTANCE_START_URL,
-    method: 'post',
-    data: bpmStartForm,
   })
 }
 

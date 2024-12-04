@@ -54,7 +54,7 @@ const props = defineProps({
   // 获取数据的接口
   listApi: {
     type: Function,
-    required: true,
+    required: false,
   },
   // 表格使用的字典
   dict: {
@@ -404,7 +404,7 @@ const setMultiCheckedList = () => {
   props.checkedRows.forEach((selected: any) => {
     // 传来的值去匹配表格数据
     const row = tableData.value.rows.find(
-      (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] + '' === selected,
+      (item: any) => item[props.pk] === selected[props.pk] || item[props.pk] === selected,
     )
     nextTick(() => {
       if (!row) return
@@ -631,7 +631,7 @@ const handleSetColumnVisible = async (value: boolean, field: Field) => {
     visible: value,
   }
   await columnStore.setColumnByMenu(data)
-  getList()
+  await getList()
 }
 
 /**
@@ -660,6 +660,8 @@ watch(
 watch(
   () => props.checkedRows,
   () => {
+    if (!props.listApi) return
+
     if (!props.checkedRows || props.checkedRows.length <= 0) {
       props.select === 'single' ? (singleSelectValue.value = -1) : normalTableRef.value!.clearSelection()
       return

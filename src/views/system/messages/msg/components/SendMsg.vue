@@ -9,7 +9,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Option, SelectData } from '@/types/types.ts'
 import { selectDept } from '@/api/auth/dept'
-import { listUser } from '@/api/auth/user'
+import { listDeptUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import useMsgStore from '@/store/modules/msg.ts'
 import useUserStore from '@/store/modules/user.ts'
@@ -123,7 +123,7 @@ const handleSendMsgFormSubmit = async () => {
 
 const initUserTransferData = async (deptId?: number) => {
   try {
-    const response: any = await listUser(deptId)
+    const response: any = await listDeptUser(deptId)
     const data: Option[] = []
     response.data?.forEach((user: UserRecord) => {
       data.push({

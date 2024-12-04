@@ -35,6 +35,7 @@ const queryParams = reactive<InstanceQuery>({
   startUserName: '',
   current: 1,
   size: 10,
+  total: 0,
 })
 
 let checkedRows = reactive<string[]>([])

@@ -5,10 +5,10 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { RowPermissionResponseData, RowPermissionQuery, RowPermissionForm } from './type'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   PERMISSION_RESTFUL_URL = '/auth/v1/rowPermission',
-  CHECK_PERMISSION_CODE_URL = '/auth/v1/rowPermission/checkRowPermissionCode',
 }
 
 /**
@@ -97,11 +97,31 @@ export function exportExcel(params: RowPermissionQuery): AxiosPromise<RowPermiss
  */
 export function checkPermissionCode(permissionCode: string, permissionId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_PERMISSION_CODE_URL,
+    url: `${API.PERMISSION_RESTFUL_URL}/checkPermissionCode`,
     method: 'get',
     params: {
       permissionId,
       permissionCode,
     },
+  })
+}
+
+/**
+ * 行权限类型下拉框
+ */
+export function selectRowPermissionType(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: `${API.PERMISSION_RESTFUL_URL}/selectPermissionType`,
+    method: 'get',
+  })
+}
+
+/**
+ * 自定义行权限下拉框
+ */
+export function selectCustomizePermission(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: `${API.PERMISSION_RESTFUL_URL}/selectCustomizePermission`,
+    method: 'get',
   })
 }

@@ -10,8 +10,6 @@ import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   DEPT_RESTFUL_URL = '/auth/v1/dept',
-  CHECK_DEPT_CODE_URL = '/auth/v1/dept/checkDeptCode',
-  SELECT_DEPT_URL = '/sys/v1/common/selectDept',
 }
 
 /**
@@ -100,7 +98,7 @@ export function exportExcel(params: DeptQuery): AxiosPromise<DeptResponseData> {
  */
 export function selectDept(id?: number): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.SELECT_DEPT_URL,
+    url: `${API.DEPT_RESTFUL_URL}/selectDept`,
     method: 'get',
     params: {
       id,
@@ -116,7 +114,7 @@ export function selectDept(id?: number): AxiosPromise<SelectResponseData> {
  */
 export function checkDeptCode(deptCode: string, deptId: number): Promise<AxiosPromise<SelectResponseData>> {
   return request({
-    url: API.CHECK_DEPT_CODE_URL,
+    url: `${API.DEPT_RESTFUL_URL}/checkDeptCode`,
     method: 'get',
     params: {
       deptId: deptId || '',

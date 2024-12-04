@@ -9,9 +9,6 @@ import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
   ROLE_RESTFUL_URL = '/auth/v1/role',
-  CHECK_ROLE_CODE_URL = '/auth/v1/role/checkRoleCode',
-  SELECT_PERMISSION_TYPE_URL = '/sys/v1/common/selectPermissionType',
-  SELECT_CUSTOMIZE_PERMISSION_URL = '/sys/v1/common/selectCustomizePermission',
 }
 
 /**
@@ -100,7 +97,7 @@ export function exportExcel(params: RoleQuery): AxiosPromise<any> {
  */
 export function checkRoleCode(roleCode: string, roleId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_ROLE_CODE_URL,
+    url: `${API.ROLE_RESTFUL_URL}/checkRoleCode`,
     method: 'get',
     params: {
       roleId: roleId,
@@ -152,21 +149,11 @@ export function modifyPermission(data: any): AxiosPromise<ResponseData> {
 }
 
 /**
- * 权限下拉框
+ * 角色下拉框
  */
-export function selectRowPermissionType(): AxiosPromise<SelectResponseData> {
+export function selectRole(): AxiosPromise<SelectResponseData> {
   return request({
-    url: API.SELECT_PERMISSION_TYPE_URL,
-    method: 'get',
-  })
-}
-
-/**
- * 自定义行权限下拉框
- */
-export function selectCustomizePermission(): AxiosPromise<SelectResponseData> {
-  return request({
-    url: API.SELECT_CUSTOMIZE_PERMISSION_URL,
+    url: `${API.ROLE_RESTFUL_URL}/selectRole`,
     method: 'get',
   })
 }

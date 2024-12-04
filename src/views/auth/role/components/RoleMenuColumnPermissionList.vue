@@ -129,7 +129,7 @@ defineExpose({
           :icon="treeSetting.checkStrictly ? 'strictly' : 'strictly'"
           type="default"
           :style="{ margin: '10px 5px' }"
-          :label="treeSetting.checkStrictly ? t('role.common.oneCheck') : t('role.common.cascadeCheck')"
+          :label="treeSetting.checkStrictly ? t('common.oneCheck') : t('common.cascadeCheck')"
           @svg-btn-click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
         />
       </div>

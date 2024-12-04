@@ -13,6 +13,8 @@ import { DEVICE, LAYOUT } from '@/utils/common.ts'
 const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
     return {
+      drawnWidth: 100,
+      dialogWidth: 100,
       refresh: false,
       device: CookiesStorage.get(CookiesKey.DEVICE) || setting.defaultDevice,
       theme: {
@@ -56,16 +58,18 @@ const useSettingStore = defineStore('SettingStore', {
       this.theme.menuLayout = value
       CookiesStorage.set(CookiesKey.MENU_LAYOUT, value)
     },
-    setDevice(value: string) {
-      this.device = value
-      CookiesStorage.set(CookiesKey.DEVICE, value)
-      if (value === DEVICE.MOBILE) {
+    setDevice(device: string, dialogWidth: string, drawnWidth: string) {
+      this.device = device
+      this.dialogWidth = dialogWidth
+      this.drawnWidth = drawnWidth
+      CookiesStorage.set(CookiesKey.DEVICE, device)
+      if (device === DEVICE.MOBILE) {
         this.settings.isCollapse = true
         this.setMenuLayout(LAYOUT.VERTICAL)
-      } else if (value === DEVICE.PAD) {
+      } else if (device === DEVICE.PAD) {
         this.setMenuLayout(LAYOUT.VERTICAL)
         this.settings.isCollapse = true
-      } else if (value === DEVICE.PC) {
+      } else if (device === DEVICE.PC) {
         this.setMenuLayout(this.theme.menuLayout)
         this.settings.isCollapse = false
       }

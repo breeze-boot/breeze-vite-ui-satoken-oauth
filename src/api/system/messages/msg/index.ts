@@ -9,7 +9,6 @@ import { ResponseData } from '@/types/types.ts'
 
 enum API {
   MSG_RESTFUL_URL = '/sys/v1/msg',
-  CHECK_MSG_CODE_URL = '/sys/v1/msg/checkMsgCode',
 }
 
 /**
@@ -98,7 +97,7 @@ export function exportExcel(params: MsgQuery): AxiosPromise<any> {
  */
 export function checkMsgCode(roleCode: string, roleId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_MSG_CODE_URL,
+    url: `${API.MSG_RESTFUL_URL}/checkMsgCode`,
     method: 'get',
     params: {
       roleId: roleId,

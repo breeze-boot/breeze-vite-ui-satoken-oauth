@@ -11,7 +11,7 @@ import { RowPermissionForm } from '@/api/auth/permission/rowPermission/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { selectDept } from '@/api/auth/dept'
-import { listUser } from '@/api/auth/user'
+import { listDeptUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import { Option, SelectData } from '@/types/types.ts'
 import useWidth from '@/hooks/dialogWidth'
@@ -145,7 +145,7 @@ const initDeptSelectData = async () => {
 
 const initUserTransferData = async () => {
   try {
-    const response: any = await listUser()
+    const response: any = await listDeptUser()
     const data: Option[] = []
     response.data.forEach((user: UserRecord) => {
       data.push({

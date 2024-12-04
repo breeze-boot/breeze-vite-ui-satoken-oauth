@@ -5,11 +5,10 @@
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
 import { PostResponseData, PostQuery, PostForm } from './type'
-import { ResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
   POST_RESTFUL_URL = '/auth/v1/post',
-  CHECK_POST_CODE_URL = '/auth/v1/post/checkPostCode',
 }
 
 /**
@@ -98,11 +97,21 @@ export function exportExcel(params: PostQuery): AxiosPromise<any> {
  */
 export function checkPostCode(postCode: string, postId?: number): AxiosPromise<any> {
   return request({
-    url: API.CHECK_POST_CODE_URL,
+    url: `${API.POST_RESTFUL_URL}/checkPostCode`,
     method: 'get',
     params: {
       postId,
       postCode,
     },
+  })
+}
+
+/**
+ * 岗位下拉框
+ */
+export function selectPost(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: `${API.POST_RESTFUL_URL}/selectPost`,
+    method: 'get',
   })
 }

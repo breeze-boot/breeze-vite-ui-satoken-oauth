@@ -3,30 +3,12 @@
  * @since: 2023-11-12
  */
 import request from '@/utils/request'
-import { AxiosPromise } from 'axios'
-import { PermissionResponseData, UserLoginForm } from './type'
+import { UserLoginForm } from './type'
 import { GrantType } from '@/types/types.ts'
 
 enum API {
   AUTH_URL = '/oauth2/token',
-  LIST_PERMISSION_URL = '/auth/v1/menu/listTreeMenu',
   LOGOUT_URL = '/logout',
-}
-
-/**
- * 获取菜单权限
- *
- * @param i18n 国际化标志
- */
-export function listPermission(i18n: string): AxiosPromise<PermissionResponseData> {
-  return request({
-    url: API.LIST_PERMISSION_URL,
-    method: 'get',
-    params: {
-      platformCode: 'pc',
-      i18n: i18n,
-    },
-  })
 }
 
 /**
