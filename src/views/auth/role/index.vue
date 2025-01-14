@@ -13,7 +13,7 @@ import RoleMenuPermissionList from './components/RoleMenuPermissionList.vue'
 import RoleMenuColumnPermissionList from './components/RoleMenuColumnPermissionList.vue'
 import { ElForm } from 'element-plus'
 import { RoleQuery, RoleRecord, RoleRecords } from '@/api/auth/role/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
@@ -42,13 +42,14 @@ const queryParams = reactive<RoleQuery>({
 
 let checkedRows = reactive<RoleRecords>([])
 let currentRows = reactive<RoleRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -164,7 +165,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -315,15 +316,17 @@ const handleSelectionChange = (rows: RoleRecords) => {
 
   <b-table
     ref="roleTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"

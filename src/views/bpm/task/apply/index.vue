@@ -8,7 +8,7 @@ import { reactive, ref } from 'vue'
 import { ElForm } from 'element-plus'
 import { list } from '@/api/bpm/task/apply'
 import type { ApplyRecord, ApplyQuery } from '@/api/bpm/task/apply/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
@@ -33,14 +33,14 @@ const queryParams = reactive<ApplyQuery>({
 
 let checkedRows = reactive<string[]>([])
 let currentRow = reactive<ApplyRecord>({})
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo: TableInfo = reactive({
-  // 刷新标识
-  refresh: 1,
-  // 序号列
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -63,82 +63,82 @@ const tableInfo: TableInfo = reactive({
     {
       prop: 'taskName',
       showOverflowTooltip: true,
-      label: t('completed.fields.taskName'),
+      label: t('apply.fields.taskName'),
       width: 200,
     },
     {
       prop: 'procDefKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.procDefKey'),
+      label: t('apply.fields.procDefKey'),
       width: 200,
     },
     {
       prop: 'taskDefKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.taskDefKey'),
+      label: t('apply.fields.taskDefKey'),
       width: 200,
     },
     {
       prop: 'procDefKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.procDefKey'),
+      label: t('apply.fields.procDefKey'),
       width: 200,
     },
     {
       prop: 'businessKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.businessKey'),
+      label: t('apply.fields.businessKey'),
       width: 200,
     },
     {
       prop: 'assignee',
       showOverflowTooltip: true,
-      label: t('completed.fields.assignee'),
+      label: t('apply.fields.assignee'),
       width: 200,
     },
     {
       prop: 'assigneeName',
       showOverflowTooltip: true,
-      label: t('completed.fields.assigneeName'),
+      label: t('apply.fields.assigneeName'),
       width: 200,
     },
     {
       prop: 'taskDefKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.taskDefKey'),
+      label: t('apply.fields.taskDefKey'),
       width: 180,
     },
     {
       prop: 'formKey',
       showOverflowTooltip: true,
-      label: t('completed.fields.formKey'),
+      label: t('apply.fields.formKey'),
       width: 100,
     },
     {
       prop: 'applyUser',
       showOverflowTooltip: true,
-      label: t('completed.fields.applyUser'),
+      label: t('apply.fields.applyUser'),
     },
     {
       prop: 'applyUserName',
       showOverflowTooltip: true,
-      label: t('completed.fields.applyUserName'),
+      label: t('apply.fields.applyUserName'),
     },
     {
       prop: 'status',
       showOverflowTooltip: true,
-      label: t('completed.fields.status'),
+      label: t('apply.fields.status'),
     },
     {
       prop: 'comment',
       showOverflowTooltip: true,
-      label: t('completed.fields.comment'),
+      label: t('apply.fields.comment'),
       width: 200,
     },
     {
       prop: 'createTime',
       showOverflowTooltip: true,
-      label: t('completed.fields.createTime'),
+      label: t('apply.fields.createTime'),
       width: 180,
     },
   ],
@@ -148,7 +148,7 @@ const tableInfo: TableInfo = reactive({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -202,15 +202,16 @@ const handleSelectionChange = (row: ApplyRecord) => {
 
   <b-table
     ref="completedTableRef"
+    :refresh="refresh"
+    :select="select"
     :list-api="list"
-    :tableIndex="tableInfo.tableIndex"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :default-sort="tableInfo.defaultSort"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   />

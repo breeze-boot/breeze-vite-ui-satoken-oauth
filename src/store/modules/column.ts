@@ -7,13 +7,14 @@ import { defineStore } from 'pinia'
 import { ColumnState } from '@/store/modules/types/types.ts'
 import { getRolesMenuColumns, saveMenuColumn } from '@/api/auth/permission/menuColumn'
 import type { ColumnCacheData } from '@/types/types'
-import { GET_OBJ_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
+import { GET_OBJ_ARRAY_STORAGE, SET_OBJ_ARRAY_STORAGE } from '@/utils/storage.ts'
 import { StorageName } from '@/types/types'
+import { useMessage } from '@/hooks/message'
 
 const useColumnStore = defineStore('Column', {
   state: (): ColumnState => {
     return {
-      columns: GET_OBJ_STORAGE(StorageName.Columns) as ColumnCacheData[],
+      columns: GET_OBJ_ARRAY_STORAGE(StorageName.Columns) as ColumnCacheData[],
     }
   },
   actions: {
@@ -21,7 +22,7 @@ const useColumnStore = defineStore('Column', {
       try {
         const response: any = await getRolesMenuColumns()
         this.columns = response.data as ColumnCacheData[]
-        SET_STORAGE(StorageName.Columns, this.columns)
+        SET_OBJ_ARRAY_STORAGE(StorageName.Columns, this.columns)
       } catch (err: any) {
         useMessage().error(err.message)
       }

@@ -5,13 +5,13 @@
 <!-- 权限管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, exportExcel, deleteMenuColumn } from '@/api/auth/permission/menuColumn'
+import { page, deleteMenuColumn } from '@/api/auth/permission/menuColumn'
 import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import type { MenuColumnRecords } from '@/api/auth/permission/menuColumn/type.ts'
 import { MenuColumnRecord, MenuColumnQuery } from '@/api/auth/permission/menuColumn/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
@@ -35,15 +35,16 @@ const queryParams = reactive<MenuColumnQuery>({
   total: 0,
 })
 
-let checkedColumns = reactive<MenuColumnRecords>([])
-let currentColumns = reactive<MenuColumnRecords>([])
+let checkedRows = reactive<MenuColumnRecords>([])
+let currentRows = reactive<MenuColumnRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'multi'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'multi',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -114,7 +115,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -162,9 +163,9 @@ const handleDelete = async (rows: MenuColumnRecords) => {
  *
  * @param row 选择的行数据
  */
-function handleColumnClick(row: MenuColumnRecord) {
-  currentColumns = [row]
-  console.log(currentColumns)
+const handleMenuColumnRowClick = (row: MenuColumnRecord) => {
+  currentRows = [row]
+  console.log(currentRows)
 }
 
 /**
@@ -173,7 +174,7 @@ function handleColumnClick(row: MenuColumnRecord) {
  * @param rows 选择的行数据
  */
 const handleSelectionChange = (rows: MenuColumnRecords) => {
-  currentColumns = rows
+  currentRows = rows
 }
 </script>
 
@@ -213,17 +214,18 @@ const handleSelectionChange = (rows: MenuColumnRecords) => {
 
   <b-table
     ref="permissionTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :tableIndex="tableInfo.tableIndex"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :refresh="tableInfo.refresh"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedColumns"
+    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
-    @handle-row-click="handleColumnClick"
+    @handle-row-click="handleMenuColumnRowClick"
   />
 </template>

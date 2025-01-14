@@ -25,7 +25,7 @@ defineOptions({
 const props = defineProps({
   // 表格顶部按钮
   tbHeaderBtn: {
-    type: Array,
+    type: Array<Btn>,
     default: () => [],
   },
   // 表格宽度，默认100%
@@ -41,11 +41,11 @@ const props = defineProps({
   // 获取数据的接口
   listApi: {
     type: Function,
-    required: true,
+    required: false,
   },
   // 表格使用的字典
   dict: {
-    type: Array,
+    type: Array<string>,
     default: () => [],
   },
   // 导出数据的接口
@@ -75,9 +75,12 @@ const props = defineProps({
   },
   // 表格字段配置
   fieldList: {
-    type: Array,
+    type: Array<Field>,
     required: true,
     default: () => [],
+  },
+  loading: {
+    type: Boolean,
   },
   // 操作栏配置
   handleBtn: {
@@ -92,7 +95,7 @@ const props = defineProps({
   // 是否分页
   pager: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   // 重置到第一页
   reloadCurrentPage: {
@@ -119,7 +122,7 @@ let $route = useRoute()
 const columnStore = useColumnStore()
 const { theme } = storeToRefs(useSettingStore())
 const { t } = useI18n()
-const $emit = defineEmits(['handle-row-db-click', 'selection-change'])
+const $emit = defineEmits(['handle-row-db-click', 'selection-change', 'update:loading'])
 // 分页信息
 const pagerInfo = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
@@ -134,9 +137,19 @@ const pagerQuery = ref({
   // 每页条数
   size: 10,
 })
+/**
+ * 表格 loading
+ */
+const tableLoading = computed({
+  get: () => {
+    return props.loading
+  },
+  set: (value) => {
+    $emit('update:loading', value)
+  },
+})
 
 const tableInfo = ref({
-  loading: false,
   // 是否展开
   expandAll: false,
   // 显示的列
@@ -271,7 +284,7 @@ const handleParams = () => {
  */
 const getList = async () => {
   try {
-    tableInfo.value.loading = true
+    tableLoading.value = true
     singleSelectValue.value = undefined
     if (!props.listApi) return
     const response: any = await props.listApi(handleParams())
@@ -290,7 +303,7 @@ const getList = async () => {
     useMessage().warning(err.message)
   } finally {
     onEnd()
-    tableInfo.value.loading = false
+    tableLoading.value = false
     handleDoExpandTableRowView()
   }
 }
@@ -677,7 +690,7 @@ const handleSliderChange = (row: any) => {
         :data="tableData.rows"
         :max-height="tableHeight"
         :height="tableHeight"
-        v-loading="tableInfo.loading"
+        v-loading="tableLoading"
         border
         :default-expand-all="expandAll"
         stripe

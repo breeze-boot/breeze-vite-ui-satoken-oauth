@@ -13,7 +13,7 @@ import DictItem from './components/DictItem.vue'
 import { ElForm } from 'element-plus'
 import type { DictRecords } from '@/api/system/dict/type.ts'
 import { DictRecord, DictQuery } from '@/api/system/dict/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
@@ -41,13 +41,14 @@ const queryParams = reactive<DictQuery>({
 
 let checkedRows = reactive<DictRecords>([])
 let currentRows = reactive<DictRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 字典
   dict: ['DICT_STATUS'],
   // 表格顶部按钮
@@ -166,7 +167,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -298,16 +299,17 @@ const handleSelectionChange = (rows: DictRecords) => {
 
   <b-table
     ref="dictTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :dict="tableInfo.dict"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"

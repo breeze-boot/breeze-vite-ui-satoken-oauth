@@ -8,7 +8,7 @@
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { page } from '@/api/system/jLog'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { JLogQuery, JLogRecords } from '@/api/system/jLog/type.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import useWidth from '@/hooks/dialogWidth'
@@ -22,6 +22,7 @@ const direction = ref('rtl')
 const { t } = useI18n()
 const visible = ref<boolean>(false)
 const jLogTableRef = ref()
+const loading = ref<boolean>(false)
 
 let currentRows = reactive<JLogRecords>([])
 
@@ -33,13 +34,14 @@ const queryParams = reactive<JLogQuery>({
   size: 10,
   total: 0,
 })
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'multi'
+const mountedRefresh: boolean = true
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  mountedRefresh: true,
-  tableIndex: true,
-  // 选择框类型
-  select: 'multi',
   // 字典
   dict: ['JOB_STATUS'],
   // 表格字段配置
@@ -125,7 +127,7 @@ const init = async (id: number) => {
  */
 const getInfo = async (id: number) => {
   queryParams.jobId = id
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -151,16 +153,19 @@ defineExpose({
     <template #default>
       <b-table
         ref="jLogTableRef"
-        :list-api="page"
-        :dict="tableInfo.dict"
-        :tableIndex="tableInfo.tableIndex"
-        :query="queryParams"
-        :refresh="tableInfo.refresh"
-        :mountedRefresh="tableInfo.mountedRefresh"
-        :field-list="tableInfo.fieldList"
-        :select="tableInfo.select"
-        :handle-btn="tableInfo.handleBtn"
         table-height="80%"
+        :refresh="refresh"
+        :mountedRefresh="mountedRefresh"
+        :select="select"
+        :list-api="page"
+        v-model:loading="tableLoading"
+        :tableIndex="tableIndex"
+        :query="queryParams"
+        :checked-rows="checkedRows"
+        :dict="tableInfo.dict"
+        :field-list="tableInfo.fieldList"
+        :tb-header-btn="tableInfo.tbHeaderBtn"
+        :handle-btn="tableInfo.handleBtn"
         @handle-table-row-btn-click="handleTableRowBtnClick"
         @selection-change="handleSelectionChange"
       />

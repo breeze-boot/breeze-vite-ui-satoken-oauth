@@ -13,6 +13,7 @@ import { FormItemRule } from 'element-plus/es/components/form'
 export interface Btn {
   type?: 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
   icon?: string
+  loading?: boolean
   label?: string
   disabled?: (event: string, row: any) => boolean
   hidden?: (event: string, row: any) => boolean
@@ -21,30 +22,23 @@ export interface Btn {
   permission?: string[]
   link?: boolean
   event: Event
-  eventHandle?: (row: any, $index: number) => void
+  eventHandle?: (row: any, $index?: number) => void
 }
 
 /**
  * 事件类型
  */
 export type Event = 'exportAll' | 'export' | 'delete' | 'add' | string
+export type SelectEvent = 'multi' | 'single'
 
 /**
  * 表格类型
  */
 export interface TableInfo {
-  refresh: number
-  mountedRefresh?: boolean
-  rows?: any[]
   dict?: string[]
-  pager?: boolean
-  select?: 'multi' | 'single'
-  tbHeaderBtn?: Btn[]
   fieldList?: Field[]
-  tableIndex?: boolean
-  checkedRows?: object[] | number[] | string[]
+  tbHeaderBtn?: Btn[]
   handleBtn?: HandleBtn
-  defaultSort?: ColumnSort
 }
 
 /**

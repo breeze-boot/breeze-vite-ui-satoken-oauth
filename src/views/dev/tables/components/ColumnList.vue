@@ -9,7 +9,7 @@ import { reactive, ref } from 'vue'
 import { listColumns } from '@/api/dev/tables/index.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { useI18n } from 'vue-i18n'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
@@ -127,7 +127,7 @@ const tableInfo: TableInfo = {
 const init = async (tableName: string) => {
   queryParams.tableName = tableName
   visible.value = true
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 defineExpose({

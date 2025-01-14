@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { UserRecord, UserRecords } from '@/api/auth/user/type.ts'
 import { page } from '@/api/auth/user'
 import { EmailSetUserQuery, SetUserMSubjectForm } from '@/api/system/email/msubject/type.ts'
@@ -18,6 +18,7 @@ import { ElMessage } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import useWidth from '@/hooks/dialogWidth'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'SetUser',
@@ -31,9 +32,6 @@ const loading = ref<boolean>(false)
 const userTableRef = ref()
 const userQueryFormRef = ref()
 const setUserMSubjectForm = ref<SetUserMSubjectForm>({ ccUserId: [], toUserId: [] })
-
-let currentRows = reactive<UserRecords>([])
-
 /**
  * 查询条件
  */
@@ -48,16 +46,20 @@ const queryParams = ref<EmailSetUserQuery>({
   total: 0,
 })
 
+let currentRows = reactive<UserRecords>([])
+// 选中的行
+let checkedRows = reactive<UserRecords>([])
+
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const pager = ref<boolean>(true)
+const mountedRefresh = ref<boolean>(true)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'multi'
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  mountedRefresh: true,
-  pager: true,
-  tableIndex: true,
-  // 选择框类型
-  select: 'multi',
-  // 选中的行
-  checkedRows: [],
   tbHeaderBtn: [
     {
       type: 'primary',
@@ -126,8 +128,8 @@ const init = async (id: number, column: string) => {
 const getInfo = async (id: number, column: string) => {
   try {
     const response: any = await getMSubject(JSONBigInt.parse(id))
-    tableInfo.checkedRows = response.data[column]
-    tableInfo.refresh = Math.random()
+    checkedRows = response.data[column]
+    refresh.value = Math.random()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -224,17 +226,19 @@ defineExpose({
     </search-container-box>
     <b-table
       ref="userTableRef"
-      :checked-rows="tableInfo.checkedRows"
-      :list-api="page"
-      :tableIndex="tableInfo.tableIndex"
-      :query="queryParams"
-      :refresh="tableInfo.refresh"
-      :mountedRefresh="tableInfo.mountedRefresh"
-      :field-list="tableInfo.fieldList"
-      :select="tableInfo.select"
-      :handle-btn="tableInfo.handleBtn"
       table-height="80%"
-      :pager="tableInfo.pager"
+      :refresh="refresh"
+      :select="select"
+      :list-api="page"
+      v-model:loading="tableLoading"
+      :tableIndex="tableIndex"
+      :query="queryParams"
+      :checked-rows="checkedRows"
+      :mountedRefresh="mountedRefresh"
+      :dict="tableInfo.dict"
+      :field-list="tableInfo.fieldList"
+      :tb-header-btn="tableInfo.tbHeaderBtn"
+      :handle-btn="tableInfo.handleBtn"
       @selection-change="handleSelectionChange"
     />
     <template #footer>

@@ -13,8 +13,8 @@ import { DEVICE, LAYOUT } from '@/utils/common.ts'
 const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
     return {
-      drawnWidth: 100,
-      dialogWidth: 100,
+      drawnWidth: '100%',
+      dialogWidth: '100%',
       refresh: false,
       device: CookiesStorage.get(CookiesKey.DEVICE) || setting.defaultDevice,
       theme: {

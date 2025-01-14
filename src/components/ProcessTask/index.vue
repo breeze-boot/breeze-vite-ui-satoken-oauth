@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, nextTick, ref, shallowRef } from 'vue'
-import { useRouter } from 'vue-router'
-import { ArrowLeft } from '@element-plus/icons-vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
-import BpmInfo from '@/components/ProcessTask/ProcessInfo/index.vue'
 import UserDialog from '@/components/UserDialog/index.vue'
 import { getBpmDefinitionXml } from '@/api/bpm/def/definition'
 import { suspendedInstance } from '@/api/bpm/def/instance'
@@ -25,11 +22,16 @@ import { Button } from '@/types/types.ts'
 import useUserStore from '@/store/modules/user'
 import { ApproveListRecord, TodoRecord } from '@/api/bpm/task/todo/type.ts'
 import { useI18n } from 'vue-i18n'
+import SvgButton from '@/components/SvgButton/index.vue'
+import { useCloseTab } from '@/hooks/newTab'
+import { useRouter } from 'vue-router'
 
 const $emit = defineEmits(['approveClickCallBack'])
 
 const { t } = useI18n()
-let form = shallowRef()
+let $router = useRouter()
+const loading = ref(true)
+let formComponent = shallowRef()
 let delegateUserDialogVisible = ref<boolean>()
 let transferUserDialogVisible = ref<boolean>()
 let taskInfo = ref<TodoRecord>({
@@ -43,28 +45,30 @@ let taskInfo = ref<TodoRecord>({
   procInstId: '',
   taskId: '',
 })
-const $router = useRouter()
-const loading = ref<boolean>(false)
 const btnLoading = ref<boolean>(false)
-const tabName = ref<string>('approval')
 const buttons = ref<Button[]>([])
 const startUser = ref<string>()
 const xmlStr = ref<string>('')
+const processViewerVisible = ref<boolean>(false)
 const xmlNodes = ref<any>()
 const tableData = ref<ApproveListRecord[]>([])
 const userStore = useUserStore()
 
 const initApprove = async (taskId: string) => {
-  const response: any = await getTaskInfo(taskId)
-  if (response.code !== '0000') {
-    ElMessage.warning('任务不存在')
-  }
-  taskInfo.value = response.data
-  await flowButtonInfo()
+  try {
+    const response: any = await getTaskInfo(taskId)
+    taskInfo.value = response.data
+    await flowButtonInfo()
+    await approveList()
 
-  form.value = defineAsyncComponent(() => {
-    return import(`/src/views${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
-  })
+    formComponent.value = defineAsyncComponent(() => {
+      return import(`/src/views${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
+    })
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  }
+  loading.value = false
 }
 
 const initStartApprove = async (procDefKey: string, businessKey: string) => {
@@ -72,57 +76,39 @@ const initStartApprove = async (procDefKey: string, businessKey: string) => {
 }
 
 /**
- * 获取信息
- */
-const handleChangeType = async (value: string) => {
-  await flowButtonInfo()
-  if (value === 'approval') {
-    tabName.value = value
-    return
-  }
-  if (value === 'approvalNode') {
-    await approveList()
-    tabName.value = value
-    return
-  }
-  if (value === 'flow') {
-    await historyProcessDefinitionXml()
-    tabName.value = value
-    return
-  }
-}
-/**
  * 获取流程的按钮信息
  */
 const flowButtonInfo = async () => {
-  const response: any = await getFlowButtonInfo(
-    taskInfo.value.procDefKey,
-    taskInfo.value.businessKey,
-    taskInfo.value.procInstId,
-  )
-  if (response.code !== '0000') {
-    ElMessage.warning('按钮获取失败')
-    return
+  try {
+    const response: any = await getFlowButtonInfo(
+      taskInfo.value.procDefKey,
+      taskInfo.value.businessKey,
+      taskInfo.value.procInstId,
+    )
+    await nextTick(() => {
+      buttons.value = response.data.buttons
+      startUser.value = response.data.startUser
+    })
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
   }
-  nextTick(() => {
-    buttons.value = response.data.buttons
-    startUser.value = response.data.startUser
-  })
 }
 
 /**
  * 获取流程的按钮信息
  */
 const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
-  const response: any = await getFlowButtonInfo(procDefKey, businessKey, '')
-  if (response.code !== '0000') {
-    ElMessage.warning('按钮获取失败')
-    return
+  try {
+    const response: any = await getFlowButtonInfo(procDefKey, businessKey, '')
+    await nextTick(() => {
+      buttons.value = response.data.buttons
+      startUser.value = response.data.startUser
+    })
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
   }
-  nextTick(() => {
-    buttons.value = response.data.buttons
-    startUser.value = response.data.startUser
-  })
 }
 
 /**
@@ -130,130 +116,171 @@ const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
  */
 const historyProcessDefinitionXml = async () => {
   if (!taskInfo.value.procInstId) return
-  const response: any = await getBpmDefinitionXml(taskInfo.value.procInstId)
-  if (response.code !== '0000') {
-    ElMessage.warning('流程图获取失败')
-    return
+  try {
+    const response: any = await getBpmDefinitionXml(taskInfo.value.procInstId)
+    xmlStr.value = response.data.xmlStr
+    xmlNodes.value = response.data
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
   }
-  xmlStr.value = response.data.xmlStr
-  xmlNodes.value = response.data
 }
 
 /**
  * 获取审批记录信息
  */
 const approveList = async () => {
-  const response: any = await listFlowApproveInfo(taskInfo.value.procDefKey, taskInfo.value.businessKey)
-  if (response.code !== '0000') {
-    ElMessage.warning('审批记录获取失败')
-    return
+  try {
+    const response: any = await listFlowApproveInfo(taskInfo.value.procDefKey, taskInfo.value.businessKey)
+    tableData.value = response.data
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
   }
-  tableData.value = response.data
 }
 
 /**
  * 加签审批通过
  */
 const approveResolveTask = async () => {
-  const response: any = await resolveTask(taskInfo.value.taskId)
-  if (response.code !== '0000') {
-    ElMessage.warning('审批失败')
+  try {
+    btnLoading.value = true
+    const response: any = await resolveTask(taskInfo.value.taskId)
+    if (response.code !== '0000') {
+      ElMessage.warning('审批失败')
+    }
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  btnLoading.value = false
 }
 
 /**
  * 审批通过
  */
 const approveAgree = async () => {
-  const response: any = await agree({
-    comment: '同意',
-    pass: true,
-    procInstId: taskInfo.value.procInstId,
-    taskId: taskInfo.value.taskId,
-    variables: {},
-  })
-  if (response.code !== '0000') {
-    ElMessage.warning('审批失败')
+  try {
+    btnLoading.value = true
+    await agree({
+      comment: '同意',
+      pass: true,
+      procInstId: taskInfo.value.procInstId,
+      taskId: taskInfo.value.taskId,
+      variables: {},
+    })
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  btnLoading.value = false
 }
 
 /**
  * 审批废止
  */
 const approveAbolition = async () => {
-  const response: any = await abolition({
-    comment: '废止流程',
-    pass: true,
-    procInstId: taskInfo.value.procInstId,
-    taskId: taskInfo.value.taskId,
-    variables: {},
-  })
-  if (response.code !== '0000') {
-    ElMessage.warning('审批失败')
+  try {
+    btnLoading.value = true
+    await abolition({
+      comment: '废止流程',
+      pass: true,
+      procInstId: taskInfo.value.procInstId,
+      taskId: taskInfo.value.taskId,
+      variables: {},
+    })
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  btnLoading.value = false
 }
 
 /**
  * 审批据绝
  */
 const approveReject = async () => {
-  const response: any = await reject({
-    comment: '拒绝',
-    pass: false,
-    procInstId: taskInfo.value.procInstId,
-    taskId: taskInfo.value.taskId,
-    variables: {},
-  })
-  if (response.code !== '0000') {
-    ElMessage.warning('审批失败')
+  try {
+    btnLoading.value = true
+    await reject({
+      comment: '拒绝',
+      pass: false,
+      procInstId: taskInfo.value.procInstId,
+      taskId: taskInfo.value.taskId,
+      variables: {},
+    })
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  btnLoading.value = false
 }
 
 /**
  * 签收
  */
 const approveClaim = async () => {
-  const response: any = await claim(taskInfo.value.taskId)
-  if (response.code !== '0000') {
-    ElMessage.warning('签收失败')
+  try {
+    btnLoading.value = true
+    await claim(taskInfo.value.taskId)
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  await handleChangeType(tabName.value)
-  btnLoading.value = false
 }
 
 /**
  * 反签收
  */
 const approveUnClaim = async () => {
-  const response: any = await unClaim(taskInfo.value.taskId)
-  if (response.code !== '0000') {
-    ElMessage.warning('签收失败')
+  try {
+    btnLoading.value = true
+    await unClaim(taskInfo.value.taskId)
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  await handleChangeType(tabName.value)
-  btnLoading.value = false
 }
 
 /**
  * 加签
  */
-const approveDelegateTask = async (username: string) => {
-  const response: any = await delegateTask(taskInfo.value.taskId, username)
-  if (response.code !== '0000') {
-    ElMessage.warning('加签失败')
+const approveDelegateTask = async (row: any) => {
+  if (!row.id) {
+    ElMessage.warning('用户信息获取失败')
+    return
   }
-  await flowButtonInfo()
-  await handleChangeType(tabName.value)
-  btnLoading.value = false
+  try {
+    btnLoading.value = true
+    await delegateTask(taskInfo.value.taskId, row.id)
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
+  }
 }
 
 /**
@@ -267,28 +294,40 @@ const handleApproveDelegateTask = async () => {
  * 暂停
  */
 const approveSuspendedInstance = async () => {
-  const response: any = await suspendedInstance({
-    procInstId: taskInfo.value.procInstId,
-  })
-  if (response.code !== '0000') {
-    ElMessage.warning('暂停失败')
+  btnLoading.value = true
+  try {
+    await suspendedInstance({
+      procInstId: taskInfo.value.procInstId,
+    })
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
   }
-  await flowButtonInfo()
-  await handleChangeType(tabName.value)
-  btnLoading.value = false
 }
 
 /**
  * 转签审批
  */
-const approveTransferTask = async (username: string) => {
-  const response: any = await transferTask(taskInfo.value.taskId, username)
-  if (response.code !== '0000') {
-    ElMessage.warning('审批失败')
+const approveTransferTask = async (row: any) => {
+  if (!row.id) {
+    ElMessage.warning('用户信息获取失败')
+    return
   }
-  await flowButtonInfo()
-  await handleChangeType(tabName.value)
-  btnLoading.value = false
+  try {
+    btnLoading.value = true
+    await transferTask(taskInfo.value.taskId, row.id)
+    await flowButtonInfo()
+    await useCloseTab($router)
+  } catch (e: any) {
+    ElMessage.warning(e.message)
+    throw new Error(e.message)
+  } finally {
+    btnLoading.value = false
+  }
 }
 
 /**
@@ -298,8 +337,12 @@ const handleApproveTransferTask = async () => {
   transferUserDialogVisible.value = true
 }
 
+const handleShowBpmFlow = async () => {
+  await historyProcessDefinitionXml()
+  processViewerVisible.value = true
+}
+
 const handleApproveClick = (item: Button) => {
-  btnLoading.value = true
   switch (item.key) {
     case 'abolition':
       approveAbolition()
@@ -333,71 +376,84 @@ const handleApproveClick = (item: Button) => {
   $emit('approveClickCallBack', item)
 }
 
-const goBack = () => {
-  $router.back()
+const tableRowClassName = ({ rowIndex }: { row: ApproveListRecord; rowIndex: number }) => {
+  if (rowIndex === 1) {
+    return 'warning-row'
+  } else if (rowIndex === 3) {
+    return 'success-row'
+  }
+  return ''
 }
 
 defineExpose({ initApprove, initStartApprove })
 </script>
 <template>
-  <el-card shadow="never">
-    <el-page-header style="width: 100%" :icon="ArrowLeft" @back="goBack">
-      <template #content>
-        <div class="flex items-center">
-          <span class="text-sm mr-2" style="color: var(--el-text-color-regular)">流程处理</span>
-        </div>
+  <el-card shadow="never" v-loading="loading">
+    <div class="flex items-center">
+      <template v-for="item in buttons" :key="item.key">
+        <template v-if="item.key === 'abolition'">
+          <svg-button
+            type="primary"
+            class="ml-2"
+            :label="item.name"
+            :loading="btnLoading"
+            v-if="startUser === userStore.userInfo.username"
+            @svg-btn-click="handleApproveClick(item)"
+          />
+        </template>
+        <template v-else>
+          <svg-button
+            type="primary"
+            class="ml-2"
+            :label="item.name"
+            :loading="btnLoading"
+            @svg-btn-click="handleApproveClick(item)"
+          />
+        </template>
       </template>
-      <template #extra>
-        <div class="flex items-center">
-          <template v-for="item in buttons" :key="item.key">
-            <template v-if="item.key === 'abolition'">
-              <svg-button
-                type="primary"
-                class="ml-2"
-                :label="item.name"
-                :loading="btnLoading"
-                v-if="startUser === userStore.userInfo.username"
-                @svg-btn-click="handleApproveClick(item)"
-              />
-            </template>
-            <template v-else>
-              <svg-button
-                type="primary"
-                class="ml-2"
-                :label="item.name"
-                :loading="btnLoading"
-                @svg-btn-click="handleApproveClick(item)"
-              />
-            </template>
-          </template>
-        </div>
-      </template>
-      <el-divider />
-      <div class="mt-4 text-sm font-bold">
-        <el-skeleton v-if="loading" :rows="5" animated />
-
-        <el-radio-group @change="handleChangeType" size="default" style="margin-bottom: 30px">
-          <el-radio-button value="approval">审批</el-radio-button>
-          <el-radio-button value="approvalNode">审批记录</el-radio-button>
-          <el-radio-button value="flow">流程图</el-radio-button>
-        </el-radio-group>
-        <el-row v-if="tabName === 'approval'" :gutter="23">
-          <el-col :span="23">
-            <component v-model="taskInfo.businessKey" v-if="form" :is="form" />
-            <slot v-else name="formSlot" />
-          </el-col>
-        </el-row>
-        <el-row v-if="tabName === 'approvalNode'" :gutter="23">
-          <bpm-info :business-key="taskInfo.businessKey" :proc-def-key="taskInfo.procDefKey" />
-        </el-row>
-        <el-row v-if="tabName === 'flow'" :gutter="23">
-          <el-col :span="23" style="overflow-x: hidden">
-            <process-viewer :xml="xmlStr" style="height: 50vh; width: 100%" :xmlNodes="xmlNodes" />
-          </el-col>
-        </el-row>
-      </div>
-    </el-page-header>
+      <svg-button type="primary" class="ml-2" label="流程图" @svg-btn-click="handleShowBpmFlow" />
+    </div>
+    <el-divider />
+    <el-row>
+      <!--组件插槽-->
+      <el-col :span="24" style="padding: 20px">
+        <el-card shadow="never">
+          <component v-model="taskInfo.businessKey" v-if="formComponent" :is="formComponent" />
+          <slot v-else name="formSlot" />
+        </el-card>
+      </el-col>
+      <!--流程信息-->
+      <el-col :span="24" style="padding: 20px">
+        <el-card shadow="never">
+          <el-table :data="tableData" style="width: 100%" :row-class-name="tableRowClassName">
+            <el-table-column prop="taskName" label="任务名" />
+            <el-table-column prop="activityId" label="节点" />
+            <el-table-column prop="assigneeName" label="当前审批人" />
+            <el-table-column prop="taskAssigneeName" label="任务分配人员" />
+            <el-table-column prop="taskCandidateName" label="任务审批候选人员" />
+            <el-table-column prop="taskGroupName" label="任务审批候选角色" />
+            <el-table-column prop="startTime" label="审批开始时间" />
+            <el-table-column prop="endTime" label="审批结束时间" />
+            <el-table-column prop="comments" label="审批意见">
+              <template v-slot="{ row }">
+                <div v-if="row.comments">
+                  <div v-for="(item, index) in row.comments" :key="index">
+                    <div style="border-bottom: 1px solid rgba(40, 40, 40, 0.23)">{{ item.message }}</div>
+                    <div style="border-bottom: 1px solid rgba(40, 40, 40, 0.23)">{{ item.time }}</div>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
   </el-card>
+
+  <!--流程信息-->
+  <el-dialog v-model="processViewerVisible">
+    <process-viewer :xml="xmlStr" style="height: 50vh; width: 100%" :xmlNodes="xmlNodes" />
+  </el-dialog>
 
   <user-dialog
     ref="transferUserRef"
@@ -405,8 +461,8 @@ defineExpose({ initApprove, initStartApprove })
     :single="true"
     v-model:modelValue="transferUserDialogVisible"
     @updateUserData="
-      (username: string) => {
-        approveTransferTask(username)
+      (row: any) => {
+        approveTransferTask(row)
       }
     "
   />
@@ -416,10 +472,22 @@ defineExpose({ initApprove, initStartApprove })
     :single="true"
     v-model:modelValue="delegateUserDialogVisible"
     @updateUserData="
-      (username: string) => {
-        approveDelegateTask(username)
+      (row: any) => {
+        approveDelegateTask(row)
       }
     "
   />
 </template>
-<style></style>
+<style>
+.el-table .warning-row {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+
+.el-table .success-row {
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+.example-showcase .el-loading-mask {
+  z-index: 9;
+}
+</style>

@@ -128,9 +128,9 @@ export function setEmailUser(id: number, data: SetUserMSubjectForm): AxiosPromis
  *
  * @param id
  */
-export function listToEmail(id: number): AxiosPromise<ResponseData> {
+export function listToEmailUser(id: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.EMAIL_RESULT_URL}/listToEmail/${id}`,
+    url: `${API.EMAIL_RESULT_URL}/listToEmailUser/${id}`,
     method: 'get',
   })
 }
@@ -140,9 +140,9 @@ export function listToEmail(id: number): AxiosPromise<ResponseData> {
  *
  * @param id
  */
-export function listCcEmail(id: number): AxiosPromise<ResponseData> {
+export function listCcEmailUser(id: number): AxiosPromise<ResponseData> {
   return request({
-    url: `${API.EMAIL_RESULT_URL}/listCcEmail/${id}`,
+    url: `${API.EMAIL_RESULT_URL}/listCcEmailUser/${id}`,
     method: 'get',
   })
 }

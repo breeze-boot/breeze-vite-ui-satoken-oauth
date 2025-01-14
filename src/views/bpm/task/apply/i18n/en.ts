@@ -1,7 +1,6 @@
 export default {
   apply: {
     fields: {
-      taskTitle: 'task title',
       taskName: 'task name',
       taskDefKey: 'task definition key',
       procInstId: 'process instance id',

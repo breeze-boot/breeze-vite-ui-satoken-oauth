@@ -48,7 +48,7 @@ request.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   // 如果存在token，请求携带token
   const accessToken: string = userStore.accessToken
   if (accessToken && !config.headers[StorageName.Authorization]) {
-    config.headers[StorageName.Authorization] = `Bearer ${accessToken}`
+    config.headers[StorageName.Authorization] = `${accessToken}`
   }
   config.headers[CookiesKey.XTenantId] = userStore.tenantId
   config.headers[StorageName.AcceptLanguage] = i18n.global.locale.value
@@ -81,7 +81,7 @@ const handleRefreshToken = async (error: any) => {
     try {
       const response: LoginResponseData = await userStore.toRefreshToken()
       const token: string = response.access_token
-      error.config.headers['Authorization'] = `Bearer ${token}`
+      error.config.headers['Authorization'] = `${token}`
       requests.forEach((cb) => cb(token))
       requests = []
       return Promise.resolve(request(error.config))
@@ -94,7 +94,7 @@ const handleRefreshToken = async (error: any) => {
   } else {
     return new Promise((resolve): void => {
       requests.push((token: string): void => {
-        error.config.headers['Authorization'] = `Bearer ${token}`
+        error.config.headers['Authorization'] = `${token}`
         resolve(request(error.config))
       })
     })
@@ -111,7 +111,7 @@ const handle401Error = async (error: any) => {
     refreshTimes = 0
     ElMessage.error(i18n.global.t('axios.reLogin'))
     await redirectToLogin()
-    return
+    throw new Error(i18n.global.t('axios.reLogin'))
   }
   return await handleRefreshToken(error)
 }

@@ -8,7 +8,7 @@
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
@@ -26,8 +26,6 @@ const visible = ref<boolean>(false)
 const dictItemTableRef = ref()
 const dictItemAddOrEditRef = ref()
 
-let currentRows = reactive<DictItemRecords>([])
-
 /**
  * 查询条件
  */
@@ -36,13 +34,17 @@ const queryParams = reactive<DictItemQuery>({
   dictCode: '',
   dictName: '',
 })
+
+let currentRows = reactive<DictItemRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const mountedRefresh = ref<boolean>(true)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'multi'
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  mountedRefresh: true,
-  tableIndex: true,
-  // 选择框类型
-  select: 'multi',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -142,7 +144,7 @@ const getInfo = async (id: number) => {
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -208,17 +210,19 @@ defineExpose({
     <template #default>
       <b-table
         ref="dictItemTableRef"
+        table-height="80%"
         :pager="false"
+        :refresh="refresh"
+        :mountedRefresh="mountedRefresh"
+        :select="select"
         :list-api="list"
-        :tableIndex="tableInfo.tableIndex"
+        v-model:loading="tableLoading"
+        :tableIndex="tableIndex"
         :query="queryParams"
-        :refresh="tableInfo.refresh"
-        :mountedRefresh="tableInfo.mountedRefresh"
+        :dict="tableInfo.dict"
         :field-list="tableInfo.fieldList"
         :tb-header-btn="tableInfo.tbHeaderBtn"
-        :select="tableInfo.select"
         :handle-btn="tableInfo.handleBtn"
-        table-height="80%"
         @selection-change="handleSelectionChange"
       />
     </template>

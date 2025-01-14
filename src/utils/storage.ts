@@ -4,6 +4,16 @@
  */
 import { StorageName } from '@/types/types'
 
+// 提取公共的获取localStorage数据逻辑，增加更合理的错误处理
+const getLocalStorageData = (name: StorageName): string | null => {
+  try {
+    return localStorage.getItem(name)
+  } catch (e) {
+    console.error(`Error getting data from localStorage with key ${name}:`, e)
+    return null
+  }
+}
+
 /**
  * 保存string类型的数据到 localStorage
  *
@@ -22,8 +32,29 @@ export const SET_STRING_STORAGE = (name: StorageName, data: string): void => {
  * @param data 数据
  * @constructor
  */
-export const SET_STORAGE = (name: StorageName, data: object): void => {
+export const SET_OBJ_STORAGE = (name: StorageName, data: object): void => {
   localStorage.setItem(name, JSON.stringify(data || {}))
+}
+
+/**
+ * 保存object类型的数据到 localStorage
+ *
+ * @param name 键名
+ * @param data 数据
+ * @constructor
+ */
+export const SET_OBJ_ARRAY_STORAGE = (name: StorageName, data: object[]): void => {
+  localStorage.setItem(name, JSON.stringify(data || []))
+}
+/**
+ * 保存object类型的数据到 localStorage
+ *
+ * @param name 键名
+ * @param data 数据
+ * @constructor
+ */
+export const SET_STR_ARRAY_STORAGE = (name: StorageName, data: string[]): void => {
+  localStorage.setItem(name, JSON.stringify(data || []))
 }
 
 /**
@@ -33,29 +64,30 @@ export const SET_STORAGE = (name: StorageName, data: object): void => {
  * @constructor
  */
 export const GET_OBJ_STORAGE = (name: StorageName): object => {
-  let storage: string = ''
-  try {
-    storage = localStorage.getItem(name)!
-  } catch (e) {
-    localStorage.clear()
-  }
-  return !storage ? {} : JSON.parse(storage)
+  const storage = getLocalStorageData(name)
+  return storage ? JSON.parse(storage) : {}
 }
 
 /**
- * 获取数组类型类型的数据
+ * 获取object类型的数据（数组形式）
  *
  * @param name 键名
  * @constructor
  */
-export const GET_ARRAY_STORAGE = (name: StorageName): string[] => {
-  let storage: string = ''
-  try {
-    storage = localStorage.getItem(name)!
-  } catch (e) {
-    localStorage.clear()
-  }
-  return !storage ? ([] as string[]) : (JSON.parse(storage) as string[])
+export const GET_OBJ_ARRAY_STORAGE = (name: StorageName): object[] => {
+  const storage = getLocalStorageData(name)
+  return storage ? (JSON.parse(storage) as object[]) : []
+}
+
+/**
+ * 获取数组类型的数据
+ *
+ * @param name 键名
+ * @constructor
+ */
+export const GET_STR_ARRAY_STORAGE = (name: StorageName): string[] => {
+  const storage = getLocalStorageData(name)
+  return storage ? (JSON.parse(storage) as string[]) : []
 }
 
 /**
@@ -65,7 +97,8 @@ export const GET_ARRAY_STORAGE = (name: StorageName): string[] => {
  * @constructor
  */
 export const GET_STRING_STORAGE = (name: StorageName): string => {
-  return localStorage.getItem(name)!
+  const storage = getLocalStorageData(name)
+  return storage || ''
 }
 
 /**
@@ -79,7 +112,7 @@ export const REMOVE_STORAGE = (name: StorageName) => {
 }
 
 /**
- * 删除 localStorage 数据
+ * 删除 localStorage 中多个数据
  *
  * @param names 键名数组
  * @constructor
@@ -91,7 +124,7 @@ export const REMOVE_STORAGES = (names: StorageName[]) => {
 }
 
 /**
- * 删除所有数据
+ * 删除所有localStorage数据
  *
  * @constructor
  */

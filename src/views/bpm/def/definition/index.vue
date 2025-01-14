@@ -12,12 +12,13 @@ import { page, exportExcel, deleteDefinition, suspendedDefinition } from '@/api/
 import type { BpmDefinitionRecords } from '@/api/bpm/def/definition/type.ts'
 import type { BpmDefinitionRecord, BpmDefinitionQuery, BpmStartForm } from '@/api/bpm/def/definition/type.ts'
 import AddOrEdit from './components/DefinationAddOrEdit.vue'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import { useMessage } from '@/hooks/message'
 import { startInstance } from '@/api/bpm/def/instance'
+import { random } from 'lodash-es'
 
 defineOptions({
   name: 'Definition',
@@ -43,17 +44,18 @@ let currentRow = reactive<BpmDefinitionRecord>({
   procDefName: '',
   deploymentTime: '',
   suspended: '',
-  tenantId: '',
   version: '',
   xml: '',
 })
 
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 字典
   dict: ['FLOW_SUSPENDED'],
   // 表格顶部按钮
@@ -142,7 +144,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    width: 280,
+    width: 300,
     label: t('common.operate'),
     fixed: 'right',
     link: true,
@@ -191,7 +193,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -237,10 +239,13 @@ const handleDelete = async (rows: RoleRecords) => {
     const definitions: any[] = rows.map((item: any) => {
       return { procDefKey: item.procDefKey, cascade: true }
     })
+    tableLoading.value = true
     await deleteDefinition(definitions)
     useMessage().success(`${t('common.delete') + t('common.success')}`)
+    tableLoading.value = false
     reloadList()
   } catch (err: any) {
+    tableLoading.value = false
     useMessage().error(err.message)
   }
 }
@@ -254,13 +259,16 @@ const handleStart = async (row: BpmDefinitionRecord) => {
   try {
     let startParam: BpmStartForm = {
       procDefKey: row.procDefKey,
-      businessKey: '',
+      businessKey: new Date().getTime().toString(),
       variables: {},
       isPassFirstNode: false,
     }
+    tableLoading.value = true
     await startInstance(startParam)
     useMessage().success(`${t('common.start') + t('common.success')}`)
+    tableLoading.value = false
   } catch (err: any) {
+    tableLoading.value = false
     useMessage().error(err.message)
   }
 }
@@ -321,17 +329,17 @@ const handleSelectionChange = (row: BpmDefinitionRecord) => {
 
   <b-table
     ref="definitionTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :dict="tableInfo.dict"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :default-sort="tableInfo.defaultSort"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   />

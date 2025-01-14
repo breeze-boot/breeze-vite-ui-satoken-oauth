@@ -13,7 +13,7 @@ import { useMessage } from '@/hooks/message'
 
 const tenantIdOption = ref<SelectData[]>()
 let { tenantId } = storeToRefs(useUserStore())
-let _tenantId = ref<string>('')
+let _tenantId = ref<number>()
 let { refresh } = storeToRefs(useSettingStore())
 
 onMounted(async () => {
@@ -27,14 +27,14 @@ const initTenant = async () => {
   try {
     const response: any = await selectTenant()
     tenantIdOption.value = response.data
-    _tenantId.value = tenantId.value.toString()
+    _tenantId.value = tenantId.value
   } catch (err: any) {
     useMessage().error(err.message)
   }
 }
 
 const handleChangeTenant = () => {
-  useUserStore().storeTenantId(_tenantId.value)
+  useUserStore().storeTenantId(_tenantId.value as number)
   updateRefresh()
 }
 

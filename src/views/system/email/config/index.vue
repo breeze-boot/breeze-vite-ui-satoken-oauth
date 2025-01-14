@@ -8,7 +8,7 @@ import { reactive, ref } from 'vue'
 import { ElForm } from 'element-plus'
 import { page, exportExcel, deleteEmailConfig, open } from '@/api/system/email/emailConfig'
 import type { EmailConfigRecords, EmailConfigRecord, EmailConfigQuery } from '@/api/system/email/emailConfig/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/EmailConfigAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
@@ -35,13 +35,14 @@ const queryParams = reactive<EmailConfigQuery>({
 
 let checkedRows = reactive<string[]>([])
 let currentRow = reactive<EmailConfigRecord>({})
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -186,7 +187,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -291,16 +292,17 @@ const handleSelectionChange = (row: EmailConfigRecord) => {
 
   <b-table
     ref="emailTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :default-sort="tableInfo.defaultSort"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   />

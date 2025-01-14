@@ -76,7 +76,7 @@ export interface UserInfoData {
   password: null
   username: string
   avtar: string
-  tenantId: string
+  tenantId: number
   permissions: object
   authorities: AuthoritiesDatas
   accountNonExpired: boolean
@@ -158,6 +158,10 @@ export enum StorageName {
   Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
   menuRoutes = 'MENU_ROUTES',
+  CurrentTab = 'CURRENT_TAB',
+  CurrentTabName = 'CURRENT_TAB_NAME',
+  CacheTabs = 'CACHE_TABS',
+  Tabs = 'TABS',
 }
 
 /**
@@ -243,8 +247,8 @@ export interface Tab {
   name: string
   path: string
   fullPath: string
-  query?: object
-  params?: object
+  query?: any
+  params?: any
   keepAlive: boolean
   hidden: boolean
 }

@@ -44,6 +44,7 @@ export default {
     edit: 'edit',
     modify: 'modify',
     info: 'info',
+    approve: 'approve',
     download: 'download',
     start: 'start',
     upload: 'upload',

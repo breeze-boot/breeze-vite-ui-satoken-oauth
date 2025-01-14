@@ -13,7 +13,7 @@ import JLog from './components/JLog.vue'
 import { ElForm } from 'element-plus'
 import type { JobRecords } from '@/api/system/job/type.ts'
 import { JobRecord, JobQuery } from '@/api/system/job/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
@@ -42,13 +42,14 @@ const queryParams = reactive<JobQuery>({
 
 let checkedRows = reactive<JobRecords>([])
 let currentRows = reactive<JobRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 字典
   dict: ['JOB_STATUS', 'MISFIRE_POLICY', 'CONCURRENT'],
   // 表格顶部按钮
@@ -202,7 +203,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -351,16 +352,17 @@ const handleSelectionChange = (rows: JobRecords) => {
 
   <b-table
     ref="jobTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :dict="tableInfo.dict"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"

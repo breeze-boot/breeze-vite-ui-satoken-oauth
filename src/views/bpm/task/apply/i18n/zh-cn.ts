@@ -1,8 +1,7 @@
 export default {
   apply: {
     fields: {
-      taskTitle: '任务标题',
-      taskName: '任务名称',
+      taskName: '任务节点名称',
       taskDefKey: '任务节点定义KEY',
       procInstId: '流程实例ID',
       procDefId: '流程定义ID',

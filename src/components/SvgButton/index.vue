@@ -72,11 +72,11 @@ const handleChick = () => {
 
 <template>
   <el-button
+    :loading="props.loading"
     :disabled="props.disabled"
     @click="handleChick"
     :circle="props.circle"
     :link="props.link"
-    :loading="props.loading"
     :style="props.style"
     :type="props.type"
   >

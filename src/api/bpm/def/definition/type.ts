@@ -14,7 +14,6 @@ export interface BpmDefinitionRecord {
   procDefKey: string
   procDefName: string
   categoryName: string
-  tenantId: string
   deploymentTime: string
   version: string
   suspended: string

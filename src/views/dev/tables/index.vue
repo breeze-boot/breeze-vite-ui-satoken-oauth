@@ -9,7 +9,7 @@ import { reactive, ref } from 'vue'
 import { listTables } from '@/api/dev/tables/index.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { useI18n } from 'vue-i18n'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { ElForm } from 'element-plus'
 import ColumnList from '@/views/dev/tables/components/ColumnList.vue'
 
@@ -23,13 +23,14 @@ const tableInfoTableRef = ref()
 const { t } = useI18n()
 const visible = ref<boolean>(false)
 const currentRow = ref<any>()
+
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  pager: false,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [],
   // 表格字段配置
@@ -90,12 +91,11 @@ defineExpose({
   <b-table
     ref="tableInfoTableRef"
     :list-api="listTables"
-    :tableIndex="tableInfo.tableIndex"
-    :refresh="tableInfo.refresh"
+    :select="select"
+    :tableIndex="tableIndex"
+    :refresh="refresh"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :pager="tableInfo.pager"
     :handle-btn="tableInfo.handleBtn"
   />
 

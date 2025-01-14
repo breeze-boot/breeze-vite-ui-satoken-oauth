@@ -54,7 +54,7 @@ export interface TodoResponseData extends ResponseData {
  */
 export interface TodoQuery extends PageQuery {
   taskName: string
-  taskTitle: string
+  isAssigned: boolean
 }
 
 /**

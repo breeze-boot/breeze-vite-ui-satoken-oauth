@@ -1,7 +1,6 @@
 export default {
   todo: {
     fields: {
-      taskTitle: 'task title',
       taskName: 'task name',
       taskDefKey: 'task definition key',
       procInstId: 'process instance id',
@@ -11,12 +10,15 @@ export default {
       applyUser: 'apply user',
       applyUserName: 'apply user name',
       status: 'status',
-      comment: 'comment',
       assignee: 'assignee',
       assigneeName: 'assignee name',
-      variable: 'variable',
       formKey: 'formKey',
       createTime: 'create time',
+      isAssigned: 'isAssigned',
+      assigned: {
+        notAssigned: '未签收',
+        assigned: '已签收',
+      },
     },
     common: { approval: 'approval', notAssignee: '不可审批' },
     rules: {},

@@ -2,7 +2,7 @@
  * @author: gaoweixuan
  * @since: 2024-03-01
  */
-import { ResponseData } from '@/types/types.ts'
+import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
  * 字典项列表类型声明
@@ -36,7 +36,7 @@ export interface DictItemResponseData extends ResponseData {
 /**
  * 字典项列表查询类型声明
  */
-export interface DictItemQuery {
+export interface DictItemQuery extends PageQuery {
   dictId: number
   dictCode: string
   dictName: string

@@ -11,7 +11,7 @@ import { constantChildRoutes } from '@/router/routes'
 import type { RouteRecordRaw } from 'vue-router'
 import { PermissionData, StorageName } from '@/types/types'
 import useSettingStore from '@/store/modules/setting.ts'
-import { GET_OBJ_STORAGE, SET_STORAGE } from '@/utils/storage.ts'
+import { GET_OBJ_ARRAY_STORAGE, SET_OBJ_ARRAY_STORAGE } from '@/utils/storage.ts'
 import { listPermission } from '@/api/auth/menu'
 
 const modules = import.meta.glob('@/views/**/**.vue')
@@ -85,7 +85,7 @@ const useMenuStore = defineStore('Menu', {
       initMenu: false,
       currentMenu: {} as RouteRecordRaw,
       menuRoutes: constantChildRoutes,
-      subMenuRoutes: GET_OBJ_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
+      subMenuRoutes: GET_OBJ_ARRAY_STORAGE(StorageName.mixMenuRoutes) as RouteRecordRaw[],
     }
   },
   /**
@@ -123,7 +123,7 @@ const useMenuStore = defineStore('Menu', {
       // 子菜单路由信息
       return new Promise((resolve) => {
         this.subMenuRoutes = fmtRouter as RouteRecordRaw[]
-        SET_STORAGE(StorageName.mixMenuRoutes, this.subMenuRoutes)
+        SET_OBJ_ARRAY_STORAGE(StorageName.mixMenuRoutes, this.subMenuRoutes)
         resolve(this.subMenuRoutes)
       })
     },
@@ -147,7 +147,7 @@ const useMenuStore = defineStore('Menu', {
     getMixLeftMenuInfo: () => {
       return () => {
         // 子菜单路由信息
-        return new Promise((resolve) => resolve(GET_OBJ_STORAGE(StorageName.mixMenuRoutes)))
+        return new Promise((resolve) => resolve(GET_OBJ_ARRAY_STORAGE(StorageName.mixMenuRoutes)))
       }
     },
     /**

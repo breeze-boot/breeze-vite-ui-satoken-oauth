@@ -6,6 +6,7 @@ export default {
     },
     fields: {
       businessKey: 'business key',
+      assignee: 'assignee',
       startUserName: 'start user name',
       startUserId: 'start user id',
       suspensionState: 'suspension state',

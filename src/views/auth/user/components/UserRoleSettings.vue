@@ -10,7 +10,7 @@ import { useI18n } from 'vue-i18n'
 import { listUserRoles } from '@/api/auth/role'
 import RoleCheckDialog from './RoleCheckDialog.vue'
 import BTable from '@/components/Table/BTable/index.vue'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
 import { userSetRole } from '@/api/auth/user'
@@ -43,12 +43,15 @@ const queryParams = reactive<UserRoleQuery>({
   total: 0,
 })
 const tableData = ref<RoleRecords>([])
+const checkedRows = ref<RoleRecords>([])
+
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
+
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -113,7 +116,7 @@ const getInfo = async (id: number) => {
   try {
     const response: any = await listUserRoles(JSONBigInt.parse(id))
     tableData.value = response.data
-    tableInfo.refresh = Math.random()
+    refresh.value = Math.random()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -151,16 +154,16 @@ defineExpose({
   >
     <b-table
       ref="userRoleTableRef"
-      :checked-rows="tableInfo.checkedRows"
-      :tableIndex="tableInfo.tableIndex"
+      :pager="false"
+      :select="select"
+      :refresh="refresh"
       v-model:modelValue="tableData"
+      :tableIndex="tableIndex"
       :query="queryParams"
-      :refresh="tableInfo.refresh"
       :field-list="tableInfo.fieldList"
       :tb-header-btn="tableInfo.tbHeaderBtn"
-      :select="tableInfo.select"
       :handle-btn="tableInfo.handleBtn"
-      :pager="false"
+      :checked-rows="checkedRows"
       table-height="80%"
     />
     <template #footer>

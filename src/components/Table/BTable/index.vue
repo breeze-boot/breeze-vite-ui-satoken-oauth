@@ -58,7 +58,7 @@ const props = defineProps({
   },
   // 表格使用的字典
   dict: {
-    type: Array,
+    type: Array<string>,
     default: () => [],
   },
   // 导出数据的接口
@@ -88,7 +88,7 @@ const props = defineProps({
   },
   // 表格字段配置
   fieldList: {
-    type: Array,
+    type: Array<Field>,
     required: true,
     default: () => [],
   },
@@ -97,6 +97,9 @@ const props = defineProps({
     type: Array,
     required: false,
     default: () => [],
+  },
+  loading: {
+    type: Boolean,
   },
   // 操作栏配置
   handleBtn: {
@@ -153,7 +156,13 @@ let $route = useRoute()
 const columnStore = useColumnStore()
 const { theme } = storeToRefs(useSettingStore())
 const { t } = useI18n()
-const $emit = defineEmits(['handle-row-db-click', 'selection-change', 'init-table-data'])
+const $emit = defineEmits([
+  'handle-row-db-click',
+  'selection-change',
+  'init-table-data',
+  'update:modelValue',
+  'update:loading',
+])
 // 分页信息
 const pagerInfo = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
@@ -169,8 +178,19 @@ const pagerQuery = ref({
   size: 10,
 })
 
+/**
+ * 表格 loading
+ */
+const tableLoading = computed({
+  get: () => {
+    return props.loading
+  },
+  set: (value) => {
+    $emit('update:loading', value)
+  },
+})
+
 const tableInfo = ref({
-  loading: false,
   // 显示的列
   showFieldList: [] as Field[],
 })
@@ -196,6 +216,7 @@ const initTableData = computed({
     return props.modelValue
   },
   set: (value) => {
+    $emit('update:modelValue', value)
     $emit('init-table-data', value)
   },
 })
@@ -365,18 +386,18 @@ const getList = async (order?: ColumnSort) => {
 
   // 父组件传入的数据，直接渲染
   if (initTableData.value.length > 0) {
-    tableInfo.value.loading = true
+    tableLoading.value = true
     tableData.value.rows = initTableData.value as any[]
     props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
     handleOnEnd()
-    tableInfo.value.loading = false
+    tableLoading.value = false
     return
   }
 
   if (!props.listApi) return
 
   try {
-    tableInfo.value.loading = true
+    tableLoading.value = true
     const response: any = await props.listApi(handleParams(order))
     tableData.value.rows = []
     if (props.pager) {
@@ -390,7 +411,7 @@ const getList = async (order?: ColumnSort) => {
     useMessage().warning(err.message)
   } finally {
     handleOnEnd()
-    tableInfo.value.loading = false
+    tableLoading.value = false
   }
 }
 
@@ -510,11 +531,11 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
   switch (btn.event) {
     case 'delete' || 'remove':
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning('未配置事件')
+        btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning(t('common.noHandle'))
       })
       break
     default:
-      btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning('未配置事件')
+      btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning(t('common.noHandle'))
       break
   }
 }
@@ -811,7 +832,7 @@ const handleSliderChange = (row: any) => {
         :data="tableData.rows"
         :max-height="tableHeight"
         :height="tableHeight"
-        v-loading="tableInfo.loading"
+        v-loading="tableLoading"
         border
         stripe
         row-key="id"

@@ -77,6 +77,10 @@ export default {
       this.visible = false
       this.$emit('updateUserData', this.checkUser)
     },
+    handleCloseCheck() {
+      this.visible = false
+      this.$emit('handleCloseCheck')
+    },
     /**
      * 页码改变事件
      *
@@ -135,7 +139,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title" :width="useWidth()">
+  <el-dialog v-model="visible" :title="title" :before-close="handleCloseCheck" :width="useWidth()">
     <el-table
       ref="userCheckTableRef"
       @selection-change="handleSelectionChange"
@@ -170,7 +174,7 @@ export default {
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button @click="handleCloseCheck()">{{ $t('common.cancel') }}</el-button>
         <el-button type="primary" @click="handleCheckUser()">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>

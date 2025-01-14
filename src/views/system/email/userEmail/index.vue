@@ -8,12 +8,11 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import BTable from '@/components/Table/BTable/index.vue'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { EmailSetUserQuery } from '@/api/system/email/msubject/type.ts'
-import { listToEmail, listCcEmail } from '@/api/system/email/msubject'
+import { listToEmailUser, listCcEmailUser } from '@/api/system/email/msubject'
 import JSONBigInt from 'json-bigint'
 import { useRoute } from 'vue-router'
-import { convertOptionIdName } from 'echarts/types/src/util/model'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -38,18 +37,17 @@ const queryParams = ref<EmailSetUserQuery>({
   size: 10,
   total: 0,
 })
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'multi'
+const pager: boolean = true
+const mountedRefresh: boolean = true
+const rows = ref<any>([])
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  mountedRefresh: true,
-  rows: [],
-  pager: true,
-  tableIndex: true,
-  // 选择框类型
-  select: 'multi',
   // 选中的行
-  checkedRows: [],
   tbHeaderBtn: [],
   // 表格字段配置
   fieldList: [
@@ -88,17 +86,17 @@ onMounted(async () => {
 const getInfo = async (id: number, column: string) => {
   if (column === 'toEmail') {
     try {
-      const response: any = await listToEmail(id)
-      tableInfo.rows = response.data
-      tableInfo.refresh = Math.random()
+      const response: any = await listToEmailUser(id)
+      rows.value = response.data
+      refresh.value = Math.random()
     } catch (err: any) {
       useMessage().error(err.message)
     }
   } else if (column === 'ccEmail') {
     try {
-      const response: any = await listCcEmail(id)
-      tableInfo.rows = response.data
-      tableInfo.refresh = Math.random()
+      const response: any = await listCcEmailUser(id)
+      rows.value = response.data
+      refresh.value = Math.random()
     } catch (err: any) {
       useMessage().error(err.message)
     }
@@ -109,15 +107,17 @@ const getInfo = async (id: number, column: string) => {
 <template>
   <b-table
     ref="userTableRef"
-    v-model="tableInfo.rows"
-    :tableIndex="tableInfo.tableIndex"
-    :query="queryParams"
-    :refresh="tableInfo.refresh"
-    :mountedRefresh="tableInfo.mountedRefresh"
-    :field-list="tableInfo.fieldList"
-    :select="tableInfo.select"
-    :handle-btn="tableInfo.handleBtn"
     table-height="80%"
-    :pager="tableInfo.pager"
+    v-model="rows"
+    :pager="pager"
+    :mountedRefresh="mountedRefresh"
+    :refresh="refresh"
+    :select="select"
+    :tableIndex="tableIndex"
+    :query="queryParams"
+    :dict="tableInfo.dict"
+    :field-list="tableInfo.fieldList"
+    :tb-header-btn="tableInfo.tbHeaderBtn"
+    :handle-btn="tableInfo.handleBtn"
   />
 </template>

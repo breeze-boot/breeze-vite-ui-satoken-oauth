@@ -12,7 +12,7 @@ import AddOrEdit from './components/ClientAddOrEdit.vue'
 import { ElForm, ElMessage } from 'element-plus'
 import type { ClientRecords } from '@/api/auth/client/type.ts'
 import { ClientRecord, ClientQuery } from '@/api/auth/client/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
@@ -38,13 +38,14 @@ const queryParams = reactive<ClientQuery>({
 
 let checkedRows = reactive<ClientRecords>([])
 let currentRows = reactive<ClientRecords>([])
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -231,7 +232,7 @@ const tableInfo = reactive<TableInfo>({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -346,15 +347,16 @@ const handleSelectionChange = (rows: ClientRecords) => {
 
   <b-table
     ref="clientTableRef"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="page"
-    :tableIndex="tableInfo.tableIndex"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
     @handle-row-click="handleRowClick"

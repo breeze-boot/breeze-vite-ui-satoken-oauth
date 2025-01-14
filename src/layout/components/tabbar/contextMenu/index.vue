@@ -32,7 +32,7 @@ const handleMenuItemClick = async (event: string) => {
   tabsStore.contextMenuStatus = false
   switch (event) {
     case 'all':
-      tabsStore.removeAllTab()
+      tabsStore.initAllTab()
       break
     case 'left':
       tabsStore.removeLeftTab()

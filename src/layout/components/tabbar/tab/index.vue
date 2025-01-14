@@ -4,7 +4,7 @@
 -->
 
 <script lang="ts" setup>
-import useTabStore from '@/store/modules/tabs.ts'
+import useTabStore, { homeConstantTab } from '@/store/modules/tabs.ts'
 import { LocationQueryRaw, RouteRecordRaw, useRouter } from 'vue-router'
 import useMenuStore from '@/store/modules/menu.ts'
 
@@ -50,8 +50,8 @@ const handleSwitchTab = async (pane: any) => {
       v-model="tabsStore.currentTabName"
       type="card"
       class="tabs"
+      :closable="homeConstantTab.name === 'Home'"
       v-right-menu="''"
-      :closable="tabsStore.currentTabName !== 'Home'"
       @tab-click="handleSwitchTab"
       @tab-remove="removeTab"
     >

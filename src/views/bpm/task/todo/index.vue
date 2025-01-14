@@ -10,11 +10,13 @@ import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { list, exportExcel } from '@/api/bpm/task/todo'
 import type { TodoRecord, TodoQuery } from '@/api/bpm/task/todo/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import useUserStore from '@/store/modules/user.ts'
+import { useNewTab } from '@/hooks/newTab'
+import { page } from '@/api/bpm/def/category'
 
 defineOptions({
   name: 'Todo',
@@ -24,12 +26,11 @@ defineOptions({
 const { t } = useI18n()
 let userStore = useUserStore()
 const todoQueryFormRef = ref(ElForm)
-let $router = useRouter()
 
 // 查询条件
 const queryParams = reactive<TodoQuery>({
+  isAssigned: true,
   taskName: '',
-  taskTitle: '',
   current: 1,
   size: 10,
   total: 0,
@@ -47,14 +48,14 @@ let currentRow = reactive<TodoRecord>({
   procInstId: '',
   taskId: '',
 })
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo: TableInfo = reactive({
-  // 刷新标识
-  refresh: 1,
-  // 序号列
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格顶部按钮
   tbHeaderBtn: [
     {
@@ -139,12 +140,6 @@ const tableInfo: TableInfo = reactive({
       label: t('todo.fields.applyUserName'),
     },
     {
-      prop: 'comment',
-      showOverflowTooltip: true,
-      label: t('todo.fields.comment'),
-      width: 200,
-    },
-    {
       prop: 'createTime',
       showOverflowTooltip: true,
       label: t('todo.fields.createTime'),
@@ -183,7 +178,7 @@ const tableInfo: TableInfo = reactive({
  * 刷新表格
  */
 const reloadList = () => {
-  tableInfo.refresh = Math.random()
+  refresh.value = Math.random()
 }
 
 /**
@@ -209,6 +204,7 @@ const handleQuery = () => {
 const handleInfo = (row: any) => {
   console.log(row)
 }
+let $route = useRoute()
 
 /**
  * 详情
@@ -220,11 +216,11 @@ const handleToApproval = async (row: TodoRecord) => {
     ElMessage.warning(t('todo.common.notAssignee'))
     return
   }
-  await $router.push({
-    path: '/task/todoApproval',
-    query: {
-      taskId: row.taskId,
-    },
+  await useNewTab($route, {
+    path: '/bpm/task/todo/components/TodoApproval',
+    title: `去审批`,
+    pageId: row.taskId,
+    query: { taskId: row.taskId },
   })
 }
 
@@ -251,6 +247,17 @@ const handleSelectionChange = (row: TodoRecord) => {
           v-model="queryParams.taskName"
         />
       </el-form-item>
+      <el-form-item :label="t('todo.fields.isAssigned')" prop="isAssigned">
+        <el-select
+          v-model="queryParams.isAssigned"
+          @change="handleQuery"
+          :placeholder="t('todo.fields.isAssigned')"
+          style="width: 200px"
+        >
+          <el-option :label="t('todo.fields.assigned.assigned')" :value="true" />
+          <el-option :label="t('todo.fields.assigned.notAssigned')" :value="false" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" :icon="Search" @click="handleQuery">
           {{ t('common.search') }}
@@ -264,17 +271,17 @@ const handleSelectionChange = (row: TodoRecord) => {
 
   <b-table
     ref="todoTableRef"
-    :pager="false"
-    :export-api="exportExcel"
+    :refresh="refresh"
+    :select="select"
     :list-api="list"
-    :tableIndex="tableInfo.tableIndex"
+    :export-api="exportExcel"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :default-sort="tableInfo.defaultSort"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   />

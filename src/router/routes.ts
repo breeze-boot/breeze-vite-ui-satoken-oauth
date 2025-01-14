@@ -28,6 +28,25 @@ export const constantChildRoutes = [
     },
   },
   {
+    path: 'approve/:pageId',
+    component: () => import('@/components/TabWrapper/index.vue'),
+    name: 'Approve',
+    props: (route: any) => {
+      return {
+        title: route.query.title,
+        path: route.query.path,
+        pageId: route.params.pageId,
+      }
+    },
+    meta: {
+      title: '',
+      icon: '',
+      hidden: true,
+      type: 1,
+      href: 0,
+    },
+  },
+  {
     path: '/screen',
     name: 'Screen',
     component: () => import('@/views/screen/index.vue'),
@@ -35,30 +54,6 @@ export const constantChildRoutes = [
       title: 'Screen',
       icon: 'screen',
       hidden: false,
-      type: 1,
-      href: 0,
-    },
-  },
-  {
-    path: '/wo/startApproval',
-    name: 'StartApproval',
-    component: () => import('@/views/wo/leave/startApproval/index.vue'),
-    meta: {
-      title: '开始审批',
-      icon: 'startApproval',
-      hidden: true,
-      type: 1,
-      href: 0,
-    },
-  },
-  {
-    path: '/task/todoApproval',
-    name: 'TodoApproval',
-    component: () => import('@/views/bpm/todoApproval/index.vue'),
-    meta: {
-      title: '审批流程',
-      icon: 'todoApproval',
-      hidden: true,
       type: 1,
       href: 0,
     },

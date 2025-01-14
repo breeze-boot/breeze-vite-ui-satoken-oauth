@@ -4,7 +4,7 @@
 -->
 <!-- 在线用户管理管理 -->
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import BTable from '@/components/Table/BTable/index.vue'
 import {
   list,
@@ -14,7 +14,7 @@ import {
   focusLogout,
 } from '@/api/auth/onlineUser'
 import type { OnlineUserQuery, OnlineUserRecord, LoginDevice } from '@/api/auth/onlineUser/type.ts'
-import { TableInfo } from '@/components/Table/types/types.ts'
+import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
 
@@ -30,13 +30,14 @@ const queryParams = reactive<OnlineUserQuery>({ current: 0, size: 0 })
 
 let checkedRows = reactive<string[]>([])
 let currentRow = reactive<OnlineUserRecord>({ userId: 0 })
+const tableLoading = ref<boolean>(false)
+// 刷新标识
+const refresh = ref<number>(1)
+const tableIndex = ref<boolean>(true)
+// 选择框类型
+const select: SelectEvent = 'single'
 
 const tableInfo = reactive<TableInfo>({
-  // 刷新标识
-  refresh: 1,
-  tableIndex: true,
-  // 选择框类型
-  select: 'single',
   // 表格字段配置
   fieldList: [
     {
@@ -92,6 +93,13 @@ const tableInfo = reactive<TableInfo>({
 })
 
 /**
+ * 刷新表格
+ */
+const reloadList = () => {
+  refresh.value = Math.random()
+}
+
+/**
  * 踢下线
  *
  * @param row 参数
@@ -100,6 +108,7 @@ const handleKickOut = async (row: OnlineUserRecord) => {
   try {
     const response: any = await focusKickOut(row?.userId)
     useMessage().success(response.message)
+    reloadList()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -114,6 +123,7 @@ const handleLogout = async (row: OnlineUserRecord) => {
   try {
     const response: any = await focusLogout(row?.userId)
     useMessage().success(response.message)
+    reloadList()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -128,6 +138,7 @@ const handleKickOutByToken = async (row: LoginDevice) => {
   try {
     const response: any = await focusKickOutByTokenValue(row?.value)
     useMessage().success(response.message)
+    reloadList()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -142,6 +153,7 @@ const handleLogoutByToken = async (row: LoginDevice) => {
   try {
     const response: any = await focusLogoutByTokenValue(row?.value)
     useMessage().success(response.message)
+    reloadList()
   } catch (err: any) {
     useMessage().error(err.message)
   }
@@ -161,16 +173,17 @@ const handleSelectionChange = (row: OnlineUserRecord) => {
 <template>
   <b-table
     ref="onlineUserTableRef"
+    :refresh="refresh"
+    :select="select"
     :list-api="list"
     :pager="false"
-    :tableIndex="tableInfo.tableIndex"
+    v-model:loading="tableLoading"
+    :tableIndex="tableIndex"
     :query="queryParams"
-    :default-sort="tableInfo.defaultSort"
-    :refresh="tableInfo.refresh"
+    :checked-rows="checkedRows"
+    :dict="tableInfo.dict"
     :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
-    :select="tableInfo.select"
-    :checked-rows="checkedRows"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   >

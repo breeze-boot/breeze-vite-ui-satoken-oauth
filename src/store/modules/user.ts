@@ -9,11 +9,12 @@ import { type UserState } from './types/types'
 import { refreshToken, userLogin } from '@/api/login'
 import {
   CLEAR_STORAGE,
-  GET_ARRAY_STORAGE,
+  GET_STR_ARRAY_STORAGE,
   GET_OBJ_STORAGE,
   GET_STRING_STORAGE,
-  SET_STORAGE,
+  SET_OBJ_STORAGE,
   SET_STRING_STORAGE,
+  SET_STR_ARRAY_STORAGE,
 } from '@/utils/storage'
 import { AuthoritiesData, AuthoritiesDatas, GrantType, SALES, StorageName, UserInfoData } from '@/types/types'
 import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
@@ -27,7 +28,7 @@ const filterPermissions = (userInfo: UserInfoData): string[] => {
   if (!userInfo) {
     return []
   }
-  const PERMISSIONS = [] as string[]
+  const PERMISSIONS: string[] = []
 
   ;(userInfo.authorities as AuthoritiesDatas).forEach((item: AuthoritiesData) => {
     PERMISSIONS.push(item.authority)
@@ -39,11 +40,11 @@ const useUserStore = defineStore('User', {
   state: (): UserState => {
     return {
       userInfo: GET_OBJ_STORAGE(StorageName.UserInfo) as UserInfoData,
-      tenantId: CookiesStorage.get(CookiesKey.XTenantId) as string,
-      refreshToken: GET_STRING_STORAGE(StorageName.RefreshToken) as string,
-      accessToken: GET_STRING_STORAGE(StorageName.AccessToken) as string,
-      roleCodes: GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[],
-      permissions: GET_ARRAY_STORAGE(StorageName.Permissions) as string[],
+      tenantId: CookiesStorage.get(CookiesKey.XTenantId),
+      refreshToken: GET_STRING_STORAGE(StorageName.RefreshToken),
+      accessToken: GET_STRING_STORAGE(StorageName.AccessToken),
+      roleCodes: GET_STR_ARRAY_STORAGE(StorageName.RoleCodes),
+      permissions: GET_STR_ARRAY_STORAGE(StorageName.Permissions),
     }
   },
   actions: {
@@ -53,34 +54,36 @@ const useUserStore = defineStore('User', {
      * @param data 登录参数
      */
     async userLogin(data: UserLoginForm): Promise<LoginResponseData> {
-      const LoginForm = {
-        username: data.username!.trim() as string,
-        password: encrypt(data.password!.trim(), SALES) as string,
-        captchaVerification: encodeURIComponent(data.captchaVerification as string),
-      }
       this.tenantId = data.tenantId
-      const response: any = await userLogin(LoginForm, GrantType.PASSWORD)
+      const response: any = await userLogin(
+        {
+          username: data.username!.trim(),
+          captchaVerification: encodeURIComponent(data.captchaVerification),
+          password: encrypt(data.password!.trim(), SALES),
+        } as UserLoginForm,
+        GrantType.PASSWORD,
+      )
 
       if (response) {
         const { access_token, refresh_token, user_info } = response as LoginResponseData
         // 持久化
         this.userInfo = user_info as UserInfoData
-        SET_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
+        SET_OBJ_STORAGE(StorageName.UserInfo, this.userInfo as UserInfoData)
 
-        this.tenantId = user_info.tenantId as string
-        CookiesStorage.set(CookiesKey.XTenantId, this.userInfo.tenantId as string)
+        this.tenantId = user_info.tenantId
+        CookiesStorage.set(CookiesKey.XTenantId, this.userInfo.tenantId)
 
-        this.refreshToken = refresh_token as string
-        SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
+        this.refreshToken = refresh_token
+        SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken)
 
-        this.accessToken = access_token as string
-        SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken as string)
+        this.accessToken = access_token
+        SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken)
 
-        this.roleCodes = user_info.userRoleCodes as string[]
-        SET_STORAGE(StorageName.RoleCodes, this.roleCodes as string[])
+        this.roleCodes = user_info.userRoleCodes
+        SET_STR_ARRAY_STORAGE(StorageName.RoleCodes, this.roleCodes)
 
-        this.permissions = filterPermissions(user_info) as string[]
-        SET_STORAGE(StorageName.Permissions, this.permissions as string[])
+        this.permissions = filterPermissions(user_info)
+        SET_STR_ARRAY_STORAGE(StorageName.Permissions, this.permissions)
 
         return response
       }
@@ -97,11 +100,11 @@ const useUserStore = defineStore('User', {
       if (response) {
         const { access_token, refresh_token } = response as LoginResponseData
         // 持久化
-        this.refreshToken = refresh_token as string
-        SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken as string)
+        this.refreshToken = refresh_token
+        SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken)
 
-        this.accessToken = access_token as string
-        SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken as string)
+        this.accessToken = access_token
+        SET_STRING_STORAGE(StorageName.AccessToken, this.accessToken)
         return response
       }
       return {} as LoginResponseData
@@ -111,12 +114,13 @@ const useUserStore = defineStore('User', {
      */
     async logout() {
       this.userInfo = {} as UserInfoData
-      this.tenantId = '' as string
+      this.tenantId = 0
       this.accessToken = '' as string
       this.refreshToken = '' as string
       this.permissions = [] as string[]
       this.roleCodes = [] as string[]
       CLEAR_STORAGE()
+      CookiesStorage.remove(CookiesKey.XTenantId)
     },
     /**
      * 保存登录信息
@@ -128,7 +132,7 @@ const useUserStore = defineStore('User', {
     /**
      * 保存租户信息
      */
-    storeTenantId(tenantId: string) {
+    storeTenantId(tenantId: number) {
       this.tenantId = tenantId
       CookiesStorage.set(CookiesKey.XTenantId, tenantId)
     },
@@ -142,7 +146,7 @@ const useUserStore = defineStore('User', {
     getPermissions: (state: UserState) => {
       return async (): Promise<string[]> => {
         return (
-          state.permissions.length > 0 ? state.permissions : (GET_ARRAY_STORAGE(StorageName.Permissions) as string[])
+          state.permissions.length > 0 ? state.permissions : GET_STR_ARRAY_STORAGE(StorageName.Permissions)
         ) as string[]
       }
     },
@@ -153,9 +157,7 @@ const useUserStore = defineStore('User', {
      */
     getRoleCodes: (state: UserState) => {
       return async (): Promise<string[]> => {
-        return (
-          state.roleCodes.length > 0 ? state.roleCodes : (GET_ARRAY_STORAGE(StorageName.RoleCodes) as string[])
-        ) as string[]
+        return (state.roleCodes.length > 0 ? state.roleCodes : GET_STR_ARRAY_STORAGE(StorageName.RoleCodes)) as string[]
       }
     },
   },

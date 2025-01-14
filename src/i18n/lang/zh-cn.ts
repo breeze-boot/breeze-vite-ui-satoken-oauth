@@ -44,6 +44,7 @@ export default {
     edit: '编辑',
     modify: '修改',
     info: '查看',
+    approve: '审批',
     download: '下载',
     start: '启动',
     upload: '上传',
