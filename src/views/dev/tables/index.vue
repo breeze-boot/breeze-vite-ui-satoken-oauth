@@ -90,6 +90,7 @@ defineExpose({
 <template>
   <b-table
     ref="tableInfoTableRef"
+    :pager="false"
     :list-api="listTables"
     :select="select"
     :tableIndex="tableIndex"
