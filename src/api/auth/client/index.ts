@@ -87,20 +87,3 @@ export function exportExcel(params: ClientQuery): AxiosPromise<ClientResponseDat
     data: params,
   })
 }
-
-/**
- * 校验客户端编码是否重复
- *
- *  @param permissionCode
- *  @param permissionId
- */
-export function checkClientCode(permissionCode: string, permissionId?: number): AxiosPromise<any> {
-  return request({
-    url: `${API.CLIENT_RESTFUL_URL}/checkClientCode`,
-    method: 'get',
-    params: {
-      permissionId,
-      permissionCode,
-    },
-  })
-}

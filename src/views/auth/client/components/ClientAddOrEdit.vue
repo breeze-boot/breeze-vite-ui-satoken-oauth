@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { addClient, checkClientCode, editClient, getClient } from '@/api/auth/client'
+import { addClient, editClient, getClient } from '@/api/auth/client'
 import { ClientForm } from '@/api/auth/client/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
@@ -70,27 +70,6 @@ const {
 )
 
 const rules = ref({
-  clientCode: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('client.fields.clientCode'),
-      trigger: 'blur',
-    },
-    {
-      validator: (rule: any, value: any, callback: any) => {
-        checkClientCode(value, !clientDataForm.value.id ? undefined : JSONBigInt.parse(clientDataForm.value.id)).then(
-          (response: any) => {
-            if (response.data) {
-              callback()
-              return
-            }
-            callback(new Error(t('client.rules.clientCodeExists')))
-          },
-        )
-      },
-      trigger: 'blur',
-    },
-  ],
   clientName: [
     {
       required: true,

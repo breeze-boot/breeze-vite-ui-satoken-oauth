@@ -18,7 +18,6 @@ import { useI18n } from 'vue-i18n'
 import { RoleRecords } from '@/api/auth/role/type.ts'
 import { useMessage } from '@/hooks/message'
 import { startInstance } from '@/api/bpm/def/instance'
-import { random } from 'lodash-es'
 
 defineOptions({
   name: 'Definition',
