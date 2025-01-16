@@ -1,7 +1,6 @@
 export default {
   client: {
     fields: {
-      basicSettings: 'basic settings',
       clientId: 'client id',
       clientName: 'client name',
       clientSecret: 'client secret',
@@ -9,22 +8,10 @@ export default {
       clientIdIssuedAt: 'clientIdIssuedAt',
       redirectUris: 'redirectUris',
       scopes: 'scopes',
-      authorizationGrantTypes: 'authorizationGrantTypes',
-      clientAuthenticationMethods: 'clientAuthenticationMethods',
-      clientSecretExpiresAt: 'clientSecretExpiresAt',
+      authorizationGrantTypes: 'authorization grant types',
+      clientAuthenticationMethods: 'client authentication methods',
+      clientSecretExpiresAt: 'client secret expires at',
       clientSettings: 'client settings',
-      requireProofKey: 'requireProofKey',
-      requireAuthorizationConsent: 'requireAuthorizationConsent',
-      jwkSetUrl: 'jwk set url',
-      tokenEndpointAuthenticationSigningAlgorithm: 'tokenEndpointAuthenticationSigningAlgorithm',
-      tokenSettings: 'tokenSettings settings',
-      idTokenSignatureAlgorithm: 'idTokenSignatureAlgorithm',
-      accessTokenFormat: 'accessTokenFormat',
-      authorizationCodeTimeToLive: 'authorizationCodeTimeToLive',
-      accessTokenTimeToLive: 'accessTokenTimeToLive',
-      reuseRefreshTokens: 'reuseRefreshTokens',
-      refreshTokenTimeToLive: 'refreshTokenTimeToLive',
-      minutes: 'minutes',
     },
     rules: {
       clientCodeExists: 'The input client code already exists',

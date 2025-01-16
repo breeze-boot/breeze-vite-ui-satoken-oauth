@@ -118,6 +118,7 @@ const tableInfo = reactive<TableInfo>({
     },
     {
       prop: 'clientAuthenticationMethods',
+      hidden: true,
       showOverflowTooltip: true,
       label: t('client.fields.clientAuthenticationMethods'),
     },
@@ -125,70 +126,6 @@ const tableInfo = reactive<TableInfo>({
       prop: 'clientSecretExpiresAt',
       showOverflowTooltip: true,
       label: t('client.fields.clientSecretExpiresAt'),
-    },
-    {
-      prop: 'clientSettings',
-      showOverflowTooltip: true,
-      label: t('client.fields.clientSettings'),
-      children: [
-        {
-          prop: 'requireProofKey',
-          showOverflowTooltip: true,
-          label: t('client.fields.requireProofKey'),
-        },
-        {
-          prop: 'requireAuthorizationConsent',
-          showOverflowTooltip: true,
-          label: t('client.fields.requireAuthorizationConsent'),
-        },
-        {
-          prop: 'jwkSetUrl',
-          showOverflowTooltip: true,
-          label: t('client.fields.jwkSetUrl'),
-        },
-        {
-          prop: 'tokenEndpointAuthenticationSigningAlgorithm',
-          showOverflowTooltip: true,
-          label: t('client.fields.tokenEndpointAuthenticationSigningAlgorithm'),
-        },
-      ],
-    },
-    {
-      prop: 'tokenSettings',
-      showOverflowTooltip: true,
-      label: t('client.fields.tokenSettings'),
-      children: [
-        {
-          prop: 'idTokenSignatureAlgorithm',
-          showOverflowTooltip: true,
-          label: t('client.fields.idTokenSignatureAlgorithm'),
-        },
-        {
-          prop: 'accessTokenFormat',
-          showOverflowTooltip: true,
-          label: t('client.fields.accessTokenFormat'),
-        },
-        {
-          prop: 'authorizationCodeTimeToLive',
-          showOverflowTooltip: true,
-          label: t('client.fields.authorizationCodeTimeToLive'),
-        },
-        {
-          prop: 'accessTokenTimeToLive',
-          showOverflowTooltip: true,
-          label: t('client.fields.accessTokenTimeToLive'),
-        },
-        {
-          prop: 'reuseRefreshTokens',
-          showOverflowTooltip: true,
-          label: t('client.fields.reuseRefreshTokens'),
-        },
-        {
-          prop: 'refreshTokenTimeToLive',
-          showOverflowTooltip: true,
-          label: t('client.fields.refreshTokenTimeToLive'),
-        },
-      ],
     },
   ],
   handleBtn: {

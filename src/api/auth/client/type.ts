@@ -19,20 +19,6 @@ export interface ClientRecord {
   clientAuthenticationMethods: string[]
   clientSecretExpiresAt: string
   clientIdIssuedAt: string
-  clientSettings: {
-    requireProofKey: boolean
-    requireAuthorizationConsent: boolean
-    jwkSetUrl: string
-    tokenEndpointAuthenticationSigningAlgorithm: string
-  }
-  tokenSettings: {
-    reuseRefreshTokens: boolean
-    idTokenSignatureAlgorithm: string
-    accessTokenFormat: string
-    refreshTokenTimeToLive: number
-    authorizationCodeTimeToLive: number
-    accessTokenTimeToLive: number
-  }
 }
 
 /**
@@ -76,18 +62,4 @@ export interface ClientForm {
   clientAuthenticationMethods: string[]
   clientSecretExpiresAt: string
   clientIdIssuedAt: string
-  clientSettings: {
-    requireProofKey: boolean
-    requireAuthorizationConsent: boolean
-    jwkSetUrl: string
-    tokenEndpointAuthenticationSigningAlgorithm: string
-  }
-  tokenSettings: {
-    reuseRefreshTokens: boolean
-    idTokenSignatureAlgorithm: string
-    accessTokenFormat: string
-    refreshTokenTimeToLive: number
-    authorizationCodeTimeToLive: number
-    accessTokenTimeToLive: number
-  }
 }

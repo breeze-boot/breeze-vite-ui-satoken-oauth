@@ -5,6 +5,7 @@
 import request from '@/utils/request.ts'
 import { AxiosPromise } from 'axios'
 import { ClientResponseData, ClientQuery, ClientForm } from './type.ts'
+import { SelectResponseData } from '@/types/types.ts'
 
 enum API {
   CLIENT_RESTFUL_URL = '/auth/v1/client',
@@ -85,5 +86,16 @@ export function exportExcel(params: ClientQuery): AxiosPromise<ClientResponseDat
     url: API.CLIENT_RESTFUL_URL,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * 注册客户端下拉框
+ *
+ */
+export function selectRegisterClient(): AxiosPromise<SelectResponseData> {
+  return request({
+    url: `${API.CLIENT_RESTFUL_URL}/selectRegisteredClient`,
+    method: 'get',
   })
 }

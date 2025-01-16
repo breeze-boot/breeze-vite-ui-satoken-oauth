@@ -11,7 +11,7 @@ export const ROOT: SelectData = {
 }
 
 export enum DIALOG_FLAG {
-  ADD = 'add',
+  ADD = 'ADD',
   ADD_SUB = 'ADD_SUB',
   EDIT = 'EDIT',
 }
