@@ -4,6 +4,26 @@
  */
 import { PermissionDatas, ResponseData, UserInfoData } from '@/types/types.ts'
 
+export interface LoginForm {
+  tenantId: number
+  captchaVerification: string
+}
+
+export interface UserLoginForm extends LoginForm {
+  username: string
+  password: string
+}
+
+export interface EmailLoginForm extends LoginForm {
+  email: string
+  code: string
+}
+
+export interface PhoneLoginForm extends LoginForm {
+  phone: string
+  code: string
+}
+
 export interface UserLoginForm {
   username: string
   password: string

@@ -394,7 +394,6 @@ defineExpose({ initApprove, initStartApprove })
         <template v-if="item.key === 'abolition'">
           <svg-button
             type="primary"
-            class="ml-2"
             :label="item.name"
             :loading="btnLoading"
             v-if="startUser === userStore.userInfo.username"
@@ -404,14 +403,13 @@ defineExpose({ initApprove, initStartApprove })
         <template v-else>
           <svg-button
             type="primary"
-            class="ml-2"
             :label="item.name"
             :loading="btnLoading"
             @svg-btn-click="handleApproveClick(item)"
           />
         </template>
       </template>
-      <svg-button type="primary" class="ml-2" label="流程图" @svg-btn-click="handleShowBpmFlow" />
+      <svg-button type="primary" label="流程图" @svg-btn-click="handleShowBpmFlow" />
     </div>
     <el-divider />
     <el-row>

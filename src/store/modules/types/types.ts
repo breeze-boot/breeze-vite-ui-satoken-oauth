@@ -21,6 +21,16 @@ export interface UserState {
 }
 
 /**
+ * 登录状态保存类型
+ */
+export interface LoginState {
+  phone: string
+  phoneCountDown: string
+  email: string
+  emailCountDown: string
+}
+
+/**
  * 菜单保存类型
  */
 export interface MenuState {

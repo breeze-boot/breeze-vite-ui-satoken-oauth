@@ -135,8 +135,8 @@ export type PermissionDatas = PermissionData[]
 export enum GrantType {
   PASSWORD = 'password',
   REFRESH_TOKEN = 'refresh_token',
-  SMS = 'sms',
-  EMAIL = 'email',
+  SMS = 'sms_code',
+  EMAIL = 'email_code',
 }
 
 /**
@@ -149,6 +149,10 @@ export const SALES: string = '1234567890123456'
  */
 export enum StorageName {
   AccessToken = 'ACCESS_TOKEN',
+  Email = 'EMAIL',
+  Phone = 'PHONE',
+  EmailCountDown = 'EMAIL_COUNT_DOWN',
+  PhoneCountDown = 'PHONE_COUNT_DOWN',
   RefreshToken = 'REFRESH_TOKEN',
   RoleCodes = 'ROLE_CODES',
   Permissions = 'PERMISSIONS',

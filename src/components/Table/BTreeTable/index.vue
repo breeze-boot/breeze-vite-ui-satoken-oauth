@@ -642,7 +642,6 @@ const handleSliderChange = (row: any) => {
             v-for="(item, index) in initTbHeaderBtn"
             :key="index"
             :type="item.type"
-            :circle="false"
             :label="item.label"
             :icon="item.icon"
             v-has="item.permission"
@@ -652,7 +651,6 @@ const handleSliderChange = (row: any) => {
             v-has="['ROLE_ADMIN']"
             :icon="expandAll ? 'expend' : 'fold'"
             type="success"
-            :circle="false"
             :label="expandAll ? t('common.expend') : t('common.fold')"
             @svg-btn-click="
               () => {
@@ -668,7 +666,6 @@ const handleSliderChange = (row: any) => {
             ref="tableSettingButtonRef"
             v-click-outside="tableSettingsOnClickOutside"
             icon="settings"
-            width="1.4rem"
             :circle="true"
           />
           <svg-button
@@ -676,7 +673,6 @@ const handleSliderChange = (row: any) => {
             ref="tableColumnPermissionButtonRef"
             v-click-outside="tableColumnPermissionOnClickOutside"
             icon="column_permission"
-            width="1.4rem"
             :circle="true"
           />
         </div>
@@ -809,7 +805,6 @@ const handleSliderChange = (row: any) => {
               <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
               <!-- 操作按钮 -->
               <svg-button
-                :circle="false"
                 v-has="item.permission"
                 :link="initHandleBtn.link || item.link"
                 :icon="item.icon"

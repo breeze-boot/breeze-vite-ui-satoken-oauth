@@ -794,7 +794,6 @@ const handleSliderChange = (row: any) => {
             <svg-button
               :key="index"
               :type="item.type"
-              :circle="false"
               :label="item.label"
               :icon="item.icon"
               :disabled="item.disabled || headerBtnDisable(item.event, currentRows)"
@@ -810,7 +809,6 @@ const handleSliderChange = (row: any) => {
             ref="tableSettingButtonRef"
             v-click-outside="tableSettingsOnClickOutside"
             icon="settings"
-            width="1.4rem"
             :circle="true"
           />
           <svg-button
@@ -818,7 +816,6 @@ const handleSliderChange = (row: any) => {
             ref="tableColumnPermissionButtonRef"
             v-click-outside="tableColumnPermissionOnClickOutside"
             icon="column_permission"
-            width="1.4rem"
             :circle="true"
           />
         </div>
@@ -953,7 +950,6 @@ const handleSliderChange = (row: any) => {
               <!-- 操作按钮 -->
               <svg-button
                 :key="index"
-                :circle="false"
                 v-has="item.permission"
                 :link="initHandleBtn.link || item.link"
                 :icon="item.icon"

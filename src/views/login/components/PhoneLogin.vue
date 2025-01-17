@@ -9,20 +9,37 @@ import { useI18n } from 'vue-i18n'
 import type { SelectData } from '@/types/types.ts'
 import { selectTenant } from '@/api/auth/tenant'
 import { useMessage } from '@/hooks/message'
+import useLoginStore from '@/store/modules/login.ts'
+import { sendPhoneCode } from '@/api/login'
 
 const { t } = useI18n()
+
+const loginStore = useLoginStore()
 
 const tenantOption = ref<SelectData[]>()
 
 const loginFormRef = ref()
+const buttonText = ref<string>('获取验证码')
+const countdown = ref<number>(0)
+const isCounting = ref<boolean>(false)
 
 const loginFormData = reactive({
-  phone: '',
+  phone: '17812341234',
   code: '',
   tenantId: 1,
   captchaVerification: '',
 })
 
+const init = () => {
+  debugger
+  const storedCountDown: number = parseInt(loginStore.phoneCountDown)
+  if (storedCountDown > 0) {
+    countdown.value = storedCountDown
+    handleCountdown()
+  } else {
+    buttonText.value = '获取验证码'
+  }
+}
 /**
  * 初始化
  */
@@ -41,7 +58,9 @@ const initSelectTenant = async () => {
     useMessage().error(e.message)
   }
 }
-
+/**
+ * 手机号正则表达式
+ */
 const phoneRegex: RegExp = /^1[3-9]\d{9}$/
 
 /**
@@ -94,10 +113,51 @@ const rules = {
   ],
 }
 
+const handleCountdown = async () => {
+  buttonText.value = `${countdown.value}s 后重新获取`
+  const timer = setInterval(() => {
+    countdown.value--
+    buttonText.value = `${countdown.value}s 后重新获取`
+    if (countdown.value <= 0) {
+      clearInterval(timer)
+      isCounting.value = false
+      countdown.value = 60
+      buttonText.value = '获取验证码'
+      // 清除状态
+      loginStore.storagePhoneCountDown(countdown.value)
+    } else {
+      // 存储倒计时状态
+      loginStore.storagePhoneCountDown(countdown.value)
+    }
+  }, 1000)
+}
+
+const startCountdown = async () => {
+  // 发送验证码请求
+  await sendVerificationCode()
+  await handleCountdown()
+}
+
+const sendVerificationCode = async () => {
+  try {
+    await loginFormRef.value.validateField('phone')
+    loginStore.storagePhone(loginFormData.phone)
+    const response: any = await sendPhoneCode(loginFormData.phone)
+    buttonText.value = `${response.data}s 后重新获取`
+    countdown.value = response.data
+    loginStore.storagePhoneCountDown(countdown.value)
+    useMessage().success(response.message)
+  } catch (err: any) {
+    useMessage().warning(err.message)
+    throw new Error(err.message)
+  }
+}
+
 defineExpose({
   loginFormRef,
   loginFormData,
   rules,
+  init,
 })
 </script>
 <template>
@@ -113,14 +173,17 @@ defineExpose({
     </el-form-item>
     <el-form-item prop="code">
       <el-input
-        type="text"
+        type="password"
         :prefix-icon="Lock"
-        show-code
         v-model="loginFormData.code"
         size="large"
         :placeholder="t('login.phone.fields.code')"
         clearable
-      />
+      >
+        <template #append>
+          <el-button :disabled="isCounting" @click="startCountdown()">{{ buttonText }}</el-button>
+        </template>
+      </el-input>
     </el-form-item>
     <el-form-item prop="tenantId">
       <el-select
@@ -139,4 +202,5 @@ defineExpose({
     </el-form-item>
   </el-form>
 </template>
+
 <style scoped></style>

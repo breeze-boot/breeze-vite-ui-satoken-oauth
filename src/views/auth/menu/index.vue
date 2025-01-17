@@ -169,9 +169,9 @@ const tableInfo = reactive<TableInfo>({
       // 详情
       {
         label: t('common.info'),
-        type: '',
-        icon: 'info',
-        event: 'info',
+        type: 'warning',
+        icon: 'view',
+        event: 'view',
         permission: ['auth:menu:info'],
         eventHandle: (row: MenuRecord) => handleInfo(row),
       },
