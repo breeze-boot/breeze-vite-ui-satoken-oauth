@@ -32,11 +32,12 @@ const pages = ref({})
 watch(
   () => pageId,
   () => {
-    if (pageId && path) {
+    const _path = atob(decodeURIComponent(path))
+    if (pageId && _path) {
       pages.value = {
         pageId: pageId,
         asyncComponent: defineAsyncComponent(() => {
-          return import(`/src/views${/* @vite-ignore */ path}.vue`)
+          return import(`/src/views${/* @vite-ignore */ _path}.vue`)
         }),
         params: { ...$route.query, ...$route.params },
       }

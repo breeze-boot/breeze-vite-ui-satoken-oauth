@@ -28,16 +28,10 @@ export const constantChildRoutes = [
     },
   },
   {
-    path: 'approve/:pageId',
+    path: 'tabWrapper/:pageId/:type/:path',
     component: () => import('@/components/TabWrapper/index.vue'),
-    name: 'Approve',
-    props: (route: any) => {
-      return {
-        title: route.query.title,
-        path: route.query.path,
-        pageId: route.params.pageId,
-      }
-    },
+    name: 'TabWrapper',
+    props: true,
     meta: {
       title: '',
       icon: '',

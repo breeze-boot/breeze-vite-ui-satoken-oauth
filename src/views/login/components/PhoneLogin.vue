@@ -31,7 +31,6 @@ const loginFormData = reactive({
 })
 
 const init = () => {
-  debugger
   const storedCountDown: number = parseInt(loginStore.phoneCountDown)
   if (storedCountDown > 0) {
     countdown.value = storedCountDown

@@ -89,6 +89,7 @@ export interface Field {
     | string
     | 'tag'
     | 'slot'
+    | 'expand'
     | 'customRowLink'
     | 'rowLink'
     | 'image'

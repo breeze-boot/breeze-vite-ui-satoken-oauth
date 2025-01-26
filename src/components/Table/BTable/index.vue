@@ -166,7 +166,7 @@ const $emit = defineEmits([
 // 分页信息
 const pagerInfo = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
-  pageSizes: [10, 20, 50, 100, 200, 300, 500, 600],
+  pageSizes: [10, 20, 50, 100],
 })
 // 分页查询条件
 const pagerQuery = ref({
@@ -882,6 +882,7 @@ const handleSliderChange = (row: any) => {
           :label="item.label"
           :align="item.align || 'center'"
           :sortable="item.sortable"
+          :type="item.type"
           :header-align="item.align || 'center'"
           :width="item.width || ''"
           :min-width="item.minWidth || ''"
@@ -928,6 +929,10 @@ const handleSliderChange = (row: any) => {
             <!-- slot自定义列 -->
             <template v-else-if="item.type === 'slot'">
               <slot :name="`col-${item.prop}`" :row="scope.row" :index="scope.$index" :key="index" />
+            </template>
+
+            <template v-else-if="item.type === 'expand'">
+              <slot name="expand" :row="scope.row" :index="scope.$index" :key="index" />
             </template>
 
             <table-item @reload-data-list="getList" :dict="dict" :scope="scope" :table-field="item" :key="index" />

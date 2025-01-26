@@ -42,7 +42,7 @@ const tableLoading = ref<boolean>(false)
 const refresh = ref<number>(1)
 const tableIndex = ref<boolean>(true)
 // 选择框类型
-const select: SelectEvent = 'single'
+const select: SelectEvent = 'multi'
 
 const tableInfo = reactive<TableInfo>({
   // 表格顶部按钮
@@ -119,7 +119,7 @@ const tableInfo = reactive<TableInfo>({
     },
   ],
   handleBtn: {
-    width: 100,
+    width: 200,
     label: t('common.operate'),
     fixed: 'right',
     link: true,

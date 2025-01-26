@@ -3,47 +3,40 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting.ts'
-import { SsoClientUrl } from '@/api/home/type.ts'
 import LoginUserPie from '@/views/home/component/LoginUserPie.vue'
 
 let settings = useSettingStore().settings
 let userStore = useUserStore()
 
-let ssoClient = ref<SsoClientUrl[]>()
-
 onMounted(() => {})
 </script>
 
 <template>
-  <el-card>
-    <div class="header">
-      <div>
-        <el-avatar :size="100" :src="userStore.userInfo?.avatar || settings.logoUrl" />
-      </div>
-      <div class="greeting">
-        <h3 class="title">
-          {{ loadGreetings() }}~
-          <span class="gradient">欢迎登录！每一天，都是您迈向卓越的新起点！</span>
-        </h3>
-        <p class="subtitle">当前登录账户：{{ userStore.userInfo?.username }}</p>
-      </div>
-    </div>
-  </el-card>
-
-  <el-card>
-    <div class="client-group">
-      <div class="client" v-for="(item, index) in ssoClient" :key="index">
-        <a :href="item.url" target="_blank">{{ item.clientName }}</a>
-      </div>
-    </div>
-  </el-card>
+  <el-row :gutter="24">
+    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+      <el-card>
+        <div class="header">
+          <div>
+            <el-avatar :size="100" :src="userStore.userInfo?.avatar || settings.logoUrl" />
+          </div>
+          <div class="greeting">
+            <h3 class="title">
+              {{ loadGreetings() }}~
+              <span class="gradient">欢迎登录！每一天，都是您迈向卓越的新起点！</span>
+            </h3>
+            <p class="subtitle">当前登录账户：{{ userStore.userInfo?.username }}</p>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
 
   <el-row :gutter="24">
-    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
       <el-card>
         <template #header>
           <div class="card-header">
@@ -53,7 +46,7 @@ onMounted(() => {})
         <login-user-pie />
       </el-card>
     </el-col>
-    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
       <el-card>
         <template #header>
           <div class="card-header">
@@ -110,35 +103,6 @@ onMounted(() => {})
       font-weight: 500;
       color: #676767;
     }
-  }
-}
-
-.client-group {
-  display: flex;
-  align-items: center;
-  justify-items: center;
-
-  .client {
-    cursor: pointer;
-    width: 100px;
-    height: 100px;
-    background: #f5f5f5;
-    border-radius: 10px;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30px;
-    font-weight: bold;
-    color: #333;
-  }
-
-  .client:active {
-    transform: scale(0.95);
-  }
-
-  .client:hover {
-    background: #e6e6e6;
   }
 }
 </style>

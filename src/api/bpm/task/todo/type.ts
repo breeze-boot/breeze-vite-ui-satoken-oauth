@@ -29,6 +29,7 @@ export interface TodoRecord {
   taskDefKey?: string
   formKey?: string
   creatTime?: string
+  version?: string
 }
 
 /**

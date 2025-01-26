@@ -124,7 +124,6 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
         'element-plus/es/components/color-picker/style/css',
         'element-plus/es/components/cascader/style/css',
         'lodash-es',
-        'echarts-liquidfill',
         'echarts',
         'nprogress',
         'crypto-js',

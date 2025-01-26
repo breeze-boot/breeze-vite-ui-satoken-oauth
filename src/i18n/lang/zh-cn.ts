@@ -95,4 +95,9 @@ export default {
       operate: '操作',
     },
   },
+  bpmn: {
+    fields: {
+      userList: '用户列表',
+    },
+  },
 }

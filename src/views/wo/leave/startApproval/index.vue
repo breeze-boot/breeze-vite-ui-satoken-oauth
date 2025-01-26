@@ -75,7 +75,7 @@ const approveClickCallBack = (item: Button) => {
 
 <template>
   <process-task ref="todoTaskRef" @approveClickCallBack="approveClickCallBack">
-    <template v-slot:formSlot>
+    <template #form>
       <el-form
         :model="leaveDataForm"
         :rules="rules"

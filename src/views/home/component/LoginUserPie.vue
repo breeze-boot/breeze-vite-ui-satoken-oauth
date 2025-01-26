@@ -85,5 +85,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="chartContainer" style="width: 600px; height: 400px"></div>
+  <div ref="chartContainer" style="width: 100%; height: 500px"></div>
 </template>

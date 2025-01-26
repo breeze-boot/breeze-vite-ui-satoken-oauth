@@ -81,7 +81,7 @@ const useTabsStore = defineStore('Tabs', {
         hidden: route.meta.hidden as boolean,
       }
 
-      if ((tab.name === 'TabWrapper' || tab.name === 'Approve') && tab.params) {
+      if (tab.name === 'TabWrapper' && tab.params) {
         tab.name = tab.name + '-' + tab.params.pageId
         tab.title = route.query.title as string
       }

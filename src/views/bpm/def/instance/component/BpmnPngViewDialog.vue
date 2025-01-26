@@ -22,29 +22,23 @@ const xmlSrc = ref<string>()
 /**
  * 初始化
  *
- * @param procInstId
+ * @param procDefKey
+ * @param version
  */
-const init = async (procInstId: string) => {
+const init = async (procDefKey: string, version: number) => {
   // 重置表单数据
-  if (procInstId) {
-    await getInfo(procInstId)
-    visible.value = true
+  if (!procDefKey) {
+    visible.value = false
   }
-}
-
-/**
- * 获取信息
- *
- * @param procInstId
- */
-const getInfo = async (procInstId: string) => {
   try {
-    const response: any = await getBpmDefinitionPng(procInstId)
+    visible.value = true
+    const response: any = await getBpmDefinitionPng(procDefKey, version)
     xmlSrc.value = response.data
   } catch (e: any) {
     console.error(e.message)
   }
 }
+
 defineExpose({ init })
 </script>
 

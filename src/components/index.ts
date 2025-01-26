@@ -19,6 +19,7 @@ import WangEditor from '@/components/WangEditor/index.vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
 import ProcessTask from '@/components/ProcessTask/index.vue'
 import Verify from '@/components/anj-plus/Verify.vue'
+import BCard from '@/components/BCard/index.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
@@ -36,6 +37,7 @@ const components: { [name: string]: Component } = {
   ProcessViewer,
   ProcessTask,
   Verify,
+  BCard,
 }
 
 export default {

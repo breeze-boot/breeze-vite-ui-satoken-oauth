@@ -30,7 +30,7 @@ const $emit = defineEmits(['approveClickCallBack'])
 
 const { t } = useI18n()
 let $router = useRouter()
-const loading = ref(true)
+let loading = ref(false)
 let formComponent = shallowRef()
 let delegateUserDialogVisible = ref<boolean>()
 let transferUserDialogVisible = ref<boolean>()
@@ -44,6 +44,7 @@ let taskInfo = ref<TodoRecord>({
   procDefKey: '',
   procInstId: '',
   taskId: '',
+  version: '',
 })
 const btnLoading = ref<boolean>(false)
 const buttons = ref<Button[]>([])
@@ -56,6 +57,8 @@ const userStore = useUserStore()
 
 const initApprove = async (taskId: string) => {
   try {
+    if (!taskId) return
+    loading.value = true
     const response: any = await getTaskInfo(taskId)
     taskInfo.value = response.data
     await flowButtonInfo()
@@ -65,6 +68,7 @@ const initApprove = async (taskId: string) => {
       return import(`/src/views${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
     })
   } catch (e: any) {
+    loading.value = false
     ElMessage.warning(e.message)
     throw new Error(e.message)
   }
@@ -100,6 +104,7 @@ const flowButtonInfo = async () => {
  */
 const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
   try {
+    if (!procDefKey) return
     const response: any = await getFlowButtonInfo(procDefKey, businessKey, '')
     await nextTick(() => {
       buttons.value = response.data.buttons
@@ -117,7 +122,7 @@ const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
 const historyProcessDefinitionXml = async () => {
   if (!taskInfo.value.procInstId) return
   try {
-    const response: any = await getBpmDefinitionXml(taskInfo.value.procInstId)
+    const response: any = await getBpmDefinitionXml(taskInfo.value.procDefKey, taskInfo.value.version)
     xmlStr.value = response.data.xmlStr
     xmlNodes.value = response.data
   } catch (e: any) {
@@ -410,6 +415,7 @@ defineExpose({ initApprove, initStartApprove })
         </template>
       </template>
       <svg-button type="primary" label="流程图" @svg-btn-click="handleShowBpmFlow" />
+      <slot name="btn" />
     </div>
     <el-divider />
     <el-row>
@@ -417,7 +423,7 @@ defineExpose({ initApprove, initStartApprove })
       <el-col :span="24" style="padding: 20px">
         <el-card shadow="never">
           <component v-model="taskInfo.businessKey" v-if="formComponent" :is="formComponent" />
-          <slot v-else name="formSlot" />
+          <slot v-else name="form" />
         </el-card>
       </el-col>
       <!--流程信息-->

@@ -12,7 +12,7 @@ import { ref } from 'vue'
 import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
-  name: 'BpmnViewDialog',
+  name: 'BpmnXmlViewDialog',
   inheritAttrs: false,
 })
 
@@ -24,24 +24,36 @@ const xmlNodes = ref<any>()
 /**
  * 初始化
  *
- * @param procInstId
+ * @param procDefKey
+ * @param version
  */
-const init = async (procInstId: string) => {
+const init = async (procDefKey: string, version: number) => {
+  xmlStr.value = ''
+  xmlNodes.value = ''
   // 重置表单数据
-  if (procInstId) {
-    await getInfo(procInstId)
+  if (!procDefKey) {
+    visible.value = false
+    return
+  }
+  try {
     visible.value = true
+    const response: any = await getBpmDefinitionXml(procDefKey, version)
+    xmlStr.value = response.data.xmlStr
+    xmlNodes.value = response.data
+  } catch (e: any) {
+    console.error(e.message)
   }
 }
 
 /**
  * 获取信息
  *
- * @param procInstId
+ * @param procDefKey
+ * @param version
  */
-const getInfo = async (procInstId: string) => {
+const getInfo = async (procDefKey: string, version: number) => {
   try {
-    const response: any = await getBpmDefinitionXml(procInstId)
+    const response: any = await getBpmDefinitionXml(procDefKey, version)
     xmlStr.value = response.data.xmlStr
     xmlNodes.value = response.data
   } catch (e: any) {

@@ -11,15 +11,24 @@ const tabsStore = useTabsStore(pinia)
  * @param option
  */
 export const useNewTab = async ($route: any, option: any) => {
+  const { bizId, title, path, type, props } = option
+  let _pageId: string
+  if (bizId) {
+    _pageId = type + '_' + bizId
+  } else {
+    _pageId = type + '_' + title
+  }
   await router.push({
-    name: 'Approve',
+    name: 'TabWrapper',
     params: {
-      pageId: option.pageId,
+      pageId: _pageId,
+      type: type,
+      bizId: bizId,
+      path: encodeURIComponent(btoa(path)),
     },
     query: {
-      title: option.title,
-      path: option.path,
-      ...option.query,
+      title: title,
+      ...props,
     },
   })
   tabsStore.setTab($route)

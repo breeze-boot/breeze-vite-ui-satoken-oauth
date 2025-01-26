@@ -35,6 +35,6 @@ const approveClickCallBack = (item: Button) => {
 
 <template>
   <process-task ref="todoTaskRef" @approveClickCallBack="approveClickCallBack">
-    <template v-slot:formSlot></template>
+    <template v-slot:form></template>
   </process-task>
 </template>

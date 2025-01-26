@@ -14,7 +14,7 @@ import type { InstanceRecord, InstanceQuery } from '@/api/bpm/def/instance/type.
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import BpmnViewDialog from '@/views/bpm/def/instance/component/BpmnViewDialog.vue'
+import BpmnXmlViewDialog from '@/views/bpm/def/instance/component/BpmnXmlViewDialog.vue'
 import BpmnPngViewDialog from '@/views/bpm/def/instance/component/BpmnPngViewDialog.vue'
 import { useMessage } from '@/hooks/message'
 
@@ -25,7 +25,7 @@ defineOptions({
 
 const { t } = useI18n()
 const instanceQueryFormRef = ref(ElForm)
-const bpmnViewDialogRef = ref()
+const bpmnXmlViewDialogRef = ref()
 const bpmnPngViewDialogRef = ref()
 
 // 查询条件
@@ -206,7 +206,7 @@ const handleQuery = () => {
  * @param row 参数
  */
 const handleViewBpmnXml = (row: any) => {
-  bpmnViewDialogRef.value.init(row.procInstId)
+  bpmnXmlViewDialogRef.value.init(row.procDefKey, row.version)
 }
 /**
  * 详情
@@ -214,7 +214,7 @@ const handleViewBpmnXml = (row: any) => {
  * @param row 参数
  */
 const handleViewBpmPng = (row: any) => {
-  bpmnPngViewDialogRef.value.init(row.procInstId)
+  bpmnPngViewDialogRef.value.init(row.procDefKey, row.version)
 }
 
 /**
@@ -295,7 +295,7 @@ const handleSelectionChange = (row: InstanceRecord) => {
     @selection-change="handleSelectionChange"
   />
 
-  <bpmn-view-dialog ref="bpmnViewDialogRef" />
+  <bpmn-xml-view-dialog ref="bpmnXmlViewDialogRef" />
 
   <bpmn-png-view-dialog ref="bpmnPngViewDialogRef" />
 </template>

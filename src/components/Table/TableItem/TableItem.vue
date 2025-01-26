@@ -10,10 +10,9 @@ import { useRoute, useRouter } from 'vue-router'
 import FileUploadButton from '@/components/FileUploadButton/index.vue'
 import useTabsStore from '@/store/modules/tabs.ts'
 import VueJsoneditor from 'vue3-ts-jsoneditor'
-import { FormItemRule } from 'element-plus/es/components/form'
-import { Arrayable } from 'element-plus/es/utils'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import { useMessage } from '@/hooks/message'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
   name: 'TableItem',
@@ -31,6 +30,7 @@ const $route = useRoute()
 const tabStore = useTabsStore()
 const props = defineProps(['tableField', 'scope', 'dict'])
 const $emit = defineEmits(['reloadDataList'])
+const { t } = useI18n()
 
 /**
  * 表格字段
@@ -95,10 +95,10 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
     try {
       const response: any = await switchOption.api(_data)
       switchLoading.value = false
-      useMessage().success(response.message)
+      useMessage().success(response.message || t('common.success'))
       $emit('reloadDataList')
     } catch (err: any) {
-      useMessage().error(err.message)
+      useMessage().error(err.message || t('common.success'))
     }
   }
 }
@@ -259,7 +259,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'input'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
+      :rules="tableField.formOptions?.rules"
       :prop="`rows[${scope.$index}][${tableField.prop}]`"
     >
       <span v-if="editId !== scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
@@ -284,7 +284,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'radio'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
+      :rules="tableField.formOptions?.rules"
       :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
     >
       <div>
@@ -314,7 +314,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'select'">
     <el-form-item
       label-width="0"
-      :rules="tableField.formOptions?.rules as Arrayable<FormItemRule>"
+      :rules="tableField.formOptions?.rules"
       :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
     >
       <el-select

@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { RoleResponseData, RoleQuery, RoleForm } from './type'
+import { RoleResponseData, RoleQuery, RoleForm, ModifyPermissionForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
@@ -140,11 +140,11 @@ export function listRolesPermission(roleId: number): AxiosPromise<ResponseData> 
  *
  * @param data
  */
-export function modifyPermission(data: any): AxiosPromise<ResponseData> {
+export function modifyPermission(data: ModifyPermissionForm): AxiosPromise<ResponseData> {
   return request({
     url: `${API.ROLE_RESTFUL_URL}/modifyPermission`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

@@ -91,14 +91,16 @@ export function suspendedDefinition(params: any): AxiosPromise<ResponseData> {
 /**
  * 获取流程xml
  *
- * @param procInstId
+ * @param procDefKey
+ * @param version
  */
-export function getBpmDefinitionXml(procInstId: string): AxiosPromise<BpmDefinitionResponseData> {
+export function getBpmDefinitionXml(procDefKey: string, version?: number): AxiosPromise<BpmDefinitionResponseData> {
   return request({
     url: `${API.DEFINITION_RESTFUL_URL}/getBpmDefinitionXml`,
     method: 'get',
     params: {
-      procInstId,
+      procDefKey,
+      version,
     },
   })
 }
@@ -106,14 +108,16 @@ export function getBpmDefinitionXml(procInstId: string): AxiosPromise<BpmDefinit
 /**
  * 获取流程图
  *
- * @param procInstId
+ * @param procDefKey
+ * @param version
  */
-export function getBpmDefinitionPng(procInstId: string): AxiosPromise<BpmDefinitionResponseData> {
+export function getBpmDefinitionPng(procDefKey: string, version?: number): AxiosPromise<BpmDefinitionResponseData> {
   return request({
     url: `${API.DEFINITION_RESTFUL_URL}/getBpmDefinitionPng`,
     method: 'get',
     params: {
-      procInstId,
+      procDefKey,
+      version,
     },
   })
 }

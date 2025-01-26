@@ -16,7 +16,6 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import useUserStore from '@/store/modules/user.ts'
 import { useNewTab } from '@/hooks/newTab'
-import { page } from '@/api/bpm/def/category'
 
 defineOptions({
   name: 'Todo',
@@ -219,8 +218,9 @@ const handleToApproval = async (row: TodoRecord) => {
   await useNewTab($route, {
     path: '/bpm/task/todo/components/TodoApproval',
     title: `去审批`,
-    pageId: row.taskId,
-    query: { taskId: row.taskId },
+    bizId: row.taskId,
+    type: 'approve',
+    props: { taskId: row.taskId },
   })
 }
 

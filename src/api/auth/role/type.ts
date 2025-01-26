@@ -53,3 +53,13 @@ export interface RoleForm {
   rowPermissionType?: string
   rowPermissionIds?: number[]
 }
+
+/**
+ * 添加权限修改参数类型
+ */
+export interface ModifyPermissionForm {
+  roleId: number
+  permissionIds: number[]
+  menuIds?: number[] // 菜单权限IDs
+  columnIds?: number[] // 列权限IDs
+}
