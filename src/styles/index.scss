@@ -1,5 +1,5 @@
-@import './reset';
-@import "./dark";
+@use "./reset.scss";
+@use "./dark.scss";
 
-@import "./process-designer.scss";
-@import "./process-panel.scss";
+@use "./process-designer.scss";
+@use "./process-panel.scss";

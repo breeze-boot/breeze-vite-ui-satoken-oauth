@@ -2,9 +2,9 @@ import { ConfigEnv, UserConfigExport, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import DefineOptions from 'unplugin-vue-define-options/vite'
-import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import path from 'path'
 import viteCompression from 'vite-plugin-compression'
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 
 // SVG
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
@@ -44,15 +44,18 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     ],
     resolve: {
       alias: {
-        '@': path.resolve('./src'),
+        '@': path.resolve(__dirname, 'src'),
       },
     },
     css: {
       // CSS 预处理器
       preprocessorOptions: {
+        // 定义全局 SCSS 变量
         scss: {
-          javascriptEnabled: true,
-          additionalData: '@import "./src/styles/variable.scss";',
+          api: 'modern-compiler',
+          additionalData: `
+            @use "@/styles/variables.scss" as *;
+          `,
         },
       },
     },
@@ -165,10 +168,10 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
           drop_debugger: true,
         },
         format: {
-          comments: true, // 删除注释
+          comments: false, // 删除注释
         },
       },
-      sourcemap: false, //生产环境一定要关闭，不然打包的产物会很大
+      sourcemap: false, // 生产环境一定要关闭，不然打包的产物会很大
       rollupOptions: {
         output: {
           chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称

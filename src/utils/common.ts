@@ -16,11 +16,6 @@ export enum DIALOG_FLAG {
   EDIT = 'EDIT',
 }
 
-export enum SORT {
-  ASE = 'ascending',
-  DESC = 'descending',
-}
-
 export enum DEVICE {
   PC = 'PC',
   PAD = 'PAD',

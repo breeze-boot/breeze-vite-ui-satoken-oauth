@@ -235,8 +235,8 @@ export interface Theme {
   watermark: boolean
   watermarkContent: string[]
   themeModel: string
-  lightFont: object
-  darkFont: object
+  lightFont: any
+  darkFont: any
   themeColor: string
   size: string
 }

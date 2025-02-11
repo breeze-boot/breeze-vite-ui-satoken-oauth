@@ -44,11 +44,15 @@ const iconStyle = computed(() => {
     height: props.height,
   }
 })
+const emits = defineEmits(['svg-click'])
+const handleClick = () => {
+  emits('svg-click')
+}
 </script>
 
 <template>
   <i class="el-icon" :style="iconStyle">
-    <svg :style="{ width: width, height: height }">
+    <svg @click="handleClick" :style="{ width: width, height: height, cursor: 'pointer' }">
       <use :xlink:href="prefix + name" :fill="color === '' ? variables.svgTheme : color" />
     </svg>
   </i>

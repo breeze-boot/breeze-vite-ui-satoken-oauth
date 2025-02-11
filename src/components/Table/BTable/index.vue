@@ -1,12 +1,11 @@
 <script setup lang="ts">
+import { watch, unref, onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
 import { Btn, ColumnSort, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
-import { watch, unref } from 'vue'
-import { onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
-import { camelCaseToUnderscore, SORT } from '@/utils/common.ts'
+import { camelCaseToUnderscore } from '@/utils/common.ts'
 import TableItem from '../TableItem/TableItem.vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import useColumnStore from '@/store/modules/column'
@@ -15,6 +14,8 @@ import { ColumnCacheData } from '@/types/types.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import { useMessage } from '@/hooks/message'
+import SvgIcon from '@/components/SvgIcon/index.vue'
+import QueryBuilder from '@/components/QueryBuilder/index.vue'
 
 defineOptions({
   name: 'BTable',
@@ -193,6 +194,8 @@ const tableLoading = computed({
 const tableInfo = ref({
   // 显示的列
   showFieldList: [] as Field[],
+  // 当前查询条件列
+  currentField: {} as Field,
 })
 
 const tableData = ref({
@@ -201,6 +204,8 @@ const tableData = ref({
 })
 
 let singleSelectValue = ref<undefined | any | number>()
+let queryBuilderRef = ref<any>()
+let queryBuilderShow = ref<boolean>(false)
 let currentRows = ref<any>()
 
 /**
@@ -241,8 +246,13 @@ onUpdated(() => {
  */
 const refreshData = () => {
   if (props.mountedRefresh) {
-    getList()
+    getTableList()
   }
+}
+
+const handleHeaderSetting = (item: any) => {
+  queryBuilderShow.value = true
+  tableInfo.value.currentField = item
 }
 
 /**
@@ -310,41 +320,18 @@ const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
 /**
  * 排序列
  */
-const sortField = new Map()
+const sortField = new Map<string, any>()
 
-const setOrder = (order?: ColumnSort, obj?: QueryParams) => {
+const collectOrder = (order?: ColumnSort) => {
   // 检查是否有排序字段和排序顺序
-  if (order) {
-    // 获取排序顺序（升序或降序）
-    const ascSortOrder = SORT.ASE
-    const descSortOrder = SORT.DESC
-    // 获取当前排序字段列表
-    let ascSortProps = sortField.get(ascSortOrder) || ''
-    let descSortProps = sortField.get(descSortOrder) || ''
+  if (!order) return
 
-    // 获取当前排序字段
-    const prop = camelCaseToUnderscore(order.prop) + '|'
-    // 检查当前字段是否已经存在于排序字段列表中
-    const propIndexAsc = ascSortProps.indexOf(prop)
-    const propIndexDesc = descSortProps.indexOf(prop)
-
-    // 如果字段已存在，则移除
-    if (propIndexAsc !== -1 || propIndexDesc !== -1) {
-      ascSortProps = ascSortProps.replace(prop, '')
-      descSortProps = descSortProps.replace(prop, '')
-    }
-
-    const sortOrder = order.order
-    if (ascSortOrder === sortOrder) {
-      ascSortProps += prop
-    } else {
-      descSortProps += prop
-    }
-    sortField.set(ascSortOrder, ascSortProps)
-    sortField.set(descSortOrder, descSortProps)
-    if (obj) {
-      obj['sort'] = Object.fromEntries(sortField)
-    }
+  const key = camelCaseToUnderscore(order.prop)
+  const hasProp = sortField.has(key)
+  if (hasProp && !order?.order) {
+    sortField.delete(key) //取消排序字段
+  } else {
+    sortField.set(key, order?.order)
   }
 }
 
@@ -354,24 +341,85 @@ const setOrder = (order?: ColumnSort, obj?: QueryParams) => {
  * @param order
  */
 const handleSortChange = (order: ColumnSort) => {
-  getList({
+  collectOrder({
     order: order.order,
     prop: order.prop,
   })
+  getTableList()
+}
+
+const handleHeaderCellStyle = (params: any) => {
+  const key = camelCaseToUnderscore(params.column.property || '')
+  if (sortField.has(key)) {
+    params.column.order = sortField.get(key)
+  }
+}
+
+let sqlParam = ref<any>({})
+const handleSqlParamsSubmit = (_sqlParam: any) => {
+  sqlParam.value = _sqlParam
 }
 
 /**
  * 处理查询条件
  */
-const handleParams = (order?: ColumnSort) => {
+const handleParams = () => {
   const obj = {} as QueryParams
+  collectOrder()
   for (const key in props.query) {
     if (props.query[key] || props.query[key] === 0) {
       obj[key] = props.query[key]
     }
   }
+  obj.sort = Object.fromEntries(sortField)
 
-  setOrder(order, obj)
+  obj.condition = sqlParam.value
+  //   {
+  //   condition: '',
+  //   conditions: [
+  //     {
+  //       condition: '',
+  //       conditions: [
+  //         { field: 'k', operator: 'eq', value: '', condition: '' },
+  //         { field: 'z', operator: 'eq', value: '', condition: 'and' },
+  //       ],
+  //     },
+  //     {
+  //       condition: 'and',
+  //       conditions: [
+  //         { field: 'x', operator: 'eq', value: '', condition: '' },
+  //         { field: 'y', operator: 'eq', value: '', condition: 'or' },
+  //       ],
+  //     },
+  //     {
+  //       condition: 'or',
+  //       conditions: [
+  //         { field: 'a', operator: 'eq', value: '', condition: '' },
+  //         { field: 'b', operator: 'eq', value: '', condition: 'and' },
+  //       ],
+  //     },
+  //     {
+  //       condition: 'and',
+  //       conditions: [
+  //         {
+  //           condition: 'and',
+  //           conditions: [
+  //             { field: 'c', operator: 'eq', value: '', condition: '' },
+  //             { field: 'd', operator: 'eq', value: '', condition: 'and' },
+  //           ],
+  //         },
+  //         { field: 'e', operator: 'eq', value: '', condition: 'and' },
+  //       ],
+  //     },
+  //     {
+  //       condition: 'or',
+  //       conditions: [
+  //         { field: 'f', operator: 'eq', value: '', condition: '' },
+  //         { field: 'g', operator: 'eq', value: '', condition: 'and' },
+  //       ],
+  //     },
+  //   ],
+  // }
 
   // 根据分页条件，整个查询
   return props.pager ? { ...obj, ...pagerQuery.value } : obj
@@ -380,7 +428,7 @@ const handleParams = (order?: ColumnSort) => {
 /**
  * 获取数据
  */
-const getList = async (order?: ColumnSort) => {
+const getTableList = async () => {
   singleSelectValue.value = undefined
   currentRows.value = []
 
@@ -398,7 +446,7 @@ const getList = async (order?: ColumnSort) => {
 
   try {
     tableLoading.value = true
-    const response: any = await props.listApi(handleParams(order))
+    const response: any = await props.listApi(handleParams())
     tableData.value.rows = []
     if (props.pager) {
       tableData.value.rows = response?.data.records
@@ -465,7 +513,7 @@ const setSingleCheckedList = () => {
  */
 const handleSizeChange = (size: number) => {
   pagerQuery.value.size = size
-  getList()
+  getTableList()
 }
 
 /**
@@ -475,7 +523,7 @@ const handleSizeChange = (size: number) => {
  */
 const handleCurrentChange = (current: number) => {
   pagerQuery.value.current = current
-  getList()
+  getTableList()
 }
 
 /**
@@ -529,7 +577,7 @@ const handleRowDbClick = (row: any) => {
  */
 const handleTableRowClick = (btn: Btn, row: any, index: number) => {
   switch (btn.event) {
-    case 'delete' || 'remove':
+    case 'delete':
       confirmBox(() => {
         btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning(t('common.noHandle'))
       })
@@ -549,7 +597,7 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
  */
 const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
   switch (btn.event) {
-    case 'delete' || 'remove':
+    case 'delete':
       if (!rows) {
         useMessage().warning(t('common.delTip'))
         return
@@ -652,7 +700,7 @@ const handleSetColumnVisible = async (value: boolean, field: Field) => {
     visible: value,
   }
   await columnStore.setColumnByMenu(data)
-  await getList()
+  await getTableList()
 }
 
 /**
@@ -662,7 +710,7 @@ watch(
   () => props.reloadCurrentPage,
   () => {
     pagerQuery.value.current = 1
-    getList()
+    getTableList()
   },
 )
 /**
@@ -671,7 +719,7 @@ watch(
 watch(
   () => props.refresh,
   () => {
-    getList()
+    getTableList()
   },
 )
 
@@ -742,7 +790,7 @@ const handleSliderChange = (row: any) => {
               class="ml-2"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
               :disabled="row.disabled"
-              @change="getList()"
+              @change="getTableList()"
             />
           </template>
         </el-table-column>
@@ -802,7 +850,7 @@ const handleSliderChange = (row: any) => {
               @svg-btn-click="handleHeadBtnClick(item, currentRows, index)"
             />
           </div>
-          <slot name="tbHeaderBtn"></slot>
+          <slot name="tbHeaderBtn" />
         </div>
         <div class="tool-btn">
           <svg-button
@@ -823,6 +871,14 @@ const handleSliderChange = (row: any) => {
     </template>
 
     <div class="table">
+      <query-builder
+        v-model="queryBuilderShow"
+        ref="queryBuilderRef"
+        :table-fields="tableInfo.showFieldList"
+        :current-field="tableInfo.currentField"
+        @sql-params-submit="handleSqlParamsSubmit"
+        @submit-query="getTableList"
+      />
       <el-table
         ref="normalTableRef"
         :fit="true"
@@ -839,6 +895,12 @@ const handleSliderChange = (row: any) => {
         :style="tableStyle"
         :show-summary="showSummary"
         :highlight-current-row="true"
+        :header-cell-style="{ textAlign: 'center' }"
+        :header-cell-class-name="
+          (params: any) => {
+            handleHeaderCellStyle(params)
+          }
+        "
         @selection-change="handleSelectionChange"
         @row-dblclick="handleRowDbClick"
         @row-click="handleRowClick"
@@ -889,6 +951,21 @@ const handleSliderChange = (row: any) => {
           :show-overflow-tooltip="item.showOverflowTooltip"
           :fixed="item.fixed"
         >
+          <template #header>
+            {{ item.label }}
+            <div
+              @click="handleHeaderSetting(item)"
+              style="
+                cursor: pointer;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                padding-left: 2px;
+              "
+            >
+              <svg-icon name="setting" />
+            </div>
+          </template>
           <template #default="scope">
             <template v-if="item.children">
               <!-- 多级表头 -->
@@ -912,7 +989,7 @@ const handleSliderChange = (row: any) => {
                   </template>
 
                   <table-item
-                    @reload-data-list="getList"
+                    @reload-data-list="getTableList"
                     :scope="{
                       row: _.row[item.prop],
                       $index: _.$index,
@@ -935,7 +1012,7 @@ const handleSliderChange = (row: any) => {
               <slot name="expand" :row="scope.row" :index="scope.$index" :key="index" />
             </template>
 
-            <table-item @reload-data-list="getList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
+            <table-item @reload-data-list="getTableList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
           </template>
         </el-table-column>
 

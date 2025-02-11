@@ -360,7 +360,7 @@ const handleDingdingLogin = () => {
 
   .login-form-card {
     border: none;
-    width: 30rem;
+    width: 26%;
     padding: 40px;
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

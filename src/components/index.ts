@@ -20,6 +20,7 @@ import ProcessViewer from '@/components/ProcessViewer/index.vue'
 import ProcessTask from '@/components/ProcessTask/index.vue'
 import Verify from '@/components/anj-plus/Verify.vue'
 import BCard from '@/components/BCard/index.vue'
+import QueryBuilder from '@/components/QueryBuilder/index.vue'
 
 const components: { [name: string]: Component } = {
   SvgIcon,
@@ -38,6 +39,7 @@ const components: { [name: string]: Component } = {
   ProcessTask,
   Verify,
   BCard,
+  QueryBuilder,
 }
 
 export default {
