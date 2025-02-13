@@ -9,7 +9,6 @@ import { useI18n } from 'vue-i18n'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
 import { getBpmDefinitionXml } from '@/api/bpm/def/definition'
 import { ref } from 'vue'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'BpmnXmlViewDialog',
@@ -67,7 +66,6 @@ defineExpose({ init })
   <el-dialog
     v-model="visible"
     top="5vh"
-    :width="useWidth()"
     :title="t('common.design')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

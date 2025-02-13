@@ -10,7 +10,6 @@ import { listColumns } from '@/api/dev/tables/index.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { useI18n } from 'vue-i18n'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'ColumnList',
@@ -137,7 +136,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :size="useWidth()" :title="t('column.common.columnSetting')" v-model="visible" :direction="direction">
+  <el-drawer :title="t('column.common.columnSetting')" v-model="visible" :direction="direction">
     <b-table
       ref="columnListTableRef"
       :pager="false"

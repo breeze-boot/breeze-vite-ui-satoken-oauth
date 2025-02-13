@@ -8,7 +8,6 @@
 import { useI18n } from 'vue-i18n'
 import { getBpmDefinitionPng } from '@/api/bpm/def/definition'
 import { ref } from 'vue'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'BpmnViewDialog',
@@ -46,7 +45,6 @@ defineExpose({ init })
   <el-dialog
     v-model="visible"
     top="10%"
-    :width="useWidth()"
     :title="t('common.design')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

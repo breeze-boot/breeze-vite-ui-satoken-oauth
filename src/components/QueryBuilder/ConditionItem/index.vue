@@ -4,15 +4,19 @@
 -->
 <template>
   <div class="query-builder">
+    <!-- 添加条件按钮 -->
     <el-row :gutter="24">
       <el-col :span="2">
         <el-button @click="addCondition" v-if="props.visible">添加</el-button>
       </el-col>
     </el-row>
+    <!-- 条件组循环 -->
     <el-row v-for="(item, index) in conditionsTemp" :key="index" :gutter="24" class="condition-group">
+      <!-- 删除条件按钮 -->
       <div class="close-button">
         <svg-icon v-if="props.visible" name="remove" @svg-click="removeCondition(index)" />
       </div>
+      <!-- 条件逻辑选择 -->
       <el-col
         v-show="item.condition && index !== 0"
         style="height: 25px; cursor: pointer; text-align: center; line-height: 25px"
@@ -22,6 +26,7 @@
         <span>{{ item?.condition }}</span>
       </el-col>
       <el-col v-show="item.condition && index === 0" :span="1"></el-col>
+      <!-- 嵌套条件渲染 -->
       <template v-if="item.conditions">
         <el-col :span="21">
           <ConditionItem
@@ -33,6 +38,7 @@
           />
         </el-col>
       </template>
+      <!-- 普通条件渲染 -->
       <template v-else>
         <el-col :span="6">
           <el-select @change="handleChangeField" v-model="item.field" placeholder="选择字段">
@@ -44,7 +50,7 @@
             />
           </el-select>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <el-select @change="handleChangeOperator" v-model="item.operator" placeholder="选择操作符">
             <el-option label="等于" value="eq" />
             <el-option label="大于" value="gt" />
@@ -63,8 +69,24 @@
             <el-option label="区间范围" value="between" />
           </el-select>
         </el-col>
-        <el-col :span="6">
-          <el-input @change="handleChangeValue" v-model="item.value" placeholder="输入值" />
+        <el-col :span="7">
+          <el-select v-if="item.type === 'dict'" @change="handleChangeValue" v-model="item.value" placeholder="输入值">
+            <el-option v-for="(value, key) in item.dict" :key="key" :label="value.label" :value="key" />
+          </el-select>
+
+          <el-date-picker
+            style="width: 300px"
+            v-else-if="item.type === 'date'"
+            v-model="item.value"
+            format="YYYY/MM/DD hh:mm:ss"
+            value-format="YYYY-MM-DD hh:mm:ss"
+            type="datetimerange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+          />
+
+          <el-input v-else @change="handleChangeValue" v-model="item.value" placeholder="输入值" />
         </el-col>
         <el-col :span="1">
           <el-button style="margin: 0 10px" v-if="!item.conditions" @click="addNestedCondition(index)">
@@ -77,25 +99,27 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, defineProps } from 'vue'
+import { reactive, watch } from 'vue'
 import ConditionItem from '@/components/QueryBuilder/ConditionItem/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import { camelCaseToUnderscore } from '@/utils/common.ts'
+import { useDict } from '@/hooks/dict'
 
+// 定义组件接收的属性
 const props = defineProps({
   // 内部递归+外层初始化值使用
   currentCondition: {
-    type: Array,
+    type: Array as () => Condition[],
     default: () => [],
   },
   // 当前点击的列
   currentField: {
-    type: Object,
+    type: Object as () => Record<string, any>,
     default: () => null,
   },
   // 所有列的下拉列表
   conditionSelect: {
-    type: Array,
+    type: Array as () => { label: string; prop: string }[],
     default: () => [],
   },
   // 内部递归使用：是否展示添加按钮
@@ -105,90 +129,107 @@ const props = defineProps({
   },
 })
 
+// 定义组件触发的事件
 const $emit = defineEmits(['update-conditions'])
+
+// 定义条件对象的类型
 interface Condition {
   field: string
   operator: string
   value: string
   condition: string
+  dict?: any
+  type?: string
   conditions?: Condition[]
 }
-let temp = { field: camelCaseToUnderscore(props.currentField.prop), operator: 'eq', value: '', condition: 'and' }
-let conditionsTemp = reactive<Condition[]>([])
-conditionsTemp =
-  props.currentCondition.length > 0 ? (props.currentCondition as Condition[]) : reactive([{ ...temp } as Condition])
-/**
- * 监听方法
- */
+
+// 提取创建新条件的函数
+const createNewCondition = (): Condition => {
+  return {
+    field: camelCaseToUnderscore(props.currentField.prop),
+    operator: 'eq',
+    value: '',
+    condition: 'and',
+  }
+}
+
+// 初始化条件列表
+let conditionsTemp = reactive<Condition[]>(
+  props.currentCondition.length > 0 ? props.currentCondition : [createNewCondition()],
+)
+
+// 监听 currentField 的变化
 watch(
   () => props.currentField,
   () => {
-    temp = { field: camelCaseToUnderscore(props.currentField.prop), operator: 'eq', value: '', condition: 'and' }
-    conditionsTemp.push(temp)
+    debugger
+    const newCondition = createNewCondition()
+    if (props.currentField.type === 'dict') {
+      newCondition.dict = useDict(props.currentField.dict)[props.currentField.dict].value
+    }
+    newCondition.type = props.currentField.type
+    conditionsTemp.push(newCondition)
     $emit('update-conditions', conditionsTemp)
   },
 )
 
+// 添加条件
 const addCondition = () => {
-  debugger
-  let temp = { field: camelCaseToUnderscore(props.currentField.prop), operator: 'eq', value: '', condition: 'and' }
-  conditionsTemp.push(temp)
+  conditionsTemp.push(createNewCondition())
   $emit('update-conditions', conditionsTemp)
-  debugger
 }
 
+// 添加嵌套条件
 const addNestedCondition = (index: number) => {
-  debugger
-  let temp = { field: camelCaseToUnderscore(props.currentField.prop), operator: 'eq', value: '', condition: 'and' }
+  const newCondition = createNewCondition()
   const currentCondition = conditionsTemp[index]
   if (currentCondition.conditions) {
     // 如果当前条件已经是嵌套分组，直接添加新条件到该分组
-    currentCondition.conditions.push(temp)
+    currentCondition.conditions.push(newCondition)
   } else {
     // 如果当前条件不是嵌套分组，创建一个新的嵌套分组
-    const newNestedGroup = {
+    const newNestedGroup: Condition = {
+      field: '',
+      operator: '',
+      value: '',
       condition: currentCondition.condition,
-      conditions: [currentCondition, temp],
-    } as Condition
+      conditions: [currentCondition, newCondition],
+    }
     // 用新的嵌套分组替换当前条件
     conditionsTemp.splice(index, 1, newNestedGroup)
-    debugger
   }
   $emit('update-conditions', conditionsTemp)
-  debugger
 }
 
+// 删除条件
 const removeCondition = (index: number) => {
   conditionsTemp.splice(index, 1)
   $emit('update-conditions', conditionsTemp)
 }
 
+// 预览条件更新
 const previewConditionsItem = () => {
   $emit('update-conditions', conditionsTemp)
 }
 
-const handleChangeCondition = (_condition: any) => {
-  // 触发预览条件更新
-  if (_condition.condition === 'or') {
-    _condition.condition = 'and'
-  } else {
-    _condition.condition = 'or'
-  }
+// 切换条件逻辑
+const handleChangeCondition = (condition: Condition) => {
+  condition.condition = condition.condition === 'or' ? 'and' : 'or'
   $emit('update-conditions', conditionsTemp)
 }
 
+// 操作符改变时触发更新
 const handleChangeOperator = () => {
-  // 触发预览条件更新
   $emit('update-conditions', conditionsTemp)
 }
 
+// 值改变时触发更新
 const handleChangeValue = () => {
-  // 触发预览条件更新
   $emit('update-conditions', conditionsTemp)
 }
 
+// 字段改变时触发更新
 const handleChangeField = () => {
-  // 触发预览条件更新
   $emit('update-conditions', conditionsTemp)
 }
 </script>

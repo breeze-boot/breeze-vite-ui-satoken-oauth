@@ -12,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
 import CronSelect from '@/components/CronSelect/index.vue'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -121,7 +120,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!jobDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

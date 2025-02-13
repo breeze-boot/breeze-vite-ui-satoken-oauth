@@ -1,6 +1,5 @@
 <script>
 import { page } from '@/api/bpm/group'
-import useWidth from '@/hooks/dialogWidth'
 
 export default {
   name: 'RoleDialog',
@@ -67,7 +66,6 @@ export default {
     this.roleList = []
   },
   methods: {
-    useWidth,
     async getList() {
       const response = await page(this.pagerQuery.query)
       this.roleList = response.data.records
@@ -135,7 +133,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title" :width="useWidth()">
+  <el-dialog v-model="visible" :title="title">
     <el-table
       ref="roleCheckTableRef"
       @selection-change="handleSelectionChange"

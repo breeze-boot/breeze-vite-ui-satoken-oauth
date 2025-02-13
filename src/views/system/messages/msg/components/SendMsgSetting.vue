@@ -11,7 +11,6 @@ import { SelectData } from '@/types/types.ts'
 import SendMsg from '@/views/system/messages/msg/components/SendMsg.vue'
 import useMsgStore from '@/store/modules/msg.ts'
 import useUserStore from '@/store/modules/user.ts'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'SendMsgMethod',
@@ -90,7 +89,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="t('msg.common.sendMsgMethod')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

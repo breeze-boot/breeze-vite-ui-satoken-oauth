@@ -11,7 +11,6 @@ import { UserResetPasswordForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 import { encrypt } from '@/utils/common.ts'
 import { SALES } from '@/types/types.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -115,7 +114,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="t('user.common.resetPassword')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

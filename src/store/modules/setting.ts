@@ -13,8 +13,6 @@ import { DEVICE, LAYOUT } from '@/utils/common.ts'
 const useSettingStore = defineStore('SettingStore', {
   state: (): SettingState => {
     return {
-      drawnWidth: '100%',
-      dialogWidth: '100%',
       refresh: false,
       device: CookiesStorage.get(CookiesKey.DEVICE) || setting.defaultDevice,
       theme: {
@@ -58,10 +56,8 @@ const useSettingStore = defineStore('SettingStore', {
       this.theme.menuLayout = value
       CookiesStorage.set(CookiesKey.MENU_LAYOUT, value)
     },
-    setDevice(device: string, dialogWidth: string, drawnWidth: string) {
+    setDevice(device: string) {
       this.device = device
-      this.dialogWidth = dialogWidth
-      this.drawnWidth = drawnWidth
       CookiesStorage.set(CookiesKey.DEVICE, device)
       if (device === DEVICE.MOBILE) {
         this.settings.isCollapse = true

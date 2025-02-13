@@ -13,7 +13,6 @@ import { getMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
 import { ClickOutside as vClickOutside } from 'element-plus'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 const userStore = useUserStore()
@@ -136,7 +135,7 @@ const handleCloseDialog = async () => {
     </div>
   </el-popover>
 
-  <el-dialog v-model="visible" :width="useWidth()">
+  <el-dialog v-model="visible">
     <div style="text-align: center; height: 600px">
       <h1 class="title">
         {{ noticeMsgInfo.title }}

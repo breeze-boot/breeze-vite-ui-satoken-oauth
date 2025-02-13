@@ -13,7 +13,6 @@ import { listDeptUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import useMsgStore from '@/store/modules/msg.ts'
 import useUserStore from '@/store/modules/user.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -150,7 +149,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="t('msg.common.sendMsg')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

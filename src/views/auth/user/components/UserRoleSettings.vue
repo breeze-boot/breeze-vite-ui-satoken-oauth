@@ -15,7 +15,6 @@ import { RoleRecords } from '@/api/auth/role/type.ts'
 import JSONBigInt from 'json-bigint'
 import { userSetRole } from '@/api/auth/user'
 import { UserSetRoleForm, UserRoleQuery } from '@/api/auth/user/type.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -147,7 +146,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="t('user.common.roleSettings')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

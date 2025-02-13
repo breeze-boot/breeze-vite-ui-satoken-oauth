@@ -11,7 +11,6 @@ import { RoleForm } from '@/api/auth/role/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { SelectData } from '@/types/types.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 import { selectCustomizePermission, selectRowPermissionType } from '@/api/auth/permission/rowPermission'
 
@@ -157,7 +156,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!roleDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

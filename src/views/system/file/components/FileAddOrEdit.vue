@@ -9,7 +9,6 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FileUpload from '@/components/Upload/FileUpload/index.vue'
 import { UploadUserFile } from '@/components/Upload/types/types.ts'
-import useWidth from '@/hooks/dialogWidth'
 
 const { t } = useI18n()
 const $emit = defineEmits(['reloadDataList'])
@@ -44,7 +43,6 @@ defineExpose({
     :title="t('common.upload')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
-    :width="useWidth()"
   >
     <file-upload
       v-model="currentFileList"

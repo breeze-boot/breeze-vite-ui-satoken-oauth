@@ -96,6 +96,7 @@ export interface Field {
     | 'switch'
     | 'upload'
     | 'file'
+    | 'date'
     | 'select'
     | 'radio'
     | 'input'

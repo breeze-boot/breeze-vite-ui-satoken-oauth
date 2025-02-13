@@ -14,7 +14,6 @@ import { selectDept } from '@/api/auth/dept'
 import { listDeptUser } from '@/api/auth/user'
 import { UserRecord } from '@/api/auth/user/type.ts'
 import { Option, SelectData } from '@/types/types.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -172,7 +171,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!rowPermissionDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="true"

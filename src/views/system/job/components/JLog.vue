@@ -11,7 +11,6 @@ import { page } from '@/api/system/jLog'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { JLogQuery, JLogRecords } from '@/api/system/jLog/type.ts'
 import BTable from '@/components/Table/BTable/index.vue'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'JLog',
@@ -146,7 +145,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :size="useWidth()" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
+  <el-drawer v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('jLog.common.jLogViewing') }}</h4>
     </template>

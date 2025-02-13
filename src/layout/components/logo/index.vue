@@ -33,6 +33,7 @@ let { settings } = storeToRefs(useSettingStore())
 
 <style lang="scss" scoped>
 .logo {
+  --el-font-family: 'Comic Sans MS', 'Helvetica Neue', Arial, sans-serif; /* 自定义字体 */
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -43,6 +44,7 @@ let { settings } = storeToRefs(useSettingStore())
   overflow: hidden;
   font-size: $base-logo-font-size;
   font-weight: $base-logo-font-weight;
+  font-family: var(--el-font-family);
 
   .logo-img {
     img {

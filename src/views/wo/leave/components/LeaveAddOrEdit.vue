@@ -11,7 +11,6 @@ import { addLeave, getLeave, editLeave } from '@/api/wo/leave'
 import type { LeaveRecord } from '@/api/wo/leave/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'LeaveAddOrEdit',
@@ -93,7 +92,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="visible" :width="useWidth()" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog v-model="visible" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form
       :model="leaveDataForm"
       :rules="rules"

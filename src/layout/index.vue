@@ -28,11 +28,11 @@ const layoutDict: LayoutDict = {
 const WIDTH: number = 992
 watchEffect(() => {
   if (width.value > WIDTH) {
-    settingStore.setDevice(DEVICE.PC, 50 + '%', 80 + '%')
+    settingStore.setDevice(DEVICE.PC)
   } else if (width.value >= WIDTH / 2 && width.value < WIDTH) {
-    settingStore.setDevice(DEVICE.PAD, 90 + '%', 100 + '%')
+    settingStore.setDevice(DEVICE.PAD)
   } else {
-    settingStore.setDevice(DEVICE.MOBILE, 100 + '%', 100 + '%')
+    settingStore.setDevice(DEVICE.MOBILE)
   }
 })
 </script>

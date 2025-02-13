@@ -12,7 +12,6 @@ import { listTreePermission } from '@/api/auth/menu'
 import { MenuTreeRecord } from '@/api/auth/menu/type.ts'
 import { listRolesMenuColumnPermission, saveRoleMenuColumn } from '@/api/auth/permission/menuColumn'
 import SvgButton from '@/components/SvgButton/index.vue'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -115,7 +114,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="t('role.common.menuColumnPermission')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

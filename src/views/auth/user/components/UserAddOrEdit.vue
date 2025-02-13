@@ -11,9 +11,7 @@ import { UserForm } from '@/api/auth/user/type.ts'
 import { useI18n } from 'vue-i18n'
 import { SelectData } from '@/types/types.ts'
 import JSONBigInt from 'json-bigint'
-import useFormValidation from '@/hooks/formValidation'
 import AvatarUpload from '@/components/Upload/AvatarUpload/index.vue'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 import { selectDept } from '@/api/auth/dept'
 import { selectPost } from '@/api/auth/post'
@@ -231,9 +229,6 @@ const getInfo = async (id: number) => {
  * 表单提交
  */
 const handleUserDataFormSubmit = async () => {
-  let { isNANValue } = useFormValidation()
-  isNANValue(userDataForm.value)
-
   await userDataFormRef.value.validate()
   loading.value = true
   const id = userDataForm.value.id
@@ -257,7 +252,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!userDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

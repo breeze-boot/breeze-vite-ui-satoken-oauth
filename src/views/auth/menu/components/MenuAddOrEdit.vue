@@ -15,7 +15,6 @@ import { DIALOG_FLAG, ROOT } from '@/utils/common.ts'
 import SvgIconSelect from '@/components/SvgIconSelect/index.vue'
 import JSONBigInt from 'json-bigint'
 import { selectPlatform } from '@/api/auth/platform'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -184,7 +183,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!menuDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

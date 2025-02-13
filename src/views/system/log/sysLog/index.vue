@@ -18,7 +18,7 @@ import { useDict } from '@/hooks/dict'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
-  name: 'Log',
+  name: 'SysLog',
   inheritAttrs: false,
 })
 

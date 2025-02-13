@@ -12,7 +12,6 @@ import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
 import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -203,7 +202,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :size="useWidth()" v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
+  <el-drawer v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('dictItem.common.dictItemViewing') }}</h4>
     </template>

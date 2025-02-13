@@ -1,6 +1,5 @@
 <script>
 import { page } from '@/api/bpm/user'
-import useWidth from '@/hooks/dialogWidth'
 
 export default {
   name: 'UserDialog',
@@ -67,7 +66,6 @@ export default {
     this.userList = []
   },
   methods: {
-    useWidth,
     async getList() {
       const response = await page(this.pagerQuery?.query)
       this.userList = response.data?.records
@@ -139,7 +137,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title" :before-close="handleCloseCheck" :width="useWidth()">
+  <el-dialog v-model="visible" :title="title" :before-close="handleCloseCheck">
     <el-table
       ref="userCheckTableRef"
       @selection-change="handleSelectionChange"

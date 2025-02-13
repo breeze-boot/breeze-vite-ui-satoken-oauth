@@ -12,7 +12,6 @@ import { ClientForm } from '@/api/auth/client/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useDict } from '@/hooks/dict'
-import useWidth from '@/hooks/dialogWidth'
 
 defineOptions({
   name: 'ClientAddOrEdit',
@@ -127,7 +126,6 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :width="useWidth()"
     :title="!clientDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="false"

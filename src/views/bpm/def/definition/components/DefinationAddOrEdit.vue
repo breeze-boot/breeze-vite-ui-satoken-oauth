@@ -13,7 +13,6 @@ import type { BpmDefinitionForm } from '@/api/bpm/def/definition/type.ts'
 import { SelectData } from '@/types/types.ts'
 import { selectCategory } from '@/api/bpm/def/category'
 import { ElMessageBox } from 'element-plus'
-import useWidth from '@/hooks/dialogWidth'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -158,13 +157,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog
-    v-model="visible"
-    :width="useWidth()"
-    :title="t('common.design')"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-  >
+  <el-dialog v-model="visible" :title="t('common.design')" :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form
       :model="definitionDataForm"
       :rules="rules"

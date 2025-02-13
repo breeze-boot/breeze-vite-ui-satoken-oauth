@@ -3,10 +3,13 @@
 * @since: 2025-02-01
 -->
 <template>
+  <!-- 查询构建器容器，根据 visible 状态显示 -->
   <div :style="{ position: visible ? 'absolute' : 'relative' }" v-if="visible" @mousedown.stop class="query-builder">
+    <!-- 关闭按钮 -->
     <div class="close-button">
       <svg-icon v-if="visible" name="remove" @svg-click="handleCloseDiv" />
     </div>
+    <!-- 条件组 -->
     <div class="condition-group">
       <ConditionItem
         :currentField="props.currentField"
@@ -17,28 +20,35 @@
       />
     </div>
   </div>
+  <!-- SQL 预览区域 -->
   <div class="sql-preview" title="鼠标滑轮滚动">
+    <!-- 预览文本区域，支持滚动 -->
     <div @wheel="handleWheel" ref="textRef" class="text">
       {{ previewText }}
     </div>
-    <div style="width: 5%">
-      <el-button @click="submitQuery">提交查询</el-button>
+    <!-- 提交查询按钮 -->
+    <div style="width: 10%">
+      <el-button type="info" @click="resetQuery">重置</el-button>
+      <el-button type="primary" @click="submitQuery">提交查询</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, onMounted } from 'vue'
+// 导入 Vue 相关的 API
+import { ref, computed, onMounted } from 'vue'
+// 导入自定义组件
 import ConditionItem from '@/components/QueryBuilder/ConditionItem/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 
+// 定义组件的 props
 const props = defineProps({
   currentField: {
-    type: Object,
-    default: () => {},
+    type: Object as () => Record<string, any>,
+    default: () => ({}),
   },
   tableFields: {
-    type: Array,
+    type: Array as () => { label: string; prop: string }[],
     default: () => [],
   },
   modelValue: {
@@ -47,12 +57,16 @@ const props = defineProps({
   },
 })
 
-const $emit = defineEmits(['update:modelValue', 'sqlParamsSubmit'])
+// 定义组件的 emits 事件
+const emits = defineEmits(['update:modelValue', 'sqlParamsSubmit'])
 
-const conditionItemRef = ref()
+// 定义组件内的响应式变量
+const conditionItemRef = ref<InstanceType<typeof ConditionItem> | null>(null)
 const previewText = ref('')
 const initCondition = ref<any[]>([])
 const textRef = ref<HTMLDivElement | null>(null)
+
+// 处理鼠标滚轮事件，实现横向滚动
 const handleWheel = (e: WheelEvent) => {
   e.preventDefault()
   if (textRef.value) {
@@ -60,23 +74,23 @@ const handleWheel = (e: WheelEvent) => {
   }
 }
 
+// 组件挂载后执行的操作，这里暂时为空
 onMounted(() => {})
+
+// 计算属性，用于控制组件的可见性
 const visible = computed({
-  get: () => {
-    return props.modelValue
-  },
-  set: (value) => {
-    $emit('update:modelValue', value)
-  },
+  get: () => props.modelValue,
+  set: (value) => emits('update:modelValue', value),
 })
 
+// 提交查询的方法
 const submitQuery = async (params: any) => {
   const queryData = {
     conditions: params,
   }
   try {
     debugger
-    $emit('sqlParamsSubmit', queryData)
+    emits('sqlParamsSubmit', queryData)
     initCondition.value = params.value
     console.log('生成的 参数:', queryData)
   } catch (error) {
@@ -84,81 +98,64 @@ const submitQuery = async (params: any) => {
   }
 }
 
+const resetQuery = async () => {
+  try {
+    debugger
+    initCondition.value = []
+  } catch (error) {
+    console.error('请求出错:', error)
+  }
+}
+
+// 关闭查询构建器的方法
 const handleCloseDiv = () => {
   visible.value = false
 }
 
-const formatCondition = (condition: any) => {
+// 格式化条件的方法
+const formatCondition = (condition: any): string => {
   if (condition.conditions) {
     const subConditionsText = condition.conditions.map(formatCondition).join(` ${condition.condition.toUpperCase()} `)
     return `(${subConditionsText})`
-  } else {
-    let operatorText
-    switch (condition.operator) {
-      case 'eq':
-        operatorText = '等于'
-        break
-      case 'gt':
-        operatorText = '大于'
-        break
-      case 'lt':
-        operatorText = '小于'
-        break
-      case 'gte':
-        operatorText = '大于等于'
-        break
-      case 'lte':
-        operatorText = '小于等于'
-        break
-      case 'neq':
-        operatorText = '不等于'
-        break
-      case 'contain':
-        operatorText = '包含'
-        break
-      case 'notContain':
-        operatorText = '不包含'
-        break
-      case 'startWith':
-        operatorText = '以...开头'
-        break
-      case 'endWith':
-        operatorText = '以...结尾'
-        break
-      case 'isNull':
-        operatorText = '为空'
-        break
-      case 'isNotNull':
-        operatorText = '不为空'
-        break
-      case 'in':
-        operatorText = '在列表中'
-        break
-      case 'notIn':
-        operatorText = '不在列表中'
-        break
-      case 'between':
-        operatorText = '区间范围'
-        break
-      default:
-        operatorText = condition.operator
-    }
-    return `${condition.field} ${operatorText} '${condition.value}'`
   }
+
+  // 定义操作符对应的文本
+  const operatorMap: Record<string, string> = {
+    eq: '等于',
+    gt: '大于',
+    lt: '小于',
+    gte: '大于等于',
+    lte: '小于等于',
+    neq: '不等于',
+    contain: '包含',
+    notContain: '不包含',
+    startWith: '以...开头',
+    endWith: '以...结尾',
+    isNull: '为空',
+    isNotNull: '不为空',
+    in: '在列表中',
+    notIn: '不在列表中',
+    between: '区间范围',
+  }
+
+  const operatorText = operatorMap[condition.operator] || condition.operator
+  return `${condition.field} ${operatorText} '${condition.value}'`
 }
 
-const previewConditions = (temp: any) => {
-  debugger
+// 预览条件并提交查询的方法
+const previewConditions = (temp: any[]) => {
   if (temp.length === 0) {
     previewText.value = ''
     return
   }
+
   let result = formatCondition(temp[0])
   for (let i = 1; i < temp.length; i++) {
     const conditionObj = temp[i]
     const formattedCondition = formatCondition(conditionObj)
     result += ` ${conditionObj.condition.toUpperCase()} ${formattedCondition}`
   }
+
   previewText.value = result
   console.log(previewText.value)
   submitQuery(temp)
@@ -186,7 +183,7 @@ const previewConditions = (temp: any) => {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-/* 定义 .sql-preview 样式 */
+
 .sql-preview {
   cursor: pointer;
   width: 100%;
@@ -196,14 +193,7 @@ const previewConditions = (temp: any) => {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-.sql-preview {
-  width: 100%;
-  display: flex;
-  align-content: center;
-  justify-content: flex-start;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
+
 .sql-preview .text {
   cursor: pointer;
   width: 93%;
@@ -215,18 +205,18 @@ const previewConditions = (temp: any) => {
   background: rgba(248, 248, 248, 0.71);
   padding: 0 10px;
   display: flex;
-  align-items: center; /* 添加这一行，让文本垂直居中 */
+  align-items: center;
   align-content: center;
-  /* 添加横向滚动条及隐藏样式 */
   overflow-x: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* 禁止文本自动换行 */
   white-space: nowrap;
 }
+
 .sql-preview .text::-webkit-scrollbar {
   display: none;
 }
+
 .close-button {
   width: 30px;
   height: 30px;

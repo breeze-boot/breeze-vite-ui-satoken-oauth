@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, unref, onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
-import { ElMessage, ElMessageBox, ClickOutside as vClickOutside } from 'element-plus'
+import { ElMessage, ElMessageBox, ClickOutside as vClickOutside, ElTable } from 'element-plus'
 import { Btn, ColumnSort, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -152,7 +152,7 @@ const props = defineProps({
   },
 })
 
-const normalTableRef = ref<any>('')
+const normalTableRef = ref<InstanceType<typeof ElTable>>()
 let $route = useRoute()
 const columnStore = useColumnStore()
 const { theme } = storeToRefs(useSettingStore())
@@ -164,11 +164,13 @@ const $emit = defineEmits([
   'update:modelValue',
   'update:loading',
 ])
+
 // 分页信息
 const pagerInfo = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
   pageSizes: [10, 20, 50, 100],
 })
+
 // 分页查询条件
 const pagerQuery = ref({
   // 总条数
@@ -177,18 +179,6 @@ const pagerQuery = ref({
   current: 1,
   // 每页条数
   size: 10,
-})
-
-/**
- * 表格 loading
- */
-const tableLoading = computed({
-  get: () => {
-    return props.loading
-  },
-  set: (value) => {
-    $emit('update:loading', value)
-  },
 })
 
 const tableInfo = ref({
@@ -201,6 +191,18 @@ const tableInfo = ref({
 const tableData = ref({
   // 表格的值
   rows: [] as any[],
+})
+
+/**
+ * 表格 loading
+ */
+const tableLoading = computed({
+  get: () => {
+    return props.loading
+  },
+  set: (value) => {
+    $emit('update:loading', value)
+  },
 })
 
 let singleSelectValue = ref<undefined | any | number>()
@@ -374,52 +376,6 @@ const handleParams = () => {
   obj.sort = Object.fromEntries(sortField)
 
   obj.condition = sqlParam.value
-  //   {
-  //   condition: '',
-  //   conditions: [
-  //     {
-  //       condition: '',
-  //       conditions: [
-  //         { field: 'k', operator: 'eq', value: '', condition: '' },
-  //         { field: 'z', operator: 'eq', value: '', condition: 'and' },
-  //       ],
-  //     },
-  //     {
-  //       condition: 'and',
-  //       conditions: [
-  //         { field: 'x', operator: 'eq', value: '', condition: '' },
-  //         { field: 'y', operator: 'eq', value: '', condition: 'or' },
-  //       ],
-  //     },
-  //     {
-  //       condition: 'or',
-  //       conditions: [
-  //         { field: 'a', operator: 'eq', value: '', condition: '' },
-  //         { field: 'b', operator: 'eq', value: '', condition: 'and' },
-  //       ],
-  //     },
-  //     {
-  //       condition: 'and',
-  //       conditions: [
-  //         {
-  //           condition: 'and',
-  //           conditions: [
-  //             { field: 'c', operator: 'eq', value: '', condition: '' },
-  //             { field: 'd', operator: 'eq', value: '', condition: 'and' },
-  //           ],
-  //         },
-  //         { field: 'e', operator: 'eq', value: '', condition: 'and' },
-  //       ],
-  //     },
-  //     {
-  //       condition: 'or',
-  //       conditions: [
-  //         { field: 'f', operator: 'eq', value: '', condition: '' },
-  //         { field: 'g', operator: 'eq', value: '', condition: 'and' },
-  //       ],
-  //     },
-  //   ],
-  // }
 
   // 根据分页条件，整个查询
   return props.pager ? { ...obj, ...pagerQuery.value } : obj

@@ -1,6 +1,5 @@
 <script>
 import { page } from '@/api/auth/role'
-import useWidth from '@/hooks/dialogWidth'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 
@@ -80,7 +79,6 @@ export default {
     this.roleList = []
   },
   methods: {
-    useWidth,
     /**
      * 查询
      */
@@ -166,7 +164,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title" :width="useWidth()">
+  <el-dialog v-model="visible" :title="title">
     <search-container-box>
       <el-form ref="roleQueryFormRef" :model="queryParams" :inline="true">
         <!-- 角色编码 -->
