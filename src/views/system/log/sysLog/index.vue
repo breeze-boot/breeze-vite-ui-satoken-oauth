@@ -2,15 +2,15 @@
  * @author: gaoweixuan
  * @since: 2023-11-12
 -->
-<!-- 日志管理 -->
+<!-- 系统日志管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { page, deleteLog } from '@/api/system/log/sysLog/index.ts'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { ElForm } from 'element-plus'
-import type { LogRecords } from '@/api/system/log/sysLog/type.ts'
-import { LogRecord, LogQuery } from '@/api/system/log/sysLog/type.ts'
+import type { SysLogRecords } from '@/api/system/log/sysLog/type.ts'
+import { SysLogRecord, SysLogQuery } from '@/api/system/log/sysLog/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -29,14 +29,14 @@ const { RESULT, LOG_TYPE, DO_TYPE } = useDict('RESULT', 'LOG_TYPE', 'DO_TYPE')
 /**
  * 查询条件
  */
-const queryParams = reactive<LogQuery>({
+const queryParams = reactive<SysLogQuery>({
   current: 1,
   size: 10,
   total: 0,
 })
 
-let checkedRows = reactive<LogRecords>([])
-let currentRows = reactive<LogRecords>([])
+let checkedRows = reactive<SysLogRecords>([])
+let currentRows = reactive<SysLogRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
 const refresh = ref<number>(1)
@@ -53,7 +53,7 @@ const tableInfo = reactive<TableInfo>({
       permission: ['sys:sysLog:delete'],
       event: 'delete',
       icon: 'delete',
-      eventHandle: (rows: LogRecords) => handleDelete(rows),
+      eventHandle: (rows: SysLogRecords) => handleDelete(rows),
     },
   ],
   // 字典
@@ -63,59 +63,59 @@ const tableInfo = reactive<TableInfo>({
     {
       prop: 'systemModule',
       showOverflowTooltip: true,
-      label: t('log.fields.systemModule'),
+      label: t('sysLog.fields.systemModule'),
     },
     {
       prop: 'logTitle',
       showOverflowTooltip: true,
-      label: t('log.fields.logTitle'),
+      label: t('sysLog.fields.logTitle'),
     },
     {
       prop: 'logType',
       showOverflowTooltip: true,
-      label: t('log.fields.logType'),
+      label: t('sysLog.fields.logType'),
       type: 'dict',
       dict: 'LOG_TYPE',
     },
     {
       prop: 'doType',
       showOverflowTooltip: true,
-      label: t('log.fields.doType'),
+      label: t('sysLog.fields.doType'),
       type: 'dict',
       dict: 'DO_TYPE',
     },
     {
       prop: 'requestType',
       showOverflowTooltip: true,
-      label: t('log.fields.requestType'),
+      label: t('sysLog.fields.requestType'),
     },
     {
       prop: 'browser',
       showOverflowTooltip: true,
-      label: t('log.fields.browser'),
+      label: t('sysLog.fields.browser'),
     },
     {
       prop: 'result',
       showOverflowTooltip: true,
-      label: t('log.fields.result'),
+      label: t('sysLog.fields.result'),
       type: 'dict',
       dict: 'RESULT',
     },
     {
       prop: 'system',
       showOverflowTooltip: true,
-      label: t('log.fields.system'),
+      label: t('sysLog.fields.system'),
     },
     {
       prop: 'ip',
       showOverflowTooltip: true,
-      label: t('log.fields.ip'),
+      label: t('sysLog.fields.ip'),
     },
     {
       prop: '',
       type: 'slot',
       showOverflowTooltip: true,
-      label: t('log.fields.createBy'),
+      label: t('sysLog.fields.createBy'),
     },
   ],
   handleBtn: {
@@ -131,7 +131,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'view',
         event: 'view',
         permission: ['sys:sysLog:info'],
-        eventHandle: (rows: LogRecords) => handleInfo(rows),
+        eventHandle: (rows: SysLogRecords) => handleInfo(rows),
       },
       // 删除
       {
@@ -140,7 +140,7 @@ const tableInfo = reactive<TableInfo>({
         icon: 'delete',
         event: 'delete',
         permission: ['sys:sysLog:delete'],
-        eventHandle: (row: LogRecord) => handleDelete([row] as LogRecords),
+        eventHandle: (row: SysLogRecord) => handleDelete([row] as SysLogRecords),
       },
     ],
   },
@@ -182,7 +182,7 @@ const handleInfo = (row: any) => {
  *
  * @param rows 行数据
  */
-const handleDelete = async (rows: LogRecords) => {
+const handleDelete = async (rows: SysLogRecords) => {
   try {
     const logIds = rows.map((item: any) => item.id)
     await deleteLog(logIds)
@@ -198,7 +198,7 @@ const handleDelete = async (rows: LogRecords) => {
  *
  * @param row 选择的行数据
  */
-function handleRowClick(row: LogRecord) {
+function handleRowClick(row: SysLogRecord) {
   currentRows = [row]
   console.log(currentRows)
 }
@@ -208,7 +208,7 @@ function handleRowClick(row: LogRecord) {
  *
  * @param rows 选择的行数据
  */
-const handleSelectionChange = (rows: LogRecords) => {
+const handleSelectionChange = (rows: SysLogRecords) => {
   currentRows = rows
 }
 </script>
@@ -216,65 +216,65 @@ const handleSelectionChange = (rows: LogRecords) => {
 <template>
   <search-container-box>
     <el-form ref="logQueryFormRef" :model="queryParams" :inline="true" style="flex-wrap: wrap">
-      <el-form-item :label="t('log.fields.systemModule')" props="systemModule">
+      <el-form-item :label="t('sysLog.fields.systemModule')" props="systemModule">
         <el-input
           v-model="queryParams.systemModule"
           @keyup.enter="handleQuery"
           clearable
-          :placeholder="t('log.fields.systemModule')"
+          :placeholder="t('sysLog.fields.systemModule')"
         />
       </el-form-item>
-      <el-form-item :label="t('log.fields.doType')" prop="doType">
+      <el-form-item :label="t('sysLog.fields.doType')" prop="doType">
         <el-select
           class="m-2"
           style="width: 240px"
           v-model="queryParams.doType"
           @change="handleQuery"
-          :placeholder="t('log.fields.doType')"
+          :placeholder="t('sysLog.fields.doType')"
         >
           <el-option v-for="item in DO_TYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('log.fields.logType')" prop="logType">
+      <el-form-item :label="t('sysLog.fields.logType')" prop="logType">
         <el-select
           class="m-2"
           style="width: 240px"
           v-model="queryParams.logType"
           @change="handleQuery"
-          :placeholder="t('log.fields.logType')"
+          :placeholder="t('sysLog.fields.logType')"
         >
           <el-option v-for="item in LOG_TYPE" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('log.fields.result')" prop="result">
+      <el-form-item :label="t('sysLog.fields.result')" prop="result">
         <el-select
           class="m-2"
           style="width: 240px"
           v-model="queryParams.result"
           @change="handleQuery"
-          :placeholder="t('log.fields.result')"
+          :placeholder="t('sysLog.fields.result')"
         >
           <el-option v-for="item in RESULT" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="t('log.fields.createBy')" prop="createBy">
+      <el-form-item :label="t('sysLog.fields.createBy')" prop="createBy">
         <el-input
           v-model="queryParams.createBy"
           @keyup.enter="handleQuery"
           clearable
-          :placeholder="t('log.fields.createBy')"
+          :placeholder="t('sysLog.fields.createBy')"
         />
       </el-form-item>
-      <el-form-item :label="t('log.fields.searchDate')" prop="searchDate">
+      <el-form-item :label="t('sysLog.fields.searchDate')" prop="searchDate">
         <el-date-picker
           class="m-2"
           v-model="queryParams.searchDate"
           clearable
           style="width: 250px"
-          :end-placeholder="t('log.fields.endDate')"
+          :start-placeholder="t('sysLog.common.startDate')"
+          :end-placeholder="t('sysLog.common.endDate')"
           format="yyyy-MM-dd HH:mm:ss"
-          range-separator="至"
-          :start-placeholder="t('log.fields.startDate')"
+          range-separator="-"
           type="datetimerange"
         ></el-date-picker>
       </el-form-item>

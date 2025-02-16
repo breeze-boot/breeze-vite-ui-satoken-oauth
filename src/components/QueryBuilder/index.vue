@@ -5,6 +5,11 @@
 <template>
   <!-- 查询构建器容器，根据 visible 状态显示 -->
   <div :style="{ position: visible ? 'absolute' : 'relative' }" v-if="visible" @mousedown.stop class="query-builder">
+    <!-- 提交查询按钮 -->
+    <div class="query-button">
+      <el-button type="info" @click="resetQuery">清除条件</el-button>
+      <el-button type="primary" @click="submitQuery">提交查询</el-button>
+    </div>
     <!-- 关闭按钮 -->
     <div class="close-button">
       <svg-icon v-if="visible" name="remove" @svg-click="handleCloseDiv" />
@@ -12,10 +17,10 @@
     <!-- 条件组 -->
     <div class="condition-group">
       <ConditionItem
+        ref="conditionItemRef"
         :currentField="props.currentField"
         :condition-select="props.tableFields"
-        ref="conditionItemRef"
-        :current-condition="initCondition"
+        :current-condition="currentSqlConditions"
         @update-conditions="previewConditions"
       />
     </div>
@@ -27,8 +32,8 @@
       {{ previewText }}
     </div>
     <!-- 提交查询按钮 -->
-    <div style="width: 10%">
-      <el-button type="info" @click="resetQuery">重置</el-button>
+    <div style="width: 200px">
+      <el-button type="info" @click="resetQuery">清除条件</el-button>
       <el-button type="primary" @click="submitQuery">提交查询</el-button>
     </div>
   </div>
@@ -63,8 +68,8 @@ const emits = defineEmits(['update:modelValue', 'sqlParamsSubmit'])
 // 定义组件内的响应式变量
 const conditionItemRef = ref<InstanceType<typeof ConditionItem> | null>(null)
 const previewText = ref('')
-const initCondition = ref<any[]>([])
 const textRef = ref<HTMLDivElement | null>(null)
+let currentSqlConditions = ref<any>()
 
 // 处理鼠标滚轮事件，实现横向滚动
 const handleWheel = (e: WheelEvent) => {
@@ -75,7 +80,9 @@ const handleWheel = (e: WheelEvent) => {
 }
 
 // 组件挂载后执行的操作，这里暂时为空
-onMounted(() => {})
+onMounted(() => {
+  debugger
+})
 
 // 计算属性，用于控制组件的可见性
 const visible = computed({
@@ -84,14 +91,13 @@ const visible = computed({
 })
 
 // 提交查询的方法
-const submitQuery = async (params: any) => {
+const submitQuery = async () => {
+  debugger
   const queryData = {
-    conditions: params,
+    conditions: currentSqlConditions.value,
   }
   try {
-    debugger
     emits('sqlParamsSubmit', queryData)
-    initCondition.value = params.value
     console.log('生成的 参数:', queryData)
   } catch (error) {
     console.error('请求出错:', error)
@@ -99,12 +105,10 @@ const submitQuery = async (params: any) => {
 }
 
 const resetQuery = async () => {
-  try {
-    debugger
-    initCondition.value = []
-  } catch (error) {
-    console.error('请求出错:', error)
-  }
+  debugger
+  previewText.value = ''
+  currentSqlConditions.value = []
+  await submitQuery()
 }
 
 // 关闭查询构建器的方法
@@ -157,8 +161,7 @@ const previewConditions = (temp: any[]) => {
   }
 
   previewText.value = result
-  console.log(previewText.value)
-  submitQuery(temp)
+  currentSqlConditions.value = temp
 }
 </script>
 
@@ -227,5 +230,15 @@ const previewConditions = (temp: any[]) => {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.query-button {
+  position: absolute;
+  width: 97%;
+  z-index: 9999;
+  height: 30px;
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
 }
 </style>

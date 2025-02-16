@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function list(params: TodoQuery): AxiosPromise<TodoResponseData> {
+export function list(data: TodoQuery): AxiosPromise<TodoResponseData> {
   return request({
-    url: API.TODO_RESTFUL_URL + '/listUserTodoTask',
-    method: 'get',
-    params: params,
+    url: `${API.TODO_RESTFUL_URL}/listUserTodoTask`,
+    method: 'post',
+    data,
   })
 }
 

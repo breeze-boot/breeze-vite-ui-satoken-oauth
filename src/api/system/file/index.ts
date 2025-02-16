@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: FileQuery): AxiosPromise<FileResponseData> {
+export function page(data: FileQuery): AxiosPromise<FileResponseData> {
   return request({
-    url: API.FILE_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.FILE_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -34,7 +34,7 @@ export function editFile(id: number, data: FileRecord): AxiosPromise<ResponseDat
   return request({
     url: `${API.FILE_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

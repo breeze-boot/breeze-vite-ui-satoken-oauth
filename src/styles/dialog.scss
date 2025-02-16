@@ -1,0 +1,116 @@
+/*
+ * 全局对话框样式设置
+ * 默认情况下，对话框宽度为 35%，若自定义变量 --el-dialog-width 未定义，则使用 50% 作为备用宽度
+ * 使用 !important 确保自定义样式优先级高于其他样式
+ */
+.el-dialog {
+  /* 定义自定义 CSS 变量，设置默认宽度为 35% */
+  --el-dialog-width: 35%;
+  /* 使用 var() 函数获取自定义变量的值，若变量未定义则使用 50% 作为备用宽度 */
+  width: var(--el-dialog-width, 50%) !important;
+  /* 设置对话框的最大宽度，避免在超宽屏幕上过大 */
+  max-width: 100%;
+  /* 设置对话框的最小宽度，避免在窄屏幕上过小 */
+  min-width: 300px;
+  /* 设置对话框的过渡效果，使宽度变化更平滑 */
+  transition: width 0.3s ease;
+}
+
+/*
+ * 超宽屏幕（宽度大于 1920px）样式
+ * 适当增大对话框宽度，充分利用屏幕空间
+ */
+@media (min-width: 1921px) {
+  .el-dialog {
+    --el-dialog-width: 30%;
+    width: var(--el-dialog-width, 50%) !important;
+  }
+}
+
+/*
+ * 宽屏幕（宽度在 1441px 到 1920px 之间）样式
+ * 调整对话框宽度以适应宽屏幕
+ */
+@media (min-width: 1441px) and (max-width: 1920px) {
+  .el-dialog {
+    --el-dialog-width: 32%;
+    width: var(--el-dialog-width, 50%) !important;
+  }
+}
+
+/*
+ * 中等屏幕（宽度在 1025px 到 1440px 之间）样式
+ * 进一步调整对话框宽度
+ */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .el-dialog {
+    --el-dialog-width: 40%;
+    width: var(--el-dialog-width, 50%) !important;
+  }
+}
+
+/*
+ * 当窗口宽度在 769px 到 1024px 之间时的对话框样式
+ * 调整对话框宽度为 60%
+ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .el-dialog {
+    --el-dialog-width: 60%;
+    width: var(--el-dialog-width, 50%) !important;
+  }
+}
+
+/*
+ * 当窗口宽度在 481px 到 768px 之间时的对话框样式
+ * 让对话框宽度占满大部分屏幕
+ */
+@media (min-width: 481px) and (max-width: 768px) {
+  .el-dialog {
+    --el-dialog-width: 100%;
+    width: var(--el-dialog-width, 50%) !important;
+    /* 适当减小内边距，节省空间 */
+    padding: 15px;
+  }
+}
+
+/*
+ * 小屏幕（宽度小于等于 480px）样式
+ * 对话框宽度为 100%，并调整内边距
+ */
+@media (max-width: 480px) {
+  .el-dialog {
+    --el-dialog-width: 100%;
+    width: var(--el-dialog-width, 50%) !important;
+    /* 进一步减小内边距，适应小屏幕 */
+    padding: 10px;
+    /* 去除外边距，充分利用屏幕空间 */
+    margin: 0;
+  }
+}
+
+/*
+ * 对话框内容区域样式
+ * 设置背景颜色和内边距
+ */
+.el-dialog__content {
+  background-color: #fff;
+  padding: 20px;
+}
+
+/*
+ * 对话框标题区域样式
+ * 设置字体大小和颜色
+ */
+.el-dialog__title {
+  font-size: 18px;
+  color: #333;
+}
+
+/*
+ * 对话框底部按钮区域样式
+ * 设置文本右对齐和内边距
+ */
+.el-dialog__footer {
+  text-align: right;
+  padding: 15px 20px;
+}

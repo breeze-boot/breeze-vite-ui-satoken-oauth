@@ -1,5 +1,5 @@
 export default {
-  log: {
+  loginLog: {
     fields: {
       systemModule: '系统模块',
       logTitle: '日志标题',
@@ -14,6 +14,10 @@ export default {
       searchDate: '查询时间',
       endDate: '结束时间',
       startDate: '开始时间',
+    },
+    common: {
+      startDate: '开始日期',
+      endDate: '结束日期',
     },
   },
 }

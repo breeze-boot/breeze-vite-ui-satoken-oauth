@@ -45,7 +45,7 @@ export function addPlatform(data: PlatformForm): AxiosPromise<ResponseData> {
   return request({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editPlatform(id: number, data: PlatformForm): AxiosPromise<Respo
   return request({
     url: `${API.PLATFORM_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

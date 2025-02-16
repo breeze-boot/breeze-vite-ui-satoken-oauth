@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: CategoryQuery): AxiosPromise<CategoryResponseData> {
+export function page(data: CategoryQuery): AxiosPromise<CategoryResponseData> {
   return request({
-    url: API.CATEGORY_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.CATEGORY_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addCategory(data: CategoryForm): AxiosPromise<ResponseData> {
   return request({
     url: API.CATEGORY_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editCategory(id: number, data: CategoryForm): AxiosPromise<Respo
   return request({
     url: `${API.CATEGORY_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

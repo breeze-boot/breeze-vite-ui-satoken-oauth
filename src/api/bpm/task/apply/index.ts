@@ -13,12 +13,12 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function list(params: ApplyQuery): AxiosPromise<ApplyResponseData> {
+export function list(data: ApplyQuery): AxiosPromise<ApplyResponseData> {
   return request({
-    url: API.USER_APPLY_RESTFUL_URL + '/listApplyUserTask',
-    method: 'get',
-    params: params,
+    url: `${API.USER_APPLY_RESTFUL_URL}/listApplyUserTask`,
+    method: 'post',
+    data,
   })
 }

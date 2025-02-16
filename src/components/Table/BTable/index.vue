@@ -360,6 +360,7 @@ const handleHeaderCellStyle = (params: any) => {
 let sqlParam = ref<any>({})
 const handleSqlParamsSubmit = (_sqlParam: any) => {
   sqlParam.value = _sqlParam
+  getTableList()
 }
 
 /**

@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: MsgUserQuery): AxiosPromise<MsgUserResponseData> {
+export function page(data: MsgUserQuery): AxiosPromise<MsgUserResponseData> {
   return request({
-    url: API.MSG_USER_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.MSG_USER_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 

@@ -101,7 +101,7 @@ const toggleOpenSearch = () => {
   height: 100vh;
   background: var(--base-search-dialog-theme);
   display: none;
-  z-index: 9;
+  z-index: 9999998;
 
   .search {
     width: auto;
@@ -110,7 +110,7 @@ const toggleOpenSearch = () => {
     left: 50%;
     top: 25%;
     transform: translate(-50%, -50%);
-    z-index: 9999;
+    z-index: 9999999;
   }
 }
 </style>

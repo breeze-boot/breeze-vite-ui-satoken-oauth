@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: TenantQuery): AxiosPromise<TenantResponseData> {
+export function page(data: TenantQuery): AxiosPromise<TenantResponseData> {
   return request({
-    url: API.TENANT_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.TENANT_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addTenant(data: TenantForm): AxiosPromise<ResponseData> {
   return request({
     url: API.TENANT_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editTenant(id: number, data: TenantForm): AxiosPromise<ResponseD
   return request({
     url: `${API.TENANT_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

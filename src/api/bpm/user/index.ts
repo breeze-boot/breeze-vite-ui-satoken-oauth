@@ -13,12 +13,12 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: UserQuery): AxiosPromise<UserResponseData> {
+export function page(data: UserQuery): AxiosPromise<UserResponseData> {
   return request({
-    url: API.BPM_USER_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.BPM_USER_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }

@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: ClientQuery): AxiosPromise<ClientResponseData> {
+export function page(data: ClientQuery): AxiosPromise<ClientResponseData> {
   return request({
-    url: API.CLIENT_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.CLIENT_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addClient(data: ClientForm): AxiosPromise<ClientResponseData> {
   return request({
     url: API.CLIENT_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editClient(id: number, data: ClientForm): AxiosPromise<ClientRes
   return request({
     url: `${API.CLIENT_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

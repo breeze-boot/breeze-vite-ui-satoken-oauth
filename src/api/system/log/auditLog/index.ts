@@ -1,14 +1,14 @@
 /**
  * @author: gaoweixuan
- * @since: 2023-11-12
+ * @since: 2025-02-15
  */
-import request from '@/utils/request.ts'
+import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { SysLogResponseData, SysLogQuery } from './type.ts'
+import { AuditLogResponseData, AuditLogQuery } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
-  SYS_LOG_RESTFUL_URL = '/sys/v1/sysLog',
+  AUDIT_LOG_RESTFUL_URL = '/sys/v1/auditLog',
 }
 
 /**
@@ -16,9 +16,9 @@ enum API {
  *
  * @param data
  */
-export function page(data: SysLogQuery): AxiosPromise<SysLogResponseData> {
+export function page(data: AuditLogQuery): AxiosPromise<AuditLogResponseData> {
   return request({
-    url: `${API.SYS_LOG_RESTFUL_URL}/page`,
+    url: `${API.AUDIT_LOG_RESTFUL_URL}/page`,
     method: 'post',
     data,
   })
@@ -31,7 +31,7 @@ export function page(data: SysLogQuery): AxiosPromise<SysLogResponseData> {
  */
 export function deleteLog(ids: number[]): AxiosPromise<ResponseData> {
   return request({
-    url: API.SYS_LOG_RESTFUL_URL,
+    url: API.AUDIT_LOG_RESTFUL_URL,
     method: 'delete',
     data: ids,
   })

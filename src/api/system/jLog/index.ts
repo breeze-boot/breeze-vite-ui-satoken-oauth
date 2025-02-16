@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: JLogQuery): AxiosPromise<JLogResponseData> {
+export function page(data: JLogQuery): AxiosPromise<JLogResponseData> {
   return request({
-    url: API.J_LOG_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.J_LOG_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 

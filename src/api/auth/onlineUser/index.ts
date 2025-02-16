@@ -19,7 +19,7 @@ export function list(params: OnlineUserQuery): AxiosPromise<OnlineUserResponseDa
   return request({
     url: `${API.CLIENT_RESTFUL_URL}/list`,
     method: 'get',
-    params: params,
+    params,
   })
 }
 

@@ -49,7 +49,7 @@ export function addDept(data: DeptForm): AxiosPromise<DeptResponseData> {
   return request({
     url: API.DEPT_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -63,7 +63,7 @@ export function editDept(id: number, data: DeptForm): AxiosPromise<DeptResponseD
   return request({
     url: `${API.DEPT_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

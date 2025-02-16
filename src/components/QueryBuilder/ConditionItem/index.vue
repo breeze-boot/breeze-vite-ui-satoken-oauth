@@ -162,7 +162,6 @@ let conditionsTemp = reactive<Condition[]>(
 watch(
   () => props.currentField,
   () => {
-    debugger
     const newCondition = createNewCondition()
     if (props.currentField.type === 'dict') {
       newCondition.dict = useDict(props.currentField.dict)[props.currentField.dict].value
@@ -170,6 +169,15 @@ watch(
     newCondition.type = props.currentField.type
     conditionsTemp.push(newCondition)
     $emit('update-conditions', conditionsTemp)
+  },
+)
+// 监听 currentCondition 的变化
+watch(
+  () => props.currentCondition,
+  () => {
+    conditionsTemp = reactive<Condition[]>(
+      props.currentCondition.length > 0 ? props.currentCondition : [createNewCondition()],
+    )
   },
 )
 

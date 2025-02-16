@@ -20,13 +20,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: EmailConfigQuery): AxiosPromise<EmailConfigResponseData> {
+export function page(data: EmailConfigQuery): AxiosPromise<EmailConfigResponseData> {
   return request({
-    url: API.EMAIL_CONFIG_RESULT_URL,
-    method: 'get',
-    params: params,
+    url: `${API.EMAIL_CONFIG_RESULT_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -51,7 +51,7 @@ export function addEmailConfig(data: EmailConfigForm): AxiosPromise<ResponseData
   return request({
     url: API.EMAIL_CONFIG_RESULT_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -65,7 +65,7 @@ export function editEmailConfig(id: number, data: EmailConfigForm): AxiosPromise
   return request({
     url: `${API.EMAIL_CONFIG_RESULT_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -104,6 +104,6 @@ export function open(data: EmailConfigSwitchForm): AxiosPromise<ResponseData> {
   return request({
     url: API.EMAIL_CONFIG_RESULT_URL + `/open`,
     method: 'put',
-    data: data,
+    data,
   })
 }

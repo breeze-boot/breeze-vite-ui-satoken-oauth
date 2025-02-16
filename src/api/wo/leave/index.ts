@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: LeaveQuery): AxiosPromise<LeaveResponseData> {
+export function page(data: LeaveQuery): AxiosPromise<LeaveResponseData> {
   return request({
-    url: API.LEAVE_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.LEAVE_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addLeave(data: LeaveRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.LEAVE_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -58,7 +58,7 @@ export function editLeave(data: LeaveRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.LEAVE_RESTFUL_URL,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

@@ -1,0 +1,43 @@
+/* 全局样式，设置基本字体和颜色 */
+:root {
+  --el-color-primary: #1890ff; /* 自定义主色调 */
+  --el-font-family: "Arial", "Helvetica Neue", Arial, sans-serif; /* 自定义字体 */
+}
+
+body {
+  font-family: var(--el-font-family);
+  color: #333;
+}
+
+/* 自定义按钮样式 */
+.el-button {
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+/* 自定义表格样式 */
+.el-table {
+  border-radius: 10px;
+}
+
+.el-table__body-wrapper {
+  border-top: none;
+}
+
+.el-table__header th {
+  font-weight: 500;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.el-table__body td {
+  padding: 10px 16px;
+}
+
+.el-table__body-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+
+.el-card {
+  border-radius: 10px;
+}

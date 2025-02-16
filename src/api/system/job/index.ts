@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: JobQuery): AxiosPromise<JobResponseData> {
+export function page(data: JobQuery): AxiosPromise<JobResponseData> {
   return request({
-    url: API.JOB_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.JOB_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addJob(data: JobRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.JOB_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editJob(id: number, data: JobRecord): AxiosPromise<ResponseData>
   return request({
     url: `${API.JOB_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -113,6 +113,6 @@ export function open(data: JobSwitchParam): AxiosPromise<ResponseData> {
   return request({
     url: `${API.JOB_RESTFUL_URL}/open`,
     method: 'put',
-    data: data,
+    data,
   })
 }

@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: PostQuery): AxiosPromise<PostResponseData> {
+export function page(data: PostQuery): AxiosPromise<PostResponseData> {
   return request({
-    url: API.POST_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.POST_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addPost(data: PostForm): AxiosPromise<ResponseData> {
   return request({
     url: API.POST_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editPost(id: number, data: PostForm): AxiosPromise<ResponseData>
   return request({
     url: `${API.POST_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

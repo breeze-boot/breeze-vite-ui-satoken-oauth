@@ -1,0 +1,107 @@
+/*
+ * 全局 el-drawer 样式设置
+ * 默认情况下，el-drawer 宽度为 35%，若自定义变量 --el-drawer-width 未定义，则使用 50% 作为备用宽度
+ * 使用 !important 确保自定义样式优先级高于其他样式
+ * 添加过渡效果使宽度变化更平滑
+ * 设置最大和最小宽度避免在极端屏幕下显示异常
+ */
+.el-drawer {
+  --el-drawer-width: 60%;
+  width: var(--el-drawer-width, 50%) !important;
+  max-width: 100%;
+  min-width: 280px;
+}
+
+/*
+ * 超宽屏幕（宽度大于 1920px）样式
+ * 适当减小 el-drawer 宽度以保持合理布局
+ */
+@media (min-width: 1921px) {
+  .el-drawer {
+    --el-drawer-width: 60%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * 宽屏幕（宽度在 1441px 到 1920px 之间）样式
+ * 调整 el-drawer 宽度以适应宽屏幕
+ */
+@media (min-width: 1441px) and (max-width: 1920px) {
+  .el-drawer {
+    --el-drawer-width: 60%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * 中等屏幕（宽度在 1025px 到 1440px 之间）样式
+ * 进一步调整 el-drawer 宽度
+ */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .el-drawer {
+    --el-drawer-width: 60%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * 当窗口宽度在 769px 到 1024px 之间时的 el-drawer 样式
+ * 调整 el-drawer 宽度为 80%
+ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .el-drawer {
+    --el-drawer-width: 100%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * 当窗口宽度在 481px 到 768px 之间时的 el-drawer 样式
+ * 让 el-drawer 宽度占满大部分屏幕
+ */
+@media (min-width: 481px) and (max-width: 768px) {
+  .el-drawer {
+    --el-drawer-width: 100%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * 小屏幕（宽度小于等于 480px）样式
+ * el-drawer 宽度为 100%
+ */
+@media (max-width: 480px) {
+  .el-drawer {
+    --el-drawer-width: 100%;
+    width: var(--el-drawer-width, 50%) !important;
+  }
+}
+
+/*
+ * el-drawer 内容区域样式
+ * 设置背景颜色和内边距
+ */
+.el-drawer__content {
+  background-color: #fff;
+  padding: 15px;
+}
+
+/*
+ * el-drawer 标题区域样式
+ * 设置字体大小和颜色
+ */
+.el-drawer__title {
+  font-size: 18px;
+  color: #333;
+  padding: 15px;
+}
+
+/*
+ * el-drawer 关闭按钮区域样式
+ * 设置对齐方式和内边距
+ */
+.el-drawer__close-btn {
+  text-align: right;
+  padding: 10px;
+}

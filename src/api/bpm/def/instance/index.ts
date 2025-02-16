@@ -15,13 +15,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: InstanceQuery): AxiosPromise<InstanceResponseData> {
+export function page(data: InstanceQuery): AxiosPromise<InstanceResponseData> {
   return request({
-    url: API.INSTANCE_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.INSTANCE_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 

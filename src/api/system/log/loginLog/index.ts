@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { LogResponseData, LogQuery } from './type'
+import { LoginLogResponseData, LoginLogQuery } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: LogQuery): AxiosPromise<LogResponseData> {
+export function page(data: LoginLogQuery): AxiosPromise<LoginLogResponseData> {
   return request({
-    url: API.LOGIN_LOG_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.LOGIN_LOG_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 

@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: MsgQuery): AxiosPromise<MsgResponseData> {
+export function page(data: MsgQuery): AxiosPromise<MsgResponseData> {
   return request({
-    url: API.MSG_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.MSG_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addMsg(data: MsgRecord): AxiosPromise<ResponseData> {
   return request({
     url: API.MSG_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editMsg(id: number, data: MsgRecord): AxiosPromise<ResponseData>
   return request({
     url: `${API.MSG_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

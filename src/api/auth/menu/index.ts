@@ -66,7 +66,7 @@ export function addMenu(data: MenuForm): AxiosPromise<MenuResponseData> {
   return request({
     url: API.MENU_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -80,7 +80,7 @@ export function editMenu(id: number, data: MenuForm): AxiosPromise<MenuResponseD
   return request({
     url: `${API.MENU_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

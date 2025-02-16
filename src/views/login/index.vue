@@ -243,8 +243,12 @@ const handleLogin = async (data: any) => {
 const initParticles = () => {
   const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement
   let ctx = canvas.getContext('2d')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
+  function updateCanvasSize() {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+  }
+  updateCanvasSize()
+  window.addEventListener('resize', updateCanvasSize)
 
   const particles: any[] = []
   const particleCount = 100
@@ -355,13 +359,14 @@ const handleDingdingLogin = () => {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
   }
 
   .login-form-card {
     border: none;
-    width: 26%;
-    padding: 40px;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 2rem;
     background-color: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -370,7 +375,7 @@ const handleDingdingLogin = () => {
 
     h1 {
       margin-bottom: 0;
-      font-size: 32px;
+      font-size: 2rem;
       font-weight: 600;
       text-align: center;
       color: #333;
@@ -386,9 +391,9 @@ const handleDingdingLogin = () => {
       border-radius: 5px;
       overflow: hidden;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      margin-top: 30px;
-      padding: 15px 0;
-      font-size: 18px;
+      margin-top: 2rem;
+      padding: 1rem 0;
+      font-size: 1.2rem;
       cursor: pointer;
 
       &:before {
@@ -477,17 +482,17 @@ const handleDingdingLogin = () => {
   }
 
   .third-party-login {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     text-align: center;
 
     span {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 0.625rem;
       color: #666;
     }
 
     .social-btn-list {
-      margin: 10px 0;
+      margin: 0.625rem 0;
       display: flex;
       justify-content: center;
     }
@@ -497,21 +502,21 @@ const handleDingdingLogin = () => {
   .tab-buttons {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
 
   .tab-button {
-    margin: 0 8px;
-    padding: 10px 20px;
+    margin: 0 0.5rem;
+    padding: 0.625rem 1.25rem;
     border: none;
     text-align: center;
     background-color: #eeeeee;
-    border-radius: 20px;
+    border-radius: 1.25rem;
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.8rem;
     font-weight: 500;
-    width: 170px;
+    width: 10.625rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
 

@@ -483,7 +483,7 @@ export default {
       return {
         filename: `${filename}.${type}`,
         href: `data:application/${type === 'svg' ? 'text/xml' : 'bpmn20-xml'};charset=UTF-8,${encodedData}`,
-        data: data,
+        data,
       }
     },
 

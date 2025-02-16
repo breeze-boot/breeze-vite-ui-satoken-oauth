@@ -22,13 +22,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: UserQuery): AxiosPromise<UserResponseData> {
+export function page(data: UserQuery): AxiosPromise<UserResponseData> {
   return request({
-    url: API.USER_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.USER_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -53,7 +53,7 @@ export function addUser(data: UserForm): AxiosPromise<ResponseData> {
   return request({
     url: API.USER_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -67,7 +67,7 @@ export function editUser(id: number, data: UserForm): AxiosPromise<ResponseData>
   return request({
     url: `${API.USER_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -80,7 +80,7 @@ export function editAvatar(data: UserRecord): AxiosPromise<ResponseData> {
   return request({
     url: `${API.USER_RESTFUL_URL}/modifyAvatar`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -93,7 +93,7 @@ export function open(data: UserSwitchForm): AxiosPromise<ResponseData> {
   return request({
     url: API.USER_RESTFUL_URL + `/open`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -129,7 +129,7 @@ export function exportExcel(data: UserQuery): AxiosPromise<any> {
   return request({
     url: `${API.USER_RESTFUL_URL}/export`,
     method: 'post',
-    data: data,
+    data,
     // 指定响应类型为二进制流
     responseType: 'blob',
   })

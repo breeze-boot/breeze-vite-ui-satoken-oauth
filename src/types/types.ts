@@ -13,6 +13,7 @@ import { LAYOUT } from '@/utils/common.ts'
  * 分页查询参数
  */
 export interface PageQuery {
+  condition?: object
   current?: number
   size?: number
   total?: number

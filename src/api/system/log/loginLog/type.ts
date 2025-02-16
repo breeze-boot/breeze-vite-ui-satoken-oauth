@@ -5,9 +5,9 @@
 import { PageQuery, ResponseData } from '@/types/types.ts'
 
 /**
- * 日志列表类型声明
+ * 登录日志列表类型声明
  */
-export interface LogRecord {
+export interface LoginLogRecord {
   id?: number
   systemModule: string
   logTitle: string
@@ -22,16 +22,16 @@ export interface LogRecord {
 }
 
 /**
- * 日志列表数组类型声明
+ * 登录日志列表数组类型声明
  */
-export type LogRecords = LogRecord[]
+export type LoginLogRecords = LoginLogRecord[]
 
 /**
- * 日志列表接口响应类型声明
+ * 登录日志列表接口响应类型声明
  */
-export interface LogResponseData extends ResponseData {
+export interface LoginLogResponseData extends ResponseData {
   data: {
-    records: LogRecords | LogRecord
+    records: LoginLogRecords | LoginLogRecord
     total: number
     size: number
     current: number
@@ -42,7 +42,7 @@ export interface LogResponseData extends ResponseData {
 /**
  * 日志列表查询类型声明
  */
-export interface LogQuery extends PageQuery {
+export interface LoginLogQuery extends PageQuery {
   doType?: number
   logType?: number
   systemModule?: string

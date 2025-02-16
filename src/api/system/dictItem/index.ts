@@ -14,13 +14,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function list(params: DictItemQuery): AxiosPromise<DictItemResponseData> {
+export function list(data: DictItemQuery): AxiosPromise<DictItemResponseData> {
   return request({
-    url: API.DICT_ITEM_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.DICT_ITEM_RESTFUL_URL}/list`,
+    method: 'post',
+    data,
   })
 }
 
@@ -45,7 +45,7 @@ export function addDictItem(data: DictItemForm): AxiosPromise<ResponseData> {
   return request({
     url: API.DICT_ITEM_RESTFUL_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -59,7 +59,7 @@ export function editDictItem(id: number, data: DictItemForm): AxiosPromise<Respo
   return request({
     url: `${API.DICT_ITEM_RESTFUL_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 

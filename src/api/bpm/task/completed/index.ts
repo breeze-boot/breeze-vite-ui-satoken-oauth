@@ -13,12 +13,12 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function list(params: CompletedQuery): AxiosPromise<CompletedResponseData> {
+export function list(data: CompletedQuery): AxiosPromise<CompletedResponseData> {
   return request({
-    url: API.COMPLETED_RESTFUL_URL + '/listCompletedTask',
-    method: 'get',
-    params: params,
+    url: `${API.COMPLETED_RESTFUL_URL}/listCompletedTask`,
+    method: 'post',
+    data,
   })
 }

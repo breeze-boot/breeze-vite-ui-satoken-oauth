@@ -15,13 +15,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: MenuColumnQuery): AxiosPromise<MenuColumnResponseData> {
+export function page(data: MenuColumnQuery): AxiosPromise<MenuColumnResponseData> {
   return request({
-    url: API.MENU_COLUMN_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.MENU_COLUMN_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 

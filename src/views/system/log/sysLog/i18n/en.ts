@@ -1,5 +1,5 @@
 export default {
-  log: {
+  sysLog: {
     fields: {
       systemModule: 'system module',
       logTitle: 'log title',
@@ -14,6 +14,10 @@ export default {
       searchDate: 'search date',
       endDate: 'end date',
       startDate: 'start date',
+    },
+    common: {
+      startDate: 'startDate',
+      endDate: 'endDate',
     },
   },
 }

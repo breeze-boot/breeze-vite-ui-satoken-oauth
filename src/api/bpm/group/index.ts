@@ -13,12 +13,12 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: GroupQuery): AxiosPromise<GroupResponseData> {
+export function page(data: GroupQuery): AxiosPromise<GroupResponseData> {
   return request({
-    url: API.BPM_GROUP_RESTFUL_URL,
-    method: 'get',
-    params: params,
+    url: `${API.BPM_GROUP_RESTFUL_URL}/page`,
+    method: 'post',
+    data,
   })
 }

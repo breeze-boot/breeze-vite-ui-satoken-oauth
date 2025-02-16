@@ -21,13 +21,13 @@ enum API {
 /**
  * 列表
  *
- * @param params
+ * @param data
  */
-export function page(params: MSubjectQuery): AxiosPromise<MSubjectResponseData> {
+export function page(data: MSubjectQuery): AxiosPromise<MSubjectResponseData> {
   return request({
-    url: API.EMAIL_RESULT_URL,
-    method: 'get',
-    params: params,
+    url: `${API.EMAIL_RESULT_URL}/page`,
+    method: 'post',
+    data,
   })
 }
 
@@ -52,7 +52,7 @@ export function addMSubject(data: MSubjectForm): AxiosPromise<ResponseData> {
   return request({
     url: API.EMAIL_RESULT_URL,
     method: 'post',
-    data: data,
+    data,
   })
 }
 
@@ -66,7 +66,7 @@ export function editMSubject(id: number, data: MSubjectForm): AxiosPromise<Respo
   return request({
     url: `${API.EMAIL_RESULT_URL}/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -105,7 +105,7 @@ export function open(data: MSubjectSwitchForm): AxiosPromise<ResponseData> {
   return request({
     url: API.EMAIL_RESULT_URL + `/open`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
@@ -119,7 +119,7 @@ export function setEmailUser(id: number, data: SetUserMSubjectForm): AxiosPromis
   return request({
     url: `${API.EMAIL_RESULT_URL}/setEmailUser/${id}`,
     method: 'put',
-    data: data,
+    data,
   })
 }
 
