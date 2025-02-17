@@ -171,6 +171,7 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
+    width="40%"
     :title="!rowPermissionDataForm.id ? t('common.add') : t('common.edit')"
     :close-on-click-modal="false"
     :close-on-press-escape="true"

@@ -62,15 +62,16 @@ const handleClickMenu = async (menu: any) => {
 .left-menu-wrapper {
   width: var(--el-aside-width);
   height: var(--el-aside-width);
-  display: flex;
+  background: var(--base-left-theme);
   z-index: 99;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
-  background: var(--base-left-theme);
   cursor: pointer;
+  transition: background-color 0.3s ease; // 添加过渡效果
 
   .left-menu-logo {
     width: 50px;
@@ -91,10 +92,17 @@ const handleClickMenu = async (menu: any) => {
     width: 100%;
     height: 50px;
     padding: 3px;
+    transition: color 0.3s ease; // 添加过渡效果
   }
 
-  .left-menu-wrapper:hover {
-    background-color: #ff0000;
+  // 鼠标悬停样式
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1); // 更柔和的颜色
+  }
+
+  // 当前选中菜单样式
+  &.active {
+    background-color: rgba(0, 0, 0, 0.15);
   }
 }
 </style>

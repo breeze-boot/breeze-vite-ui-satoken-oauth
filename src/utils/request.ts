@@ -21,7 +21,7 @@ let userStore: any = undefined
 const request: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
-  withCredentials: true,
+  withCredentials: false, // 关闭 cookies 的发送和接收
 })
 
 /**

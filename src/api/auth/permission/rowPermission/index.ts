@@ -97,7 +97,7 @@ export function exportExcel(params: RowPermissionQuery): AxiosPromise<RowPermiss
  */
 export function checkPermissionCode(permissionCode: string, permissionId?: number): AxiosPromise<any> {
   return request({
-    url: `${API.PERMISSION_RESTFUL_URL}/checkPermissionCode`,
+    url: `${API.PERMISSION_RESTFUL_URL}/checkRowPermissionCode`,
     method: 'get',
     params: {
       permissionId,

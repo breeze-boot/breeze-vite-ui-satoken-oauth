@@ -44,9 +44,9 @@ const selectMenu = async (index: string) => {
   <el-container class="layout-container">
     <el-aside :width="variables.baseColumnsLeftMenuWidth" style="overflow: hidden">
       <Logo :title="false" />
-      <el-scrollbar>
+      <div class="column-menu">
         <columns-menu v-for="item in menuStore.menuRoutes" :menu="item" :key="item.path" />
-      </el-scrollbar>
+      </div>
     </el-aside>
     <el-aside
       :width="variables.baseLeftMenuWidth"
@@ -84,6 +84,17 @@ const selectMenu = async (index: string) => {
     background: var(--base-left-theme);
     box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
     transition: all 0.3s;
+    padding-bottom: 60px;
+
+    .column-menu {
+      height: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
 
     .el-menu {
       border-right: none;
