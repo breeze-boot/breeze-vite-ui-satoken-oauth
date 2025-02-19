@@ -9,9 +9,9 @@ import useSettingStore from '@/store/modules/setting.ts'
 import useMenuStore from '@/store/modules/menu.ts'
 import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
-import Logo from '@/layout/components/logo/index.vue'
 import { useWindowSize } from '@vueuse/core'
-import { LAYOUT, MENU_TYPE } from '@/utils/common.ts'
+import { MENU_TYPE } from '@/utils/common.ts'
+import { ref } from 'vue'
 
 let tabsStore = useTabsStore()
 let settingStore = useSettingStore()
@@ -37,10 +37,19 @@ const selectMenu = async (index: string) => {
   }
   tabsStore.setTab($route)
 }
+const menuRef = ref<HTMLDivElement | null>(null)
+
+// 处理鼠标滚轮事件，实现横向滚动
+const handleWheel = (e: WheelEvent) => {
+  e.preventDefault()
+  if (menuRef.value) {
+    menuRef.value.scrollLeft = menuRef.value.scrollLeft + e.deltaY
+  }
+}
 </script>
 
 <template>
-  <el-scrollbar>
+  <div class="h-menu" title="滑轮滚动" ref="menuRef" @wheel.prevent="handleWheel">
     <el-menu
       ellipsis
       mode="horizontal"
@@ -52,7 +61,6 @@ const selectMenu = async (index: string) => {
         maxWidth: width - 100 + 'px',
       }"
     >
-      <Logo v-if="theme.menuLayout !== LAYOUT.MIX" />
       <menu-item
         v-for="item in menuStore.menuRoutes"
         :key="item.path"
@@ -61,11 +69,19 @@ const selectMenu = async (index: string) => {
         :menu="item"
       />
     </el-menu>
-  </el-scrollbar>
+  </div>
 </template>
 <style lang="scss">
-.el-menu,
-.el-menu-item {
-  border-bottom: none !important;
+.h-menu {
+  width: 100%;
+  overflow-x: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  .el-menu,
+  .el-menu-item {
+    border-bottom: none !important;
+  }
 }
 </style>

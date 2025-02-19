@@ -202,7 +202,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer v-model="visible" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
+  <el-drawer v-model="visible" size="60%" :title="t('dictItem.common.dictItemViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('dictItem.common.dictItemViewing') }}</h4>
     </template>

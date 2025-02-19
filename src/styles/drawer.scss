@@ -6,48 +6,13 @@
  * 设置最大和最小宽度避免在极端屏幕下显示异常
  */
 .el-drawer {
-  --el-drawer-width: 60%;
-  width: var(--el-drawer-width, 50%) !important;
-  max-width: 100%;
-  min-width: 280px;
-}
-
-/*
- * 超宽屏幕（宽度大于 1920px）样式
- * 适当减小 el-drawer 宽度以保持合理布局
- */
-@media (min-width: 1921px) {
-  .el-drawer {
-    --el-drawer-width: 60%;
-    width: var(--el-drawer-width, 50%) !important;
-  }
-}
-
-/*
- * 宽屏幕（宽度在 1441px 到 1920px 之间）样式
- * 调整 el-drawer 宽度以适应宽屏幕
- */
-@media (min-width: 1441px) and (max-width: 1920px) {
-  .el-drawer {
-    --el-drawer-width: 60%;
-    width: var(--el-drawer-width, 50%) !important;
-  }
-}
-
-/*
- * 中等屏幕（宽度在 1025px 到 1440px 之间）样式
- * 进一步调整 el-drawer 宽度
- */
-@media (min-width: 1025px) and (max-width: 1440px) {
-  .el-drawer {
-    --el-drawer-width: 60%;
-    width: var(--el-drawer-width, 50%) !important;
-  }
+  max-width: 100% !important;
+  min-width: 280px !important;
 }
 
 /*
  * 当窗口宽度在 769px 到 1024px 之间时的 el-drawer 样式
- * 调整 el-drawer 宽度为 80%
+ * 调整 el-drawer 宽度为 100%
  */
 @media (min-width: 769px) and (max-width: 1024px) {
   .el-drawer {

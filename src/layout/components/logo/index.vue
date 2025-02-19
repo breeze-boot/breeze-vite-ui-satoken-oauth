@@ -21,26 +21,26 @@ let { settings } = storeToRefs(useSettingStore())
 </script>
 
 <template>
-  <div class="logo" v-if="settings.logoHidden">
+  <div class="breeze-logo" v-if="settings.logoHidden">
     <div class="logo-img" v-show="props.logoImg">
       <img :src="settings.logoUrl" alt="" />
     </div>
-    <span class="title" v-show="props.title && !settings.isCollapse">
+    <div class="title" v-show="props.title && !settings.isCollapse">
       {{ settings.title }}
-    </span>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.logo {
+.breeze-logo {
   --el-font-family: 'Comic Sans MS', 'Helvetica Neue', Arial, sans-serif; /* 自定义字体 */
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  width: auto;
   height: 50px;
   padding: 0 10px;
+  width: 100%;
   overflow: hidden;
   font-size: $base-logo-font-size;
   font-weight: $base-logo-font-weight;
@@ -56,7 +56,6 @@ let { settings } = storeToRefs(useSettingStore())
 
   .title {
     color: var(--base-text-color);
-    display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

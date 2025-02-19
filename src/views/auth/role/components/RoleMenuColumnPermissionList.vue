@@ -56,7 +56,7 @@ const getInfo = async (id: number) => {
   try {
     const treePermissionResponse: any = await listTreePermission([0, 1])
     Object.assign(roleTreeData.value, treePermissionResponse.data)
-  } catch (e: any) {
+  } catch (err: any) {
     useMessage().warning(t('common.reloadFail'))
     return
   }
@@ -67,9 +67,9 @@ const getInfo = async (id: number) => {
     if (menus) {
       rolePermissionTreeRef.value.setCheckedKeys(menus, true)
     }
-  } catch (e: any) {
+  } catch (err: any) {
     useMessage().warning(t('common.reloadFail'))
-    console.error(e.message)
+    console.error(err.message)
   }
 }
 
@@ -90,7 +90,7 @@ const handleRoleDataFormSubmit = async () => {
     })
     useMessage().success(`${t('common.success')}`)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}`)
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false

@@ -67,10 +67,10 @@ const initApprove = async (taskId: string) => {
     formComponent.value = defineAsyncComponent(() => {
       return import(`/src/views${/* @vite-ignore */ taskInfo.value.formKey as string}.vue`)
     })
-  } catch (e: any) {
+  } catch (err: any) {
     loading.value = false
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   }
   loading.value = false
 }
@@ -93,9 +93,9 @@ const flowButtonInfo = async () => {
       buttons.value = response.data.buttons
       startUser.value = response.data.startUser
     })
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   }
 }
 
@@ -110,9 +110,9 @@ const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
       buttons.value = response.data.buttons
       startUser.value = response.data.startUser
     })
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   }
 }
 
@@ -125,9 +125,9 @@ const historyProcessDefinitionXml = async () => {
     const response: any = await getBpmDefinitionXml(taskInfo.value.procDefKey, taskInfo.value.version)
     xmlStr.value = response.data.xmlStr
     xmlNodes.value = response.data
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   }
 }
 
@@ -138,9 +138,9 @@ const approveList = async () => {
   try {
     const response: any = await listFlowApproveInfo(taskInfo.value.procDefKey, taskInfo.value.businessKey)
     tableData.value = response.data
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   }
 }
 
@@ -156,9 +156,9 @@ const approveResolveTask = async () => {
     }
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -179,9 +179,9 @@ const approveAgree = async () => {
     })
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -202,9 +202,9 @@ const approveAbolition = async () => {
     })
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -225,9 +225,9 @@ const approveReject = async () => {
     })
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -242,9 +242,9 @@ const approveClaim = async () => {
     await claim(taskInfo.value.taskId)
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -259,9 +259,9 @@ const approveUnClaim = async () => {
     await unClaim(taskInfo.value.taskId)
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -280,9 +280,9 @@ const approveDelegateTask = async (row: any) => {
     await delegateTask(taskInfo.value.taskId, row.id)
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -306,9 +306,9 @@ const approveSuspendedInstance = async () => {
     })
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }
@@ -327,9 +327,9 @@ const approveTransferTask = async (row: any) => {
     await transferTask(taskInfo.value.taskId, row.id)
     await flowButtonInfo()
     await useCloseTab($router)
-  } catch (e: any) {
-    ElMessage.warning(e.message)
-    throw new Error(e.message)
+  } catch (err: any) {
+    ElMessage.warning(err.message)
+    throw new Error(err.message)
   } finally {
     btnLoading.value = false
   }

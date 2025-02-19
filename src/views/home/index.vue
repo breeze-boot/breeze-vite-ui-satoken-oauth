@@ -3,7 +3,6 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting.ts'
@@ -11,8 +10,6 @@ import LoginUserPie from '@/views/home/component/LoginUserPie.vue'
 
 let settings = useSettingStore().settings
 let userStore = useUserStore()
-
-onMounted(() => {})
 </script>
 
 <template>

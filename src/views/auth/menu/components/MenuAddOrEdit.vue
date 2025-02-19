@@ -125,8 +125,8 @@ const initSelectMenu = async (id: number | undefined) => {
         children: response.data,
       },
     ]
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -137,8 +137,8 @@ const initSelectPlatform = async () => {
   try {
     const response: any = await selectPlatform()
     platformOptions.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -151,8 +151,8 @@ const getInfo = async (id: number) => {
   try {
     const response: any = await getMenu(JSONBigInt.parse(id))
     Object.assign(menuDataForm.value, response.data)
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

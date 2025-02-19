@@ -37,8 +37,8 @@ const initSelectTenant = async () => {
   try {
     const response: any = await selectTenant()
     tenantOption.value = response.data
-  } catch (e: any) {
-    useMessage().error(e.message)
+  } catch (err: any) {
+    useMessage().error(err.message)
   }
 }
 

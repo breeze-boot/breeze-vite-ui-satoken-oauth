@@ -129,8 +129,8 @@ const initCategory = async () => {
   try {
     const response: any = await selectCategory()
     categoryOption.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

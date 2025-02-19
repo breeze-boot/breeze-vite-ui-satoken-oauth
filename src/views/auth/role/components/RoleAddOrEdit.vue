@@ -100,8 +100,8 @@ const getInfo = async (id: number) => {
   try {
     const response: any = await getRole(JSONBigInt.parse(id))
     Object.assign(roleDataForm.value, response.data)
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -112,8 +112,8 @@ const initSelectRowPermissionType = async () => {
   try {
     const response: any = await selectRowPermissionType()
     permissionOption.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -124,8 +124,8 @@ const initSelectCustomizePermission = async () => {
   try {
     const response: any = await selectCustomizePermission()
     customizeRowPermissionOption.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

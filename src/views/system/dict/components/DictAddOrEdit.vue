@@ -67,8 +67,8 @@ const getInfo = async (id: number) => {
   try {
     const response: any = await getDict(JSONBigInt.parse(id))
     Object.assign(dictDataForm.value, response.data)
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

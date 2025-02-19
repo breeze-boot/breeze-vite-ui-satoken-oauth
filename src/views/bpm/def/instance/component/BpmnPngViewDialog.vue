@@ -33,8 +33,8 @@ const init = async (procDefKey: string, version: number) => {
     visible.value = true
     const response: any = await getBpmDefinitionPng(procDefKey, version)
     xmlSrc.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

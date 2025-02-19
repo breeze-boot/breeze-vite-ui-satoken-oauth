@@ -81,8 +81,8 @@ const getInfo = async (id: number) => {
   try {
     const response: any = await getPlatform(JSONBigInt.parse(id))
     Object.assign(platformDataForm.value, response.data)
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

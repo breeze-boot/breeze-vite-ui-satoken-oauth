@@ -109,8 +109,8 @@ const getInfo = async (id: number) => {
         userList.value?.some((user: Option) => user.key === per),
       )
     }
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -137,8 +137,8 @@ const initDeptSelectData = async () => {
   try {
     const response: any = await selectDept()
     deptOption.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
@@ -154,8 +154,8 @@ const initUserTransferData = async () => {
       })
     })
     userList.value = data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 

@@ -8,9 +8,9 @@ import type { TabsState } from '@/store/modules/types/types.ts'
 import { StorageName, Tab, Tabs } from '@/types/types.ts'
 import { RouteLocationNormalizedLoaded } from 'vue-router'
 import {
-  GET_STR_ARRAY_STORAGE,
   GET_OBJ_ARRAY_STORAGE,
   GET_OBJ_STORAGE,
+  GET_STR_ARRAY_STORAGE,
   GET_STRING_STORAGE,
   SET_OBJ_ARRAY_STORAGE,
   SET_OBJ_STORAGE,
@@ -30,6 +30,12 @@ export const homeConstantTab: Tab = {
   hidden: false,
 }
 
+// 提取存储操作的公共函数
+const saveTabsToStorage = (tabs: Tabs) => SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, tabs)
+const saveCacheTabsToStorage = (cacheTabs: string[]) => SET_STR_ARRAY_STORAGE(StorageName.CacheTabs, cacheTabs)
+const saveCurrentTabToStorage = (tab: Tab) => SET_OBJ_STORAGE(StorageName.CurrentTab, tab)
+const saveCurrentTabNameToStorage = (name: string) => SET_STRING_STORAGE(StorageName.CurrentTabName, name)
+
 const useTabsStore = defineStore('Tabs', {
   state: (): TabsState => {
     return {
@@ -48,12 +54,11 @@ const useTabsStore = defineStore('Tabs', {
     /**
      * 查找指定名称的Tab在tabs数组中的索引，提取成私有方法方便复用
      * @param name 要查找的Tab名称
+     * @returns {number} Tab在数组中的索引，如果未找到则返回 -1
      * @private
      */
     findTabIndex(name: string): number {
-      return this.tabs.findIndex((item: Tab): boolean => {
-        return item.name === name
-      })
+      return this.tabs.findIndex((item: Tab) => item.name === name)
     },
 
     /**
@@ -85,18 +90,18 @@ const useTabsStore = defineStore('Tabs', {
         tab.name = tab.name + '-' + tab.params.pageId
         tab.title = route.query.title as string
       }
-      if (!this.tabs.some((_t: Tab): boolean => _t.name === tab.name)) {
+      if (!this.tabs.some((_t: Tab) => _t.name === tab.name)) {
         this.tabs.push(tab)
-        SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+        saveTabsToStorage(this.tabs)
       }
-      if (!this.cacheTabs.some((name: string): boolean => name === tab.name) && route.meta.keepAlive) {
+      if (!this.cacheTabs.some((name: string) => name === tab.name) && route.meta.keepAlive) {
         this.cacheTabs.push(tab.name)
-        SET_STR_ARRAY_STORAGE(StorageName.CacheTabs, this.cacheTabs)
+        saveCacheTabsToStorage(this.cacheTabs)
       }
       this.currentTab = tab
-      SET_OBJ_STORAGE(StorageName.CurrentTab, tab)
+      saveCurrentTabToStorage(tab)
       this.currentTabName = tab.name
-      SET_STRING_STORAGE(StorageName.CurrentTabName, tab.name)
+      saveCurrentTabNameToStorage(tab.name)
     },
 
     /**
@@ -119,32 +124,31 @@ const useTabsStore = defineStore('Tabs', {
       }
 
       this.currentTab = activeTab
-      SET_OBJ_STORAGE(StorageName.CurrentTab, this.currentTab)
+      saveCurrentTabToStorage(this.currentTab)
       this.currentTabName = activeTab?.name
-      SET_STRING_STORAGE(StorageName.CurrentTabName, this.currentTabName)
-      const _tabs: Tab[] = this.tabs.filter((tab: Tab): boolean => tab.name !== targetName)
-      this.tabs = _tabs ? _tabs : []
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+      saveCurrentTabNameToStorage(this.currentTabName)
+      this.tabs = this.tabs.filter((tab: Tab) => tab.name !== targetName) || []
+      saveTabsToStorage(this.tabs)
     },
 
     /**
      * 删除右侧选项卡
      */
     removeRightTab(): void {
-      const activeName: Tab = this.currentTab
-      const currentIndex: number = this.findTabIndex(activeName.name)
+      const activeName = this.currentTab.name
+      const currentIndex = this.findTabIndex(activeName)
       this.tabs.splice(currentIndex + 1, this.tabs.length - currentIndex)
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+      saveTabsToStorage(this.tabs)
     },
 
     /**
      * 删除左侧选项卡，修正后的逻辑，删除从索引1到当前Tab索引（不包含当前Tab索引）的元素
      */
     removeLeftTab(): void {
-      const activeName: Tab = this.currentTab
-      const currentIndex: number = this.findTabIndex(activeName.name)
+      const activeName = this.currentTab.name
+      const currentIndex = this.findTabIndex(activeName)
       this.tabs.splice(1, currentIndex - 1)
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+      saveTabsToStorage(this.tabs)
     },
 
     /**
@@ -152,27 +156,27 @@ const useTabsStore = defineStore('Tabs', {
      */
     initAllTab(): void {
       this.currentTabName = homeConstantTab.name
-      SET_STRING_STORAGE(StorageName.CurrentTabName, this.currentTabName)
+      saveCurrentTabNameToStorage(this.currentTabName)
       this.currentTab = homeConstantTab
-      SET_OBJ_STORAGE(StorageName.CurrentTab, this.currentTab)
+      saveCurrentTabToStorage(this.currentTab)
       this.tabs = [homeConstantTab]
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+      saveTabsToStorage(this.tabs)
     },
 
     /**
      * 删除当前激活的选项卡，并尝试设置新的激活选项卡（如果存在），同时更新相关状态和存储
      */
     removeCurrentTab(): void {
-      const activeName: Tab = this.currentTab
-      const currentIndex: number = this.findTabIndex(activeName.name)
+      const activeName = this.currentTab.name
+      const currentIndex = this.findTabIndex(activeName)
       this.tabs.splice(currentIndex, 1)
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, this.tabs)
+      saveTabsToStorage(this.tabs)
       const nextTab: Tab = this.tabs[currentIndex] || this.tabs[currentIndex - 1]
       if (nextTab) {
         this.currentTab = nextTab
-        SET_OBJ_STORAGE(StorageName.CurrentTab, this.currentTab)
+        saveCurrentTabToStorage(this.currentTab)
         this.currentTabName = nextTab.name
-        SET_STRING_STORAGE(StorageName.CurrentTabName, this.currentTabName)
+        saveCurrentTabNameToStorage(this.currentTabName)
       }
     },
 
@@ -180,23 +184,17 @@ const useTabsStore = defineStore('Tabs', {
      * 删除除当前激活选项卡之外的其他所有选项卡，通过先获取当前Tab索引，然后构建只包含当前Tab的新数组来实现
      */
     removeOtherTab(): void {
-      const activeName: Tab = this.currentTab
-      const currentIndex: number = this.findTabIndex(activeName.name)
+      const activeName = this.currentTab.name
+      const currentIndex = this.findTabIndex(activeName)
       const newTabs = [homeConstantTab, this.tabs[currentIndex]]
-      SET_OBJ_ARRAY_STORAGE(StorageName.Tabs, newTabs)
       this.tabs = newTabs
+      saveTabsToStorage(newTabs)
     },
   },
   getters: {
     getCurrentTab: (state: TabsState) => {
       return (targetName: string): Tab => {
-        let _tab: Tab = {} as Tab
-        state.tabs.forEach((item: Tab): void => {
-          if (item.name === targetName) {
-            _tab = item
-          }
-        })
-        return _tab
+        return state.tabs.find((item: Tab) => item.name === targetName) || ({} as Tab)
       }
     },
   },

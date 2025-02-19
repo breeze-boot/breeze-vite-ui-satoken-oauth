@@ -130,8 +130,8 @@ const handleUserRoleSettingsDataFormSubmit = async () => {
   try {
     await userSetRole(userSetRoleDataForm.value)
     useMessage().success(`${t('common.success')}`)
-  } catch (e: any) {
-    useMessage().error(`${t('common.fail')}`)
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false

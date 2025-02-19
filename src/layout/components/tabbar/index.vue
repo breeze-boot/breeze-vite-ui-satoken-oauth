@@ -10,6 +10,7 @@ import Setting from './setting/index.vue'
 import TopMenu from './topMenu/index.vue'
 import Tab from '@/layout/components/tabbar/tab/index.vue'
 import { DEVICE, LAYOUT } from '@/utils/common.ts'
+import Logo from '@/layout/components/logo/index.vue'
 
 const { theme, device } = storeToRefs(useSettingStore())
 </script>
@@ -18,6 +19,9 @@ const { theme, device } = storeToRefs(useSettingStore())
   <el-header class="el-header-container">
     <div class="tabbar">
       <div class="tabbar-left">
+        <div v-if="theme.menuLayout === LAYOUT.HORIZONTAL">
+          <Logo />
+        </div>
         <top-menu v-if="theme.menuLayout !== LAYOUT.VERTICAL && theme.menuLayout !== LAYOUT.COLUMNS" />
         <bread-crumb
           v-if="(theme.menuLayout === LAYOUT.VERTICAL || theme.menuLayout === LAYOUT.COLUMNS) && device === DEVICE.PC"
@@ -47,17 +51,19 @@ const { theme, device } = storeToRefs(useSettingStore())
   .tabbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     height: 70%;
     width: 100%;
 
     .tabbar-left {
+      width: 80%;
       display: flex;
       margin-left: 10px;
       align-items: flex-start;
     }
 
     .tabbar-right {
+      width: 25%;
       display: flex;
       align-items: center;
       justify-items: flex-end;

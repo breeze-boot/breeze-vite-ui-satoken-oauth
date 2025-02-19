@@ -82,7 +82,7 @@ const changeThemeColor = () => {
 </script>
 
 <template>
-  <el-drawer v-model="drawer" :show-close="false" size="350px" :direction="direction">
+  <el-drawer v-model="drawer" :show-close="false" size="20%" :direction="direction">
     <el-form>
       <el-divider>主题色调</el-divider>
       <el-form-item label="主题颜色">

@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 // 导入 Vue 相关的 API
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 // 导入自定义组件
 import ConditionItem from '@/components/QueryBuilder/ConditionItem/index.vue'
 import SvgIcon from '@/components/SvgIcon/index.vue'
@@ -78,11 +78,6 @@ const handleWheel = (e: WheelEvent) => {
     textRef.value.scrollLeft = textRef.value.scrollLeft + e.deltaY
   }
 }
-
-// 组件挂载后执行的操作，这里暂时为空
-onMounted(() => {
-  debugger
-})
 
 // 计算属性，用于控制组件的可见性
 const visible = computed({

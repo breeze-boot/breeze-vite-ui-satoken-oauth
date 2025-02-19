@@ -169,7 +169,7 @@ request.interceptors.response.use(
           message = message || i18n.global.t('axios.unknownError')
           break
       }
-      data.message = message
+      data.message = `      ${message}`
       return Promise.reject(data)
     }
   },

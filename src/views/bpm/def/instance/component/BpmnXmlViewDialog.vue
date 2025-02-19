@@ -39,26 +39,11 @@ const init = async (procDefKey: string, version: number) => {
     const response: any = await getBpmDefinitionXml(procDefKey, version)
     xmlStr.value = response.data.xmlStr
     xmlNodes.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
+  } catch (err: any) {
+    console.error(err.message)
   }
 }
 
-/**
- * 获取信息
- *
- * @param procDefKey
- * @param version
- */
-const getInfo = async (procDefKey: string, version: number) => {
-  try {
-    const response: any = await getBpmDefinitionXml(procDefKey, version)
-    xmlStr.value = response.data.xmlStr
-    xmlNodes.value = response.data
-  } catch (e: any) {
-    console.error(e.message)
-  }
-}
 defineExpose({ init })
 </script>
 

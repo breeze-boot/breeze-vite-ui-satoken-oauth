@@ -60,7 +60,7 @@ const getInfo = async (id: number) => {
   try {
     const treePermissionResponse: any = await listTreePermission([0, 1, 2])
     Object.assign(roleTreeData.value, treePermissionResponse.data)
-  } catch (e: any) {
+  } catch (err: any) {
     ElMessage.warning(t('common.reloadFail'))
     return
   }
@@ -70,7 +70,7 @@ const getInfo = async (id: number) => {
     if (menuIds) {
       rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
     }
-  } catch (e: any) {
+  } catch (err: any) {
     useMessage().warning(t('common.reloadFail'))
   }
 }
@@ -87,12 +87,12 @@ const handleRoleDataFormSubmit = async () => {
   loading.value = true
   try {
     await modifyPermission({
-      roleId: currentClickRoleId.value,
+      roleId: currentClickRoleId.value as number,
       permissionIds: checkedKeys,
     })
     useMessage().success(`${t('common.success')}`)
-  } catch (e: any) {
-    useMessage().error(`${t('common.fail')}`)
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false
