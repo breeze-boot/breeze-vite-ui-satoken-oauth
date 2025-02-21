@@ -3,7 +3,17 @@
  * @since: 2024-02-28
 -->
 <script setup lang="ts">
-import { Columns, Field, QueryParams, SwitchOption, UploadOption } from '@/components/Table/types/types.ts'
+import {
+  Columns,
+  Field,
+  LinkInfo2,
+  QueryParams,
+  RadioOptions,
+  SelectOptions,
+  SwitchOption,
+  UploadOption,
+  InputNumberOptions,
+} from '@/components/Table/types/types.ts'
 import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
@@ -223,7 +233,10 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <!-- 自定义链接名称-->
   <template v-else-if="tableField.type === 'customRowLink'">
     <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
-      {{ scope?.row[tableField?.linkInfo?.columnName || ''] || tableField.linkInfo?.fixColumnName }}
+      {{
+        scope?.row[(tableField?.linkInfo as LinkInfo2)?.columnName || ''] ||
+        (tableField?.linkInfo as LinkInfo2)?.fixColumnName
+      }}
     </a>
   </template>
 
@@ -267,6 +280,35 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       </span>
       <el-input
         v-else
+        :type="tableField.formOptions?.type || 'text'"
+        v-model="scope.row[tableField.prop]"
+        :disabled="
+          tableField.formOptions?.disabled ||
+          (tableField.formOptions?.isDisabled
+            ? tableField.formOptions?.isDisabled(tableField, scope.row)
+            : tableField.formOptions?.disabled)
+        "
+        @change="tableField.formOptions?.handleChange ? tableField.formOptions?.handleChange(scope.row) : () => {}"
+        @blur="inputBlur(tableField, scope.row)"
+      />
+    </el-form-item>
+  </template>
+
+  <!-- 行内input-number  -->
+  <template v-else-if="tableField.type === 'input-number'">
+    <el-form-item
+      label-width="1px"
+      :rules="tableField.formOptions?.rules"
+      :prop="`rows[${scope.$index}][${tableField.prop}]`"
+    >
+      <span v-if="editId !== scope.row.id" class="input-span" @click="handleInputViewClick(tableField, scope.row)">
+        {{ scope.row[tableField.prop] }}
+      </span>
+      <el-input-number
+        v-else
+        style="width: 100%"
+        :min="(tableField.formOptions as InputNumberOptions)?.min"
+        :max="(tableField.formOptions as InputNumberOptions)?.max"
         v-model="scope.row[tableField.prop]"
         :disabled="
           tableField.formOptions?.disabled ||
@@ -290,9 +332,9 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       <div>
         <el-radio
           style="width: 50%"
-          v-for="_ in tableField.formOptions?.options
-            ? tableField.formOptions?.options
-            : scope.row[tableField.formOptions?.optionKey || 'checkbox']"
+          v-for="_ in (tableField.formOptions as RadioOptions)?.options
+            ? (tableField.formOptions as RadioOptions)?.options
+            : scope.row[(tableField.formOptions as RadioOptions)?.optionKey || 'radio']"
           v-model="scope.row[tableField.prop]"
           :key="_.value"
           :value="_.value"
@@ -332,9 +374,9 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       >
         <!-- options 若没有配置，可以从后台返回的select数据中获取 -->
         <el-option
-          v-for="_ in tableField.formOptions?.options
-            ? tableField.formOptions?.options
-            : scope.row[tableField.formOptions?.optionKey || 'select']"
+          v-for="_ in (tableField.formOptions as SelectOptions)?.options
+            ? (tableField.formOptions as SelectOptions)?.options
+            : scope.row[(tableField.formOptions as SelectOptions)?.optionKey || 'select']"
           :key="_.value"
           :label="_.label"
           :value="_.value"

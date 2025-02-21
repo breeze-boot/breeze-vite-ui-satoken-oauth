@@ -87,7 +87,6 @@ const visible = computed({
 
 // 提交查询的方法
 const submitQuery = async () => {
-  debugger
   const queryData = {
     conditions: currentSqlConditions.value,
   }
@@ -100,7 +99,6 @@ const submitQuery = async () => {
 }
 
 const resetQuery = async () => {
-  debugger
   previewText.value = ''
   currentSqlConditions.value = []
   await submitQuery()

@@ -22,133 +22,202 @@ defineOptions({
   inheritAttrs: false,
 })
 
+/**
+ * 使用 defineProps 定义组件的 props，并指定其类型为 TableProps 接口所定义的类型
+ */
 const props = defineProps({
-  // 表格顶部按钮
   tbHeaderBtn: {
-    type: Array,
+    type: Array as () => any[],
     default: () => [],
+    /**
+     * 默认值为一个空数组，表示初始时表格顶部没有按钮
+     */
   },
-  // 表格宽度，默认100%
   tableWidth: {
     type: String,
     default: '100%',
+    /**
+     * 默认值为 '100%'，表示表格宽度占父容器的 100%
+     */
   },
-  // 表格高度，默认60%
   tableHeight: {
     type: String,
     default: '60%',
+    /**
+     * 默认值为 '60%'，表示表格高度占父容器的 60%
+     */
   },
-  // 是否展示合并行
   showSummary: {
     type: Boolean,
     default: false,
+    /**
+     * 默认值为 false，表示默认不展示表格的合并行（合计行）
+     */
   },
-  // 合计行方法
   summaryMethod: {
     type: Function,
     default: () => {},
+    /**
+     * 默认值为一个空函数，表示如果未提供具体的合计行计算方法，则不进行任何计算
+     */
   },
-  // 合并行或者列方法
   spanMethod: {
     type: Function,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示默认不进行行或列的合并操作
+     */
   },
-  // 获取数据的接口
   listApi: {
     type: Function,
     required: false,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示如果未提供获取数据的接口函数，则需要通过其他方式提供表格数据
+     */
   },
-  // 表格使用的字典
   dict: {
-    type: Array<string>,
+    type: Array as () => string[],
     default: () => [],
+    /**
+     * 默认值为一个空数组，表示初始时没有使用字典进行数据映射
+     */
   },
-  // 导出数据的接口
   exportApi: {
     type: Function,
     required: false,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示如果未提供导出数据的接口函数，则无法进行数据导出操作
+     */
   },
-  // 是否显示序号
   tableIndex: {
     type: Boolean,
     default: false,
+    /**
+     * 默认值为 false，表示默认不显示表格的序号列
+     */
   },
-  // 选择框样式
   select: {
     type: String,
     default: 'single',
+    /**
+     * 默认值为 'single'，表示表格选择框默认使用单选样式
+     */
   },
-  // 主键
   pk: {
     type: String,
     default: 'id',
+    /**
+     * 默认值为 'id'，表示表格数据的主键字段名为 'id'
+     */
   },
-  // 选中行数据
   checkedRows: {
-    type: Array,
+    type: Array as () => any[],
     default: () => [],
+    /**
+     * 默认值为一个空数组，表示初始时表格中没有选中的行
+     */
   },
-  // 表格字段配置
   fieldList: {
     type: Array<Field>,
     required: true,
     default: () => [],
+    /**
+     * 该 prop 是必需的，默认值为一个空数组，表示初始时没有定义表格的字段配置
+     */
   },
-  // 表格数据配置
   modelValue: {
     type: Array,
     required: false,
     default: () => [],
+    /**
+     * 默认值为一个空数组，表示初始时没有提供表格要展示的数据
+     */
   },
   loading: {
     type: Boolean,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示如果未提供加载状态标识，则不控制加载显示效果
+     */
   },
-  // 操作栏配置
   handleBtn: {
     type: Object,
     default: () => {},
+    /**
+     * 默认值为一个空对象，表示初始时操作栏没有任何配置
+     */
   },
-  // 操作按钮是否不可点击
   rowBtnDisable: {
     type: Function,
     default: () => false,
+    /**
+     * 默认值为一个返回 false 的函数，表示默认情况下表格行操作按钮都是可点击的
+     */
   },
-  // 操作按钮是否隐藏
   rowBtnHidden: {
     type: Function,
     default: () => true,
+    /**
+     * 默认值为一个返回 true 的函数，表示默认情况下表格行操作按钮都是隐藏的
+     */
   },
-  // 操作按钮是否不可点击
   headerBtnDisable: {
     type: Function,
     default: () => false,
+    /**
+     * 默认值为一个返回 false 的函数，表示默认情况下表格顶部操作按钮都是可点击的
+     */
   },
-  // 操作按钮是否隐藏
   headerBtnHidden: {
     type: Function,
     default: () => true,
+    /**
+     * 默认值为一个返回 true 的函数，表示默认情况下表格顶部操作按钮都是隐藏的
+     */
   },
-  // 是否分页
   pager: {
     type: Boolean,
     default: true,
+    /**
+     * 默认值为 true，表示默认开启表格的分页功能
+     */
   },
-  // 重置到第一页
+  search: {
+    type: Boolean,
+    default: true,
+    /**
+     * 默认值为 true，表示默认开启表格的配置化搜索功能
+     */
+  },
   reloadCurrentPage: {
     type: Number,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示初始时不触发表格跳转到指定页的操作
+     */
   },
-  // 查询条件
   query: {
     type: Object,
     default: () => {},
+    /**
+     * 默认值为一个空对象，表示初始时没有提供表格的查询条件
+     */
   },
-  // 刷新
   refresh: {
     type: Number,
+    default: undefined,
+    /**
+     * 默认值为 undefined，表示初始时不触发表格数据的刷新操作
+     */
   },
-  // 开启初始化后自动刷新
   mountedRefresh: {
     type: Boolean,
     default: true,
+    /**
+     * 默认值为 true，表示表格初始化后默认自动刷新数据
+     */
   },
 })
 
@@ -804,7 +873,7 @@ const handleSliderChange = (row: any) => {
               :disabled="item.disabled || headerBtnDisable(item.event, currentRows)"
               v-if="item.hidden || headerBtnHidden(item.event, currentRows)"
               v-has="item.permission"
-              @svg-btn-click="handleHeadBtnClick(item, currentRows, index)"
+              @svg-btn-click="handleHeadBtnClick(item, currentRows, singleSelectValue)"
             />
           </div>
           <slot name="tbHeaderBtn" />
@@ -829,12 +898,12 @@ const handleSliderChange = (row: any) => {
 
     <div class="table">
       <query-builder
+        v-if="search"
         v-model="queryBuilderShow"
         ref="queryBuilderRef"
         :table-fields="tableInfo.showFieldList"
         :current-field="tableInfo.currentField"
         @sql-params-submit="handleSqlParamsSubmit"
-        @submit-query="getTableList"
       />
       <el-table
         ref="normalTableRef"
@@ -990,12 +1059,12 @@ const handleSliderChange = (row: any) => {
               <svg-button
                 :key="index"
                 v-has="item.permission"
+                v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
                 :link="initHandleBtn.link || item.link"
                 :icon="item.icon"
                 :type="item.type"
                 :label="item.label"
                 :disabled="item.disabled || rowBtnDisable(item.event, scope.row)"
-                v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
                 @svg-btn-click="handleTableRowClick(item, scope.row, scope.$index)"
               />
             </template>

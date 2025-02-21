@@ -4,7 +4,6 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@/styles/index.scss'
 import 'virtual:svg-icons-register'
-import globalComponent from '@/components/index'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import router from '@/router'
@@ -20,7 +19,6 @@ const app = createApp(App)
 
 isHasPermission(app)
 rightMenu(app)
-app.use(globalComponent)
 app.use(router)
 app.use(i18n)
 app.use(pinia)

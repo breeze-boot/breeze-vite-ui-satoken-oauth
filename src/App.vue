@@ -19,7 +19,7 @@ let { settings, theme } = storeToRefs(useSettingStore())
       :font="theme.themeModel === THEME.DARK ? theme.lightFont : theme.darkFont"
       :content="theme.watermarkContent"
     >
-      <router-view></router-view>
+      <router-view />
     </el-watermark>
   </el-config-provider>
 </template>

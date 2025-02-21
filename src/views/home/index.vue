@@ -6,7 +6,7 @@
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting.ts'
-import LoginUserPie from '@/views/home/component/LoginUserPie.vue'
+import LoginUserBar from '@/views/home/component/LoginUserBar.vue'
 
 let settings = useSettingStore().settings
 let userStore = useUserStore()
@@ -40,7 +40,7 @@ let userStore = useUserStore()
             <span>在线统计</span>
           </div>
         </template>
-        <login-user-pie />
+        <login-user-bar />
       </el-card>
     </el-col>
     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

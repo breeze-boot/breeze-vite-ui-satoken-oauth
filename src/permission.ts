@@ -5,11 +5,13 @@ import 'nprogress/nprogress.css'
 import pinia from '@/store'
 import useUserStore from '@/store/modules/user'
 import useMenuStore from '@/store/modules/menu'
+import useTabsStore from '@/store/modules/tabs.ts'
 
 nprogress.configure({ showSpinner: false })
 
 const whiteRoute: string[] = ['/redirect', '/login']
 const userStore = useUserStore(pinia)
+const tabsStore = useTabsStore(pinia)
 const menuStore = useMenuStore(pinia)
 
 /**
@@ -35,6 +37,7 @@ router.beforeEach(async (to, from, next) => {
         return
       } catch (error) {
         await userStore.logout()
+        await tabsStore.initAllTab()
         next({ path: '/login', query: { redirect: to.path } })
         return
       }

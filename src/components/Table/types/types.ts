@@ -8,10 +8,18 @@ import { SelectData } from '@/types/types.ts'
 import { FormItemRule } from 'element-plus/es/components/form'
 
 /**
+ * 事件类型
+ */
+export type Event = 'exportAll' | 'export' | 'delete' | 'add' | string
+export type SelectEvent = 'multi' | 'single'
+type ButtonType = 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
+
+/**
  * 按钮类型
  */
 export interface Btn {
-  type?: 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
+  // 使用枚举类型
+  type?: ButtonType
   icon?: string
   loading?: boolean
   label?: string
@@ -22,14 +30,8 @@ export interface Btn {
   permission?: string[]
   link?: boolean
   event: Event
-  eventHandle?: (row: any, $index?: number) => void
+  eventHandle?: (row: any, $index?: number) => Promise<void> | void
 }
-
-/**
- * 事件类型
- */
-export type Event = 'exportAll' | 'export' | 'delete' | 'add' | string
-export type SelectEvent = 'multi' | 'single'
 
 /**
  * 表格类型
@@ -62,47 +64,122 @@ export interface HandleBtn {
   btList?: Btn[]
 }
 
+export type AlignType = 'center' | 'right' | 'left'
+
+/**
+ * 表格字段类型
+ */
+export type FieldType =
+  | 'input-number'
+  | 'tag'
+  | 'slot'
+  | 'expand'
+  | 'customRowLink'
+  | 'rowLink'
+  | 'image'
+  | 'switch'
+  | 'upload'
+  | 'file'
+  | 'date'
+  | 'select'
+  | 'radio'
+  | 'input'
+  | 'textarea'
+
+// 定义 formOptions 的联合类型
+type FormOptionsUnion = SelectOptions | RadioOptions | InputOptions | InputNumberOptions
+
 /**
  * 表格字段类型
  */
 export interface Field {
-  align?: 'center' | 'right' | 'left'
+  /**
+   * 对齐方式，默认为左对齐
+   */
+  align?: AlignType
+  /**
+   * 子字段列表
+   */
   children?: Field[]
+  /**
+   * 字典标识
+   */
   dict?: string
+  /**
+   * 是否禁用
+   */
   disabled?: boolean
+  /**
+   * 是否可见
+   */
   visible?: boolean
+  /**
+   * 是否固定列
+   */
   fixed?: boolean
-  formOptions?: FormOptions
+  /**
+   * 表单选项，根据不同的 type 可能有不同的配置
+   */
+  formOptions?: FormOptionsUnion
+  /**
+   * 是否隐藏
+   */
   hidden?: boolean
-  input?: InputOption
+  /**
+   * 唯一标识，可用于排序等操作
+   */
   key?: number
+  /**
+   * 字段标签
+   */
   label?: string
+  /**
+   * 链接信息
+   */
   linkInfo?: LinkInfo | LinkInfo2
+  /**
+   * 最小宽度
+   */
   minWidth?: string
+  /**
+   * 字段属性名，用于绑定数据
+   */
   prop: string
+  /**
+   * 是否显示溢出tooltip，默认为 false
+   */
   showOverflowTooltip?: boolean
+  /**
+   * 是否可排序，默认为 false，也可以设置为 'custom' 表示自定义排序
+   */
   sortable?: boolean | 'custom'
+  /**
+   * 开关选项
+   */
   switch?: SwitchOption
+  /**
+   * 标签选项
+   */
   tag?: TagOptions
+  /**
+   * 文本域选项
+   */
   textarea?: TextareaOption
-  type?:
-    | string
-    | 'tag'
-    | 'slot'
-    | 'expand'
-    | 'customRowLink'
-    | 'rowLink'
-    | 'image'
-    | 'switch'
-    | 'upload'
-    | 'file'
-    | 'date'
-    | 'select'
-    | 'radio'
-    | 'input'
-    | 'textarea'
+  /**
+   * 字段类型
+   */
+  type?: FieldType | string
+  /**
+   * 上传选项
+   */
   upload?: UploadOption
+  /**
+   * 列宽度
+   */
   width?: number | string
+  /**
+   * 滑块宽度
+   */
   sliderWidth?: number
 }
 
@@ -113,8 +190,27 @@ export interface FormOptions {
   disabled?: boolean
   isDisabled?: (field: Field, row: any) => boolean
   rules?: Arrayable<FormItemRule>
+  type?: string
+}
+
+export interface SelectOptions extends FormOptions {
   options?: SelectData[]
   optionKey?: string // 后台行内返回的选项的字段名
+}
+
+export interface RadioOptions extends FormOptions {
+  options?: SelectData[]
+  optionKey?: string // 后台行内返回的选项的字段名
+}
+
+export interface InputOptions extends FormOptions {
+  options?: SelectData[]
+  optionKey?: string // 后台行内返回的选项的字段名
+}
+
+export interface InputNumberOptions extends FormOptions {
+  max?: number
+  min?: number
 }
 
 /**
@@ -129,12 +225,12 @@ export interface TagOptions {
  */
 export interface UploadOption {
   api?: any
+  pk?: string
   fileLimit?: number
   callback?: (row: any) => void
   bizType: string
   fileType?: string[]
   fileSize?: number
-  pk?: string
   style?: string
   uploadRefresh?: boolean
   status?: string
@@ -180,13 +276,6 @@ export interface SwitchOption {
 }
 
 /**
- * input类型
- */
-export interface InputOption {
-  readonly?: boolean
-}
-
-/**
  * 表格查询参数类型
  */
 export interface QueryParams {
@@ -204,9 +293,7 @@ export interface TagOption {
 /**
  * 字段行内跳转字段属性类型
  */
-export interface LinkInfo {
-  // 前端定义的路由路径
-  routePath?: string
+export interface Link {
   // 路由参数，行项目获取
   rowParam?: string[]
   // 路由参数
@@ -215,23 +302,23 @@ export interface LinkInfo {
   columnName?: string
   // 自定义显示的内容
   fixColumnName?: string
+}
+/**
+ * 字段行内跳转字段属性类型
+ */
+export interface LinkInfo extends Link {
+  // 前端定义的路由路径
+  routePath?: string
 }
 
 /**
  * 字段行内跳转字段属性类型
  */
-export interface LinkInfo2 {
+export interface LinkInfo2 extends Link {
   // 后台返回的url地址
   linkUrlProp?: string
-  // 路由参数，行项目获取
-  rowParam?: string[]
-  // 路由参数
-  query?: Query
-  // 自定义显示的内容，从行项目获取
-  columnName?: string
-  // 自定义显示的内容
-  fixColumnName?: string
 }
+
 /**
  * 链接字段属性查询类型
  */

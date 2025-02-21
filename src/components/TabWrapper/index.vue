@@ -1,20 +1,26 @@
 <template>
   <div style="width: 99%; height: auto">
-    <component :is="pages.asyncComponent" v-bind="pages.params" :key="pages.pageId"></component>
+    <component :is="pages.asyncComponent" v-bind="pages.params" :key="pages.pageId" />
     <slot name="backTop">
       <el-backtop v-if="backTop" :bottom="200" :visibility-height="100"></el-backtop>
     </slot>
   </div>
 </template>
-<script lang="js" setup>
+<script lang="ts" setup>
 import { useRoute } from 'vue-router'
-import { ref, watch, onBeforeUnmount, defineAsyncComponent } from 'vue'
+import { ref, watch, markRaw, onBeforeUnmount, defineAsyncComponent } from 'vue'
+
+defineOptions({
+  name: 'TabWrapper',
+  inheritAttrs: false,
+})
 
 const $route = useRoute()
 
 const { path, backTop, pageId } = defineProps({
   path: {
     type: String,
+    default: '',
   },
   backTop: {
     type: Boolean,
@@ -27,7 +33,7 @@ const { path, backTop, pageId } = defineProps({
 })
 
 // 创建响应式数据
-const pages = ref({})
+const pages = ref<any>({})
 
 watch(
   () => pageId,
@@ -36,9 +42,11 @@ watch(
     if (pageId && _path) {
       pages.value = {
         pageId: pageId,
-        asyncComponent: defineAsyncComponent(() => {
-          return import(`/src/views${/* @vite-ignore */ _path}.vue`)
-        }),
+        asyncComponent: markRaw(
+          defineAsyncComponent(() => {
+            return import(`/src/views${/* @vite-ignore */ _path}.vue`)
+          }),
+        ),
         params: { ...$route.query, ...$route.params },
       }
     }

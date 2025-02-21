@@ -5,6 +5,8 @@ import DefineOptions from 'unplugin-vue-define-options/vite'
 import path from 'path'
 import viteCompression from 'vite-plugin-compression'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 
 // SVG
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
@@ -21,10 +23,15 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     plugins: [
       vue(),
       AutoImport({
-        // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-        imports: ['vue', '@vueuse/core', 'pinia', 'vue-router'],
-        // 自动导入类型定义文件路径
-        dts: './auto-imports.d.ts',
+        imports: ['vue', '@vueuse/core', 'pinia', 'vue-router', 'vue-i18n'],
+        resolvers: [ElementPlusResolver()],
+        dts: './src/types/auto-imports.d.ts',
+        vueTemplate: true,
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+        dirs: ['src/components', 'src/**/components'],
+        dts: './src/types/components.d.ts',
       }),
       VueSetupExtend(),
       DefineOptions(),

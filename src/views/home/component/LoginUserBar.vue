@@ -1,4 +1,4 @@
-<script setup lang="ts" name="PureEChartsPie">
+<script setup lang="ts" name="PureEChartsBar">
 import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import * as echarts from 'echarts'
 import { statisticLoginUserPie } from '@/api/home'
@@ -17,25 +17,37 @@ const initChart = () => {
         left: 'center',
       },
       tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
       },
       legend: {
         orient: 'vertical',
         left: 'left',
       },
+      // 禁用鼠标滚轮缩放
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none',
+          },
+          restore: {},
+          saveAsImage: {},
+        },
+      },
+      xAxis: {
+        type: 'category',
+        data: [], // 初始 x 轴数据为空数组
+      },
+      yAxis: {
+        type: 'value',
+      },
       series: [
         {
           name: '用户登录',
-          type: 'pie',
-          radius: '60%',
+          type: 'bar',
           data: [], // 初始数据为空数组
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
         },
       ],
     }
@@ -48,16 +60,19 @@ const fetchData = async () => {
     const response: any = await statisticLoginUserPie()
     const data = response.data.series // 假设后端返回的数据格式为 { name: string, value: number }[]
 
+    const xAxisData = data.map((item: any) => item.name)
+    const seriesData = data.map((item: any) => item.value)
+
     // 更新图表数据
     if (chartInstance) {
       chartInstance.setOption({
+        xAxis: {
+          data: xAxisData,
+        },
         series: [
           {
-            // 这里只更新 series 数组中的第一个元素（即我们的饼图）
-            data: data.map((item: any) => ({
-              name: item.name,
-              value: item.value,
-            })),
+            // 这里只更新 series 数组中的第一个元素（即我们的柱状图）
+            data: seriesData,
           },
         ],
       })
@@ -85,5 +100,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="chartContainer" style="width: 100%; height: 500px"></div>
+  <div ref="chartContainer" class="chart-container" style="width: 100%; height: 500px"></div>
 </template>
+
+<style scoped>
+.chart-container {
+  touch-action: none; /* 禁用触摸滚动穿透 */
+  overscroll-behavior: contain; /* 禁用滚动溢出行为 */
+}
+</style>

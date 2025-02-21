@@ -14,7 +14,7 @@ import { SALES } from '@/types/types.ts'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
-  name: 'PasswordReset',
+  name: 'UserPasswordReset',
   inheritAttrs: false,
 })
 

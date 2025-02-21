@@ -87,8 +87,12 @@ const useTabsStore = defineStore('Tabs', {
       }
 
       if (tab.name === 'TabWrapper' && tab.params) {
-        tab.name = tab.name + '-' + tab.params.pageId
+        if (!this.cacheTabs.some((name: string) => name === tab.name)) {
+          this.cacheTabs.push(tab.name)
+          saveCacheTabsToStorage(this.cacheTabs)
+        }
         tab.title = route.query.title as string
+        tab.name = tab.name + '-' + tab.params.pageId
       }
       if (!this.tabs.some((_t: Tab) => _t.name === tab.name)) {
         this.tabs.push(tab)

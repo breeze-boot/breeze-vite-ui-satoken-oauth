@@ -4,13 +4,8 @@
 -->
 
 <!-- 测试KeepAlive -->
-<script setup lang="ts">
+<script setup lang="ts" name="KeepAlive">
 import { reactive } from 'vue'
-
-defineOptions({
-  name: 'keepAlive',
-  inheritAttrs: false,
-})
 
 // do not use same name with ref
 const form = reactive({
@@ -24,7 +19,7 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <el-form :model="form" label-width="auto" style="max-width: 600px">
+  <el-form :model="form" label-width="100px" style="max-width: 600px">
     <el-form-item label="Activity name">
       <el-input v-model="form.name" />
     </el-form-item>

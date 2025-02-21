@@ -8,7 +8,7 @@ import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting'
-import UserPasswordReset from '@/layout/components/tabbar/setting/userPasswordReset/index.vue'
+import ResetPassword from '@/layout/components/tabbar/setting/resetPassword/index.vue'
 
 const { t } = useI18n()
 const restPasswordRef = ref()
@@ -97,17 +97,17 @@ const handleClose = (done: () => void) => {
   </el-dropdown>
 
   <!-- 密码重置 Dialog -->
-  <user-password-reset ref="restPasswordRef" />
+  <reset-password ref="restPasswordRef" />
 
   <el-dialog v-model="personalCenterDialogVisible" title="个人中心" width="70%" :before-close="handleClose">
-    <el-descriptions class="margin-top" title="With border" :column="3" :size="size" border>
+    <el-descriptions class="margin-top" title="With border" :column="3" size="100%" border>
       <template #extra>
         <el-button type="primary">Operation</el-button>
       </template>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon :style="iconStyle">
+            <el-icon>
               <user />
             </el-icon>
             Username
@@ -118,7 +118,7 @@ const handleClose = (done: () => void) => {
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon :style="iconStyle">
+            <el-icon>
               <iphone />
             </el-icon>
             Telephone
@@ -129,7 +129,7 @@ const handleClose = (done: () => void) => {
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon :style="iconStyle">
+            <el-icon>
               <location />
             </el-icon>
             Place
@@ -140,7 +140,7 @@ const handleClose = (done: () => void) => {
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon :style="iconStyle">
+            <el-icon>
               <tickets />
             </el-icon>
             Remarks
@@ -151,7 +151,7 @@ const handleClose = (done: () => void) => {
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon :style="iconStyle">
+            <el-icon>
               <office-building />
             </el-icon>
             Address

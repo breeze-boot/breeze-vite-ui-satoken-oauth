@@ -5,7 +5,7 @@
 <!-- 客户端管理 -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { page, exportExcel, deleteClient } from '@/api/auth/client'
+import { page, deleteClient } from '@/api/auth/client'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/ClientAddOrEdit.vue'

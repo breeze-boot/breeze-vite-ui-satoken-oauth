@@ -38,32 +38,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <transition name="slide-fade">
-    <component :is="layoutDict[theme.menuLayout]" />
-  </transition>
+  <component :is="layoutDict[theme.menuLayout]" />
 
   <!-- 全局组件 -->
   <context-menu ref="contextMenuRef" />
   <!-- 全局组件 -->
   <websocket />
 </template>
-
-<style lang="scss" scoped>
-/*
-    进入和离开动画可以使用不同
-    持续时间和速度曲线。
-  */
-.slide-fade-enter-active {
-  transition: opacity 0.1s ease-in;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.1s ease-out;
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-</style>

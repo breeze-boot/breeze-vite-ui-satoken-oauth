@@ -136,7 +136,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :title="t('column.common.columnSetting')" v-model="visible" :direction="direction">
+  <el-drawer :title="t('column.common.columnSetting')" size="80%" v-model="visible" :direction="direction">
     <b-table
       ref="columnListTableRef"
       :pager="false"
