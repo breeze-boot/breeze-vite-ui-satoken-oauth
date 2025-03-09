@@ -42,6 +42,6 @@ watchEffect(() => {
 
   <!-- 全局组件 -->
   <context-menu ref="contextMenuRef" />
-  <!-- 全局组件 -->
+  <!-- 全局组件 websocket -->
   <websocket />
 </template>

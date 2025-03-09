@@ -268,7 +268,7 @@ const tableData = ref({
  */
 const tableLoading = computed({
   get: () => {
-    return props.loading
+    return props.loading as boolean
   },
   set: (value) => {
     $emit('update:loading', value)
@@ -405,7 +405,7 @@ const checkRuleFormRef = async () => {
 const showErrorMessages = (errorJson: any) => {
   let errorHtml = '<ul>'
   for (const field in errorJson) {
-    errorJson[field].forEach((error) => {
+    errorJson[field].forEach((error: any) => {
       errorHtml += `<li>${error.message}</li>`
     })
   }
