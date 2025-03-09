@@ -158,7 +158,7 @@ const useTabsStore = defineStore('Tabs', {
     /**
      * 初始化所有选项卡，将相关状态重置为默认的主页Tab相关状态，并更新存储
      */
-    initAllTab(): void {
+    async initAllTab(): Promise<void> {
       this.currentTabName = homeConstantTab.name
       saveCurrentTabNameToStorage(this.currentTabName)
       this.currentTab = homeConstantTab

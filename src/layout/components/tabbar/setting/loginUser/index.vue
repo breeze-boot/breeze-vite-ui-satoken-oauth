@@ -99,74 +99,7 @@ const handleClose = (done: () => void) => {
   <!-- 密码重置 Dialog -->
   <reset-password ref="restPasswordRef" />
 
-  <el-dialog v-model="personalCenterDialogVisible" title="个人中心" width="70%" :before-close="handleClose">
-    <el-descriptions class="margin-top" title="With border" :column="3" size="100%" border>
-      <template #extra>
-        <el-button type="primary">Operation</el-button>
-      </template>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <user />
-            </el-icon>
-            Username
-          </div>
-        </template>
-        kooriookami
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <iphone />
-            </el-icon>
-            Telephone
-          </div>
-        </template>
-        18100000000
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <location />
-            </el-icon>
-            Place
-          </div>
-        </template>
-        Suzhou
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <tickets />
-            </el-icon>
-            Remarks
-          </div>
-        </template>
-        <el-tag size="small">School</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <office-building />
-            </el-icon>
-            Address
-          </div>
-        </template>
-        No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-      </el-descriptions-item>
-    </el-descriptions>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="personalCenterDialogVisible = false">{{ t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="personalCenterDialogVisible = false">{{ t('common.confirm') }}</el-button>
-      </div>
-    </template>
-  </el-dialog>
+  <el-dialog v-model="personalCenterDialogVisible" title="个人中心" width="70%" :before-close="handleClose"></el-dialog>
 </template>
 
 <style lang="scss" scoped>

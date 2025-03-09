@@ -245,7 +245,7 @@ const handleDelete = async (rows: FileRecords) => {
     await deleteFile(fileIds)
     useMessage().success(`${t('common.delete') + t('common.success')}`)
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

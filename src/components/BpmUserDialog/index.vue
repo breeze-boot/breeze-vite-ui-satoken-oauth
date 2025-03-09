@@ -1,8 +1,8 @@
 <script>
-import { page } from '@/api/bpm/group'
+import { page } from '@/api/bpm/user'
 
 export default {
-  name: 'RoleDialog',
+  name: 'BpmUserDialog',
   props: {
     modelValue: {
       type: Boolean,
@@ -12,11 +12,11 @@ export default {
       type: String,
       default: '',
     },
-    roleCheck: {
+    userCheck: {
       type: String,
       default: '',
     },
-    roleChecks: {
+    userChecks: {
       type: Array,
       default: () => [],
     },
@@ -27,8 +27,8 @@ export default {
   },
   data() {
     return {
-      roleList: [],
-      checkRole: [],
+      userList: [],
+      checkUser: [],
       singleSelectValue: undefined,
       pagerQuery: {
         query: {
@@ -62,18 +62,22 @@ export default {
     }
   },
   beforeUnmount() {
-    this.checkRole = []
-    this.roleList = []
+    this.checkUser = []
+    this.userList = []
   },
   methods: {
     async getList() {
-      const response = await page(this.pagerQuery.query)
-      this.roleList = response.data.records
-      this.pagerQuery.query.total = Number(response.data.total)
+      const response = await page(this.pagerQuery?.query)
+      this.userList = response.data?.records
+      this.pagerQuery.query.total = Number(response.data?.total)
     },
-    handleCheckRole() {
+    handleCheckUser() {
       this.visible = false
-      this.$emit('updateRoleData', this.checkRole)
+      this.$emit('updateUserData', this.checkUser)
+    },
+    handleCloseCheck() {
+      this.visible = false
+      this.$emit('handleCloseCheck')
     },
     /**
      * 页码改变事件
@@ -99,33 +103,33 @@ export default {
       if (this.single) {
         return
       }
-      this.checkRole = row
+      this.checkUser = row
     },
     handleCheck() {
       if (this.single) {
-        this.singleSelectValue = this.roleList.findIndex((item) => item['id'] === this.roleCheck)
+        this.singleSelectValue = this.userList.findIndex((item) => item['id'] === this.userCheck)
         return
       }
-      const row = this.roleList.filter((item) => this.roleChecks.indexOf(item['id']) > -1)
+      const row = this.userList.filter((item) => this.userChecks.indexOf(item['id']) > -1)
       if (row) {
         row.forEach((item) => {
-          this.$refs.roleCheckTableRef?.toggleRowSelection(item, true)
+          this.$refs.userCheckTableRef?.toggleRowSelection(item, true)
         })
       }
     },
     handleRowClick(row) {
       if (this.single) {
-        this.checkRole = row
-        const index = this.roleList.findIndex((item) => item['id'] === row['id'])
+        this.checkUser = row
+        const index = this.userList.findIndex((item) => item['id'] === row['id'])
         if (index !== -1) {
           this.singleSelectValue = index
         }
         return
       }
       if (row) {
-        this.$refs.roleCheckTableRef?.toggleRowSelection(row, undefined)
+        this.$refs.userCheckTableRef?.toggleRowSelection(row, undefined)
       } else {
-        this.$refs.roleCheckTableRef?.clearSelection()
+        this.$refs.userCheckTableRef?.clearSelection()
       }
     },
   },
@@ -133,13 +137,13 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="title">
+  <el-dialog v-model="visible" :title="title" :before-close="handleCloseCheck">
     <el-table
-      ref="roleCheckTableRef"
+      ref="userCheckTableRef"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
       highlight-current-row
-      :data="roleList"
+      :data="userList"
       style="width: 100%"
     >
       <el-table-column v-if="!single" type="selection" width="55" />
@@ -151,8 +155,8 @@ export default {
         </template>
       </el-table-column>
       <el-table-column label="序号" fixed align="center" type="index" width=" 66" />
-      <el-table-column prop="id" label="角色编码" />
-      <el-table-column prop="name" label="角色名" />
+      <el-table-column prop="displayName" label="用户姓名" />
+      <el-table-column prop="id" label="用户名" />
     </el-table>
     <div class="table-pagination">
       <el-pagination
@@ -168,8 +172,8 @@ export default {
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="visible = false">{{ $t('common.cancel') }}</el-button>
-        <el-button type="primary" @click="handleCheckRole">{{ $t('common.confirm') }}</el-button>
+        <el-button @click="handleCloseCheck()">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="handleCheckUser()">{{ $t('common.confirm') }}</el-button>
       </div>
     </template>
   </el-dialog>

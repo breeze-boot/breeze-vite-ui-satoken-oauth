@@ -1,30 +1,26 @@
 import { ElMessage } from 'element-plus'
 
+// 可以通过提取公共逻辑来减少代码重复
+function showMessage(type: 'info' | 'warning' | 'success' | 'error', title: string) {
+  ElMessage[type]({
+    message: title,
+    duration: 3000,
+  })
+}
+
 export function useMessage() {
   return {
     info(title: string): void {
-      ElMessage.info({
-        message: title,
-        duration: 3000,
-      })
+      showMessage('info', title)
     },
     warning(title: string): void {
-      ElMessage.warning({
-        message: title,
-        duration: 3000,
-      })
+      showMessage('warning', title)
     },
     success(title: string): void {
-      ElMessage.success({
-        message: title,
-        duration: 3000,
-      })
+      showMessage('success', title)
     },
     error(title: string): void {
-      ElMessage.error({
-        message: title,
-        duration: 3000,
-      })
+      showMessage('error', title)
     },
   }
 }

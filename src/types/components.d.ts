@@ -10,6 +10,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     AvatarUpload: typeof import('./../components/Upload/AvatarUpload/index.vue')['default']
     BCard: typeof import('./../components/BCard/index.vue')['default']
+    BpmRoleDialog: typeof import('./../components/BpmRoleDialog/index.vue')['default']
+    BpmUserDialog: typeof import('./../components/BpmUserDialog/index.vue')['default']
     Breadcrumb: typeof import('./../layout/components/tabbar/breadcrumb/index.vue')['default']
     BTable: typeof import('./../components/Table/BTable/index.vue')['default']
     BTreeTable: typeof import('./../components/Table/BTreeTable/index.vue')['default']

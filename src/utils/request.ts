@@ -126,18 +126,17 @@ request.interceptors.response.use(
   },
   async (error: any) => {
     if (error.name === 'SyntaxError') {
-      ElMessage.error(`${i18n.global.t('axios.connectionTimedOut')} ${error.message}`)
+      error.message = i18n.global.t('axios.connectionTimedOut')
       return Promise.reject(error)
     }
     if (axios.isAxiosError(error)) {
       if (!error.response) {
         switch (error.code) {
           case 'ECONNABORTED':
-            ElMessage.error(`${i18n.global.t('axios.connectionTimedOut')} ${error.message}`)
+            error.message = i18n.global.t('axios.connectionTimedOut')
             return Promise.reject(error)
           default:
-            ElMessage.error(i18n.global.t('axios.systemAbnormality'))
-            console.error(`${error.message}`)
+            error.message = i18n.global.t('axios.systemAbnormality')
             return Promise.reject(error)
         }
       }

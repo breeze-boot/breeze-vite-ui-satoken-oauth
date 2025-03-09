@@ -144,7 +144,7 @@ const handleDataFormSubmit = async () => {
     useMessage().success(`${t('common.success')}`)
     $emit('reloadDataList')
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false

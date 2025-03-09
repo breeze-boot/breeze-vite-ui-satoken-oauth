@@ -21,8 +21,8 @@ router.beforeEach(async (to, from, next) => {
   document.title = (to.meta.title || '') + ` | ${setting.title}`
   nprogress.start()
 
-  const token = userStore.accessToken as string
-  const initMenu = menuStore.initMenu as boolean
+  const token = userStore.accessToken
+  const initMenu = menuStore.initMenu
   // 用户已登录
   if (token) {
     if (to.path === '/login') {

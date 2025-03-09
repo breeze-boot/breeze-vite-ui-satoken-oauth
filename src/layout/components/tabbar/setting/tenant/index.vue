@@ -29,7 +29,7 @@ const initTenant = async () => {
     tenantIdOption.value = response.data
     _tenantId.value = tenantId.value
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

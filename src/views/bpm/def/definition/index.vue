@@ -245,7 +245,7 @@ const handleDelete = async (rows: RoleRecords) => {
     reloadList()
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -268,7 +268,7 @@ const handleStart = async (row: BpmDefinitionRecord) => {
     tableLoading.value = false
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

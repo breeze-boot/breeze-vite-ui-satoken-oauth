@@ -71,7 +71,7 @@
       }
     "
   />
-  <user-dialog
+  <bpm-user-dialog
     ref="candidateUserDialog"
     :single="false"
     title="用户列表"
@@ -84,7 +84,7 @@
       }
     "
   />
-  <role-dialog
+  <bpm-role-dialog
     ref="candidateGroupsDialog"
     :single="false"
     title="角色列表"
@@ -101,8 +101,8 @@
 
 <script>
 import { Search } from '@element-plus/icons-vue'
-import UserDialog from '@/components/UserDialog/index.vue'
-import RoleDialog from '@/components/RoleDialog/index.vue'
+import BpmUserDialog from '@/components/BpmUserDialog/index.vue'
+import BpmRoleDialog from '@/components/BpmRoleDialog/index.vue'
 
 export default {
   name: 'UserTask',
@@ -111,7 +111,7 @@ export default {
       return Search
     },
   },
-  components: { UserDialog, RoleDialog },
+  components: { BpmUserDialog, BpmRoleDialog },
   props: {
     id: String,
     type: String,

@@ -121,18 +121,14 @@ defineExpose({
     :close-on-press-escape="false"
   >
     <div class="tree-filter-container">
-      <div class="input-line">
-        <el-input v-model="filterText" placeholder="Filter keyword" />
-      </div>
-      <div>
-        <svg-button
-          :icon="treeSetting.checkStrictly ? 'strictly' : 'strictly'"
-          type="default"
-          :style="{ margin: '10px 5px' }"
-          :label="treeSetting.checkStrictly ? t('common.oneCheck') : t('common.cascadeCheck')"
-          @svg-btn-click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
-        />
-      </div>
+      <el-input class="input-line" v-model="filterText" placeholder="" />
+      <svg-button
+        :icon="treeSetting.checkStrictly ? 'strictly' : 'strictly'"
+        type="default"
+        :style="{ margin: '10px 5px' }"
+        :label="treeSetting.checkStrictly ? t('common.oneCheck') : t('common.cascadeCheck')"
+        @svg-btn-click="() => (treeSetting.checkStrictly = !treeSetting.checkStrictly)"
+      />
     </div>
     <el-container class="tree-filter-container tree-container">
       <el-tree

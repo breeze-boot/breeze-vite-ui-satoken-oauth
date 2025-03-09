@@ -24,7 +24,7 @@ const useColumnStore = defineStore('Column', {
         this.columns = response.data as ColumnCacheData[]
         SET_OBJ_ARRAY_STORAGE(StorageName.Columns, this.columns)
       } catch (err: any) {
-        useMessage().error(err.message)
+        useMessage().error(`${t('common.fail')}` + err.message)
       }
     },
     async setColumnByMenu(data: ColumnCacheData) {
@@ -32,7 +32,7 @@ const useColumnStore = defineStore('Column', {
         await saveMenuColumn(data)
         await this.getRolesMenuColumns()
       } catch (err: any) {
-        useMessage().error(err.message)
+        useMessage().error(`${t('common.fail')}` + err.message)
       }
     },
     async getColumnByMenu(menu: string) {

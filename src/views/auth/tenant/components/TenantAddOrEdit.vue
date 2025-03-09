@@ -82,7 +82,7 @@ const getInfo = async (id: number) => {
     const response: any = await getTenant(JSONBigInt.parse(id))
     Object.assign(tenantDataForm.value, response.data)
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -98,7 +98,7 @@ const handleTenantDataFormSubmit = async () => {
     useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false

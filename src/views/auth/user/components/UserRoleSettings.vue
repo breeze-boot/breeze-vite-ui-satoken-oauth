@@ -117,7 +117,7 @@ const getInfo = async (id: number) => {
     tableData.value = response.data
     refresh.value = Math.random()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
