@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia'
 import useTabStore from '@/store/modules/tabs.ts'
 import useSettingStore from '@/store/modules/setting'
 import SvgIcon from '@/components/SvgIcon/index.vue'
+import aiChat from '@/layout/components/aiChat/index.vue'
 
 let { refresh } = storeToRefs(useSettingStore())
 let tabStore = useTabStore()
@@ -49,6 +50,9 @@ watch(
       </transition>
     </router-view>
   </el-scrollbar>
+
+  <!-- 全局组件 CHAT 聊天-->
+  <ai-chat />
 </template>
 
 <style lang="scss" scoped>

@@ -32,6 +32,7 @@
   ],
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@stomp/stompjs": "^7.0.0",
     "@visactor/vtable": "^1.6.1",
     "@visactor/vtable-export": "^1.6.1",
@@ -50,9 +51,11 @@
     "echarts": "^5.5.1",
     "element-plus": "^2.6.0",
     "file-saver": "^2.0.5",
+    "highlight.js": "^11.11.1",
     "js-cookie": "^3.0.1",
     "json-bigint": "^1.0.0",
     "lodash-es": "^4.17.21",
+    "markdown-it": "^14.1.0",
     "min-dash": "^4.2.1",
     "moment": "^2.29.4",
     "net": "^1.0.2",
@@ -114,5 +117,5 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+   }
 }
