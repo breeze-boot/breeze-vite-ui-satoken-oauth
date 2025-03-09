@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, nextTick, ref, shallowRef } from 'vue'
 import ProcessViewer from '@/components/ProcessViewer/index.vue'
-import UserDialog from '@/components/UserDialog/index.vue'
+import UserDialog from '@/components/BpmUserDialog/index.vue'
 import { getBpmDefinitionXml } from '@/api/bpm/def/definition'
 import { suspendedInstance } from '@/api/bpm/def/instance'
 import {

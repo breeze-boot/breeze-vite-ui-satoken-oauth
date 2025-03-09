@@ -72,7 +72,7 @@ const initDeptSelect = async () => {
     const response: any = await selectDept()
     deptOption.value = response.data
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -92,7 +92,7 @@ const handleSendMsgFormSubmit = async () => {
 
   if (currentMethod.value === 'USER') {
     msgStore.stompClient?.publish({
-      destination: '/message/asyncSendMsgToUser',
+      destination: '/send/asyncSendMsgToUser',
       headers: {
         Authorization: userStore.accessToken,
         username: userStore.userInfo.username,
@@ -106,7 +106,7 @@ const handleSendMsgFormSubmit = async () => {
   }
   if (currentMethod.value === 'DEPT') {
     msgStore.stompClient?.publish({
-      destination: '/message/syncSendMsgDeptUser',
+      destination: '/send/syncSendMsgDeptUser',
       headers: {
         Authorization: userStore.accessToken,
         username: userStore.userInfo.username,

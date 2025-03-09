@@ -60,7 +60,7 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
     const response: any = await uploadMinioS3(options.file, fileParam)
     imageUrl.value = response.data.url
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

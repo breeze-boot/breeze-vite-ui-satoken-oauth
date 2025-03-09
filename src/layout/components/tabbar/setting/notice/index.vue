@@ -38,7 +38,7 @@ const initNoticeMsg = async () => {
     const response: any = await listUsersMsg(userStore.userInfo.username)
     noticeMsg.value = response.data
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

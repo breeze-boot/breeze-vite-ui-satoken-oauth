@@ -11,7 +11,7 @@ import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import { page, exportExcel, deleteDefinition, suspendedDefinition } from '@/api/bpm/def/definition'
 import type { BpmDefinitionRecords } from '@/api/bpm/def/definition/type.ts'
 import type { BpmDefinitionRecord, BpmDefinitionQuery, BpmStartForm } from '@/api/bpm/def/definition/type.ts'
-import AddOrEdit from './components/DefinationAddOrEdit.vue'
+import AddOrEdit from './components/DefinitionAddOrEdit.vue'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -245,7 +245,7 @@ const handleDelete = async (rows: RoleRecords) => {
     reloadList()
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -268,7 +268,7 @@ const handleStart = async (row: BpmDefinitionRecord) => {
     tableLoading.value = false
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

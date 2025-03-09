@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, unref, onUpdated, onMounted, reactive, ref, computed, nextTick } from 'vue'
-import { ElMessage, ElMessageBox, ClickOutside as vClickOutside, ElTable } from 'element-plus'
+import { ElMessage, ElMessageBox, ClickOutside as vClickOutside, ElTable, ElForm } from 'element-plus'
 import { Btn, ColumnSort, Field, HandleBtn as handleType, QueryParams } from '@/components/Table/types/types.ts'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
@@ -207,7 +207,7 @@ const props = defineProps({
   },
   refresh: {
     type: Number,
-    default: undefined,
+    default: 0,
     /**
      * 默认值为 undefined，表示初始时不触发表格数据的刷新操作
      */
@@ -222,6 +222,7 @@ const props = defineProps({
 })
 
 const normalTableRef = ref<InstanceType<typeof ElTable>>()
+const ruleFormRef = ref<InstanceType<typeof ElForm>>()
 let $route = useRoute()
 const columnStore = useColumnStore()
 const { theme } = storeToRefs(useSettingStore())
@@ -259,7 +260,7 @@ const tableInfo = ref({
 
 const tableData = ref({
   // 表格的值
-  rows: [] as any[],
+  rows: <any>[],
 })
 
 /**
@@ -393,6 +394,31 @@ const initTbHeaderBtn = computed(() => props.tbHeaderBtn as Btn[])
  */
 const sortField = new Map<string, any>()
 
+const checkRuleFormRef = async () => {
+  try {
+    await ruleFormRef.value.validate()
+  } catch (err: any) {
+    showErrorMessages(err)
+  }
+}
+
+const showErrorMessages = (errorJson: any) => {
+  let errorHtml = '<ul>'
+  for (const field in errorJson) {
+    errorJson[field].forEach((error) => {
+      errorHtml += `<li>${error.message}</li>`
+    })
+  }
+  errorHtml += '</ul>'
+
+  ElMessageBox({
+    title: '错误提示',
+    message: errorHtml,
+    dangerouslyUseHTMLString: true, // 允许使用 HTML 字符串
+    type: 'error',
+    confirmButtonText: '确定',
+  })
+}
 const collectOrder = (order?: ColumnSort) => {
   // 检查是否有排序字段和排序顺序
   if (!order) return
@@ -791,6 +817,10 @@ const handleOnEnd = () => {
 const handleSliderChange = (row: any) => {
   row.width = row.sliderWidth
 }
+
+defineExpose({
+  checkRuleFormRef,
+})
 </script>
 
 <template>
@@ -905,172 +935,180 @@ const handleSliderChange = (row: any) => {
         :current-field="tableInfo.currentField"
         @sql-params-submit="handleSqlParamsSubmit"
       />
-      <el-table
-        ref="normalTableRef"
-        :fit="true"
-        :data="tableData.rows"
-        :max-height="tableHeight"
-        :height="tableHeight"
-        v-loading="tableLoading"
-        border
-        stripe
-        row-key="id"
-        :key="tableKey"
-        :summary-method="props.summaryMethod"
-        :span-method="props.spanMethod"
-        :style="tableStyle"
-        :show-summary="showSummary"
-        :highlight-current-row="true"
-        :header-cell-style="{ textAlign: 'center' }"
-        :header-cell-class-name="
-          (params: any) => {
-            handleHeaderCellStyle(params)
-          }
-        "
-        @selection-change="handleSelectionChange"
-        @row-dblclick="handleRowDbClick"
-        @row-click="handleRowClick"
-        @sort-change="handleSortChange"
-      >
-        <el-table-column
-          v-if="props.select === 'multi'"
-          key="selection"
-          fixed="left"
-          align="center"
-          type="selection"
-          width="60"
-        />
-
-        <el-table-column
-          v-else-if="props.select === 'single'"
-          key="singleSelect"
-          fixed="left"
-          type="index"
-          align="center"
-          width="60"
+      <el-form ref="ruleFormRef" :model="tableData" label-width="0px" status-icon>
+        <el-table
+          ref="normalTableRef"
+          :fit="true"
+          :data="tableData.rows"
+          :max-height="tableHeight"
+          :height="tableHeight"
+          v-loading="tableLoading"
+          border
+          stripe
+          row-key="id"
+          :key="tableKey"
+          :summary-method="props.summaryMethod"
+          :span-method="props.spanMethod"
+          :style="tableStyle"
+          :show-summary="showSummary"
+          :highlight-current-row="true"
+          :header-cell-style="{ textAlign: 'center' }"
+          :header-cell-class-name="
+            (params: any) => {
+              handleHeaderCellStyle(params)
+            }
+          "
+          @selection-change="handleSelectionChange"
+          @row-dblclick="handleRowDbClick"
+          @row-click="handleRowClick"
+          @sort-change="handleSortChange"
         >
-          <template #default="scope">
-            <el-radio v-model="singleSelectValue" :label="scope.$index">{{}}</el-radio>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="t('common.no')"
-          fixed
-          align="center"
-          v-if="props.tableIndex"
-          type="index"
-          :width="tableField.length === 0 ? '' : 66"
-        />
+          <el-table-column
+            v-if="props.select === 'multi'"
+            key="selection"
+            fixed="left"
+            align="center"
+            type="selection"
+            width="60"
+          />
 
-        <el-table-column
-          v-for="(item, index) in tableField"
-          class-name="input-column"
-          :key="index"
-          :prop="item.prop"
-          :label="item.label"
-          :align="item.align || 'center'"
-          :sortable="item.sortable"
-          :type="item.type"
-          :header-align="item.align || 'center'"
-          :width="item.width || ''"
-          :min-width="item.minWidth || ''"
-          :show-overflow-tooltip="item.showOverflowTooltip"
-          :fixed="item.fixed"
-        >
-          <template #header>
-            {{ item.label }}
-            <div
-              @click="handleHeaderSetting(item)"
-              style="
-                cursor: pointer;
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-                padding-left: 2px;
-              "
-            >
-              <svg-icon name="setting" />
-            </div>
-          </template>
-          <template #default="scope">
-            <template v-if="item.children">
-              <!-- 多级表头 -->
-              <el-table-column
-                v-for="(_item, _index) in item.children"
-                class-name="input-column"
-                :key="_index"
-                :label="_item.label"
-                :sortable="_item.sortable"
-                :align="_item.align || 'center'"
-                :header-align="_item.align || 'center'"
-                :width="_item.width || ''"
-                :min-width="_item.minWidth || ''"
-                :show-overflow-tooltip="_item.showOverflowTooltip"
-                :fixed="_item.fixed"
+          <el-table-column
+            v-else-if="props.select === 'single'"
+            key="singleSelect"
+            fixed="left"
+            type="index"
+            align="center"
+            width="60"
+          >
+            <template #default="scope">
+              <el-radio v-model="singleSelectValue" :label="scope.$index">{{}}</el-radio>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="t('common.no')"
+            fixed
+            align="center"
+            v-if="props.tableIndex"
+            type="index"
+            :width="tableField.length === 0 ? '' : 66"
+          />
+
+          <el-table-column
+            v-for="(item, index) in tableField"
+            class-name="input-column"
+            :key="index"
+            :prop="item.prop"
+            :label="item.label"
+            :align="item.align || 'center'"
+            :sortable="item.sortable"
+            :type="item.type"
+            :header-align="item.align || 'center'"
+            :width="item.width || ''"
+            :min-width="item.minWidth || ''"
+            :show-overflow-tooltip="item.showOverflowTooltip"
+            :fixed="item.fixed"
+          >
+            <template #header>
+              {{ item.label }}
+              <div
+                @click="handleHeaderSetting(item)"
+                style="
+                  cursor: pointer;
+                  display: inline-flex;
+                  justify-content: center;
+                  align-items: center;
+                  padding-left: 2px;
+                "
               >
-                <template #default="_">
-                  <!-- slot自定义列 -->
-                  <template v-if="_item.type === 'slot'">
-                    <slot :name="`col-${_item.prop}`" :row="scope.row" :index="scope.$index" />
+                <svg-icon name="setting" />
+              </div>
+            </template>
+            <template #default="scope">
+              <template v-if="item.children">
+                <!-- 多级表头 -->
+                <el-table-column
+                  v-for="(_item, _index) in item.children"
+                  class-name="input-column"
+                  :key="_index"
+                  :label="_item.label"
+                  :sortable="_item.sortable"
+                  :align="_item.align || 'center'"
+                  :header-align="_item.align || 'center'"
+                  :width="_item.width || ''"
+                  :min-width="_item.minWidth || ''"
+                  :show-overflow-tooltip="_item.showOverflowTooltip"
+                  :fixed="_item.fixed"
+                >
+                  <template #default="_">
+                    <!-- slot自定义列 -->
+                    <template v-if="_item.type === 'slot'">
+                      <slot :name="`col-${_item.prop}`" :row="scope.row" :index="scope.$index" />
+                    </template>
+
+                    <table-item
+                      @reload-data-list="getTableList"
+                      :scope="{
+                        row: _.row[item.prop],
+                        $index: _.$index,
+                        column: _.column,
+                      }"
+                      :dict="dict"
+                      :table-field="_item"
+                      :key="_index"
+                    />
                   </template>
+                </el-table-column>
+              </template>
 
-                  <table-item
-                    @reload-data-list="getTableList"
-                    :scope="{
-                      row: _.row[item.prop],
-                      $index: _.$index,
-                      column: _.column,
-                    }"
-                    :dict="dict"
-                    :table-field="_item"
-                    :key="_index"
-                  />
-                </template>
-              </el-table-column>
-            </template>
+              <!-- slot自定义列 -->
+              <template v-else-if="item.type === 'slot'">
+                <slot :name="`col-${item.prop}`" :row="scope.row" :index="scope.$index" :key="index" />
+              </template>
 
-            <!-- slot自定义列 -->
-            <template v-else-if="item.type === 'slot'">
-              <slot :name="`col-${item.prop}`" :row="scope.row" :index="scope.$index" :key="index" />
-            </template>
+              <template v-else-if="item.type === 'expand'">
+                <slot name="expand" :row="scope.row" :index="scope.$index" :key="index" />
+              </template>
 
-            <template v-else-if="item.type === 'expand'">
-              <slot name="expand" :row="scope.row" :index="scope.$index" :key="index" />
-            </template>
-
-            <table-item @reload-data-list="getTableList" :dict="dict" :scope="scope" :table-field="item" :key="index" />
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          v-if="handleBtnOperate"
-          key="handle"
-          :fixed="initHandleBtn.fixed"
-          :align="initHandleBtn.align || 'center'"
-          :label="initHandleBtn.label || t('common.operate')"
-          :width="initHandleBtn.width"
-          :min-width="initHandleBtn.minWidth"
-        >
-          <template #default="scope">
-            <template v-for="(item, index) in initHandleBtn.btList" :key="index">
-              <!-- 自定义操作类型 -->
-              <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
-              <!-- 操作按钮 -->
-              <svg-button
+              <table-item
+                @reload-data-list="getTableList"
+                :dict="dict"
+                :scope="scope"
+                :table-field="item"
                 :key="index"
-                v-has="item.permission"
-                v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
-                :link="initHandleBtn.link || item.link"
-                :icon="item.icon"
-                :type="item.type"
-                :label="item.label"
-                :disabled="item.disabled || rowBtnDisable(item.event, scope.row)"
-                @svg-btn-click="handleTableRowClick(item, scope.row, scope.$index)"
               />
             </template>
-          </template>
-        </el-table-column>
-      </el-table>
+          </el-table-column>
+
+          <el-table-column
+            v-if="handleBtnOperate"
+            key="handle"
+            :fixed="initHandleBtn.fixed"
+            :align="initHandleBtn.align || 'center'"
+            :label="initHandleBtn.label || t('common.operate')"
+            :width="initHandleBtn.width"
+            :min-width="initHandleBtn.minWidth"
+          >
+            <template #default="scope">
+              <template v-for="(item, index) in initHandleBtn.btList" :key="index">
+                <!-- 自定义操作类型 -->
+                <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
+                <!-- 操作按钮 -->
+                <svg-button
+                  :key="index"
+                  v-has="item.permission"
+                  v-if="item.hidden || rowBtnHidden(item.event, scope.row)"
+                  :link="initHandleBtn.link || item.link"
+                  :icon="item.icon"
+                  :type="item.type"
+                  :label="item.label"
+                  :disabled="item.disabled || rowBtnDisable(item.event, scope.row)"
+                  @svg-btn-click="handleTableRowClick(item, scope.row, scope.$index)"
+                />
+              </template>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-form>
     </div>
     <template v-if="enablePager">
       <div class="table-pagination">

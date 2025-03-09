@@ -110,7 +110,7 @@ const handleKickOut = async (row: OnlineUserRecord) => {
     useMessage().success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -125,7 +125,7 @@ const handleLogout = async (row: OnlineUserRecord) => {
     useMessage().success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -140,7 +140,7 @@ const handleKickOutByToken = async (row: LoginDevice) => {
     useMessage().success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -155,7 +155,7 @@ const handleLogoutByToken = async (row: LoginDevice) => {
     useMessage().success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

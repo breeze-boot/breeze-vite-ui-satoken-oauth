@@ -154,7 +154,7 @@ const handleDelete = async (rows: MenuColumnRecords) => {
     useMessage().success(`${t('common.delete') + t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

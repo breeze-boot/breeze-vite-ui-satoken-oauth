@@ -90,7 +90,7 @@ const getInfo = async (id: number, column: string) => {
       rows.value = response.data
       refresh.value = Math.random()
     } catch (err: any) {
-      useMessage().error(err.message)
+      useMessage().error(`${t('common.fail')}` + err.message)
     }
   } else if (column === 'ccEmail') {
     try {
@@ -98,7 +98,7 @@ const getInfo = async (id: number, column: string) => {
       rows.value = response.data
       refresh.value = Math.random()
     } catch (err: any) {
-      useMessage().error(err.message)
+      useMessage().error(`${t('common.fail')}` + err.message)
     }
   }
 }

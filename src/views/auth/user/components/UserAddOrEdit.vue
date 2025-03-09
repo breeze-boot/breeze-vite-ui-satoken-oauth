@@ -181,7 +181,7 @@ const initSelectPost = async () => {
     const response: any = await selectPost()
     postOption.value = response.data
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -193,7 +193,7 @@ const initSelectRole = async () => {
     const response: any = await selectRole()
     roleOption.value = response.data
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -205,7 +205,7 @@ const initSelectDept = async () => {
     const response: any = await selectDept()
     deptOption.value = response.data
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -221,7 +221,7 @@ const getInfo = async (id: number) => {
     userDataForm.value.password = ''
     userDataForm.value.confirmPassword = ''
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 
@@ -237,7 +237,7 @@ const handleUserDataFormSubmit = async () => {
     useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   } finally {
     visible.value = false
     loading.value = false

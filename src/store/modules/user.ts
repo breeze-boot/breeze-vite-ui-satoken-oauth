@@ -159,11 +159,16 @@ const useUserStore = defineStore('User', {
      */
     async logout() {
       this.userInfo = {} as UserInfoData
+      SET_OBJ_STORAGE(StorageName.UserInfo, this.userInfo)
+      this.accessToken = ''
+      SET_STRING_STORAGE(StorageName.AccessToken, this.refreshToken)
+      this.refreshToken = ''
+      SET_STRING_STORAGE(StorageName.RefreshToken, this.refreshToken)
+      this.permissions = []
+      SET_STR_ARRAY_STORAGE(StorageName.Permissions, this.permissions)
+      this.roleCodes = []
+      SET_STR_ARRAY_STORAGE(StorageName.RoleCodes, this.roleCodes)
       this.tenantId = 0
-      this.accessToken = '' as string
-      this.refreshToken = '' as string
-      this.permissions = [] as string[]
-      this.roleCodes = [] as string[]
       CookiesStorage.remove(CookiesKey.XTenantId)
     },
     /**

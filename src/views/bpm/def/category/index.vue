@@ -178,7 +178,7 @@ const handleDelete = async (rows: CategoryRecords) => {
     useMessage().success(`${t('common.delete') + t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(err.message)
+    useMessage().error(`${t('common.fail')}` + err.message)
   }
 }
 

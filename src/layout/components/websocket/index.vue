@@ -67,41 +67,40 @@ const initWebSocket = async () => {
 /**
  * 点对点订阅 - 订阅用户消息
  * 前缀 /user
- * 前后端确定的广播消息通道/queue/userMsg
+ * 前后端确定的广播消息通道/queue/message
  */
 const subscribe = () => {
   if (!msgStore.stompClient) {
     console.log('🐛~ stomp Client is null:')
     return
   }
-  msgStore.stompClient?.subscribe('/user/queue/userMsg', notice())
+  msgStore.stompClient?.subscribe('/user/queue/message', notice('用户定向消息'))
 }
 
 /**
  * 订阅Topic
  * 前缀 /topic
- * 前后端确定的广播消息通道/msg
+ * 前后端确定的广播消息通道/message
  */
 const subscribeTopic = () => {
   if (!msgStore.stompClient) {
     console.log('stomp Client is null:')
     return
   }
-  msgStore.stompClient?.subscribe('/topic/message', notice())
+  msgStore.stompClient?.subscribe('/topic/message', notice('通知消息'))
 }
 
 /**
  * 消息提示
  */
-function notice() {
+function notice(type: string) {
   return (response: any) => {
     const responseJSON = JSON.parse(response.body)
     const msg = responseJSON.data
     msg.level = msg.level || 'info'
-    console.debug('msg => {}', msg)
     ElNotification({
       title: msg.title,
-      message: msg.content,
+      message: ` ${type} - ${msg.content}`,
       type: msg.level,
     })
   }
