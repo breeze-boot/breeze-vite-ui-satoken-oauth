@@ -1,3 +1,7 @@
+<!--
+ * @author: gaoweixuan
+ * @since: 2024-04-13
+ -->
 <template>
   <div class="chat-input">
     <el-input

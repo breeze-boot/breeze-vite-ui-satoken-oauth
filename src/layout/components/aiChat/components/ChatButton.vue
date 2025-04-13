@@ -1,3 +1,7 @@
+<!--
+ * @author: gaoweixuan
+ * @since: 2024-04-13
+ -->
 <template>
   <el-button class="chat-button" @click="toggleChat" :class="{ active: isChatVisible }">
     <svg-icon name="ai-chat" />
