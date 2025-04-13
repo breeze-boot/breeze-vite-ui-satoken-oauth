@@ -44,7 +44,7 @@
     "bpmn-js-task-resize": "^1.2.0",
     "bpmn-js-token-simulation": "^0.10.0",
     "codemirror": "^5",
-    "codemirror-editor-vue3": "^2.5.8",
+    "codemirror-editor-vue3": "^2.8.0",
     "crypto-js": "4.2.0",
     "diagram-js": "^12.2.0",
     "diagram-js-minimap": "^2.1.1",
@@ -117,5 +117,5 @@
   },
   "engines": {
     "node": ">=20.0.0"
-   }
+  }
 }

@@ -1,66 +1,31 @@
-<!--
- * @author: gaoweixuan
- * @since: 2025-03-09
--->
 <template>
-  <el-button class="chat-button" @click="toggleChat" :class="{ active: isChatVisible }">
-    <svg-icon name="ai-chat" />
-  </el-button>
+  <ChatButton :isChatVisible="isChatVisible" @toggleChat="toggleChat" />
 
   <transition name="fade">
     <div v-show="isChatVisible" ref="chatContainer" class="chat-container">
-      <div class="chat-header" @mousedown="startDrag">
-        <h3>智能客服聊天</h3>
-        <el-button icon="Close" class="close-button" @click="toggleChat"></el-button>
+      <ChatHeader v-model:isHistoryVisible="isHistoryVisible" @toggleChat="toggleChat" @startDrag="startDrag" />
+      <div class="chat-main">
+        <ChatMessages :activities="activities" />
+        <ChatSidebar v-model:isHistoryVisible="isHistoryVisible" @loadHistory="loadHistory" />
       </div>
-      <div class="chat-messages-wrapper">
-        <div class="chat-messages">
-          <el-timeline>
-            <el-timeline-item
-              v-for="(activity, index) in activities"
-              :key="index"
-              :icon="activity.icon"
-              :type="activity.type"
-              :color="activity.color"
-              :size="activity.size"
-              :hollow="activity.hollow"
-              :timestamp="activity.timestamp"
-            >
-              <div class="message-content" v-html="renderMarkdown(activity.content)"></div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </div>
-      <div class="chat-input">
-        <el-input v-model="msg" placeholder="请输入消息..." @keydown.enter="sendMsg()"></el-input>
-        <el-button @click="handleSendOrStop()" class="send-button">
-          {{ isSending ? '停止' : '发送' }}
-        </el-button>
-      </div>
+      <ChatInput v-model="msg" :is-sending="isSending" @sendMsg="sendMsg" @handleSendOrStop="handleSendOrStop" />
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import MarkdownIt from 'markdown-it'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/default.css'
+import ChatButton from './components/ChatButton.vue'
+import ChatHeader from './components/ChatHeader.vue'
+import ChatMessages from './components/ChatMessages.vue'
+import ChatSidebar from './components/ChatSidebar.vue'
+import ChatInput from './components/ChatInput.vue'
+import useUserStore from '@/store/modules/user.ts'
+import { createChat, historyChatDetail } from '@/api/ai/chat'
+import { useMessage } from '@/hooks/message'
 
-// 配置 markdown-it 并集成 highlight.js 进行代码高亮
-const md = new MarkdownIt({
-  highlight: function (str: any, lang: any) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return '<pre class="hljs"><code>' + hljs.highlight(str, { language: lang }).value + '</code></pre>'
-      } catch (__) {
-        console.error('Error highlighting code:', lang)
-        console.error('Error Msg:', __)
-      }
-    }
-    return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>'
-  },
-})
+const userStore = useUserStore()
+const { error } = useMessage()
 
 interface Activity {
   content: string
@@ -85,6 +50,11 @@ let eventSource = ref()
 const chatContainer = ref()
 const isSending = ref(false)
 const isChatVisible = ref(false)
+const isHistoryVisible = ref(false)
+const selectedConversationId = ref('')
+
+// 每次打开聊天框都会生成新的会话ID
+let conversationId = ref<string>('')
 
 // 拖动相关变量
 let isDragging = false
@@ -92,7 +62,20 @@ let offsetX = 0
 let offsetY = 0
 
 // 切换聊天框显示
-const toggleChat = () => {
+const toggleChat = async () => {
+  if (!isChatVisible.value) {
+    // 生成新的会话ID
+    const response: any = await createChat(userStore.userInfo.id)
+    conversationId.value = response.data
+    // 清空当前消息列表
+    activities.value = [
+      {
+        content: '⭐欢迎使用智能管家！请问有什么可以帮您的?',
+        timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+        color: '#0bbd87',
+      },
+    ]
+  }
   isChatVisible.value = !isChatVisible.value
   if (isChatVisible.value) {
     scrollToBottom()
@@ -101,38 +84,37 @@ const toggleChat = () => {
 
 // 滚动到聊天容器底部
 const scrollToBottom = () => {
-  const messagesDiv = chatContainer.value.querySelector('.chat-messages')
+  const messagesDiv = chatContainer.value?.querySelector('.chat-messages')
   if (messagesDiv) {
     messagesDiv.scrollTop = messagesDiv.scrollHeight
   }
 }
 
-// 渲染 Markdown 文本
-const renderMarkdown = (text: string) => {
-  return md.render(text)
-}
-
 // 发送消息
-const sendMsg = () => {
+const sendMsg = async () => {
+  if (msg.value === '') {
+    return
+  }
   if (eventSource.value) {
     eventSource.value.close()
   }
-
   activities.value.push({
     content: `你:${msg.value}`,
-    timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+    timestamp: new Date().toLocaleString(),
     size: 'large',
     type: 'primary',
   })
 
   activities.value.push({
     content: 'waiting...',
-    timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+    timestamp: new Date().toLocaleString(),
     color: '#0bbd87',
   })
 
   // sse: 服务端推送 Server-Sent Events
-  eventSource.value = new EventSource(`http://localhost:9000/ai/chat?message=${msg.value}`)
+  eventSource.value = new EventSource(
+    `${import.meta.env.VITE_APP_BASE_SERVER}/ai/v1/ragChat?message=${encodeURIComponent(msg.value)}&conversationId=${conversationId.value}&token=${userStore.accessToken}`,
+  )
   msg.value = ''
   isSending.value = true
   eventSource.value.onmessage = (event: any) => {
@@ -173,9 +155,11 @@ const handleSendOrStop = () => {
 // 开始拖动
 const startDrag = (e: MouseEvent) => {
   isDragging = true
-  const rect = chatContainer.value.getBoundingClientRect()
-  offsetX = e.clientX - rect.left
-  offsetY = e.clientY - rect.top
+  const rect = chatContainer.value?.getBoundingClientRect()
+  if (rect) {
+    offsetX = e.clientX - rect.left
+    offsetY = e.clientY - rect.top
+  }
 }
 
 // 拖动过程
@@ -183,14 +167,46 @@ const onDrag = (e: MouseEvent) => {
   if (isDragging) {
     const x = e.clientX - offsetX
     const y = e.clientY - offsetY
-    chatContainer.value.style.left = `${x}px`
-    chatContainer.value.style.top = `${y}px`
+    if (chatContainer.value) {
+      chatContainer.value.style.left = `${x}px`
+      chatContainer.value.style.top = `${y}px`
+    }
   }
 }
 
 // 停止拖动
 const stopDrag = () => {
   isDragging = false
+}
+
+// 加载历史消息
+const loadHistory = async (id: string) => {
+  if (!id) return
+  selectedConversationId.value = id
+
+  try {
+    // 调用后端历史查询接口
+    const response: any = await historyChatDetail(id)
+    const historyMessages = response.data
+
+    // 清空当前消息列表
+    activities.value = []
+
+    // 添加历史消息
+    historyMessages.forEach((msg: { content: string; timestamp: string; isUser: boolean }) => {
+      activities.value.push({
+        content: msg.content,
+        timestamp: msg.timestamp,
+        color: msg.isUser ? '#0bbd87' : '#409eff',
+      })
+    })
+
+    isHistoryVisible.value = false
+    scrollToBottom()
+  } catch (err: any) {
+    console.error('加载历史消息失败:', err)
+    error('加载历史消息失败')
+  }
 }
 
 onMounted(() => {
@@ -205,39 +221,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 聊天按钮样式 */
-.chat-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999999;
-  background-color: var(--el-color-primary);
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    background-color 0.3s ease;
-}
-
-.chat-button.active {
-  transform: rotate(180deg);
-  background-color: #dc3545;
-}
-
 /* 聊天容器样式 */
 .chat-container {
   position: fixed;
   bottom: 100px;
   right: 20px;
-  width: 500px;
-  max-height: 700px;
+  width: 800px;
+  /* 修改为固定高度 */
+  height: 600px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -246,81 +237,11 @@ onUnmounted(() => {
   flex-direction: column;
 }
 
-/* 聊天头部样式 */
-.chat-header {
+/* 聊天主区域样式 */
+.chat-main {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-  cursor: grab;
-}
-
-.chat-header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: #6c757d;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.close-button:hover {
-  color: #333;
-}
-
-/* 聊天消息区域样式 */
-.chat-messages-wrapper {
   flex: 1;
-  overflow-y: auto;
-}
-
-.chat-messages {
-  padding: 16px;
-}
-
-.message-content {
-  padding: 8px 12px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.message-content pre {
-  background-color: #f6f8fa;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
-  padding: 16px;
-  overflow-x: auto;
-}
-
-/* 输入区域样式 */
-.chat-input {
-  display: flex;
-  padding: 12px 16px;
-  border-top: 1px solid #e9ecef;
-}
-
-.chat-input el-input {
-  flex: 1;
-  margin-right: 8px;
-}
-
-.send-button {
-  background-color: #007bff;
-  color: white;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.send-button:hover {
-  background-color: #0056b3;
+  overflow: hidden;
 }
 
 /* 淡入淡出动画 */
@@ -332,5 +253,35 @@ onUnmounted(() => {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 1100px) {
+  .chat-container {
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .chat-messages-wrapper {
+    max-height: calc(100vh - 320px);
+  }
+}
+
+/* 优化滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f8f9fa;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c8c8c8;
+  border-radius: 3px;
 }
 </style>
