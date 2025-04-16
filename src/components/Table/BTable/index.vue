@@ -258,9 +258,16 @@ const tableInfo = ref({
   currentField: {} as Field,
 })
 
-const tableData = ref({
-  // 表格的值
-  rows: <any>[],
+// 表格数据的类型
+interface TableRow {
+  [key: string]: any
+}
+
+// 响应式的表格数据
+const tableData = ref<{
+  rows: TableRow[]
+}>({
+  rows: [],
 })
 
 /**

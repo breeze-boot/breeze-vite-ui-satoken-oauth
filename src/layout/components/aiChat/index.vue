@@ -117,7 +117,7 @@ const sendMsg = async () => {
 
   // sse: 服务端推送 Server-Sent Events
   eventSource.value = new EventSource(
-    `${import.meta.env.VITE_APP_BASE_SERVER}/ai/v1/ragChat?message=${encodeURIComponent(msg.value)}&conversationId=${conversationId.value}&token=${userStore.accessToken}`,
+    `${import.meta.env.VITE_APP_BASE_SERVER}/ai/v1/dashscope/qwen-max/ragChat?message=${encodeURIComponent(msg.value)}&conversationId=${conversationId.value}&token=${userStore.accessToken}`,
   )
   msg.value = ''
   isSending.value = true
