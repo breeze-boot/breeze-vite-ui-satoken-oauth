@@ -952,7 +952,7 @@ defineExpose({
           v-loading="tableLoading"
           border
           stripe
-          row-key="id"
+          :row-key="pk"
           :key="tableKey"
           :summary-method="props.summaryMethod"
           :span-method="props.spanMethod"

@@ -19,7 +19,7 @@ defineOptions({
  * 查询条件
  */
 const queryParams = reactive<any>({ tableName: '', permissionId: '' })
-const disableColumn = ['id', 'is_delete', 'tenant_id', 'delete_by']
+// const disableColumn = ['id', 'is_delete', 'tenant_id', 'delete_by']
 const { t } = useI18n()
 const visible = ref<boolean>(false)
 const direction = ref('rtl')
@@ -39,85 +39,168 @@ const tableInfo: TableInfo = {
       prop: 'columnName',
       showOverflowTooltip: true,
       label: t('column.fields.columnName'),
+      align: 'center',
+      width: 120,
     },
     {
-      prop: 'comment',
+      prop: 'dataType',
       showOverflowTooltip: true,
-      label: t('column.fields.comment'),
-    },
-    {
-      prop: 'status',
-      showOverflowTooltip: true,
-      label: t('column.fields.status'),
-      type: 'select',
-      formOptions: {
-        isDisabled: (field: any, row: any) => {
-          return disableColumn.some((item) => item === row.columnName)
-        },
-        options: [
-          {
-            label: '显示',
-            value: true,
-          },
-          {
-            label: '隐藏',
-            value: false,
-          },
-        ],
-        handleChange: async (row: any) => {
-          if (row.status) {
-            return
-          }
-        },
-      },
-    },
-    {
-      prop: 'status',
-      showOverflowTooltip: true,
-      label: t('column.fields.status'),
-      type: 'radio',
+      label: t('gen.column.fields.dataType'),
+      align: 'center',
       width: 100,
-      formOptions: {
-        isDisabled: (field: any, row: any) => {
-          return disableColumn.some((item) => item === row.columnName)
-        },
-        options: [
-          {
-            label: '显示',
-            value: true,
-          },
-          {
-            label: '隐藏',
-            value: false,
-          },
-        ],
-        handleChange: async (row: any) => {
-          if (row.status) {
-            return
-          }
-        },
-      },
     },
     {
-      prop: 'isNullAble',
+      prop: 'columnComment',
       showOverflowTooltip: true,
-      label: t('column.fields.isNullAble'),
+      label: t('gen.column.fields.columnComment'),
+      align: 'center',
+      width: 150,
     },
     {
-      prop: 'typeName',
+      prop: 'columnKey',
       showOverflowTooltip: true,
-      label: t('column.fields.typeName'),
+      label: t('gen.column.fields.columnKey'),
+      align: 'center',
+      width: 80,
     },
     {
-      prop: 'columnSize',
+      prop: 'extra',
       showOverflowTooltip: true,
-      label: t('column.fields.columnSize'),
+      label: t('gen.column.fields.extra'),
+      align: 'center',
+      width: 100,
     },
     {
-      prop: 'decimalDigits',
+      prop: 'ordinalPosition',
       showOverflowTooltip: true,
-      label: t('column.fields.decimalDigits'),
+      label: t('gen.column.fields.ordinalPosition'),
+      align: 'center',
+      width: 120,
     },
+    {
+      prop: 'isNullable',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.isNullable'),
+      align: 'center',
+      width: 150,
+    },
+    {
+      prop: 'columnDefault',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.columnDefault'),
+      align: 'center',
+      width: 150,
+    },
+    {
+      prop: 'characterMaximumLength',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.characterMaximumLength'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'numericPrecision',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.numericPrecision'),
+      align: 'center',
+      width: 100,
+    },
+    {
+      prop: 'numericScale',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.numericScale'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'datetimePrecision',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.datetimePrecision'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'characterSetName',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.characterSetName'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'collationName',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.collationName'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'columnType',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.columnType'),
+      align: 'center',
+      width: 120,
+    },
+    {
+      prop: 'privileges',
+      showOverflowTooltip: true,
+      label: t('gen.column.fields.privileges'),
+      align: 'center',
+      width: 120,
+    },
+    // {
+    //   prop: 'status',
+    //   showOverflowTooltip: true,
+    //   label: t('gen.column.fields.status'),
+    //   type: 'select',
+    //   width: 200,
+    //   formOptions: {
+    //     isDisabled: (field: any, row: any) => {
+    //       return disableColumn.some((item) => item === row.columnName)
+    //     },
+    //     options: [
+    //       {
+    //         label: '显示',
+    //         value: true,
+    //       },
+    //       {
+    //         label: '隐藏',
+    //         value: false,
+    //       },
+    //     ],
+    //     handleChange: async (row: any) => {
+    //       if (row.status) {
+    //         return
+    //       }
+    //     },
+    //   },
+    // },
+    // {
+    //   prop: 'status',
+    //   showOverflowTooltip: true,
+    //   label: t('column.fields.status'),
+    //   type: 'radio',
+    //   width: 200,
+    //   formOptions: {
+    //     isDisabled: (field: any, row: any) => {
+    //       return disableColumn.some((item) => item === row.columnName)
+    //     },
+    //     options: [
+    //       {
+    //         label: '显示',
+    //         value: true,
+    //       },
+    //       {
+    //         label: '隐藏',
+    //         value: false,
+    //       },
+    //     ],
+    //     handleChange: async (row: any) => {
+    //       if (row.status) {
+    //         return
+    //       }
+    //     },
+    //   },
+    // },
   ],
 }
 
@@ -136,7 +219,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer :title="t('column.common.columnSetting')" size="80%" v-model="visible" :direction="direction">
+  <el-drawer :title="t('gen.common.column')" size="90%" v-model="visible" :direction="direction">
     <b-table
       ref="columnListTableRef"
       :pager="false"

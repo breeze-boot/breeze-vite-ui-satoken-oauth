@@ -3,7 +3,6 @@
  * @since: 2023-11-12
  */
 import request from '@/utils/request'
-import { AxiosPromise } from 'axios'
 import { PlatformResponseData, PlatformQuery, PlatformRecord, PlatformForm } from './type'
 import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
@@ -16,8 +15,8 @@ enum API {
  *
  * @param data
  */
-export function page(data: PlatformQuery): AxiosPromise<PlatformResponseData> {
-  return request({
+export function page(data: PlatformQuery): Promise<PlatformResponseData> {
+  return request<any, PlatformResponseData>({
     url: `${API.PLATFORM_RESTFUL_URL}/page`,
     method: 'post',
     data,
@@ -29,8 +28,8 @@ export function page(data: PlatformQuery): AxiosPromise<PlatformResponseData> {
  *
  * @param id
  */
-export function getPlatform(id: number): AxiosPromise<PlatformResponseData> {
-  return request({
+export function getPlatform(id: number): Promise<PlatformResponseData> {
+  return request<any, PlatformResponseData>({
     url: `${API.PLATFORM_RESTFUL_URL}/info/${id}`,
     method: 'get',
   })
@@ -41,8 +40,8 @@ export function getPlatform(id: number): AxiosPromise<PlatformResponseData> {
  *
  * @param data
  */
-export function addPlatform(data: PlatformForm): AxiosPromise<ResponseData> {
-  return request({
+export function addPlatform(data: PlatformForm): Promise<ResponseData> {
+  return request<any, ResponseData>({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',
     data,
@@ -55,8 +54,8 @@ export function addPlatform(data: PlatformForm): AxiosPromise<ResponseData> {
  * @param id
  * @param data
  */
-export function editPlatform(id: number, data: PlatformForm): AxiosPromise<ResponseData> {
-  return request({
+export function editPlatform(id: number, data: PlatformForm): Promise<ResponseData> {
+  return request<any, ResponseData>({
     url: `${API.PLATFORM_RESTFUL_URL}/${id}`,
     method: 'put',
     data,
@@ -68,8 +67,8 @@ export function editPlatform(id: number, data: PlatformForm): AxiosPromise<Respo
  *
  * @param ids
  */
-export function deletePlatform(ids: number[]): AxiosPromise<ResponseData> {
-  return request({
+export function deletePlatform(ids: number[]): Promise<ResponseData> {
+  return request<any, ResponseData>({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'delete',
     data: ids,
@@ -81,8 +80,8 @@ export function deletePlatform(ids: number[]): AxiosPromise<ResponseData> {
  *
  * @param params
  */
-export function exportExcel(params: PlatformRecord): AxiosPromise<any> {
-  return request({
+export function exportExcel(params: PlatformRecord): Promise<any> {
+  return request<any, any>({
     url: API.PLATFORM_RESTFUL_URL,
     method: 'post',
     data: params,
@@ -95,8 +94,8 @@ export function exportExcel(params: PlatformRecord): AxiosPromise<any> {
  *  @param platformCode
  *  @param platformId
  */
-export function checkPlatformCode(platformCode: string, platformId?: number): AxiosPromise<any> {
-  return request({
+export function checkPlatformCode(platformCode: string, platformId?: number): Promise<ResponseData> {
+  return request<any, ResponseData>({
     url: `${API.PLATFORM_RESTFUL_URL}/checkPlatformCode`,
     method: 'get',
     params: {
@@ -110,8 +109,8 @@ export function checkPlatformCode(platformCode: string, platformId?: number): Ax
  * 平台下拉框
  *
  */
-export function selectPlatform(): AxiosPromise<SelectResponseData> {
-  return request({
+export function selectPlatform(): Promise<SelectResponseData> {
+  return request<any, SelectResponseData>({
     url: `${API.PLATFORM_RESTFUL_URL}/selectPlatform`,
     method: 'get',
   })

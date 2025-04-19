@@ -145,7 +145,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-drawer v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
+  <el-drawer size="80%" v-model="visible" :title="t('jLog.common.jLogViewing')" :direction="direction">
     <template #header>
       <h4>{{ t('jLog.common.jLogViewing') }}</h4>
     </template>
@@ -157,10 +157,8 @@ defineExpose({
         :mountedRefresh="mountedRefresh"
         :select="select"
         :list-api="page"
-        v-model:loading="tableLoading"
         :tableIndex="tableIndex"
         :query="queryParams"
-        :checked-rows="checkedRows"
         :dict="tableInfo.dict"
         :field-list="tableInfo.fieldList"
         :tb-header-btn="tableInfo.tbHeaderBtn"

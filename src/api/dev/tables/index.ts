@@ -3,29 +3,49 @@
  * @since: 2023-11-12
  */
 import request from '@/utils/request'
-import { AxiosPromise } from 'axios'
+import { Column, Table, TableQuery } from '@/api/dev/tables/type.ts'
 
 enum API {
-  DB_MATE_CODE_URL = '/dev/v1/dbMate',
+  MYSQL_DB_CODE_URL = '/dev/v1/db',
+  GEN_CODE_URL = '/gen/v1',
 }
 
 /**
  * 表信息
  */
-export function listTables(): AxiosPromise<any> {
-  return request({
-    url: `${API.DB_MATE_CODE_URL}/tables`,
-    method: 'get',
+export function listTables(data: TableQuery): Promise<Table> {
+  return request<any, Table>({
+    url: `${API.MYSQL_DB_CODE_URL}/tables`,
+    method: 'post',
+    data,
   })
 }
 
 /**
  * 表字段信息
  */
-export function listColumns(params: any): AxiosPromise<any> {
-  return request({
-    url: `${API.DB_MATE_CODE_URL}/columns`,
+export function listColumns(params: any): Promise<Column> {
+  return request<any, Column>({
+    url: `${API.MYSQL_DB_CODE_URL}/columns`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * 生成代码
+ */
+export function genCode(tableName: string[]): Promise<Table> {
+  return request<any, Table>({
+    url: `${API.GEN_CODE_URL}/generate-code`,
+    method: 'get',
+    params: {
+      tableName: tableName,
+      packageName: 'com.breeze.boot',
+      moduleName: 'dev',
+      author: 'gaoweixuan',
+    },
+    // 指定响应类型为二进制流
+    responseType: 'blob',
   })
 }

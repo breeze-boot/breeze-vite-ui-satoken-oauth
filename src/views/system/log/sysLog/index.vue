@@ -196,16 +196,6 @@ const handleDelete = async (rows: SysLogRecords) => {
 /**
  * 选中行，设置当前行currentRow
  *
- * @param row 选择的行数据
- */
-function handleRowClick(row: SysLogRecord) {
-  currentRows = [row]
-  console.log(currentRows)
-}
-
-/**
- * 选中行，设置当前行currentRow
- *
  * @param rows 选择的行数据
  */
 const handleSelectionChange = (rows: SysLogRecords) => {
@@ -303,7 +293,6 @@ const handleSelectionChange = (rows: SysLogRecords) => {
     :tb-header-btn="tableInfo.tbHeaderBtn"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
-    @handle-row-click="handleRowClick"
   >
     <template #col-slot="{ row }">
       <span>{{ row?.createBy }}</span>

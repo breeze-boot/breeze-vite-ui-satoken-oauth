@@ -1,24 +1,37 @@
 export default {
-  table: {
-    fields: {
-      tableName: 'table menu',
-      tableType: 'table type',
-      remarks: 'remarks',
-    },
-  },
-  column: {
+  gen: {
     common: {
-      columnSetting: 'column settings',
+      gen: 'generate code',
+      column: 'column',
     },
-    fields: {
-      columnName: 'column menu',
-      status: 'status',
-      comment: 'comment',
-      isNullAble: 'isNullable',
-      typeName: 'type menu',
-      columnSize: 'column size',
-      decimalDigits: 'decimal digits',
+    table: {
+      fields: {
+        tableName: 'table name',
+        tableType: 'table type',
+        tableComment: 'table comment',
+        createTime: 'create time',
+      },
+    },
+    column: {
+      fields: {
+        columnName: 'Column Name',
+        dataType: 'Data Type',
+        columnComment: 'Column Comment',
+        columnKey: 'Column Key',
+        extra: 'Extra',
+        ordinalPosition: 'Ordinal Position',
+        isNullable: 'Is Nullable',
+        columnDefault: 'Column Default',
+        characterMaximumLength: 'Character Maximum Length',
+        numericPrecision: 'Numeric Precision',
+        numericScale: 'Numeric Scale',
+        datetimePrecision: 'Datetime Precision',
+        characterSetName: 'Character Set Name',
+        collationName: 'Collation Name',
+        columnType: 'Column Type',
+        privileges: 'Privileges',
+        status: 'Status',
+      },
     },
   },
-  rules: {},
 }

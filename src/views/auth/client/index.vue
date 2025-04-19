@@ -241,16 +241,6 @@ const handleUpdate = (row: any) => {
 /**
  * 选中行，设置当前行currentRow
  *
- * @param row 选择的行数据
- */
-function handleRowClick(row: ClientRecord) {
-  currentRows = [row]
-  console.log(currentRows)
-}
-
-/**
- * 选中行，设置当前行currentRow
- *
  * @param rows 选择的行数据
  */
 const handleSelectionChange = (rows: ClientRecords) => {
@@ -296,7 +286,6 @@ const handleSelectionChange = (rows: ClientRecords) => {
     :tb-header-btn="tableInfo.tbHeaderBtn"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
-    @handle-row-click="handleRowClick"
   />
 
   <!-- 新增 / 修改 Dialog -->
