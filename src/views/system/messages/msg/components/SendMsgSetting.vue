@@ -78,7 +78,7 @@ const handleSendMsgMethodFormSubmit = async () => {
     }
     sendMsgRef.value.init(sendMsgMethodDataForm.value.method, currentMsgId.value)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

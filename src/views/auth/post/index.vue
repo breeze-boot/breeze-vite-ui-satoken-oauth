@@ -186,10 +186,10 @@ const handleDelete = async (rows: PostRecords) => {
   try {
     const postIds = rows.map((item: any) => item.id)
     await deletePost(postIds)
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

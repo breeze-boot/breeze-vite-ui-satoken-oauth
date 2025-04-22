@@ -191,10 +191,10 @@ const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
 const handleDelete = async (row: DeptRecord) => {
   try {
     await deleteDept(JSONBigInt.parse(row.id))
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

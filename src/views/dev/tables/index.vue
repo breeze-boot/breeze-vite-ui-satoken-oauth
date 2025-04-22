@@ -107,7 +107,7 @@ const handleGen = async () => {
     const response: any = await genCode(currentRows.map((item: Table) => item.tableName))
     saveTypeFile(response, response.type, '代码生成.zip')
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 </script>

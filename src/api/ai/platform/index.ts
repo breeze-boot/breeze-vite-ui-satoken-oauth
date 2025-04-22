@@ -4,10 +4,10 @@
  */
 import request from '@/utils/request.ts'
 import { AiPlatformResponseData, AiPlatformQuery, AiPlatformRecord, AiPlatformForm } from './type.ts'
-import { ResponseData } from '@/types/types.ts'
+import { ResponseData, SelectResponseData } from '@/types/types.ts'
 
 enum API {
-  AI_PLATFORM_RESTFUL_URL = '/auth/v1/aiPlatform',
+  AI_PLATFORM_RESTFUL_URL = '/ai/v1/aiPlatform',
 }
 
 /**
@@ -31,6 +31,16 @@ export function page(data: AiPlatformQuery): Promise<AiPlatformResponseData> {
 export function getAiPlatform(id: number): Promise<AiPlatformResponseData> {
   return request<any, AiPlatformResponseData>({
     url: `${API.AI_PLATFORM_RESTFUL_URL}/info/${id}`,
+    method: 'get',
+  })
+}
+
+/**
+ * AI平台下拉框
+ */
+export function selectAIPlatform(): Promise<SelectResponseData> {
+  return request<any, SelectResponseData>({
+    url: `${API.AI_PLATFORM_RESTFUL_URL}/selectAIPlatform`,
     method: 'get',
   })
 }

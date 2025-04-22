@@ -92,7 +92,7 @@ const handleRoleDataFormSubmit = async () => {
     })
     useMessage().success(`${t('common.success')}`)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   } finally {
     visible.value = false
     loading.value = false

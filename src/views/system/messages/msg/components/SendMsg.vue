@@ -72,7 +72,7 @@ const initDeptSelect = async () => {
     const response: any = await selectDept()
     deptOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

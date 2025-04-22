@@ -244,10 +244,10 @@ const handleDelete = async (rows: RoleRecords) => {
   try {
     const roleIds = rows.map((item: any) => item.id)
     await deleteRole(roleIds)
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

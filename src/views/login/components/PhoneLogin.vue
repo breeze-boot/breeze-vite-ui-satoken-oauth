@@ -54,7 +54,7 @@ const initSelectTenant = async () => {
     const response: any = await selectTenant()
     tenantOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 /**

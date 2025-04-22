@@ -36,6 +36,7 @@ export interface AiPlatformResponseData extends ResponseData {
  * AiPlatform列表查询类型声明
  */
 export interface AiPlatformQuery extends PageQuery {
+  platformName: string
   platformCode: string
 }
 

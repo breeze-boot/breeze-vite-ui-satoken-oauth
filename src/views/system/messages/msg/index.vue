@@ -226,10 +226,10 @@ const handleDelete = async (rows: MsgRecords) => {
   try {
     const msgTemplateIds = rows.map((item: any) => item.id)
     await deleteMsg(msgTemplateIds)
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

@@ -186,10 +186,10 @@ const handleDelete = async (rows: TenantRecords) => {
   try {
     const tenantIds = rows.map((item: any) => item.id)
     await deleteTenant(tenantIds)
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

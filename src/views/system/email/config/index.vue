@@ -239,10 +239,10 @@ const handleDelete = async (rows: EmailConfigRecords) => {
   try {
     const emailIds = rows.map((item: any) => item.id)
     await deleteEmailConfig(emailIds)
-    useMessage().success(`${t('common.delete') + t('common.success')}`)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

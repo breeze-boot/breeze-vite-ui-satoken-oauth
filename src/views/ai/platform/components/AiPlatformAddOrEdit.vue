@@ -1,13 +1,13 @@
 <!--
  * @author: gaoweixuan
- * @since: 2025-04-19
+ * @since: 2025-04-22
 -->
 
 <!-- AI平台添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { addAiPlatform, getAiPlatform, editAiPlatform } from '@/api/ai/aiPlatform'
-import type { AiPlatformForm } from '@/api/ai/aiPlatform/type.ts'
+import { addAiPlatform, getAiPlatform, editAiPlatform } from '@/api/ai/platform'
+import type { AiPlatformForm } from '@/api/ai/platform/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useMessage } from '@/hooks/message'
@@ -22,89 +22,40 @@ const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const aiPlatformDataFormRef = ref()
-const aiPlatformDataForm = ref<AiPlatformForm>({ description: '', platformCode: '', platformName: '' })
+const aiPlatformDataForm = ref<AiPlatformForm>({})
 const rules = ref({
   id: [
     {
       required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.id'),
+      message: t('common.placeholder.enter') + t('aiPlatform.fields.id'),
       trigger: 'blur',
     },
   ],
   platformCode: [
     {
       required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.platformCode'),
+      message: t('common.placeholder.enter') + t('aiPlatform.fields.platformCode'),
       trigger: 'blur',
     },
   ],
   platformName: [
     {
       required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.platformName'),
+      message: t('common.placeholder.enter') + t('aiPlatform.fields.platformName'),
       trigger: 'blur',
     },
   ],
   description: [
     {
       required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.description'),
-      trigger: 'blur',
-    },
-  ],
-  createTime: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.createTime'),
-      trigger: 'blur',
-    },
-  ],
-  createBy: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.createBy'),
-      trigger: 'blur',
-    },
-  ],
-  createName: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.createName'),
-      trigger: 'blur',
-    },
-  ],
-  updateBy: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.updateBy'),
-      trigger: 'blur',
-    },
-  ],
-  updateName: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.updateName'),
-      trigger: 'blur',
-    },
-  ],
-  updateTime: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.updateTime'),
-      trigger: 'blur',
-    },
-  ],
-  isDelete: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.isDelete'),
+      message: t('common.placeholder.enter') + t('aiPlatform.fields.description'),
       trigger: 'blur',
     },
   ],
   deleteBy: [
     {
       required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.columns.deleteBy'),
+      message: t('common.placeholder.enter') + t('aiPlatform.fields.deleteBy'),
       trigger: 'blur',
     },
   ],
@@ -178,100 +129,28 @@ defineExpose({
       @keyup.enter="handleDataFormSubmit()"
       label-width="90px"
     >
-      <el-form-item :label="t('aiPlatform.columns.id')" prop="id">
-        <el-input
-          v-model="aiPlatformDataForm.id"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.id')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.platformCode')" prop="platformCode">
+      <el-form-item :label="t('aiPlatform.fields.platformCode')" prop="platformCode">
         <el-input
           v-model="aiPlatformDataForm.platformCode"
           autocomplete="off"
           clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.platformCode')"
+          :placeholder="t('common.placeholder.enter') + t('aiPlatform.fields.platformCode')"
         />
       </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.platformName')" prop="platformName">
+      <el-form-item :label="t('aiPlatform.fields.platformName')" prop="platformName">
         <el-input
           v-model="aiPlatformDataForm.platformName"
           autocomplete="off"
           clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.platformName')"
+          :placeholder="t('common.placeholder.enter') + t('aiPlatform.fields.platformName')"
         />
       </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.description')" prop="description">
+      <el-form-item :label="t('aiPlatform.fields.description')" prop="description">
         <el-input
           v-model="aiPlatformDataForm.description"
           autocomplete="off"
           clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.description')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.createTime')" prop="createTime">
-        <el-input
-          v-model="aiPlatformDataForm.createTime"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.createTime')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.createBy')" prop="createBy">
-        <el-input
-          v-model="aiPlatformDataForm.createBy"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.createBy')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.createName')" prop="createName">
-        <el-input
-          v-model="aiPlatformDataForm.createName"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.createName')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.updateBy')" prop="updateBy">
-        <el-input
-          v-model="aiPlatformDataForm.updateBy"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.updateBy')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.updateName')" prop="updateName">
-        <el-input
-          v-model="aiPlatformDataForm.updateName"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.updateName')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.updateTime')" prop="updateTime">
-        <el-input
-          v-model="aiPlatformDataForm.updateTime"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.updateTime')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.isDelete')" prop="isDelete">
-        <el-input
-          v-model="aiPlatformDataForm.isDelete"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.isDelete')"
-        />
-      </el-form-item>
-      <el-form-item :label="t('aiPlatform.columns.deleteBy')" prop="deleteBy">
-        <el-input
-          v-model="aiPlatformDataForm.deleteBy"
-          autocomplete="off"
-          clearable
-          :placeholder="t('common.placeholder.enter') + t('aiPlatform.columns.deleteBy')"
+          :placeholder="t('common.placeholder.enter') + t('aiPlatform.fields.description')"
         />
       </el-form-item>
     </el-form>

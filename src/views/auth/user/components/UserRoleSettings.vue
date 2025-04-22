@@ -117,7 +117,7 @@ const getInfo = async (id: number) => {
     tableData.value = response.data
     refresh.value = Math.random()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -131,7 +131,7 @@ const handleUserRoleSettingsDataFormSubmit = async () => {
     await userSetRole(userSetRoleDataForm.value)
     useMessage().success(`${t('common.success')}`)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')}` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   } finally {
     visible.value = false
     loading.value = false

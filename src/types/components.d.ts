@@ -9,6 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AiChat: typeof import('./../layout/components/aiChat/index.vue')['default']
+    AiChatDocAddOrEdit: typeof import('./../views/ai/chatDoc/components/AiChatDocAddOrEdit.vue')['default']
+    AiModelAddOrEdit: typeof import('./../views/ai/model/components/AiModelAddOrEdit.vue')['default']
     AiPlatformAddOrEdit: typeof import('./../views/ai/platform/components/AiPlatformAddOrEdit.vue')['default']
     AvatarUpload: typeof import('./../components/Upload/AvatarUpload/index.vue')['default']
     BCard: typeof import('./../components/BCard/index.vue')['default']

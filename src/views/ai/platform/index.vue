@@ -1,6 +1,6 @@
 <!--
  * @author: gaoweixuan
- * @since: 2025-04-19
+ * @since: 2025-04-22
 -->
 <!-- AI平台管理 -->
 <script setup lang="ts">
@@ -8,8 +8,8 @@ import { reactive, ref } from 'vue'
 import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { deleteAiPlatform, exportExcel, page } from '@/api/ai/aiPlatform'
-import type { AiPlatformQuery, AiPlatformRecord, AiPlatformRecords } from '@/api/ai/aiPlatform/type.ts'
+import { deleteAiPlatform, exportExcel, page } from '@/api/ai/platform'
+import type { AiPlatformQuery, AiPlatformRecord, AiPlatformRecords } from '@/api/ai/platform/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import AddOrEdit from './components/AiPlatformAddOrEdit.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
@@ -27,8 +27,6 @@ const aiPlatformAddOrEditRef = ref()
 
 // 查询条件
 const queryParams = reactive<AiPlatformQuery>({
-  description: '',
-  id: 0,
   platformCode: '',
   platformName: '',
   current: 1,
@@ -51,7 +49,7 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'primary',
       label: t('common.add'),
-      permission: ['dev:aiPlatform:create'],
+      permission: ['ai:platform:create'],
       event: 'add',
       icon: 'add',
       eventHandle: () => handleAdd(),
@@ -59,7 +57,7 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'danger',
       label: t('common.delete'),
-      permission: ['dev:aiPlatform:delete'],
+      permission: ['ai:platform:delete'],
       event: 'delete',
       icon: 'delete',
       eventHandle: (rows: AiPlatformRecords) => handleDelete(rows),
@@ -71,19 +69,16 @@ const tableInfo = reactive<TableInfo>({
       prop: 'platformCode',
       showOverflowTooltip: true,
       label: t('aiPlatform.fields.platformCode'),
-      type: 'text',
     },
     {
       prop: 'platformName',
       showOverflowTooltip: true,
       label: t('aiPlatform.fields.platformName'),
-      type: 'text',
     },
     {
       prop: 'description',
       showOverflowTooltip: true,
       label: t('aiPlatform.fields.description'),
-      type: 'text',
     },
   ],
   handleBtn: {
@@ -97,7 +92,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'success',
         icon: 'edit',
         event: 'edit',
-        permission: ['dev:aiPlatform:modify'],
+        permission: ['ai:platform:modify'],
         eventHandle: (row: AiPlatformRecord) => handleUpdate(row),
       },
       // 查看
@@ -106,7 +101,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['dev:aiPlatform:info'],
+        permission: ['ai:platform:info'],
         eventHandle: (row: AiPlatformRecord) => handleInfo(row),
       },
       // 删除
@@ -115,7 +110,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'danger',
         icon: 'delete',
         event: 'delete',
-        permission: ['dev:aiPlatform:delete'],
+        permission: ['ai:platform:delete'],
         eventHandle: (row: AiPlatformRecord) => handleDelete([row] as AiPlatformRecords),
       },
     ],
@@ -178,10 +173,10 @@ const handleDelete = async (rows: AiPlatformRecords) => {
   try {
     const aiPlatformIds = rows.map((item: any) => item.id)
     await deleteAiPlatform(aiPlatformIds)
-    useMessage().success(` + $ + '{t(\'common.delete\') + t(\'common.success\')}' + `)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(` + $ + '{t(\'common.fail\')}' + ` + err.message)
+    useMessage().error(`$'{t(common.fail)}'` + err.message)
   }
 }
 
@@ -208,12 +203,20 @@ const handleSelectionChange = (row: AiPlatformRecord) => {
 <template>
   <search-container-box>
     <el-form ref="aiPlatformQueryFormRef" :model="queryParams" :inline="true">
-      <el-form-item :label="t('aiPlatform.columns.platformCode')" prop="platformCode">
+      <el-form-item :label="t('aiPlatform.fields.platformCode')" prop="platformCode">
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('aiPlatform.columns.platformCode')"
+          :placeholder="t('aiPlatform.fields.platformCode')"
           v-model="queryParams.platformCode"
+        />
+      </el-form-item>
+      <el-form-item :label="t('aiPlatform.fields.platformName')" prop="platformName">
+        <el-input
+          @keyup.enter="handleQuery"
+          style="width: 200px"
+          :placeholder="t('aiPlatform.fields.platformName')"
+          v-model="queryParams.platformName"
         />
       </el-form-item>
 
@@ -239,7 +242,7 @@ const handleSelectionChange = (row: AiPlatformRecord) => {
     :query="queryParams"
     :checked-rows="checkedRows"
     :dict="tableInfo.dict"
-    :column-list="tableInfo.fieldList"
+    :field-list="tableInfo.fieldList"
     :tb-header-btn="tableInfo.tbHeaderBtn"
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
