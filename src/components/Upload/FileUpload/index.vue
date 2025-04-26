@@ -6,10 +6,10 @@
 import { ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { UploadRawFile, UploadRequestOptions, UploadUserFile } from '@/components/Upload/types/types.ts'
-import { FileParam } from '@/api/system/file/type.ts'
 import { uploadMinioS3 } from '@/api/system/file'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
+import { FileForm } from '@/types/types.ts'
 
 defineOptions({
   name: 'FileUpload',
@@ -48,6 +48,8 @@ const props = defineProps({
   },
 })
 
+const previewImgUrl = ref('')
+const dialogVisible = ref(false)
 const currentFileList = ref<UploadUserFile[]>([])
 const $emit = defineEmits(['update:modelValue', 'upload-callback'])
 
@@ -66,19 +68,15 @@ const fileList = computed({
  */
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
   try {
-    const fileParam: FileParam = {
+    const fileForm: FileForm = {
       bizType: props.bizType,
-    } as FileParam
-    const response: any = await uploadMinioS3(options.file, fileParam)
-    const { path, objectName, fileFormat, fileId, name, url } = response.data
+    } as FileForm
+    const response: any = await uploadMinioS3(options.file, fileForm)
+    const { name, url } = response.data
     currentFileList.value.splice(
       currentFileList.value.findIndex((file) => file.uid == (options.file as any).uid),
       1,
       {
-        path: path,
-        fileId: fileId,
-        objectName: objectName,
-        fileFormat: fileFormat,
         name: name,
         url: url,
       } as UploadUserFile,
@@ -88,9 +86,11 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
     useMessage().error(err.message)
   }
 }
+const baseUrl = import.meta.env.VITE_APP_MINIO_API_URL //文件地址
 
 const handlePreview = (uploadFile: UploadUserFile) => {
-  console.log(uploadFile)
+  previewImgUrl.value = baseUrl + uploadFile.url!
+  dialogVisible.value = true
 }
 
 const handleExceed = () => {
@@ -153,4 +153,8 @@ const beforeFileUpload = (rawFile: UploadRawFile) => {
       <div class="el-upload__tip">{{ t('common.rules.fileSize') }} {{ props.fileSize }} M.</div>
     </template>
   </el-upload>
+
+  <el-dialog v-model="dialogVisible">
+    <img :src="previewImgUrl" alt="Preview Image" width="100%" />
+  </el-dialog>
 </template>

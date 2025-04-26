@@ -9,7 +9,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AiChat: typeof import('./../layout/components/aiChat/index.vue')['default']
+    AiChatDocAdd: typeof import('./../views/ai/chatDoc/components/AiChatDocAdd.vue')['default']
     AiChatDocAddOrEdit: typeof import('./../views/ai/chatDoc/components/AiChatDocAddOrEdit.vue')['default']
+    AiChatKnowledgeAdd: typeof import('./../views/ai/chatKnowledge/components/AiChatKnowledgeAdd.vue')['default']
     AiModelAddOrEdit: typeof import('./../views/ai/model/components/AiModelAddOrEdit.vue')['default']
     AiPlatformAddOrEdit: typeof import('./../views/ai/platform/components/AiPlatformAddOrEdit.vue')['default']
     AvatarUpload: typeof import('./../components/Upload/AvatarUpload/index.vue')['default']
@@ -54,8 +56,6 @@ declare module 'vue' {
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
-    ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
-    ElDescriptionsItem: typeof import('element-plus/es')['ElDescriptionsItem']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
@@ -95,7 +95,6 @@ declare module 'vue' {
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     ElWatermark: typeof import('element-plus/es')['ElWatermark']
     EmailConfigAddOrEdit: typeof import('./../views/system/email/config/components/EmailConfigAddOrEdit.vue')['default']

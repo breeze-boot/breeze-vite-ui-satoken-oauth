@@ -20,7 +20,7 @@ export const isHasPermission = (app: any) => {
 }
 
 const filterOptions = async (el: any, options: any) => {
-  if (!options.value) return
+  if (!options.value || options.value.length === 0) return
   const permissions: string[] = await userStore.getPermissions()
   let remove: boolean = true
   for (const item of options.value) {

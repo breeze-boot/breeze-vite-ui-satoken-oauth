@@ -48,15 +48,6 @@ export interface FileQuery extends PageQuery {
 }
 
 /**
- * 文件上传参数类型声明
- */
-export interface FileParam {
-  bizId?: string | number
-  bizType: string
-  title: string
-}
-
-/**
  * 文件上传响应类型声明
  */
 export interface FileUploadResponseData extends ResponseData {

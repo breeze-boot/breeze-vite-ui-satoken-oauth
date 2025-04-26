@@ -7,18 +7,23 @@
     :font="theme.themeModel === THEME.DARK ? theme.lightFont : theme.darkFont"
     :content="theme.watermarkContent"
   >
-    <div class="login-container" @keyup.enter="handleCheck">
-      <canvas id="particles-canvas" class="particles-bg"></canvas>
-      <el-card class="login-form-card">
-        <div class="login-header">
-          <h1>{{ title }}</h1>
+    <div class="login-container flex justify-center items-center w-full h-screen relative" @keyup.enter="handleCheck">
+      <canvas id="particles-canvas" class="particles-bg absolute top-0 left-0 z-0 pointer-events-none"></canvas>
+      <el-card
+        class="login-form-card border-none min-w-[300px] max-w-[500px] p-8 bg-white shadow-md rounded-lg animate-fadeIn z-1"
+      >
+        <div class="login-header flex justify-center items-center mb-8">
+          <h1 class="m-0 text-2xl font-semibold text-center text-gray-800">{{ title }}</h1>
         </div>
         <!-- 自定义按钮切换 -->
-        <div class="tab-buttons">
+        <div class="tab-buttons flex justify-center mb-5">
           <div
             v-for="(tab, index) in tabs"
             :key="index"
-            :class="['tab-button', { active: activeTab === tab.name }]"
+            :class="[
+              'tab-button m-2 p-2.5 border-none text-center bg-gray-200 rounded-full cursor-pointer transition-all duration-300 text-sm font-medium w-42.5 shadow-sm relative',
+              { 'bg-blue-500 text-white shadow-md': activeTab === tab.name },
+            ]"
             @click="handleSwitchTab(tab)"
           >
             {{ tab.label }}
@@ -39,19 +44,19 @@
             @keyup.enter="handleCheck"
             :loading="loading"
             size="large"
-            class="login-btn"
+            class="login-btn w-full bg-blue-500 border-blue-500 text-white transition-all duration-300 relative rounded-md overflow-hidden shadow-lg mt-8 py-4 text-xl cursor-pointer"
             type="primary"
             @click="handleCheck"
           >
             登录
           </el-button>
         </el-form-item>
-        <div class="third-party-login">
-          <span>第三方登录</span>
-          <div class="social-btn-list">
+        <div class="third-party-login mt-5 text-center">
+          <span class="block mb-2.5 text-gray-600">第三方登录</span>
+          <div class="social-btn-list my-2.5 flex justify-center">
             <svg-button
               @svg-btn-click="handleWeiboLogin"
-              :style="{ width: '30px', height: '30px' }"
+              class="w-7.5 h-7.5"
               width="1.2rem"
               height="1.2rem"
               icon="weibo"
@@ -59,7 +64,7 @@
             />
             <svg-button
               @svg-btn-click="handleDingdingLogin"
-              :style="{ width: '30px', height: '30px' }"
+              class="w-7.5 h-7.5"
               width="1.2rem"
               height="1.2rem"
               icon="ding"
@@ -321,228 +326,19 @@ const handleDingdingLogin = () => {
 </script>
 
 <style lang="scss" scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  position: relative;
-
-  .qr-code-icon {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #00a8e8;
-      border-color: #00a8e8;
-
-      img {
-        filter: brightness(0) invert(1);
-      }
-    }
-
-    img {
-      width: 16px;
-      height: 16px;
-    }
+/* 保留一些无法用 UnoCSS 替代的样式，如动画 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
 
-  .login-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-
-  .login-form-card {
-    border: none;
-    min-width: 300px;
-    max-width: 500px;
-    padding: 2rem;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    animation: fadeIn 1s ease;
-    z-index: 1;
-
-    h1 {
-      margin-bottom: 0;
-      font-size: 2rem;
-      font-weight: 600;
-      text-align: center;
-      color: #333;
-    }
-
-    .login-btn {
-      width: 100%;
-      background-color: #00a8e8;
-      border-color: #00a8e8;
-      color: white;
-      transition: all 0.3s ease;
-      position: relative;
-      border-radius: 5px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      margin-top: 2rem;
-      padding: 1rem 0;
-      font-size: 1.2rem;
-      cursor: pointer;
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.1);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s ease;
-        z-index: -1;
-      }
-
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      }
-
-      &:hover:before {
-        transform: scaleX(1);
-      }
-
-      &.loading::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 20px;
-        height: 20px;
-        margin-top: -10px;
-        margin-left: -10px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-top-color: white;
-        border-radius: 50%;
-        animation: spin 1s ease-in-out infinite;
-      }
-    }
-  }
-
-  .particles-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
-    pointer-events: none; // 让鼠标事件穿透
-  }
-
-  :deep(.el-input-group__append, .el-input-group__prepend) {
-    width: 100px;
-  }
-
-  :deep(.el-tabs__item) {
-    color: #666;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #00a8e8;
-    }
-  }
-
-  :deep(.el-tabs__item.is-active) {
-    color: #00a8e8;
-    border-bottom-color: #00a8e8;
-  }
-
-  :deep(.el-tabs__item.is-top) {
-    width: 120px;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  .third-party-login {
-    margin-top: 1.25rem;
-    text-align: center;
-
-    span {
-      display: block;
-      margin-bottom: 0.625rem;
-      color: #666;
-    }
-
-    .social-btn-list {
-      margin: 0.625rem 0;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  // 自定义的 tab 按钮样式
-  .tab-buttons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.25rem;
-  }
-
-  .tab-button {
-    margin: 0 0.5rem;
-    padding: 0.625rem 1.25rem;
-    border: none;
-    text-align: center;
-    background-color: #eeeeee;
-    border-radius: 1.25rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-    font-weight: 500;
-    width: 10.625rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-
-    &.active {
-      background-color: #00a8e8;
-      color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    &:before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #00a8e8;
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      background-color: #00a8e8;
-      color: white;
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-    }
+  to {
+    opacity: 1;
   }
 }
 </style>

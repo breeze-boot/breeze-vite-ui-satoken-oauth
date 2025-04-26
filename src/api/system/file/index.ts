@@ -4,8 +4,8 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { FileResponseData, FileQuery, FileRecord, FileUploadResponseData, FileParam } from './type'
-import { ResponseData } from '@/types/types.ts'
+import { FileResponseData, FileQuery, FileRecord, FileUploadResponseData } from './type'
+import { FileForm, ResponseData } from '@/types/types.ts'
 
 enum API {
   FILE_RESTFUL_URL = '/sys/v1/file',
@@ -68,20 +68,35 @@ export function exportExcel(params: FileQuery): AxiosPromise<any> {
  * 上传文件
  *
  * @param file
- * @param fileParam
+ * @param fileForm
  */
-export function uploadMinioS3(file: File, fileParam: FileParam): AxiosPromise<FileUploadResponseData> {
+export function uploadMinioS3(file: File, fileForm: FileForm): AxiosPromise<FileUploadResponseData> {
   const formData: FormData = new FormData()
   formData.append('file', file)
-  formData.append('bizType', fileParam.bizType)
-  fileParam.bizId ? formData.append('bizId', fileParam.bizId as string) : () => {}
 
   return request({
-    url: `${API.FILE_RESTFUL_URL}/uploadMinioS3`,
+    url: `${API.FILE_RESTFUL_URL}/${fileForm.bizType}/uploadMinioS3`,
     method: 'post',
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  })
+}
+
+/**
+ * 下载系统文件
+ *
+ * @param fileId
+ */
+export function download(fileId: number): AxiosPromise<any> {
+  return request({
+    url: `${API.FILE_RESTFUL_URL}/download`,
+    method: 'get',
+    params: {
+      fileId,
+    },
+    // 指定响应类型为二进制流
+    responseType: 'blob',
   })
 }

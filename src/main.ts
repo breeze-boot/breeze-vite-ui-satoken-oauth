@@ -14,6 +14,7 @@ import 'virtual:svg-icons-register'
 import { isHasPermission } from '@/directive/has-permission.ts'
 import { rightMenu } from '@/directive/right-menu.ts'
 import i18n from '@/i18n/index'
+import 'virtual:uno.css'
 
 const app = createApp(App)
 

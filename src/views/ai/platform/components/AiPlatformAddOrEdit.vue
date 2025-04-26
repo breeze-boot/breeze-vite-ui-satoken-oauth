@@ -22,15 +22,8 @@ const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const aiPlatformDataFormRef = ref()
-const aiPlatformDataForm = ref<AiPlatformForm>({})
+const aiPlatformDataForm = ref<AiPlatformForm>({ description: '', platformCode: '', platformName: '' })
 const rules = ref({
-  id: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.fields.id'),
-      trigger: 'blur',
-    },
-  ],
   platformCode: [
     {
       required: true,
@@ -42,20 +35,6 @@ const rules = ref({
     {
       required: true,
       message: t('common.placeholder.enter') + t('aiPlatform.fields.platformName'),
-      trigger: 'blur',
-    },
-  ],
-  description: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.fields.description'),
-      trigger: 'blur',
-    },
-  ],
-  deleteBy: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiPlatform.fields.deleteBy'),
       trigger: 'blur',
     },
   ],

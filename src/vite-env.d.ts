@@ -6,26 +6,15 @@ declare module '*.vue' {
 }
 
 interface ImportMetaEnv {
-  VITE_APP_TITLE: string
-  VITE_APP_BASE_SERVER: string
-  VITE_APP_BASE_PORT: string
+  readonly VITE_APP_TITLE: string
+  readonly VITE_APP_BASE_SERVER: string
+  readonly VITE_APP_BASE_PORT: string
   /** API 基础路径 */
-  VITE_APP_BASE_API: string
-  VITE_APP_WS_API: string
+  readonly VITE_APP_BASE_API: string
+  readonly VITE_APP_WS_API: string
+  readonly VITE_APP_MINIO_API_URL: string
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
-
-declare module 'element-plus'
-declare module 'element-plus/dist/locale/zh-cn.mjs'
-declare module 'element-plus/dist/locale/en.mjs'
-declare module 'vue-i18n'
-declare module 'crypto-js'
-declare module 'json-bigint'
-declare module 'bpmn-js/lib/Viewer'
-declare module 'bpmn-js/lib/Modeler'
-declare module 'bpmn-js/lib/Modeler'
-declare module 'markdown-it'
-declare module 'highlight.js'

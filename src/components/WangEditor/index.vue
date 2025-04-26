@@ -2,7 +2,6 @@
 import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
 import useSettingStore from '@/store/modules/setting.ts'
 import { uploadMinioS3 } from '@/api/system/file'
-import { FileParam } from '@/api/system/file/type.ts'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IDomEditor } from '@wangeditor/editor'
 import { i18nChangeLanguage } from '@wangeditor/editor'
@@ -50,7 +49,7 @@ const editorConfig = ref({
     uploadImage: {
       // 自定义图片上传
       async customUpload(file: any, insertFn: any) {
-        const fileParam: FileParam = {
+        const fileParam: FileForm = {
           bizType: props.bizType,
           title: '富文本',
         }

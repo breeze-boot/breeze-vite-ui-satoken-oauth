@@ -286,3 +286,11 @@ export interface ColumnCacheData {
   columns: string[]
   visible?: boolean
 }
+
+/**
+ * 文件提交表单类型声明
+ */
+export interface FileForm {
+  name: string
+  url: string
+}

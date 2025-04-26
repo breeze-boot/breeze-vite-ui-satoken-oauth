@@ -8,25 +8,29 @@ import { reactive, ref } from 'vue'
 import { ElForm } from 'element-plus'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
-import { deleteAiChatDoc, exportExcel, page } from '@/api/ai/chatDoc'
-import type { AiChatDocQuery, AiChatDocRecord, AiChatDocRecords } from '@/api/ai/chatDoc/type.ts'
+import { deleteAiChatKnowledge, exportExcel, page } from '@/api/ai/chatKnowledge'
+import type {
+  AiChatKnowledgeQuery,
+  AiChatKnowledgeRecord,
+  AiChatKnowledgeRecords,
+} from '@/api/ai/chatKnowledge/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
-import AddOrEdit from './components/AiChatDocAddOrEdit.vue'
+import Add from './components/AiChatKnowledgeAdd.vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
-  name: 'AiChatDoc',
+  name: 'AiChatKnowledge',
   inheritAttrs: false,
 })
 
 const { t } = useI18n()
-const aiChatDocQueryFormRef = ref(ElForm)
-const aiChatDocAddOrEditRef = ref()
+const aiChatKnowledgeQueryFormRef = ref(ElForm)
+const aiChatKnowledgeAddRef = ref()
 
 // 查询条件
-const queryParams = reactive<AiChatDocQuery>({
+const queryParams = reactive<AiChatKnowledgeQuery>({
   docName: '',
   current: 1,
   size: 10,
@@ -34,7 +38,7 @@ const queryParams = reactive<AiChatDocQuery>({
 })
 
 let checkedRows = reactive<string[]>([])
-let currentRow = reactive<AiChatDocRecord>({ docId: '', docName: '', docUrl: '', id: 0, refDocId: '' })
+let currentRow = reactive<AiChatKnowledgeRecord>({ docId: '', docName: '', docUrl: '', id: 0, refDocId: '' })
 const tableLoading = ref<boolean>(false)
 // 刷新标识
 const refresh = ref<number>(1)
@@ -48,7 +52,7 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'primary',
       label: t('common.add'),
-      permission: ['ai:chatDoc:create'],
+      permission: ['ai:chatKnowledge:create'],
       event: 'add',
       icon: 'add',
       eventHandle: () => handleAdd(),
@@ -56,10 +60,10 @@ const tableInfo = reactive<TableInfo>({
     {
       type: 'danger',
       label: t('common.delete'),
-      permission: ['ai:chatDoc:delete'],
+      permission: ['ai:chatKnowledge:delete'],
       event: 'delete',
       icon: 'delete',
-      eventHandle: (rows: AiChatDocRecords) => handleDelete(rows),
+      eventHandle: (rows: AiChatKnowledgeRecords) => handleDelete(rows),
     },
   ],
   // 表格字段配置
@@ -67,22 +71,22 @@ const tableInfo = reactive<TableInfo>({
     {
       prop: 'docId',
       showOverflowTooltip: true,
-      label: t('aiChatDoc.fields.docId'),
+      label: t('aiChatKnowledge.fields.docId'),
     },
     {
       prop: 'docName',
       showOverflowTooltip: true,
-      label: t('aiChatDoc.fields.docName'),
+      label: t('aiChatKnowledge.fields.docName'),
     },
     {
       prop: 'docUrl',
       showOverflowTooltip: true,
-      label: t('aiChatDoc.fields.docUrl'),
+      label: t('aiChatKnowledge.fields.docUrl'),
     },
     {
       prop: 'refDocId',
       showOverflowTooltip: true,
-      label: t('aiChatDoc.fields.refDocId'),
+      label: t('aiChatKnowledge.fields.refDocId'),
     },
   ],
   handleBtn: {
@@ -96,8 +100,8 @@ const tableInfo = reactive<TableInfo>({
         type: 'success',
         icon: 'edit',
         event: 'edit',
-        permission: ['ai:chatDoc:modify'],
-        eventHandle: (row: AiChatDocRecord) => handleUpdate(row),
+        permission: ['ai:chatKnowledge:modify'],
+        eventHandle: (row: AiChatKnowledgeRecord) => handleUpdate(row),
       },
       // 查看
       {
@@ -105,8 +109,8 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['ai:chatDoc:info'],
-        eventHandle: (row: AiChatDocRecord) => handleInfo(row),
+        permission: ['ai:chatKnowledge:info'],
+        eventHandle: (row: AiChatKnowledgeRecord) => handleInfo(row),
       },
       // 删除
       {
@@ -114,8 +118,8 @@ const tableInfo = reactive<TableInfo>({
         type: 'danger',
         icon: 'delete',
         event: 'delete',
-        permission: ['ai:chatDoc:delete'],
-        eventHandle: (row: AiChatDocRecord) => handleDelete([row] as AiChatDocRecords),
+        permission: ['ai:chatKnowledge:delete'],
+        eventHandle: (row: AiChatKnowledgeRecord) => handleDelete([row] as AiChatKnowledgeRecords),
       },
     ],
   },
@@ -132,7 +136,7 @@ const reloadList = () => {
  * 重置查询
  */
 const resetQuery = () => {
-  aiChatDocQueryFormRef.value.resetFields()
+  aiChatKnowledgeQueryFormRef.value.resetFields()
   handleQuery()
 }
 
@@ -148,8 +152,8 @@ const handleQuery = () => {
  *
  * @param id 主键
  */
-const AddOrEditHandle = (id?: number) => {
-  aiChatDocAddOrEditRef.value.init(id)
+const AddHandle = (id?: number) => {
+  aiChatKnowledgeAddRef.value.init(id)
 }
 
 /**
@@ -165,7 +169,7 @@ const handleInfo = (row: any) => {
  * 添加
  */
 const handleAdd = () => {
-  AddOrEditHandle()
+  AddHandle()
 }
 
 /**
@@ -173,10 +177,10 @@ const handleAdd = () => {
  *
  * @param rows 行数据
  */
-const handleDelete = async (rows: AiChatDocRecords) => {
+const handleDelete = async (rows: AiChatKnowledgeRecords) => {
   try {
-    const aiChatDocIds = rows.map((item: any) => item.id)
-    await deleteAiChatDoc(aiChatDocIds)
+    const aiChatKnowledgeIds = rows.map((item: any) => item.id)
+    await deleteAiChatKnowledge(aiChatKnowledgeIds)
     useMessage().success(` + $ + '{t(\'common.delete\') + t(\'common.success\')}' + `)
     reloadList()
   } catch (err: any) {
@@ -189,8 +193,8 @@ const handleDelete = async (rows: AiChatDocRecords) => {
  *
  * @param row 修改参数
  */
-const handleUpdate = (row: AiChatDocRecord) => {
-  AddOrEditHandle(row.id)
+const handleUpdate = (row: AiChatKnowledgeRecord) => {
+  AddHandle(row.id)
 }
 
 /**
@@ -198,7 +202,7 @@ const handleUpdate = (row: AiChatDocRecord) => {
  *
  * @param row 选择的行数据
  */
-const handleSelectionChange = (row: AiChatDocRecord) => {
+const handleSelectionChange = (row: AiChatKnowledgeRecord) => {
   currentRow = row
   console.log(currentRow)
 }
@@ -206,12 +210,12 @@ const handleSelectionChange = (row: AiChatDocRecord) => {
 
 <template>
   <search-container-box>
-    <el-form ref="aiChatDocQueryFormRef" :model="queryParams" :inline="true">
-      <el-form-item :label="t('aiChatDoc.fields.docName')" prop="docName">
+    <el-form ref="aiChatKnowledgeQueryFormRef" :model="queryParams" :inline="true">
+      <el-form-item :label="t('aiChatKnowledge.fields.docName')" prop="docName">
         <el-input
           @keyup.enter="handleQuery"
           style="width: 200px"
-          :placeholder="t('aiChatDoc.fields.docName')"
+          :placeholder="t('aiChatKnowledge.fields.docName')"
           v-model="queryParams.docName"
         />
       </el-form-item>
@@ -228,7 +232,7 @@ const handleSelectionChange = (row: AiChatDocRecord) => {
   </search-container-box>
 
   <b-table
-    ref="aiChatDocTableRef"
+    ref="aiChatKnowledgeTableRef"
     :refresh="refresh"
     :select="select"
     :list-api="page"
@@ -245,5 +249,5 @@ const handleSelectionChange = (row: AiChatDocRecord) => {
   />
 
   <!-- 新增 / 修改 Dialog -->
-  <add-or-edit ref="aiChatDocAddOrEditRef" @reload-data-list="reloadList" />
+  <add ref="aiChatKnowledgeAddRef" @reload-data-list="reloadList" />
 </template>

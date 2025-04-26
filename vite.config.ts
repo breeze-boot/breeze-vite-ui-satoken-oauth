@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 import path from 'path'
+import UnoCSS from 'unocss/vite'
 import viteCompression from 'vite-plugin-compression'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -22,6 +23,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
     base: './',
     plugins: [
       vue(),
+      UnoCSS(),
       AutoImport({
         imports: ['vue', '@vueuse/core', 'pinia', 'vue-router', 'vue-i18n'],
         resolvers: [ElementPlusResolver()],

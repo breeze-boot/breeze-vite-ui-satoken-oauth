@@ -2,11 +2,11 @@
 import { computed, ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import { UploadRawFile, UploadRequestOptions, UploadUserFile } from '@/components/Upload/types/types.ts'
-import { FileParam } from '@/api/system/file/type.ts'
 import { uploadMinioS3 } from '@/api/system/file'
 import { useI18n } from 'vue-i18n'
 import SvgButton from '@/components/SvgButton/index.vue'
 import { useMessage } from '@/hooks/message'
+import { FileForm } from '@/types/types.ts'
 
 const { t } = useI18n()
 const props = defineProps({
@@ -58,19 +58,15 @@ const fileList = computed({
  */
 async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
   try {
-    const fileParam: FileParam = {
+    const fileForm: FileForm = {
       bizType: props.bizType,
-    } as FileParam
-    const response: any = await uploadMinioS3(options.file, fileParam)
-    const { path, objectName, fileFormat, fileId, name, url } = response.data
+    } as FileForm
+    const response: any = await uploadMinioS3(options.file, fileForm)
+    const { name, url } = response.data
     currentFileList.value.splice(
       currentFileList.value.findIndex((file) => file.uid == (options.file as any).uid),
       1,
       {
-        path: path,
-        fileId: fileId,
-        objectName: objectName,
-        fileFormat: fileFormat,
         name: name,
         url: url,
       } as UploadUserFile,

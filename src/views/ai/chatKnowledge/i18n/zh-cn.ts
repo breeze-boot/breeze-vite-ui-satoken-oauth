@@ -1,5 +1,5 @@
 export default {
-  aiChatDoc: {
+  aiChatKnowledge: {
     fields: {
       id: 'id',
       docId: 'docId',

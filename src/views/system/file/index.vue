@@ -4,7 +4,7 @@
 -->
 <!-- 文件管理 -->
 <script setup lang="ts">
-import { page, exportExcel, deleteFile } from '@/api/system/file'
+import { page, exportExcel, deleteFile, download } from '@/api/system/file'
 import { reactive, ref } from 'vue'
 import AddOrEdit from './components/FileAddOrEdit.vue'
 import BTable from '@/components/Table/BTable/index.vue'
@@ -15,7 +15,6 @@ import { FileRecord, FileQuery } from '@/api/system/file/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
-import { download } from '@/api/common/comon.ts'
 import JSONBigInt from 'json-bigint'
 import { saveFile } from '@/utils/download.ts'
 import { useMessage } from '@/hooks/message'
@@ -151,7 +150,7 @@ const tableInfo = reactive<TableInfo>({
         type: 'warning',
         icon: 'view',
         event: 'view',
-        permission: ['sys:file:info'],
+        permission: [],
         eventHandle: (row: FileRecord) => handleInfo(row),
       },
       // 下载
@@ -213,7 +212,8 @@ const AddOrEditHandle = (id?: number) => {
  * @param row 参数
  */
 const handleInfo = (row: FileRecord) => {
-  alert(row + '查询')
+  const { info } = useMessage()
+  info(row.name)
 }
 
 /**
@@ -223,7 +223,7 @@ const handleInfo = (row: FileRecord) => {
  */
 const handleDownload = (row: FileRecord) => {
   download(JSONBigInt.parse(row.id || 0)).then((response: any) => {
-    saveFile(response.data, row.name)
+    saveFile(response, row.name)
   })
 }
 
@@ -244,6 +244,7 @@ const handleDelete = async (rows: FileRecords) => {
     const fileIds = rows.map((item: any) => item.id)
     await deleteFile(fileIds)
     useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    reloadList()
   } catch (err: any) {
     useMessage().error(`${t('common.fail')} ${err.message}`)
   }

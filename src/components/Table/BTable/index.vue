@@ -901,7 +901,7 @@ defineExpose({
     <template #header>
       <div class="tools">
         <div v-if="initTbHeaderBtn" class="table-btn-group">
-          <div v-for="(item, index) in initTbHeaderBtn" :key="index" style="margin: 0 0.5rem">
+          <template v-for="(item, index) in initTbHeaderBtn" :key="index" style="margin: 0 0.5rem">
             <svg-button
               :key="index"
               :type="item.type"
@@ -912,10 +912,10 @@ defineExpose({
               v-has="item.permission"
               @svg-btn-click="handleHeadBtnClick(item, currentRows, singleSelectValue)"
             />
-          </div>
+          </template>
           <slot name="tbHeaderBtn" />
         </div>
-        <div class="tool-btn">
+        <div>
           <svg-button
             ref="tableSettingButtonRef"
             v-click-outside="tableSettingsOnClickOutside"
@@ -1139,7 +1139,7 @@ defineExpose({
   display: flex;
   align-content: center;
   justify-content: space-between;
-  width: 100%;
+  width: 100% !important;
   height: auto;
 
   .table-btn-group {
@@ -1149,6 +1149,11 @@ defineExpose({
     align-content: center;
     padding: 0 5px;
   }
+}
+
+.table {
+  width: 100% !important;
+  height: auto;
 }
 
 .table-pagination {

@@ -41,13 +41,6 @@ const rules = ref({
       trigger: 'blur',
     },
   ],
-  description: [
-    {
-      required: true,
-      message: t('common.placeholder.enter') + t('aiModel.fields.description'),
-      trigger: 'blur',
-    },
-  ],
 })
 
 /**
