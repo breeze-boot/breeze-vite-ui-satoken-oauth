@@ -552,7 +552,7 @@ function _extends() {
  */
 
 function assign(target) {
-  for (var _len = arguments.length, others = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+  for (let _len = arguments.length, others = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     others[_key - 1] = arguments[_key]
   }
 
@@ -674,7 +674,7 @@ function omit(target, properties) {
 
 function merge(target) {
   for (
-    var _len2 = arguments.length, sources = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1;
+    let _len2 = arguments.length, sources = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1;
     _key2 < _len2;
     _key2++
   ) {

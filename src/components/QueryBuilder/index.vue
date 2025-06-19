@@ -33,8 +33,8 @@
     </div>
     <!-- 提交查询按钮 -->
     <div style="width: 200px">
-      <el-button type="info" @click="resetQuery">清除条件</el-button>
-      <el-button type="primary" @click="submitQuery">提交查询</el-button>
+      <el-button size="small" type="info" @click="resetQuery">清除条件</el-button>
+      <el-button size="small" type="primary" @click="submitQuery">提交查询</el-button>
     </div>
   </div>
 </template>

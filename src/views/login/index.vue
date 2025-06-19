@@ -218,7 +218,7 @@ const handleLoginResponse = async (loginFormData: any, data: any, func: any) => 
       message: t('login.common.loginSuccess'),
       title: `Hi, ${loadGreetings()}`,
     })
-    await columnStore.getRolesMenuColumns()
+    await columnStore.fetchRolesMenuColumns()
     await $router.push({
       path: redirect || '/',
     })

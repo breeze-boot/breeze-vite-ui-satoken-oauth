@@ -13,7 +13,7 @@ import { Client } from '@stomp/stompjs'
  */
 export interface UserState {
   userInfo: UserInfoData
-  tenantId: number
+  tenantId: number | null
   accessToken: string
   refreshToken: string
   roleCodes: string[]

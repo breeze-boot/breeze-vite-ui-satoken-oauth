@@ -900,8 +900,8 @@ defineExpose({
   <el-card shadow="never" style="margin: 10px 0">
     <template #header>
       <div class="tools">
-        <div v-if="initTbHeaderBtn" class="table-btn-group">
-          <template v-for="(item, index) in initTbHeaderBtn" :key="index" style="margin: 0 0.5rem">
+        <div v-if="initTbHeaderBtn" class="table-btn-group" style="margin: 0 0.5rem">
+          <template v-for="(item, index) in initTbHeaderBtn" :key="index">
             <svg-button
               :key="index"
               :type="item.type"
@@ -1152,8 +1152,7 @@ defineExpose({
 }
 
 .table {
-  width: 100% !important;
-  height: auto;
+  display: inherit;
 }
 
 .table-pagination {

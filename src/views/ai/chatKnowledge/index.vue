@@ -181,10 +181,10 @@ const handleDelete = async (rows: AiChatKnowledgeRecords) => {
   try {
     const aiChatKnowledgeIds = rows.map((item: any) => item.id)
     await deleteAiChatKnowledge(aiChatKnowledgeIds)
-    useMessage().success(` + $ + '{t(\'common.delete\') + t(\'common.success\')}' + `)
+    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(` + $ + '{t(\'common.fail\')}' + ` + err.message)
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

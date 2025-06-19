@@ -31,7 +31,7 @@ const currentFileList = ref<UploadUserFile[]>([])
 const fileList = ref<UploadUserFile[]>([])
 const fileLimit = 10
 const fileSize = 10
-const fileType: any[] = ['application/pdf', 'application/md']
+const fileType: string[] = ['application/pdf', 'application/md']
 
 /**
  * @param options
@@ -86,7 +86,6 @@ const beforeRemove = (uploadFile: UploadUserFile) => {
  * @param rawFile
  */
 const beforeFileUpload = (rawFile: UploadRawFile) => {
-  debugger
   if (!fileType.includes(rawFile.type)) {
     ElMessage.error(t('common.rules.fileFormat'), fileType?.join(','))
     return false

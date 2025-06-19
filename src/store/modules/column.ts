@@ -3,51 +3,63 @@
  * @since: 2024-07-18
  */
 
-import { defineStore } from 'pinia'
-import { ColumnState } from '@/store/modules/types/types.ts'
-import { getRolesMenuColumns, saveMenuColumn } from '@/api/auth/permission/menuColumn'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
+import { defineStore, StoreDefinition } from 'pinia'
+import type { ColumnState } from '@/store/modules/types/types.ts'
 import type { ColumnCacheData } from '@/types/types'
 import { GET_OBJ_ARRAY_STORAGE, SET_OBJ_ARRAY_STORAGE } from '@/utils/storage.ts'
+import { getRolesMenuColumns, saveMenuColumn } from '@/api/auth/permission/menuColumn'
 import { StorageName } from '@/types/types'
-import { useMessage } from '@/hooks/message'
-import { useI18n } from 'vue-i18n'
 
-const useColumnStore = defineStore('Column', {
-  state: (): ColumnState => {
-    return {
-      columns: GET_OBJ_ARRAY_STORAGE(StorageName.Columns) as ColumnCacheData[],
+const useColumnStore: StoreDefinition<'Column', ColumnState> = defineStore('Column', () => {
+  // 响应式状态
+  const columns = ref<ColumnCacheData[]>(GET_OBJ_ARRAY_STORAGE(StorageName.Columns) as ColumnCacheData[])
+
+  // 获取角色菜单列配置
+  const fetchRolesMenuColumns = async () => {
+    try {
+      const response = await getRolesMenuColumns()
+      columns.value = response.data as ColumnCacheData[]
+      SET_OBJ_ARRAY_STORAGE(StorageName.Columns, columns.value)
+    } catch (err: any) {
+      const { t } = useI18n()
+      useMessage().error(`${t('common.fail')} ${err.message}`)
     }
-  },
-  actions: {
-    async getRolesMenuColumns() {
-      try {
-        const response: any = await getRolesMenuColumns()
-        this.columns = response.data as ColumnCacheData[]
-        SET_OBJ_ARRAY_STORAGE(StorageName.Columns, this.columns)
-      } catch (err: any) {
-        const { t } = useI18n()
-        useMessage().error(`${t('common.fail')} ${err.message}`)
+  }
+
+  // 设置菜单列配置
+  const setColumnByMenu = async (data: ColumnCacheData) => {
+    try {
+      await saveMenuColumn(data)
+      await fetchRolesMenuColumns()
+    } catch (err: any) {
+      const { t } = useI18n()
+      useMessage().error(`${t('common.fail')} ${err.message}`)
+    }
+  }
+
+  // 获取菜单列配置
+  const getColumnByMenu = (menu: string): string[] => {
+    let result: string[] = []
+    columns.value.forEach((item) => {
+      if (item.menu === menu) {
+        result = [...item.columns, ...result]
       }
-    },
-    async setColumnByMenu(data: ColumnCacheData) {
-      try {
-        await saveMenuColumn(data)
-        await this.getRolesMenuColumns()
-      } catch (err: any) {
-        const { t } = useI18n()
-        useMessage().error(`${t('common.fail')} ${err.message}`)
-      }
-    },
-    async getColumnByMenu(menu: string) {
-      let columns: string[] = []
-      this.columns?.forEach((item: ColumnCacheData) => {
-        if (menu === item.menu) {
-          columns = [...item.columns, ...columns]
-        }
-      })
-      return columns
-    },
-  },
+    })
+    return result
+  }
+
+  return {
+    // 状态
+    columns,
+
+    // 方法
+    fetchRolesMenuColumns,
+    setColumnByMenu,
+    getColumnByMenu,
+  }
 })
 
 export default useColumnStore

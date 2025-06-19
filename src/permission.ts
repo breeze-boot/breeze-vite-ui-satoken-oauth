@@ -30,9 +30,9 @@ router.beforeEach(async (to, from, next) => {
       return
     }
 
-    if (!initMenu) {
+    if (!initMenu && token) {
       try {
-        await menuStore.listPermission()
+        await menuStore.getPermission()
         next({ ...to, replace: true }) // 加载菜单后重定向
         return
       } catch (error) {

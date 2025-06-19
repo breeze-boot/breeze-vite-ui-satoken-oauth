@@ -926,8 +926,7 @@ const handleSliderChange = (row: any) => {
 }
 
 .table {
-  width: 100% !important;
-  height: auto;
+  display: inherit;
 }
 .table-pagination {
   padding: 10px;

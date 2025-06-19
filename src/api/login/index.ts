@@ -21,18 +21,23 @@ enum API {
  * @param loginData 登录提交参数
  * @param grantType 登录类型
  */
-export const authUserLogin = (loginData: UserLoginForm, grantType: GrantType) =>
-  request.post<any, any>(
-    API.AUTH_URL +
-      `?grant_type=${grantType}&username=${loginData.username}&password=${loginData.password}&scope=user_info&captchaVerification=${loginData.captchaVerification}`,
-    {},
-    {
-      headers: {
-        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
-        withCredentials: true,
-      },
+export function authUserLoginAPI(loginData: UserLoginForm, grantType: GrantType): AxiosPromise<any> {
+  return request({
+    url: API.AUTH_URL,
+    method: 'post',
+    params: {
+      grant_type: grantType,
+      username: loginData.username,
+      password: loginData.password,
+      scope: 'user_info',
+      captchaVerification: loginData.captchaVerification,
     },
-  )
+    headers: {
+      Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+      withCredentials: true,
+    },
+  })
+}
 
 /**
  * auth邮箱登录
@@ -40,36 +45,47 @@ export const authUserLogin = (loginData: UserLoginForm, grantType: GrantType) =>
  * @param loginData 登录提交参数
  * @param grantType 登录类型
  */
-export const authEmailLogin = (loginData: EmailLoginForm, grantType: GrantType) =>
-  request.post<any, any>(
-    API.AUTH_URL +
-      `?grant_type=${grantType}&email=${loginData.email}&code=${loginData.code}&scope=user_info&captchaVerification=${loginData.captchaVerification}`,
-    {},
-    {
-      headers: {
-        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
-        withCredentials: true,
-      },
+export function authEmailLoginAPI(loginData: EmailLoginForm, grantType: GrantType): AxiosPromise<any> {
+  return request({
+    url: API.AUTH_URL,
+    method: 'post',
+    params: {
+      grant_type: grantType,
+      email: loginData.email,
+      code: loginData.code,
+      scope: 'user_info',
+      captchaVerification: loginData.captchaVerification,
     },
-  )
+    headers: {
+      Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+      withCredentials: true,
+    },
+  })
+}
+
 /**
  * auth手机号登录
  *
  * @param loginData 登录提交参数
  * @param grantType 登录类型
  */
-export const authPhoneLogin = (loginData: PhoneLoginForm, grantType: GrantType) =>
-  request.post<any, any>(
-    API.AUTH_URL +
-      `?grant_type=${grantType}&phone=${loginData.phone}&code=${loginData.code}&scope=user_info&captchaVerification=${loginData.captchaVerification}`,
-    {},
-    {
-      headers: {
-        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
-        withCredentials: true,
-      },
+export function authPhoneLoginAPI(loginData: PhoneLoginForm, grantType: GrantType): AxiosPromise<any> {
+  return request({
+    url: API.AUTH_URL,
+    method: 'post',
+    params: {
+      grant_type: grantType,
+      phone: loginData.phone,
+      code: loginData.code,
+      scope: 'user_info',
+      captchaVerification: loginData.captchaVerification,
     },
-  )
+    headers: {
+      Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+      withCredentials: true,
+    },
+  })
+}
 
 /**
  * TOKEN刷新
@@ -77,23 +93,26 @@ export const authPhoneLogin = (loginData: PhoneLoginForm, grantType: GrantType) 
  * @param refreshToken 刷新token
  * @param grantType    登录类型
  */
-export const refreshToken = (refreshToken: string, grantType: GrantType) =>
-  request.post<any, any>(
-    API.AUTH_URL + `?grant_type=${grantType}&refresh_token=${refreshToken}`,
-    {},
-    {
-      headers: {
-        Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
-      },
+export function refreshTokenAPI(refreshToken: string, grantType: GrantType): AxiosPromise<any> {
+  return request({
+    url: API.AUTH_URL,
+    method: 'post',
+    params: {
+      grant_type: grantType,
+      refresh_token: refreshToken,
     },
-  )
+    headers: {
+      Authorization: 'Basic YnJlZXplOmJyZWV6ZQ==',
+    },
+  })
+}
 
 /**
  * 获取邮箱验证码
  *
  * @param email
  */
-export function sendEmailCode(email: string): AxiosPromise<DictResponseData> {
+export function sendEmailCodeAPI(email: string): AxiosPromise<DictResponseData> {
   return request({
     url: API.EMAIL_CODE_URL,
     method: 'get',
@@ -107,13 +126,15 @@ export function sendEmailCode(email: string): AxiosPromise<DictResponseData> {
  * 获取手机号验证码
  *
  * @param phone
+ * @param type
  */
-export function sendPhoneCode(phone: string): AxiosPromise<DictResponseData> {
+export function sendPhoneCodeAPI(phone: string, type: string): AxiosPromise<DictResponseData> {
   return request({
     url: API.PHONE_CODE_URL,
     method: 'get',
     params: {
       phone,
+      type,
     },
   })
 }

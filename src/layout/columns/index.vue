@@ -9,18 +9,21 @@ import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import useMenuStore from '@/store/modules/menu'
 import useSettingStore from '@/store/modules/setting'
-import TabBar from '@/layout/components/tabbar/index.vue'
 import ColumnsMenu from '@/layout/components/columnsMenu/index.vue'
 import Main from '@/layout/components/main/index.vue'
 import MenuItem from '@/layout/components/menuItem/index.vue'
 import Logo from '@/layout/components/logo/index.vue'
 import variables from '@/styles/variables.module.scss'
+import { DEVICE } from '@/utils/common.ts'
+import Setting from '@/layout/components/tabbar/setting/index.vue'
+import BreadCrumb from '@/layout/components/tabbar/breadcrumb/index.vue'
+import Tab from '@/layout/components/tabbar/tab/index.vue'
 
 let $router = useRouter()
 let $route = useRoute()
 let menuStore = useMenuStore()
 let tabStore = useTabsStore()
-let { theme, settings } = storeToRefs(useSettingStore())
+let { theme, settings, device } = storeToRefs(useSettingStore())
 
 onMounted(async () => {
   settings.value.isCollapse = true
@@ -67,7 +70,18 @@ const selectMenu = async (index: string) => {
     </el-aside>
 
     <el-container class="layout-main-container">
-      <tab-bar />
+      <div class="tabbar">
+        <div class="tabbar-left">
+          <bread-crumb v-if="device === DEVICE.PC" />
+        </div>
+        <div class="tabbar-right">
+          <setting />
+        </div>
+      </div>
+
+      <div class="tab-container">
+        <tab />
+      </div>
       <el-main>
         <Main />
       </el-main>
@@ -106,8 +120,31 @@ const selectMenu = async (index: string) => {
   }
 
   .layout-main-container {
-    height: 100%;
-    flex-direction: column !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .tabbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      height: 60px;
+      width: 100%;
+
+      .tabbar-left {
+        width: 80%;
+        display: flex;
+        margin-left: 10px;
+        align-items: flex-start;
+      }
+
+      .tabbar-right {
+        width: 25%;
+        display: flex;
+        align-items: center;
+        justify-items: flex-end;
+      }
+    }
   }
 }
 </style>

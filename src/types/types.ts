@@ -162,7 +162,6 @@ export enum StorageName {
   AcceptLanguage = 'Accept-Language',
   Authorization = 'Authorization',
   mixMenuRoutes = 'MIX_MENU_ROUTES',
-  menuRoutes = 'MENU_ROUTES',
   CurrentTab = 'CURRENT_TAB',
   CurrentTabName = 'CURRENT_TAB_NAME',
   CacheTabs = 'CACHE_TABS',

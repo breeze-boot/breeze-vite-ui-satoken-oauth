@@ -74,17 +74,6 @@ watch(
   opacity: 0;
 }
 
-// 内容区域
-.el-main {
-  position: absolute;
-  top: $base-main-top-height;
-  left: 200px;
-  width: calc(100% - $base-left-menu-width);
-  height: calc(100vh - $base-main-top-height);
-  padding: 20px;
-  transition: all 0.3s;
-}
-
 .backTop {
   height: 100%;
   width: 100%;

@@ -3,58 +3,77 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import useTabsStore from '@/store/modules/tabs.ts'
 import useMenuStore from '@/store/modules/menu'
 import useSettingStore from '@/store/modules/setting'
-import TabBar from '@/layout/components/tabbar/index.vue'
 import Main from '@/layout/components/main/index.vue'
 import MenuItem from '@/layout/components/menuItem/index.vue'
 import Logo from '@/layout/components/logo/index.vue'
 import variables from '@/styles/variables.module.scss'
+import { DEVICE } from '@/utils/common.ts'
+import Setting from '@/layout/components/tabbar/setting/index.vue'
+import BreadCrumb from '@/layout/components/tabbar/breadcrumb/index.vue'
+import Tab from '@/layout/components/tabbar/tab/index.vue'
 
-let $router = useRouter()
-let $route = useRoute()
-let menuStore = useMenuStore()
-let tabStore = useTabsStore()
-let { theme, settings } = storeToRefs(useSettingStore())
+const $router = useRouter()
+const $route = useRoute()
+const menuStore = useMenuStore()
+const tabStore = useTabsStore()
+const settingStore = useSettingStore()
+const { theme, settings, device } = storeToRefs(settingStore)
 
-onMounted(async () => {
+// 监听路由变化，更新标签页
+watch(
+  () => $route.path,
+  () => {
+    tabStore.setTab($route)
+  },
+)
+
+onMounted(() => {
   tabStore.setTab($route)
 })
 
 /**
  * 菜单选择事件
  *
- * @param index
+ * @param index - 路由路径
  */
 const selectMenu = async (index: string) => {
-  await $router.push({ path: index })
-  tabStore.setTab($route)
+  if (index !== $route.path) {
+    await $router.push({ path: index })
+    // 路由变化会触发watch监听，无需在此重复调用setTab
+  }
 }
+
+/**
+ * 计算侧边栏宽度
+ */
+const sidebarWidth = computed(() => {
+  return settings.value.isCollapse ? '56px' : variables.baseLeftMenuWidth
+})
 
 /**
  * 动态获取main的样式
  */
-const mainStyle = computed(() => {
-  return {
-    background: variables.baseMainTheme,
-    left: settings.value.isCollapse ? '56px' : variables.baseLeftMenuWidth,
-  }
-})
+const mainStyle = computed(() => ({
+  background: variables.baseMainTheme,
+  left: sidebarWidth.value,
+  transition: 'left 0.3s',
+}))
 </script>
 
 <template>
   <el-container class="layout-container">
-    <el-aside
-      :width="variables.baseLeftMenuWidth"
-      style="overflow: hidden"
-      :class="{ isCollapse: settings.isCollapse }"
-    >
-      <Logo />
-      <el-scrollbar>
+    <!-- 侧边栏 -->
+    <el-aside :width="sidebarWidth" class="sidebar" :class="{ 'is-collapsed': settings.isCollapse }">
+      <div class="sidebar-header">
+        <Logo />
+      </div>
+      <el-scrollbar class="sidebar-scrollbar">
         <el-menu
           background-color="transparent"
           :default-active="$route.path"
@@ -72,8 +91,20 @@ const mainStyle = computed(() => {
       </el-scrollbar>
     </el-aside>
 
+    <!-- 主内容区 -->
     <el-container class="layout-main-container">
-      <tab-bar />
+      <!-- 顶部导航栏 -->
+      <div class="tabbar">
+        <div class="tabbar-left">
+          <BreadCrumb v-if="device === DEVICE.PC" />
+        </div>
+        <div class="tabbar-right">
+          <Setting />
+        </div>
+      </div>
+      <div class="tab-container">
+        <tab />
+      </div>
       <!-- 内容区域 -->
       <el-main :style="mainStyle">
         <Main />
@@ -85,24 +116,61 @@ const mainStyle = computed(() => {
 <style lang="scss" scoped>
 .layout-container {
   height: 100vh;
+  display: flex;
 
-  // 菜单区域
-  .el-aside {
+  // 侧边栏区域
+  .sidebar {
     background: var(--base-left-theme);
-    box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
-    transition: all 0.3s;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 3px 3px 0;
+    transition: width 0.3s;
+    z-index: 100;
+
+    .sidebar-header {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-scrollbar {
+      height: calc(100vh - 60px);
+    }
 
     .el-menu {
       border-right: none;
     }
   }
 
-  .isCollapse {
-    width: 56px;
+  .is-collapsed {
+    width: 56px !important;
   }
+
+  // 主内容区域
   .layout-main-container {
-    height: 100%;
-    flex-direction: column !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .tabbar {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      padding: 0 15px;
+      background: var(--base-top-theme);
+      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
+      .tabbar-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+
+      .tabbar-right {
+        display: flex;
+        align-items: center;
+      }
+    }
   }
 }
 </style>
