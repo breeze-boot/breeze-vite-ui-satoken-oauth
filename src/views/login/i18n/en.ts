@@ -29,6 +29,8 @@ export default {
     },
     common: {
       loginSuccess: 'Login Success',
+      login: 'login',
+      otherWay: 'other Way',
     },
   },
 }

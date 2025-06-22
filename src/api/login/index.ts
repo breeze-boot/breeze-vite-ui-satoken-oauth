@@ -5,7 +5,6 @@
 import request from '@/utils/request'
 import { EmailLoginForm, PhoneLoginForm, UserLoginForm } from './type'
 import { GrantType } from '@/types/types.ts'
-import { DictResponseData } from '@/api/system/dict/type.ts'
 import { AxiosPromise } from 'axios'
 
 enum API {
@@ -112,7 +111,7 @@ export function refreshTokenAPI(refreshToken: string, grantType: GrantType): Axi
  *
  * @param email
  */
-export function sendEmailCodeAPI(email: string): AxiosPromise<DictResponseData> {
+export function sendEmailCodeAPI(email: string): AxiosPromise<any> {
   return request({
     url: API.EMAIL_CODE_URL,
     method: 'get',
@@ -128,7 +127,7 @@ export function sendEmailCodeAPI(email: string): AxiosPromise<DictResponseData> 
  * @param phone
  * @param type
  */
-export function sendPhoneCodeAPI(phone: string, type: string): AxiosPromise<DictResponseData> {
+export function sendPhoneCodeAPI(phone: string, type: string): AxiosPromise<any> {
   return request({
     url: API.PHONE_CODE_URL,
     method: 'get',

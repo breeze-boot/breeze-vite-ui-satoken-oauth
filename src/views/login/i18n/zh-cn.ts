@@ -35,6 +35,8 @@ export default {
     },
     common: {
       loginSuccess: '登录成功',
+      login: '登录',
+      otherWay: '其他方式',
     },
   },
 }
