@@ -17,6 +17,7 @@
     "lint:style": "stylelint src/**/*.{css,scss,vue} --cache --fix",
     "commitlint": "commitlint --config commitlint.config.cjs -e -V",
     "preinstall": "node ./scripts/preinstall.js",
+    "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "lint-staged": {
