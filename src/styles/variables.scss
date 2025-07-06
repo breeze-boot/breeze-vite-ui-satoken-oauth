@@ -1,26 +1,23 @@
 // 默认主题色
 :root {
-  --base-main-theme: #ECECECFF;
-  --base-left-theme: rgba(255, 255, 255, 0.0) !important;
-  --base-top-theme: #rgba (255, 255, 255, 0.0) !important;
-
-  --base-search-dialog-theme: rgba(255, 255, 255, 0.5);
-
-  --base-text-color: rgba(40, 40, 40, 0.82) !important;
-
+  --base-main-theme: #ecececff;
+  --base-left-theme: rgb(255 255 255 / 0%) !important;
+  --base-top-theme: rgb(255 255 255 / 0%) !important;
+  --base-search-dialog-theme: rgb(255 255 255 / 50%);
+  --base-text-color: rgb(40 40 40 / 82%) !important;
   --login-theme: rgb(255 255 255 / 57.5%);
-
   --djs-palette: --palette-background-color;
-  --djs-entry: rgba(0, 0, 0, 0.82);
-
+  --djs-entry: rgb(0 0 0 / 82%);
 }
 
 // 折叠动态左侧菜单宽度
 $base-left-menu-width: 200px;
 $base-columns-left-menu-width: 80px;
+
 // tab右键菜单宽度
 $base-context-menu-width: 100px;
 $base-context-menu-width: 100px;
+
 // 头部菜单宽度
 $base-main-top-height: 90px;
 

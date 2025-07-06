@@ -67,15 +67,15 @@ const handleSwitchTab = async (pane: any) => {
   position: relative;
   height: 30px !important;
   padding: 0;
-  text-align: right;
   font-size: 12px;
+  text-align: right;
   background: transparent !important;
 
   .tabs > .el-tabs__content {
     padding: 32px;
-    color: #6b778c;
     font-size: 32px;
     font-weight: 600;
+    color: #6b778c;
   }
 }
 </style>
@@ -84,8 +84,8 @@ const handleSwitchTab = async (pane: any) => {
 // el scss
 .el-header-tabs-container {
   .el-tabs__header {
-    margin: 0;
     height: 30px !important;
+    margin: 0;
   }
 
   .el-tabs__nav-prev,
@@ -98,55 +98,55 @@ const handleSwitchTab = async (pane: any) => {
   }
 
   .el-tabs__nav-scroll {
-    padding: 0 10px;
     height: 30px !important;
+    padding: 0 10px;
 
     .el-tabs__nav {
-      border: none !important;
-      height: 30px !important;
+      position: relative;
+      z-index: calc(var(--el-index-normal) - 1);
       display: flex;
       float: left;
-      position: relative;
-      transition: transform var(--el-transition-duration);
+      height: 30px !important;
       white-space: nowrap;
-      z-index: calc(var(--el-index-normal) - 1);
+      border: none !important;
+      transition: transform var(--el-transition-duration);
 
       .el-tabs__item {
         width: auto !important;
-        background: transparent !important;
+        height: 30px !important;
         padding: 0 10px;
+        padding-right: 23px !important;
+        padding-left: 23px !important;
+        background: transparent !important;
         border-right: none !important;
         border-bottom: none !important;
         border-left: none !important;
-        padding-left: 23px !important;
-        padding-right: 23px !important;
         border-radius: 20px 20px 0 0;
-        height: 30px !important;
       }
 
       .el-tabs__item::before,
       .el-tabs__item::after {
-        content: '';
         position: absolute;
+        z-index: -999;
         width: 20px;
         height: 20px;
+        content: '';
         background: transparent !important;
-        z-index: -999;
       }
 
       .el-tabs__item:hover {
-        background: rgba(236, 234, 234, 0.5) !important;
+        background: rgb(236 234 234 / 50%) !important;
       }
 
       .el-tabs__item::before {
-        left: -20px;
         bottom: 0;
+        left: -20px;
         background: transparent !important;
       }
 
       .el-tabs__item:hover::before {
-        background: radial-gradient(circle at 0 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px) !important;
         z-index: 999;
+        background: radial-gradient(circle at 0 0, transparent 20px, rgb(236 234 234 / 50%) 20px) !important;
       }
 
       .el-tabs__item::after {
@@ -156,8 +156,8 @@ const handleSwitchTab = async (pane: any) => {
       }
 
       .el-tabs__item:hover::after {
-        background: radial-gradient(circle at 100% 0, transparent 20px, rgba(236, 234, 234, 0.5) 20px) !important;
         z-index: 999;
+        background: radial-gradient(circle at 100% 0, transparent 20px, rgb(236 234 234 / 50%) 20px) !important;
       }
     }
   }

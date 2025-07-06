@@ -36,7 +36,7 @@ let { settings } = storeToRefs(useSettingStore())
 <style lang="scss" scoped>
 .is-collapse-icon {
   margin-right: 10px;
-  cursor: pointer;
   color: #f1f1f1;
+  cursor: pointer;
 }
 </style>

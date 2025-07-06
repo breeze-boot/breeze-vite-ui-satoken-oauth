@@ -106,30 +106,30 @@ const handlePaste = (event: ClipboardEvent) => {
 .chat-input {
   position: sticky;
   bottom: 0;
-  background-color: #f8f9fa;
   z-index: 10;
   display: flex;
   align-items: center;
   padding: 16px;
+  background-color: #f8f9fa;
   border-top: 1px solid #e9ecef;
   border-radius: 8px;
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 4px rgb(0 0 0 / 10%);
 }
 
 .chat-input .el-textarea {
   flex: 1;
-  margin-right: 16px;
   height: 100px;
+  margin-right: 16px;
 }
 
 .chat-input .el-textarea__inner {
-  border-radius: 8px;
-  border: 1px solid #ced4da;
+  height: 100%;
   padding: 12px;
   font-size: 14px;
-  transition: border-color 0.3s ease;
-  height: 100%;
   resize: none;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
 }
 
 .chat-input .el-textarea__inner:focus {
@@ -138,29 +138,29 @@ const handlePaste = (event: ClipboardEvent) => {
 }
 
 .send-button {
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 50px;
   height: 50px;
   padding: 0;
   font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: white;
+  background-color: #007bff;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .send-button:hover {
   background-color: #0056b3;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
   transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .send-button:active {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
   transform: scale(0.9);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .send-button.is-loading {
@@ -172,6 +172,7 @@ const handlePaste = (event: ClipboardEvent) => {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

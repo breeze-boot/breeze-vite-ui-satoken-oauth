@@ -79,6 +79,7 @@ const handleWheel = (e: WheelEvent) => {
   &::-webkit-scrollbar {
     display: none;
   }
+
   .el-menu,
   .el-menu-item {
     border-bottom: none !important;

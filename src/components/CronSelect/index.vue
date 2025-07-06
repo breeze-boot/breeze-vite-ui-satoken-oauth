@@ -58,7 +58,7 @@ const changeCron = (value: any) => {
 <template>
   <el-popover placement="bottom" v-model:visible="cronPopover" :width="530" trigger="click">
     <template #reference>
-      <el-input :placeholder="props.placeholder" :value="cron" style="margin-right: 16px; width: 530px" />
+      <el-input :placeholder="props.placeholder" :value="cron" style="width: 530px; margin-right: 16px" />
     </template>
 
     <no-vue3-cron

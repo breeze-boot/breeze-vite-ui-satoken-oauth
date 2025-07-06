@@ -51,6 +51,7 @@ const queryParams = reactive<UserQuery>({
 })
 
 let checkedRows = reactive<UserRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<UserRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
@@ -104,21 +105,6 @@ const tableInfo = reactive<TableInfo>({
       showOverflowTooltip: true,
       label: t('user.fields.avatar'),
       type: 'image',
-    },
-    // 测试
-    {
-      prop: 'avatar',
-      showOverflowTooltip: true,
-      label: t('user.fields.avatar'),
-      type: 'rowLink',
-      width: 200,
-      linkInfo: {
-        routePath: '/auth/menu',
-        rowParam: ['id', 'username'],
-        query: {
-          status: 1,
-        },
-      },
     },
     {
       prop: '',

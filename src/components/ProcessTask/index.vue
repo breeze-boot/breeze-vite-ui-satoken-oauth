@@ -27,6 +27,12 @@ import { useCloseTab } from '@/hooks/newTab'
 import { useRouter } from 'vue-router'
 
 const $emit = defineEmits(['approveClickCallBack'])
+const props = defineProps({
+  procDefKey: {
+    type: String,
+    default: '',
+  },
+})
 
 const { t } = useI18n()
 let $router = useRouter()
@@ -44,7 +50,7 @@ let taskInfo = ref<TodoRecord>({
   procDefKey: '',
   procInstId: '',
   taskId: '',
-  version: '',
+  version: 0,
 })
 const btnLoading = ref<boolean>(false)
 const buttons = ref<Button[]>([])
@@ -104,7 +110,9 @@ const flowButtonInfo = async () => {
  */
 const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
   try {
-    if (!procDefKey) return
+    if (!procDefKey) {
+      procDefKey = props.procDefKey
+    }
     const response: any = await getFlowButtonInfo(procDefKey, businessKey, '')
     await nextTick(() => {
       buttons.value = response.data.buttons
@@ -120,7 +128,9 @@ const flowStartButtonInfo = async (procDefKey: string, businessKey: string) => {
  * 获取信息
  */
 const historyProcessDefinitionXml = async () => {
-  if (!taskInfo.value.procInstId) return
+  if (!taskInfo.value.procDefKey) {
+    taskInfo.value.procDefKey = props.procDefKey
+  }
   try {
     const response: any = await getBpmDefinitionXml(taskInfo.value.procDefKey, taskInfo.value.version)
     xmlStr.value = response.data.xmlStr
@@ -395,6 +405,7 @@ defineExpose({ initApprove, initStartApprove })
 <template>
   <el-card shadow="never" v-loading="loading">
     <div class="flex items-center">
+      <slot name="btn" />
       <template v-for="item in buttons" :key="item.key">
         <template v-if="item.key === 'abolition'">
           <svg-button
@@ -415,7 +426,6 @@ defineExpose({ initApprove, initStartApprove })
         </template>
       </template>
       <svg-button type="primary" label="流程图" @svg-btn-click="handleShowBpmFlow" />
-      <slot name="btn" />
     </div>
     <el-divider />
     <el-row>
@@ -442,8 +452,8 @@ defineExpose({ initApprove, initStartApprove })
               <template v-slot="{ row }">
                 <div v-if="row.comments">
                   <div v-for="(item, index) in row.comments" :key="index">
-                    <div style="border-bottom: 1px solid rgba(40, 40, 40, 0.23)">{{ item.message }}</div>
-                    <div style="border-bottom: 1px solid rgba(40, 40, 40, 0.23)">{{ item.time }}</div>
+                    <div style="border-bottom: 1px solid rgb(40 40 40 / 23%)">{{ item.message }}</div>
+                    <div style="border-bottom: 1px solid rgb(40 40 40 / 23%)">{{ item.time }}</div>
                   </div>
                 </div>
               </template>
@@ -456,7 +466,7 @@ defineExpose({ initApprove, initStartApprove })
 
   <!--流程信息-->
   <el-dialog v-model="processViewerVisible">
-    <process-viewer :xml="xmlStr" style="height: 50vh; width: 100%" :xmlNodes="xmlNodes" />
+    <process-viewer :xml="xmlStr" style="width: 100%; height: 50vh" :xmlNodes="xmlNodes" />
   </el-dialog>
 
   <user-dialog

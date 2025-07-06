@@ -136,7 +136,7 @@ const handleCloseDialog = async () => {
   </el-popover>
 
   <el-dialog v-model="visible">
-    <div style="text-align: center; height: 600px">
+    <div style="height: 600px; text-align: center">
       <h1 class="title">
         {{ noticeMsgInfo.title }}
       </h1>
@@ -158,12 +158,12 @@ const handleCloseDialog = async () => {
 
 <style lang="scss" scoped>
 .title {
-  font-size: 1.5em;
-  font-weight: bold;
   margin: 30px 10px;
   font-family:
     Inter, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial,
     sans-serif;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .msg-content {
@@ -183,37 +183,37 @@ const handleCloseDialog = async () => {
 
   .msg {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     justify-items: center;
-    flex-wrap: wrap;
 
     .msg-content {
       position: relative;
-      width: 100%;
-      margin: 10px;
-      height: 50px;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       justify-items: center;
-      flex-wrap: wrap;
+      width: 100%;
+      height: 50px;
+      margin: 10px;
 
       .close {
-        display: block;
-        width: 10px;
-        height: 10px;
-        background-size: cover;
-        cursor: pointer;
         position: absolute;
         top: -5px;
         right: -5px;
+        display: block;
+        width: 10px;
+        height: 10px;
+        cursor: pointer;
+        background-size: cover;
         border-radius: 50%;
       }
 
       .title-text {
-        padding: 10px;
-        text-align: left;
         width: 100%;
         height: 20px;
+        padding: 10px;
+        text-align: left;
       }
     }
   }

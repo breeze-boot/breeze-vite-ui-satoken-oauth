@@ -12,25 +12,25 @@
 
 <style lang="scss" scoped>
 .error-container {
-  margin: 10px auto;
   position: relative;
-  border-radius: 10px;
   padding: 50px 30px;
+  margin: 10px auto;
   text-align: center;
+  border-radius: 10px;
 }
 
 .error-code {
+  margin-bottom: 20px;
+  font-family: Pacifico, cursive; /* 使用Google Fonts的艺术字体 */
   font-size: 150px;
   line-height: 1;
-  font-family: 'Pacifico', cursive; /* 使用Google Fonts的艺术字体 */
   color: var(--el-color-primary);
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影以增强立体感 */
+  text-shadow: 2px 2px 4px rgb(0 0 0 / 10%); /* 添加阴影以增强立体感 */
 }
 
 .error-message {
-  font-size: 24px;
   margin-bottom: 30px;
+  font-size: 24px;
   color: var(--el-color-primary);
 }
 </style>

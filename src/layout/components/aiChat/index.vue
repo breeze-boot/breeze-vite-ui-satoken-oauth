@@ -228,17 +228,18 @@ onUnmounted(() => {
 /* 聊天容器样式 */
 .chat-container {
   position: fixed;
-  bottom: 100px;
   right: 20px;
-  width: 800px;
-  /* 修改为固定高度 */
-  height: 600px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  bottom: 100px;
   display: flex;
   flex-direction: column;
+  width: 800px;
+
+  /* 修改为固定高度 */
+  height: 600px;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
 }
 
 /* 聊天主区域样式 */
@@ -260,12 +261,12 @@ onUnmounted(() => {
 }
 
 /* 响应式调整 */
-@media (max-width: 1100px) {
+@media (width <= 1100px) {
   .chat-container {
-    width: 100%;
-    left: 0;
     right: 0;
     bottom: 0;
+    left: 0;
+    width: 100%;
     height: 100vh;
     border-radius: 0;
   }

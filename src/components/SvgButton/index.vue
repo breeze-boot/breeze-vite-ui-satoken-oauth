@@ -77,7 +77,7 @@ const handleChick = () => {
     @click="handleChick"
     :circle="props.circle"
     :link="props.link"
-    :style="props.style"
+    :style="{ ...props.style, border: 'none' }"
     :type="props.type"
   >
     <svg-icon v-if="props.icon" :name="props.icon" :width="props.width" :height="props.height" />

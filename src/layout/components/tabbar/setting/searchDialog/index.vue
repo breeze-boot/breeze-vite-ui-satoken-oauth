@@ -97,20 +97,20 @@ const toggleOpenSearch = () => {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 9999998;
+  display: none;
   width: 100vw;
   height: 100vh;
   background: var(--base-search-dialog-theme);
-  display: none;
-  z-index: 9999998;
 
   .search {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    z-index: 9999999;
     width: auto;
     height: auto;
-    position: absolute;
-    left: 50%;
-    top: 25%;
     transform: translate(-50%, -50%);
-    z-index: 9999999;
   }
 }
 </style>
@@ -118,17 +118,17 @@ const toggleOpenSearch = () => {
 <style lang="scss">
 .dialog_search {
   .el-input__inner {
+    box-sizing: border-box;
+    flex-grow: 1;
+    width: 300px !important;
+    height: 40px;
     padding: 5px 10px;
     font-size: 20px;
     line-height: 50px;
-    width: 300px !important;
-    height: 40px;
     color: var(--el-input-text-color, var(--el-text-color-regular));
-    flex-grow: 1;
-    outline: 0;
-    border: none;
     background: 0 0;
-    box-sizing: border-box;
+    border: none;
+    outline: 0;
   }
 }
 </style>

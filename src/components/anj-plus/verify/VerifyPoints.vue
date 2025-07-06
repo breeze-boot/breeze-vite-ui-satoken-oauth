@@ -17,7 +17,7 @@
           :src="'data:image/png;base64,' + pointBackImgBase"
           ref="canvas"
           alt=""
-          style="width: 100%; height: 100%; display: block"
+          style="display: block; width: 100%; height: 100%"
           @click="bindingClick ? canvasClick($event) : undefined"
         />
 
@@ -223,6 +223,7 @@ export default {
       text.value = '验证失败'
       showRefresh.value = true
     }
+
     // 请求背景图片和验证图片
     function getPicture() {
       let data = {
@@ -240,6 +241,7 @@ export default {
         }
       })
     }
+
     //坐标转换函数
     const pointTransform = function (pointArr, imgSize) {
       return pointArr.map((p) => {

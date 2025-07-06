@@ -9,7 +9,7 @@ import { SettingState } from '@/store/modules/types/types.ts'
 import setting from '@/setting.ts'
 import { MenuLayout, Settings, Theme } from '@/types/types.ts'
 import { CookiesKey, CookiesStorage } from '@/utils/cookies.ts'
-import { DEVICE, LAYOUT } from '@/utils/common.ts'
+import { DEVICE, LAYOUT, THEME } from '@/utils/common.ts'
 
 // 初始化状态（从 Cookie 或默认值获取）
 const initTheme = (): Theme => {
@@ -29,6 +29,8 @@ const initSettings = (): Settings => {
   return {
     title: setting.title,
     showAvatar: setting.defaultShowAvatar,
+    primaryColor: '',
+    secondaryColor: '',
     isCollapse: setting.defaultIsCollapse,
     logoHidden: setting.defaultLogoHidden,
     logoUrl: setting.defaultLogoUrl,
@@ -73,6 +75,10 @@ const useSettingStore: StoreDefinition<'SettingStore', SettingState> = defineSto
     CookiesStorage.set(CookiesKey.MENU_LAYOUT, value)
   }
 
+  const isDarkMode = () => {
+    return theme.value.themeModel === THEME.LIGHT
+  }
+
   // 设置设备类型
   const setDevice = (deviceType: string) => {
     device.value = deviceType
@@ -101,6 +107,7 @@ const useSettingStore: StoreDefinition<'SettingStore', SettingState> = defineSto
     settings,
 
     // 方法
+    isDarkMode,
     setSize,
     setThemeModel,
     setLanguage,

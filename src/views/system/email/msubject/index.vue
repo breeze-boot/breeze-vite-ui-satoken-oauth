@@ -97,12 +97,24 @@ const tableInfo = reactive<TableInfo>({
       prop: 'to',
       showOverflowTooltip: true,
       label: t('mSubject.fields.to'),
+      type: 'rowLink',
+      width: 200,
+      linkInfo: {
+        routePath: '/email/userEmail',
+        rowParam: ['id'],
+        query: { column: 'toEmail' },
+      },
+    },
+    {
+      prop: 'to',
+      showOverflowTooltip: true,
+      label: t('mSubject.fields.to'),
       type: 'customRowLink',
       width: 200,
       linkInfo: {
         routePath: '/email/userEmail',
-        query: { column: 'toEmail' },
         rowParam: ['id'],
+        query: { column: 'toEmail' },
         // 自定义固定的字段值
         fixColumnName: '发送方',
       },

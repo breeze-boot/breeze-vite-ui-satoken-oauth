@@ -186,21 +186,26 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     console.error('ERROR: Please customize the upload method when limit > 1')
     return
   }
-  const _data: any = {}
-  _data[uploadOption?.pk] = row[uploadOption?.pk]
-  const columns: Columns = uploadOption?.columns || {}
-  Object.keys(columns).forEach((key: string) => {
-    const attr = columns[key] || ''
-    _data[attr] = row.fileUpload[0][key]
-  })
 
-  const response: any = await uploadOption.api(_data)
-  ElMessage.success(response.message)
-  if (uploadOption.callback) {
-    uploadOption.callback(row)
-  }
-  if (uploadOption.uploadRefresh) {
-    $emit('reloadDataList')
+  try {
+    const _data: any = {}
+    _data[uploadOption?.pk] = row[uploadOption?.pk]
+    const columns: Columns = uploadOption?.columns || {}
+    Object.keys(columns).forEach((key: string) => {
+      const attr = columns[key] || ''
+      _data[attr] = row.fileUpload[0][key]
+    })
+
+    const response: any = await uploadOption.api(_data)
+    ElMessage.success(response.message)
+    if (uploadOption.callback) {
+      uploadOption.callback(row)
+    }
+    if (uploadOption.uploadRefresh) {
+      $emit('reloadDataList')
+    }
+  } catch (error: any) {
+    useMessage().error(error.message)
   }
 }
 </script>
@@ -225,14 +230,14 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
 
   <!-- 链接 -->
   <template v-else-if="tableField.type === 'rowLink'">
-    <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
+    <a style="color: #00b8fa; cursor: pointer" @click="openLink(tableField, scope.row)">
       {{ scope?.row?.[tableField.prop] }}
     </a>
   </template>
 
   <!-- 自定义链接名称-->
   <template v-else-if="tableField.type === 'customRowLink'">
-    <a style="cursor: pointer; color: #00b8fa" @click="openLink(tableField, scope.row)">
+    <a style="color: #00b8fa; cursor: pointer" @click="openLink(tableField, scope.row)">
       {{
         scope?.row[(tableField?.linkInfo as LinkInfo2)?.columnName || ''] ||
         (tableField?.linkInfo as LinkInfo2)?.fixColumnName
@@ -256,7 +261,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'fileList'">
     <el-popover placement="top-start" :width="200" trigger="hover">
       <template #default>
-        <div v-if="scope.row[tableField.prop]" style="display: flex; gap: 16px; flex-direction: column">
+        <div v-if="scope.row[tableField.prop]" style="display: flex; flex-direction: column; gap: 16px">
           <el-tag style="margin: 0 2px" v-for="(item, index) in scope.row['fileUpload']" :key="index">
             {{ item.name }}
           </el-tag>
@@ -327,7 +332,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     <el-form-item
       label-width="0"
       :rules="tableField.formOptions?.rules"
-      :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
+      :prop="`rows[${scope.$index}][${tableField.prop}]`"
     >
       <div>
         <el-radio
@@ -357,7 +362,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
     <el-form-item
       label-width="0"
       :rules="tableField.formOptions?.rules"
-      :prop="'ruleForm.' + scope.$index + '.' + tableField.prop"
+      :prop="`rows[${scope.$index}][${tableField.prop}]`"
     >
       <el-select
         v-model="scope.row[tableField.prop]"
@@ -428,7 +433,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
   <template v-else-if="tableField.type === 'image' && scope.row?.[tableField.prop]">
     <el-popover placement="top-start" :width="200" trigger="hover">
       <template #default>
-        <div v-if="scope.row[tableField.prop]" style="display: flex; gap: 16px; flex-direction: column">
+        <div v-if="scope.row[tableField.prop]" style="display: flex; flex-direction: column; gap: 16px">
           <el-image
             :close-on-press-escape="true"
             :preview-src-list="[scope.row?.[tableField.prop]]"
@@ -464,6 +469,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       <vue-jsoneditor mode="tree" v-model:json="scope.row[tableField.prop]" />
     </el-popover>
   </span>
+
   <!-- 文本 -->
   <template v-else>
     {{ scope.row[tableField.prop] }}
@@ -475,17 +481,18 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
 
   .el-form-item {
     --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
+
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 0 !important;
 
     .input-span {
-      cursor: pointer;
-      width: 100%;
       display: block;
+      width: 100%;
       height: var(--el-input-inner-height);
       line-height: var(--el-input-inner-height);
+      cursor: pointer;
     }
   }
 }

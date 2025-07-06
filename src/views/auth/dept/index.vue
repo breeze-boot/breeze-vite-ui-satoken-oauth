@@ -35,6 +35,7 @@ const queryParams = reactive<DeptQuery>({
 })
 
 let checkedRows = reactive<DeptRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<DeptRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

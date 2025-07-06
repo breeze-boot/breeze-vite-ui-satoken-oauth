@@ -6,17 +6,18 @@
  * 设置最大和最小宽度避免在极端屏幕下显示异常
  */
 .el-drawer {
-  max-width: 100% !important;
   min-width: 280px !important;
+  max-width: 100% !important;
 }
 
 /*
  * 当窗口宽度在 769px 到 1024px 之间时的 el-drawer 样式
  * 调整 el-drawer 宽度为 100%
  */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (width >= 769px) and (width <= 1024px) {
   .el-drawer {
     --el-drawer-width: 100%;
+
     width: var(--el-drawer-width, 50%) !important;
   }
 }
@@ -25,9 +26,10 @@
  * 当窗口宽度在 481px 到 768px 之间时的 el-drawer 样式
  * 让 el-drawer 宽度占满大部分屏幕
  */
-@media (min-width: 481px) and (max-width: 768px) {
+@media (width >= 481px) and (width <= 768px) {
   .el-drawer {
     --el-drawer-width: 100%;
+
     width: var(--el-drawer-width, 50%) !important;
   }
 }
@@ -36,9 +38,10 @@
  * 小屏幕（宽度小于等于 480px）样式
  * el-drawer 宽度为 100%
  */
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .el-drawer {
     --el-drawer-width: 100%;
+
     width: var(--el-drawer-width, 50%) !important;
   }
 }
@@ -48,8 +51,8 @@
  * 设置背景颜色和内边距
  */
 .el-drawer__content {
-  background-color: #fff;
   padding: 15px;
+  background-color: #fff;
 }
 
 /*
@@ -57,9 +60,9 @@
  * 设置字体大小和颜色
  */
 .el-drawer__title {
+  padding: 15px;
   font-size: 18px;
   color: #333;
-  padding: 15px;
 }
 
 /*
@@ -67,6 +70,6 @@
  * 设置对齐方式和内边距
  */
 .el-drawer__close-btn {
-  text-align: right;
   padding: 10px;
+  text-align: right;
 }

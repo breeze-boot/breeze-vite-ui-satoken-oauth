@@ -41,6 +41,7 @@ const queryParams = reactive<RoleQuery>({
 })
 
 let checkedRows = reactive<RoleRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<RoleRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

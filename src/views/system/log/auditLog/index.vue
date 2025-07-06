@@ -33,6 +33,7 @@ const queryParams = reactive<AuditLogQuery>({
 })
 
 let checkedRows = reactive<AuditLogRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<AuditLogRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
@@ -71,6 +72,12 @@ const tableInfo = reactive<TableInfo>({
       prop: 'batch',
       showOverflowTooltip: true,
       label: t('auditLog.fields.batch'),
+    },
+    {
+      prop: 'createBy',
+      type: 'slot',
+      showOverflowTooltip: true,
+      label: t('sysLog.fields.createBy'),
     },
   ],
   handleBtn: {
@@ -199,6 +206,8 @@ const handleSelectionChange = (rows: AuditLogRecords) => {
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   >
-    <template #col-slot="{ row }"></template>
+    <template #col-createBy="{ row }">
+      <span>{{ row?.createBy }}</span>
+    </template>
   </b-table>
 </template>

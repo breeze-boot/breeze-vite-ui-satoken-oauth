@@ -1,26 +1,26 @@
-@import "../../node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css";
-@import "../../node_modules/bpmn-js-token-simulation/assets/css/font-awesome.min.css";
-@import "../../node_modules/bpmn-js-token-simulation/assets/css/normalize.css";
-@import "../../node_modules/diagram-js-minimap/assets/diagram-js-minimap.css";
+@import '../../node_modules/bpmn-js-token-simulation/assets/css/bpmn-js-token-simulation.css';
+@import '../../node_modules/bpmn-js-token-simulation/assets/css/font-awesome.min.css';
+@import '../../node_modules/bpmn-js-token-simulation/assets/css/normalize.css';
+@import '../../node_modules/diagram-js-minimap/assets/diagram-js-minimap.css';
 
 // 边框被 token-simulation 样式覆盖了
 .djs-palette {
-  background: var(--djs-palette) !important;
-  border-radius: 2px;
   width: 50px !important;
+  background: var(--djs-palette) !important;
   border: 0.2px solid var(--palette-border-color) !important;
+  border-radius: 2px;
 
-  .entry:before {
+  .entry::before {
     color: var(--djs-entry);
   }
 }
 
 .my-process-designer {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
 
   .my-process-designer__header {
     width: 100%;
@@ -37,14 +37,14 @@
     .el-tooltip__popper {
       .el-button {
         width: 100%;
-        text-align: left;
-        padding-left: 8px;
         padding-right: 8px;
+        padding-left: 8px;
+        text-align: left;
       }
 
       .el-button:hover {
-        background: rgba(64, 158, 255, 0.8);
-        color: #ffffff;
+        color: #fff;
+        background: rgb(64 158 255 / 80%);
       }
     }
 
@@ -52,9 +52,9 @@
       position: relative;
 
       i {
-        &:after {
-          content: "|";
+        &::after {
           position: absolute;
+          content: '|';
           transform: rotate(90deg) translate(200%, -10%);
         }
       }
@@ -79,7 +79,7 @@
     .align.align-center i {
       transform: rotate(90deg);
 
-      &:after {
+      &::after {
         transform: rotate(90deg) translate(0, -10%);
       }
     }
@@ -87,7 +87,7 @@
     .align.align-middle i {
       transform: rotate(0deg);
 
-      &:after {
+      &::after {
         transform: rotate(90deg) translate(0, -10%);
       }
     }
@@ -95,14 +95,15 @@
 
   .my-process-designer__container {
     display: inline-flex;
-    width: 100%;
     flex: 1;
+    width: 100%;
 
     .my-process-designer__canvas {
+      position: relative;
       flex: 1;
       height: 100%;
-      position: relative;
-      background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMTBoNDBNMTAgMHY0ME0wIDIwaDQwTTIwIDB2NDBNMCAzMGg0ME0zMCAwdjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlMGUwZTAiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQwIDBIMHY0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+") repeat !important;
+      background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMTBoNDBNMTAgMHY0ME0wIDIwaDQwTTIwIDB2NDBNMCAzMGg0ME0zMCAwdjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlMGUwZTAiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQwIDBIMHY0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')
+        repeat !important;
 
       div.toggle-mode {
         display: none;
@@ -110,10 +111,10 @@
     }
 
     .my-process-designer__property-panel {
+      z-index: 10;
       height: 100%;
       overflow: scroll;
       overflow-y: auto;
-      z-index: 10;
 
       * {
         box-sizing: border-box;
@@ -129,11 +130,11 @@
   }
 }
 
-//侧边栏配置
+// 侧边栏配置
 .djs-palette.open {
   .djs-palette-entries {
-    div[class^="bpmn-icon-"]:before,
-    div[class*="bpmn-icon-"]:before {
+    div[class^='bpmn-icon-']::before,
+    div[class*='bpmn-icon-']::before {
       line-height: unset;
     }
 
@@ -143,37 +144,37 @@
 
     div.entry:hover {
       &::after {
-        width: max-content;
-        content: attr(title);
-        vertical-align: text-bottom;
         position: absolute;
-        right: -10px;
         top: 0;
+        right: -10px;
         bottom: 0;
-        overflow: hidden;
-        transform: translateX(100%);
-        font-size: 0.5em;
-        display: inline-block;
-        text-decoration: inherit;
-        font-variant: normal;
-        text-transform: none;
-        background: #fafafa;
-        box-shadow: 0 0 6px #eeeeee;
-        border: 1px solid #cccccc;
-        box-sizing: border-box;
-        padding: 0 16px;
-        border-radius: 4px;
         z-index: 100;
+        box-sizing: border-box;
+        display: inline-block;
+        width: max-content;
+        padding: 0 16px;
+        overflow: hidden;
+        font-size: 0.5em;
+        font-variant: normal;
+        text-decoration: inherit;
+        text-transform: none;
+        vertical-align: text-bottom;
+        content: attr(title);
+        background: #fafafa;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 0 6px #eee;
+        transform: translateX(100%);
       }
     }
   }
 }
 
 pre {
-  margin: 0;
   height: 100%;
-  overflow: hidden;
   max-height: calc(80vh - 32px);
+  margin: 0;
+  overflow: hidden;
   overflow-y: auto;
 }
 

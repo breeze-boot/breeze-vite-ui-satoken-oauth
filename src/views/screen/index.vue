@@ -41,9 +41,9 @@ const toggleFullscreen = () => {
   align-content: center;
   width: 100%;
   height: 100%;
-  background: red;
   padding: 20px;
   margin-top: 20px;
+  background: red;
 
   .tabbar {
     position: absolute;

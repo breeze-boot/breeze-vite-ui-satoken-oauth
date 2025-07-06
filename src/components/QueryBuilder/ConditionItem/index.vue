@@ -19,7 +19,7 @@
       <!-- 条件逻辑选择 -->
       <el-col
         v-show="item.condition && index !== 0"
-        style="height: 25px; cursor: pointer; text-align: center; line-height: 25px"
+        style="height: 25px; line-height: 25px; text-align: center; cursor: pointer"
         @click="handleChangeCondition(item)"
         :span="1"
       >
@@ -244,23 +244,23 @@ const handleChangeField = () => {
 
 <style scoped>
 .condition-group {
-  width: 100%;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  width: 100%;
 }
 
 .query-builder {
   z-index: 999;
-  border-radius: 6px;
   height: auto;
+  border-radius: 6px;
 }
 
 .close-button {
-  width: 30px;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  width: 30px;
+  padding: 5px;
 }
 </style>

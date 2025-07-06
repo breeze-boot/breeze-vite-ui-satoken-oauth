@@ -70,31 +70,31 @@ const handleMenuItemClick = async (event: string) => {
 <style lang="scss" scoped>
 .context-menu-box {
   position: absolute;
-  height: 100%;
-  width: 100%;
   top: 0;
   left: 0;
   z-index: 9999;
+  width: 100%;
+  height: 100%;
 
   .context-menu {
     position: relative;
     width: $base-context-menu-width;
 
     .context-menu-item {
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      border: 1px solid #eee;
-      cursor: pointer;
       width: inherit;
-      background: rgba(255, 255, 255, 0.8);
+      height: 30px;
       font-size: 80%;
-      color: rgba(50, 50, 50, 0.9);
+      line-height: 30px;
+      color: rgb(50 50 50 / 90%);
+      text-align: center;
+      cursor: pointer;
+      background: rgb(255 255 255 / 80%);
+      border: 1px solid #eee;
     }
 
     .context-menu-item:hover {
-      background: rgb(255, 255, 255);
       color: var(--el-color-primary) !important;
+      background: rgb(255 255 255);
     }
   }
 }

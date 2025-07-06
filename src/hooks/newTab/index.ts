@@ -11,24 +11,24 @@ const tabsStore = useTabsStore(pinia)
  * @param option
  */
 export const useNewTab = async ($route: any, option: any) => {
-  const { bizId, title, path, type, props } = option
-  let _pageId: string
-  if (bizId) {
-    _pageId = type + '_' + bizId
-  } else {
-    _pageId = type + '_' + title
+  const { bizId, title, path, type, query } = option
+  if (!path) {
+    ElMessage.warning('未配置跳转的路由')
+    return
   }
+  // 生成唯一页面ID
+  const pageId = bizId ? `${type}_${bizId}` : `${type}_${title}`
   await router.push({
     name: 'TabWrapper',
     params: {
-      pageId: _pageId,
+      pageId: pageId,
       type: type,
-      bizId: bizId,
       path: encodeURIComponent(btoa(path)),
+      _t: new Date().getTime(),
     },
     query: {
-      title: title,
-      ...props,
+      title,
+      ...query,
     },
   })
   tabsStore.setTab($route)

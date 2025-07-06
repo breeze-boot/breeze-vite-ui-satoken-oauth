@@ -361,7 +361,7 @@ defineExpose({
       </el-form-item>
       <el-form-item :label="t('user.fields.sex')" prop="sex" style="text-align: left">
         <el-radio-group v-model="userDataForm.sex">
-          <el-radio v-for="(item, index) in SEX" :key="index" :label="item.label" :value="item.value" />
+          <el-radio v-for="(item, index) in SEX" :key="index" :label="item.label" :value="Number(item.value)" />
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="t('user.fields.idCard')" prop="idCard">

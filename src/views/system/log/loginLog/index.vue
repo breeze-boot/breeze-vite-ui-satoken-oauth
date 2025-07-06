@@ -36,6 +36,7 @@ const queryParams = reactive<LoginLogQuery>({
 })
 
 let checkedRows = reactive<LoginLogRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<LoginLogRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
@@ -112,7 +113,7 @@ const tableInfo = reactive<TableInfo>({
       label: t('loginLog.fields.ip'),
     },
     {
-      prop: '',
+      prop: 'createBy',
       type: 'slot',
       showOverflowTooltip: true,
       label: t('loginLog.fields.createBy'),
@@ -294,7 +295,7 @@ const handleSelectionChange = (rows: LoginLogRecords) => {
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   >
-    <template #col-slot="{ row }">
+    <template #col-createBy="{ row }">
       <span>{{ row?.createBy }}</span>
     </template>
   </b-table>

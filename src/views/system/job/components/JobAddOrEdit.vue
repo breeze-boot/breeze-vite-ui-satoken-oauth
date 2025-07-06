@@ -75,8 +75,8 @@ const init = async (id: number) => {
   }
   if (id) {
     await getInfo(id)
-    visible.value = true
   }
+  visible.value = true
 }
 
 /**
@@ -154,7 +154,7 @@ defineExpose({
           clearable
           :placeholder="t('job.fields.clazzName')"
         />
-        <span style="color: rgba(189, 38, 38, 0.85); font-size: 0.6rem; margin-top: 6px">
+        <span style="margin-top: 6px; font-size: 0.6rem; color: rgb(189 38 38 / 85%)">
           ** 请设置执行方法【全类名.方法名('string',1, true, 1D, 1L)】或【Bean名.方法名('string',1, true, 1D, 1L)】
         </span>
       </el-form-item>

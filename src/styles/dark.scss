@@ -3,14 +3,11 @@ html.dark {
   --base-main-theme: var(--el-color-black);
   --base-left-theme: var(--el-color-black) !important;
   --base-top-theme: var(--el-color-black) !important;
-
-  --base-search-dialog-theme: rgba(0, 0 0, 0.3);
-
-  --base-text-color: rgba(255, 255, 255, 0.88) !important;
-
+  --base-search-dialog-theme: rgb(0 0 0 30%);
+  --base-text-color: rgb(255 255 255 / 88%) !important;
   --login-theme: (--el-color-black);
-  --djs-palette: rgba(0, 0, 0, 0.66);
-  --djs-entry: rgb(255, 255, 255);
+  --djs-palette: rgb(0 0 0 / 66%);
+  --djs-entry: rgb(255 255 255);
 
   // textarea - css vars
   --w-e-textarea-bg-color: #131313;
@@ -19,7 +16,7 @@ html.dark {
   --w-e-textarea-slight-border-color: #e8e8e8;
   --w-e-textarea-slight-color: #d4d4d4;
   --w-e-textarea-slight-bg-color: #f5f2f0;
-  --w-e-textarea-selected-border-color: #B4D5FF; // 选中的元素，如选中了分割线
+  --w-e-textarea-selected-border-color: #b4d5ff; // 选中的元素，如选中了分割线
   --w-e-textarea-handler-bg-color: #4290f7; // 工具，如图片拖拽按钮
 
   // toolbar - css vars
@@ -31,6 +28,6 @@ html.dark {
   --w-e-toolbar-border-color: #3b3b3b;
 
   // modal - css vars
-  --w-e-modal-button-bg-color: rgba(103, 103, 103, 0.64);
-  --w-e-modal-button-border-color: rgba(152, 152, 152, 0.34);
+  --w-e-modal-button-bg-color: rgb(103 103 103 / 64%);
+  --w-e-modal-button-border-color: rgb(152 152 152 / 34%);
 }

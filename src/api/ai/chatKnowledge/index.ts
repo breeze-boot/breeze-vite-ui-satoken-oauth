@@ -3,8 +3,8 @@
  * @since: 2025-04-22
  */
 import request from '@/utils/request'
-import { AiChatKnowledgeResponseData, AiChatKnowledgeQuery, AiChatKnowledgeRecord, AiChatKnowledgeForm } from './type'
-import { FileForm, ResponseData } from '@/types/types.ts'
+import { AiChatKnowledgeResponseData, AiChatKnowledgeQuery, AiChatKnowledgeRecord } from './type'
+import { ResponseData } from '@/types/types.ts'
 import { AxiosPromise } from 'axios'
 import { FileUploadResponseData } from '@/api/system/file/type.ts'
 

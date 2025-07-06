@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 16px">
     <el-form-item label="消息实例">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap">
+      <div style="display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between">
         <el-select v-model="bindMessageId" @change="updateTaskMessage">
           <el-option v-for="id in Object.keys(messageMap)" :value="id" :label="messageMap[id]" :key="id" />
         </el-select>

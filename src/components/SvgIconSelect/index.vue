@@ -80,7 +80,7 @@ const initLoadIcons = () => {
 <template>
   <el-popover placement="bottom" :width="530" trigger="click">
     <template #reference>
-      <el-input :placeholder="props.placeholder" :value="icon" style="margin-right: 16px; width: 530px">
+      <el-input :placeholder="props.placeholder" :value="icon" style="width: 530px; margin-right: 16px">
         <template #append>
           <svg-icon :name="`${icon}`" height="1.2rem" width="1.2rem" />
         </template>
@@ -110,41 +110,40 @@ const initLoadIcons = () => {
   overflow-y: scroll;
 
   .input-line {
-    text-align: center;
     width: 94%;
     margin: 8px;
+    text-align: center;
   }
 
   .icon-list {
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    flex-flow: row wrap;
     width: 100%;
     height: auto;
-    text-align: center;
-    color: var(--el-text-color-regular);
     font-size: 13px;
+    color: var(--el-text-color-regular);
+    text-align: center;
     transition: background-color var(--el-transition-duration);
 
     .icon-item {
-      width: 60px;
-      height: 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      width: 60px;
+      height: 60px;
+      margin: 10px;
       cursor: pointer;
       border: 1px solid var(--el-border-color);
-      margin: 10px;
 
       .icon-name {
-        font-size: 0.5rem;
         margin-top: 8px;
+        font-size: 0.5rem;
       }
     }
 
     .icon-item:hover {
-      background: rgba(192, 192, 192, 0.23);
+      background: rgb(192 192 192 / 23%);
       border: none;
     }
   }

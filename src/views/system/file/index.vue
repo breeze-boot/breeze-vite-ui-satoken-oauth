@@ -37,6 +37,7 @@ const queryParams = reactive<FileQuery>({
 })
 
 let checkedRows = reactive<FileRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<FileRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

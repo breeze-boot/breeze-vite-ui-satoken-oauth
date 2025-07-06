@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
 import useSettingStore from '@/store/modules/setting.ts'
-import { uploadMinioS3 } from '@/api/system/file'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IDomEditor } from '@wangeditor/editor'
 import { i18nChangeLanguage } from '@wangeditor/editor'
@@ -46,19 +45,19 @@ const toolbarConfig = ref({}) // 工具条配置
 const editorConfig = ref({
   placeholder: '请输入内容...',
   MENU_CONF: {
-    uploadImage: {
-      // 自定义图片上传
-      async customUpload(file: any, insertFn: any) {
-        const fileParam: FileForm = {
-          bizType: props.bizType,
-          title: '富文本',
-        }
-        uploadMinioS3(file, fileParam).then((response: any) => {
-          const url = response.data.url
-          insertFn(url)
-        })
-      },
-    },
+    // uploadImage: {
+    //   // 自定义图片上传
+    //   async customUpload(file: any, insertFn: any) {
+    //     // const fileParam: FileForm = {
+    //     //   // bizType: props.bizType,
+    //     //   // title: '富文本',
+    //     // }
+    //     // uploadMinioS3(file, fileParam).then((response: any) => {
+    //     //   const url = response.data.url
+    //     //   insertFn(url)
+    //     // })
+    //   },
+    // },
   },
 })
 
@@ -92,7 +91,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <div style="border: 1px solid #ccc; margin-top: 10px">
+    <div style="margin-top: 10px; border: 1px solid #ccc">
       <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" style="border-bottom: 1px solid #ccc" />
       <Editor
         :defaultConfig="editorConfig"

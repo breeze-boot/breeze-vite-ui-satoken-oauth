@@ -214,16 +214,17 @@ export default {
   bottom: 48px;
   z-index: 1;
 }
+
 .open-model-button {
-  width: 48px;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  width: 48px;
+  height: 48px;
   font-size: 32px;
-  background: rgba(64, 158, 255, 1);
-  color: #ffffff;
+  color: #fff;
   cursor: pointer;
+  background: rgb(64 158 255 / 100%);
+  border-radius: 4px;
 }
 </style>

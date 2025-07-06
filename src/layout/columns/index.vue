@@ -95,15 +95,14 @@ const selectMenu = async (index: string) => {
 
   // 菜单区域
   .el-aside {
+    padding-bottom: 60px;
     background: var(--base-left-theme);
     box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
     transition: all 0.3s;
-    padding-bottom: 60px;
 
     .column-menu {
       height: 100%;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      overflow: hidden scroll;
 
       &::-webkit-scrollbar {
         display: none;
@@ -120,29 +119,28 @@ const selectMenu = async (index: string) => {
   }
 
   .layout-main-container {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     .tabbar {
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      height: 60px;
       width: 100%;
+      height: 60px;
 
       .tabbar-left {
-        width: 80%;
         display: flex;
-        margin-left: 10px;
         align-items: flex-start;
+        width: 80%;
+        margin-left: 10px;
       }
 
       .tabbar-right {
-        width: 25%;
         display: flex;
-        align-items: center;
-        justify-items: flex-end;
+        place-items: center flex-end;
+        width: 25%;
       }
     }
   }

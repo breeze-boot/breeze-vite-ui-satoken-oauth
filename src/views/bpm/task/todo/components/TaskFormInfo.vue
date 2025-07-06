@@ -48,6 +48,7 @@ ElMessage.success(businessKey.value + '初始化')
 :deep(.my-label) {
   background: var(--el-color-success-light-9) !important;
 }
+
 :deep(.my-content) {
   background: var(--el-color-danger-light-9);
 }

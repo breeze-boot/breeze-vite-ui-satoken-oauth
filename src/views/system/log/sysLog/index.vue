@@ -16,6 +16,7 @@ import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 import { useDict } from '@/hooks/dict'
 import { useMessage } from '@/hooks/message'
+import type { MsgUserRecords } from '@/api/system/messages/msgUser/type.ts'
 
 defineOptions({
   name: 'SysLog',
@@ -36,7 +37,8 @@ const queryParams = reactive<SysLogQuery>({
 })
 
 let checkedRows = reactive<SysLogRecords>([])
-let currentRows = reactive<SysLogRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let currentRows = reactive<MsgUserRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
 const refresh = ref<number>(1)
@@ -112,7 +114,7 @@ const tableInfo = reactive<TableInfo>({
       label: t('sysLog.fields.ip'),
     },
     {
-      prop: '',
+      prop: 'createBy',
       type: 'slot',
       showOverflowTooltip: true,
       label: t('sysLog.fields.createBy'),
@@ -294,7 +296,7 @@ const handleSelectionChange = (rows: SysLogRecords) => {
     :handle-btn="tableInfo.handleBtn"
     @selection-change="handleSelectionChange"
   >
-    <template #col-slot="{ row }">
+    <template #col-createBy="{ row }">
       <span>{{ row?.createBy }}</span>
     </template>
   </b-table>

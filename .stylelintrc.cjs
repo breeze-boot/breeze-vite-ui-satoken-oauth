@@ -37,6 +37,7 @@ module.exports = {
         'function-url-quotes': 'always', // 要求或禁止 URL 的引号 "always(必须加上引号)"|"never(没有引号)"
         'no-empty-source': null, // 关闭禁止空源码
         'selector-class-pattern': null, // 关闭强制选择器类名的格式
+        'keyframes-name-pattern': null, // 关闭强制关键帧动画名称的格式,
         'property-no-unknown': null, // 禁止未知的属性(true 为不允许)
         'block-opening-brace-space-before': 'always', //大括号之前必须有一个空格或不能有空白符
         'value-no-vendor-prefix': null, // 关闭 属性值前缀 --webkit-box
@@ -45,7 +46,7 @@ module.exports = {
             // 不允许未知的选择器
             true,
             {
-                ignorePseudoClasses: ['global', 'v-deep', 'deep'], // 忽略属性，修改element默认样式的时候能使用到
+                ignorePseudoClasses: ['global', 'v-deep', 'deep', 'export'], // 忽略属性，修改element默认样式的时候能使用到
             },
         ],
     }

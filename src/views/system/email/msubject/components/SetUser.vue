@@ -52,7 +52,6 @@ let checkedRows = reactive<UserRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
 const refresh = ref<number>(1)
-const pager = ref<boolean>(true)
 const mountedRefresh = ref<boolean>(true)
 const tableIndex = ref<boolean>(true)
 // 选择框类型

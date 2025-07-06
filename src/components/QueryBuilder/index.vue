@@ -160,53 +160,50 @@ const previewConditions = (temp: any[]) => {
 
 <style scoped>
 .query-builder {
-  z-index: 999;
   top: 0;
   right: 0;
-  padding: 10px 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+  z-index: 999;
   width: 80%;
   height: auto;
-  background-color: rgba(255, 255, 255, 0.93);
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  background-color: rgb(255 255 255 / 93%);
+  border-radius: 6px;
 }
 
 .condition-group {
-  width: 100%;
   display: flex;
-  align-content: center;
-  justify-content: flex-start;
-  border-radius: 6px;
+  place-content: center flex-start;
+  width: 100%;
   border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .sql-preview {
-  cursor: pointer;
-  width: 100%;
   display: flex;
-  align-content: center;
-  justify-content: flex-start;
-  border-radius: 6px;
+  place-content: center flex-start;
+  width: 100%;
+  cursor: pointer;
   border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .sql-preview .text {
-  cursor: pointer;
-  width: 93%;
-  margin-right: 1%;
-  font-size: 0.8rem;
-  font-family: 'Operator Mono', 'Source Code Pro', Menlo, Monaco, Consolas, 'Courier New', monospace;
-  vertical-align: middle;
-  overflow-y: hidden;
-  background: rgba(248, 248, 248, 0.71);
-  padding: 0 10px;
   display: flex;
-  align-items: center;
   align-content: center;
-  overflow-x: scroll;
+  align-items: center;
+  width: 93%;
+  padding: 0 10px;
+  margin-right: 1%;
+  overflow: scroll hidden;
+  font-family: 'Operator Mono', 'Source Code Pro', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background: rgb(248 248 248 / 71%);
   -ms-overflow-style: none;
   scrollbar-width: none;
-  white-space: nowrap;
 }
 
 .sql-preview .text::-webkit-scrollbar {
@@ -214,24 +211,24 @@ const previewConditions = (temp: any[]) => {
 }
 
 .close-button {
-  width: 30px;
-  height: 30px;
   position: absolute;
   top: 0;
   right: 0;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
 }
 
 .query-button {
   position: absolute;
-  width: 97%;
   z-index: 9999;
-  height: 30px;
   display: flex;
   align-items: end;
   justify-content: flex-end;
+  width: 97%;
+  height: 30px;
 }
 </style>

@@ -157,7 +157,7 @@ defineExpose({
 </script>
 
 <template>
-  <el-dialog v-model="visible" :title="t('common.design')" :close-on-click-modal="false" :close-on-press-escape="false">
+  <el-dialog v-model="visible" :title="t('common.design')" :close-on-press-escape="false" :close-on-click-modal="false">
     <el-form
       :model="definitionDataForm"
       :rules="rules"

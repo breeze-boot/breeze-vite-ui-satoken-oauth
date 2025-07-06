@@ -38,6 +38,7 @@ const queryParams = reactive<RowPermissionQuery>({
 })
 
 let checkedRows = reactive<RowPermissionRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<RowPermissionRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

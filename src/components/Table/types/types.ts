@@ -247,7 +247,7 @@ export interface UploadOption {
 }
 
 /**
- * 字段映射
+ * 上传文件回调字段映射
  */
 export interface Columns {
   [idx: number | string]: string | number

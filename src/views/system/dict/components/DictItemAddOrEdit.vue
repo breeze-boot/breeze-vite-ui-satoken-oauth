@@ -155,7 +155,7 @@ defineExpose({
           <el-option v-for="item in tagTypes" :key="item.type" :label="item.type" :value="item.type">
             <div class="flex items-center">
               <el-tag :type="item.type" style="margin-right: 8px" size="small" />
-              <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">
+              <span style="float: right; font-size: 13px; color: var(--el-text-color-secondary)">
                 {{ item.type }}
               </span>
             </div>

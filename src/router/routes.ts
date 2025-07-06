@@ -28,7 +28,7 @@ export const constantChildRoutes = [
     },
   },
   {
-    path: 'tabWrapper/:pageId/:type/:path',
+    path: 'tabWrapper/:pageId/:type/:path/:_t',
     component: () => import('@/components/TabWrapper/index.vue'),
     name: 'TabWrapper',
     props: true,

@@ -812,41 +812,43 @@ export default defineComponent({
 
   .myScroller {
     &::-webkit-scrollbar {
-      /*滚动条整体样式*/
-      width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+      /* 滚动条整体样式 */
+      width: 5px; /* 高宽分别对应横竖滚动条的尺寸 */
       height: 1px;
     }
 
     &::-webkit-scrollbar-thumb {
-      /*滚动条里面小方块*/
-      border-radius: 10px;
       background-color: skyblue;
       background-image: -webkit-linear-gradient(
         45deg,
-        rgba(255, 255, 255, 0.2) 25%,
+        rgb(255 255 255 / 20%) 25%,
         transparent 25%,
         transparent 50%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.2) 75%,
+        rgb(255 255 255 / 20%) 50%,
+        rgb(255 255 255 / 20%) 75%,
         transparent 75%,
         transparent
       );
+
+      /* 滚动条里面小方块 */
+      border-radius: 10px;
     }
 
     &::-webkit-scrollbar-track {
-      /*滚动条里面轨道*/
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
       background: #ededed;
       border-radius: 10px;
+
+      /* 滚动条里面轨道 */
+      box-shadow: inset 0 0 5px rgb(0 0 0 / 20%);
     }
   }
 
   .bottom {
-    width: 100%;
-    margin-top: 5px;
     display: flex;
     align-items: center;
     justify-content: space-around;
+    width: 100%;
+    margin-top: 5px;
 
     .value {
       float: left;

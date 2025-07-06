@@ -115,22 +115,22 @@ const mainStyle = computed(() => ({
 
 <style lang="scss" scoped>
 .layout-container {
-  height: 100vh;
   display: flex;
+  height: 100vh;
 
   // 侧边栏区域
   .sidebar {
-    background: var(--base-left-theme);
-    box-shadow: rgba(0, 0, 0, 0.1) 0 3px 3px 0;
-    transition: width 0.3s;
     z-index: 100;
+    background: var(--base-left-theme);
+    box-shadow: rgb(0 0 0 / 10%) 0 3px 3px 0;
+    transition: width 0.3s;
 
     .sidebar-header {
-      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      height: 60px;
+      border-bottom: 1px solid rgb(255 255 255 / 10%);
     }
 
     .sidebar-scrollbar {
@@ -148,8 +148,8 @@ const mainStyle = computed(() => ({
 
   // 主内容区域
   .layout-main-container {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     .tabbar {
@@ -158,11 +158,11 @@ const mainStyle = computed(() => ({
       height: 60px;
       padding: 0 15px;
       background: var(--base-top-theme);
-      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+      box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
 
       .tabbar-left {
-        flex: 1;
         display: flex;
+        flex: 1;
         align-items: center;
       }
 

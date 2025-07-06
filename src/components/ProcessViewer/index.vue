@@ -97,7 +97,7 @@ const previewXml = async () => {
 
 <template>
   <div class="process-viewer__container">
-    <div style="position: absolute; top: 0; left: 0; width: 100%; z-index: 999">
+    <div style="position: absolute; top: 0; left: 0; z-index: 999; width: 100%">
       <el-row type="flex" justify="end">
         <el-button type="primary" @click="previewXml">预览</el-button>
         <el-button type="primary" @click="handleReZoom">还原</el-button>
@@ -112,22 +112,21 @@ const previewXml = async () => {
 <style lang="scss">
 .process-viewer__container {
   position: relative;
-  border: 1px solid #efefef;
   width: 100%;
   height: calc(80vh);
-
   overflow-x: hidden;
+  border: 1px solid #efefef;
 
   .process-viewer__canvas {
+    position: relative;
     flex: 1;
     height: 100%;
-    position: relative;
     background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMTBoNDBNMTAgMHY0ME0wIDIwaDQwTTIwIDB2NDBNMCAzMGg0ME0zMCAwdjQwIiBmaWxsPSJub25lIiBzdHJva2U9IiNlMGUwZTAiIG9wYWNpdHk9Ii4yIi8+PHBhdGggZD0iTTQwIDBIMHY0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTBlMGUwIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')
       repeat !important;
   }
 
-  $finished-color: rgb(45, 63, 53);
-  $current-color: rgba(0, 178, 255, 0.99);
+  $finished-color: rgb(45 63 53);
+  $current-color: rgb(0 178 255 / 99%);
 
   .finished.djs-connection {
     .djs-visual path {
@@ -137,9 +136,9 @@ const previewXml = async () => {
 
   .finished.djs-shape {
     .djs-visual rect {
-      stroke: $finished-color !important;
       fill: $finished-color !important;
       fill-opacity: 0.15 !important;
+      stroke: $finished-color !important;
     }
 
     .djs-visual polygon {
@@ -147,22 +146,22 @@ const previewXml = async () => {
     }
 
     .djs-visual path:nth-child(2) {
-      stroke: $finished-color !important;
       fill: $finished-color !important;
+      stroke: $finished-color !important;
     }
 
     .djs-visual circle {
-      stroke: $finished-color !important;
       fill: $finished-color !important;
       fill-opacity: 0.15 !important;
+      stroke: $finished-color !important;
     }
   }
 
   .current.djs-shape {
     .djs-visual rect {
-      stroke: $current-color !important;
       fill: $current-color !important;
       fill-opacity: 0.15 !important;
+      stroke: $current-color !important;
     }
 
     .djs-visual polygon {
@@ -170,9 +169,9 @@ const previewXml = async () => {
     }
 
     .djs-visual circle {
-      stroke: $current-color !important;
       fill: $current-color !important;
       fill-opacity: 0.15 !important;
+      stroke: $current-color !important;
     }
   }
 }

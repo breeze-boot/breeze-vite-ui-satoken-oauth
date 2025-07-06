@@ -10,11 +10,13 @@ import useSettingStore from '@/store/modules/setting.ts'
 import useUserStore from '@/store/modules/user.ts'
 import { SelectData } from '@/types/types.ts'
 import { useMessage } from '@/hooks/message'
+import { useI18n } from 'vue-i18n'
 
 const tenantIdOption = ref<SelectData[]>()
 let { tenantId } = storeToRefs(useUserStore())
 let _tenantId = ref<number>()
 let { refresh } = storeToRefs(useSettingStore())
+const { t } = useI18n()
 
 onMounted(async () => {
   await initTenant()
@@ -27,7 +29,7 @@ const initTenant = async () => {
   try {
     const response: any = await selectTenant()
     tenantIdOption.value = response.data
-    _tenantId.value = tenantId.value
+    _tenantId.value = tenantId.value as any
   } catch (err: any) {
     useMessage().error(`${t('common.fail')} ${err.message}`)
   }

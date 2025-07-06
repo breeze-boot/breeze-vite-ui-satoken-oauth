@@ -44,12 +44,12 @@ const startDrag = (e: MouseEvent) => {
 /* 聊天头部样式 */
 .chat-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 12px 16px;
+  cursor: grab;
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
-  cursor: grab;
 }
 
 .chat-header h3 {
@@ -59,10 +59,10 @@ const startDrag = (e: MouseEvent) => {
 }
 
 .close-button {
-  background: none;
-  border: none;
   color: #6c757d;
   cursor: pointer;
+  background: none;
+  border: none;
   transition: color 0.3s ease;
 }
 
@@ -71,12 +71,12 @@ const startDrag = (e: MouseEvent) => {
 }
 
 .history-button {
-  background: none;
-  border: none;
+  margin-left: 10px;
   color: #6c757d;
   cursor: pointer;
+  background: none;
+  border: none;
   transition: color 0.3s ease;
-  margin-left: 10px;
 }
 
 .history-button:hover {

@@ -113,27 +113,27 @@ watch(isHistoryVisible, async (newVal) => {
 <style scoped>
 /* 侧边栏样式 */
 .chat-sidebar {
+  position: relative; /* 新增，为了让子元素的定位相对于侧边栏 */
   width: 300px;
-  background-color: #f8f9fa;
-  border-left: 1px solid #e9ecef;
   padding: 0 16px 16px;
   overflow-y: auto;
+  background-color: #f8f9fa;
+  border-left: 1px solid #e9ecef;
   transition: width 0.3s ease;
-  position: relative; /* 新增，为了让子元素的定位相对于侧边栏 */
 }
 
 .sidebar-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 16px;
 }
 
 .close-sidebar {
-  background: none;
-  border: none;
   color: #6c757d;
   cursor: pointer;
+  background: none;
+  border: none;
   transition: color 0.3s ease;
 }
 
@@ -142,74 +142,75 @@ watch(isHistoryVisible, async (newVal) => {
 }
 
 .history-list {
-  background: rgba(236, 234, 234, 0.49);
-  overflow-y: auto;
-  /* 解决边框被挡住的问题，设置内边距 */
-  padding: 8px;
   /* 设置固定高度，确保可以滚动 */
   height: 90%;
+
+  /* 解决边框被挡住的问题，设置内边距 */
+  padding: 8px;
+  overflow-y: auto;
+  background: rgb(236 234 234 / 49%);
 }
 
 /* 自定义卡片样式 */
 .custom-card {
+  position: relative; /* 为了让标题定位相对卡片 */
+  margin-bottom: 15px;
   border: 1px solid #e9ecef; /* 确保有边框 */
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: all 0.3s ease;
-  margin-bottom: 15px;
-  position: relative; /* 为了让标题定位相对卡片 */
 }
 
 .custom-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
   transform: translateY(-2px);
 }
 
 .custom-card.active {
   background-color: #e6f7ff;
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgb(0 0 0 / 10%),
     0 0 0 2px #409eff;
 }
 
 .card-title {
-  font-weight: 500;
-  font-size: 0.8rem;
   margin-bottom: 5px;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .card-last-message {
-  color: #666;
   font-size: 14px;
+  color: #666;
 }
 
 /* 标题固定样式 */
 .sticky-title {
   position: sticky;
   top: 0;
-  background-color: #fff; /* 确保背景颜色覆盖下方内容 */
   z-index: 1; /* 确保标题在上方 */
   padding: 10px 0; /* 适当的内边距 */
+  background-color: #fff; /* 确保背景颜色覆盖下方内容 */
 }
 
 /* 侧边栏头部固定样式 */
 .sticky-header {
   position: sticky;
   top: 0;
-  background-color: #f8f9fa;
+  right: 0; /* 新增，确保头部在右侧对齐 */
+  left: 0; /* 新增，确保头部在左侧对齐 */
   z-index: 2; /* 确保在卡片标题之上 */
   padding: 16px;
-  margin: -16px -16px 16px -16px; /* 调整内边距以覆盖原有的 */
+  margin: -16px -16px 16px; /* 调整内边距以覆盖原有的 */
+  background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
-  left: 0; /* 新增，确保头部在左侧对齐 */
-  right: 0; /* 新增，确保头部在右侧对齐 */
 }
 
 /* 加载更多提示样式 */
 .loading-more {
-  text-align: center;
   padding: 10px;
   font-size: 0.8rem;
   color: #6c757d;
+  text-align: center;
 }
 </style>

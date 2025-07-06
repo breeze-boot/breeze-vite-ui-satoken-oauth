@@ -89,10 +89,10 @@ const props = defineProps(['menu', 'layout', 'position'])
 
 <style lang="scss" scoped>
 .el-link {
-  border: none !important;
   display: block !important;
   width: 100% !important;
-  text-align: left !important;
   color: inherit;
+  text-align: left !important;
+  border: none !important;
 }
 </style>

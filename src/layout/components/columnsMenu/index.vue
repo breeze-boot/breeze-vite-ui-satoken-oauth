@@ -60,25 +60,24 @@ const handleClickMenu = async (menu: any) => {
 
 <style lang="scss" scoped>
 .left-menu-wrapper {
-  width: var(--el-aside-width);
-  height: var(--el-aside-width);
-  background: var(--base-left-theme);
   z-index: 99;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  width: var(--el-aside-width);
+  height: var(--el-aside-width);
+  overflow: hidden hidden;
   cursor: pointer;
+  background: var(--base-left-theme);
   transition: background-color 0.3s ease; // 添加过渡效果
 
   .left-menu-logo {
-    width: 50px;
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 50px;
+    height: 60px;
     cursor: pointer;
   }
 
@@ -86,23 +85,23 @@ const handleClickMenu = async (menu: any) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer !important;
-    font-size: 0.8rem;
-    text-align: center;
     width: 100%;
     height: 50px;
     padding: 3px;
+    font-size: 0.8rem;
+    text-align: center;
+    cursor: pointer !important;
     transition: color 0.3s ease; // 添加过渡效果
   }
 
   // 鼠标悬停样式
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1); // 更柔和的颜色
+    background-color: rgb(0 0 0 / 10%); // 更柔和的颜色
   }
 
   // 当前选中菜单样式
   &.active {
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgb(0 0 0 / 15%);
   }
 }
 </style>

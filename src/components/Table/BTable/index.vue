@@ -851,7 +851,9 @@ defineExpose({
             <el-switch
               v-model="row.hidden"
               class="ml-2"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              style="
+
+--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
               :disabled="row.disabled"
               @change="getTableList()"
             />
@@ -867,7 +869,9 @@ defineExpose({
             <el-switch
               v-model="row.fixed"
               class="ml-2"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              style="
+
+--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             />
           </template>
         </el-table-column>
@@ -886,7 +890,7 @@ defineExpose({
     :title="t('common.setTableColumn')"
     virtual-triggering
   >
-    <div style="display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column">
+    <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start">
       <el-checkbox
         v-for="(item, index) in tableInfo.showFieldList"
         @change="handleSetColumnVisible(item.visible as boolean, item)"
@@ -1020,11 +1024,11 @@ defineExpose({
               <div
                 @click="handleHeaderSetting(item)"
                 style="
-                  cursor: pointer;
                   display: inline-flex;
-                  justify-content: center;
                   align-items: center;
+                  justify-content: center;
                   padding-left: 2px;
+                  cursor: pointer;
                 "
               >
                 <svg-icon name="setting" />
@@ -1077,6 +1081,7 @@ defineExpose({
               </template>
 
               <table-item
+                v-else
                 @reload-data-list="getTableList"
                 :dict="dict"
                 :scope="scope"
@@ -1137,16 +1142,14 @@ defineExpose({
 <style lang="scss" scoped>
 .tools {
   display: flex;
-  align-content: center;
-  justify-content: space-between;
+  place-content: center space-between;
   width: 100% !important;
   height: auto;
 
   .table-btn-group {
-    height: auto;
     display: flex;
-    justify-content: flex-start;
-    align-content: center;
+    place-content: center flex-start;
+    height: auto;
     padding: 0 5px;
   }
 }

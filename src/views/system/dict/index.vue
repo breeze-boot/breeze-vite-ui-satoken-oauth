@@ -40,6 +40,7 @@ const queryParams = reactive<DictQuery>({
 })
 
 let checkedRows = reactive<DictRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<DictRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

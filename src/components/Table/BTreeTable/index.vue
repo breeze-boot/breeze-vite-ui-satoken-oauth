@@ -661,7 +661,9 @@ const handleSliderChange = (row: any) => {
               @change="getList"
               v-model="row.hidden"
               class="ml-2"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              style="
+
+--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             />
           </template>
         </el-table-column>
@@ -675,7 +677,9 @@ const handleSliderChange = (row: any) => {
             <el-switch
               v-model="row.fixed"
               class="ml-2"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+              style="
+
+--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             />
           </template>
         </el-table-column>
@@ -693,7 +697,7 @@ const handleSliderChange = (row: any) => {
     :title="t('common.setTableColumn')"
     virtual-triggering
   >
-    <div style="display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column">
+    <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start">
       <el-checkbox
         v-for="(item, index) in tableInfo.showFieldList"
         @change="handleSetColumnVisible(item.visible as boolean, item)"
@@ -911,16 +915,14 @@ const handleSliderChange = (row: any) => {
 <style lang="scss" scoped>
 .tools {
   display: flex;
-  align-content: center;
-  justify-content: space-between;
+  place-content: center space-between;
   width: 100%;
   height: auto;
 
   .table-btn-group {
-    height: auto;
     display: flex;
-    justify-content: flex-start;
-    align-content: center;
+    place-content: center flex-start;
+    height: auto;
     padding: 0 5px;
   }
 }
@@ -928,6 +930,7 @@ const handleSliderChange = (row: any) => {
 .table {
   display: inherit;
 }
+
 .table-pagination {
   padding: 10px;
 }

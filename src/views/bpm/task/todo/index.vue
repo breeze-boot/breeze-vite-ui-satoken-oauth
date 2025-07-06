@@ -220,7 +220,7 @@ const handleToApproval = async (row: TodoRecord) => {
     title: `去审批`,
     bizId: row.taskId,
     type: 'approve',
-    props: { taskId: row.taskId },
+    query: { taskId: row.taskId },
   })
 }
 

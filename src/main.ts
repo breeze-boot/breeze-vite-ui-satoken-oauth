@@ -15,11 +15,13 @@ import { isHasPermission } from '@/directive/has-permission.ts'
 import { rightMenu } from '@/directive/right-menu.ts'
 import i18n from '@/i18n/index'
 import 'virtual:uno.css'
+import ElementPlusX from 'vue-element-plus-x'
 
 const app = createApp(App)
 
 isHasPermission(app)
 rightMenu(app)
+app.use(ElementPlusX)
 app.use(router)
 app.use(i18n)
 app.use(pinia)

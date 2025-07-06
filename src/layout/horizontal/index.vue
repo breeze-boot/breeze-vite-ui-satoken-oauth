@@ -40,25 +40,25 @@ import Logo from '@/layout/components/logo/index.vue'
   height: 100vh;
 
   .layout-main-container {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     .tabbar {
+      box-sizing: border-box; // 确保 padding 不会增加整体宽度
       display: flex;
       align-items: center;
       justify-content: space-between; // 关键属性：让子元素两端对齐
+      width: 100%;
       height: 60px;
       padding: 0 15px;
-      width: 100%;
-      box-sizing: border-box; // 确保 padding 不会增加整体宽度
 
       .tabbar-left {
         display: flex;
-        align-items: center; // 垂直居中对齐
-        margin-left: 10px;
         flex: 1; // 占据剩余空间
+        align-items: center; // 垂直居中对齐
         max-width: 70%; // 限制左侧区域最大宽度
+        margin-left: 10px;
       }
 
       .tabbar-right {

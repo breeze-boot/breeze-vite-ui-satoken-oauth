@@ -70,8 +70,8 @@ const renderMarkdown = (text: string) => {
 /* 聊天消息区域样式 */
 .chat-messages-wrapper {
   flex: 1;
-  overflow-y: auto;
   max-height: calc(100vh - 240px);
+  overflow-y: auto;
 }
 
 .chat-messages {
@@ -80,22 +80,22 @@ const renderMarkdown = (text: string) => {
 
 .message-content {
   padding: 8px 12px;
-  border-radius: 8px;
   margin-bottom: 8px;
-  line-height: 1.6;
   font-size: 14px;
+  line-height: 1.6;
   color: #333;
+  border-radius: 8px;
 }
 
 .message-content :deep(.hljs) {
-  background-color: #9f9e9e;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
+  position: relative;
   padding: 16px;
   margin: 16px;
   overflow-x: auto;
-  position: relative;
   font-size: 13px; /* 调整代码块字体大小 */
+  background-color: #9f9e9e;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
 }
 
 .message-content pre code {
@@ -106,14 +106,14 @@ const renderMarkdown = (text: string) => {
   position: absolute;
   top: 8px;
   right: 8px;
-  background-color: #007bff;
+  padding: 4px 8px;
+  font-size: 12px; /* 调整复制按钮字体大小 */
   color: white;
+  cursor: pointer;
+  background-color: #007bff;
   border: none;
   border-radius: 4px;
-  padding: 4px 8px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
-  font-size: 12px; /* 调整复制按钮字体大小 */
 }
 
 .copy-button:hover {
@@ -121,17 +121,17 @@ const renderMarkdown = (text: string) => {
 }
 
 .link-card {
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
   padding: 16px;
   margin: 8px 0;
   background-color: #f9f9f9;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
 }
 
 .link-card a {
-  text-decoration: none;
-  color: #007bff;
   font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
 }
 
 .link-card p {

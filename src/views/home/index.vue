@@ -3,102 +3,335 @@
  * @since: 2023-11-12
 -->
 <script setup lang="ts">
+import { computed, ref, onMounted } from 'vue'
 import { loadGreetings } from '@/utils/times'
 import useUserStore from '@/store/modules/user'
 import useSettingStore from '@/store/modules/setting.ts'
 import LoginUserBar from '@/views/home/component/LoginUserBar.vue'
+import { ElMessage } from 'element-plus'
 
-let settings = useSettingStore().settings
-let userStore = useUserStore()
+const userStore = useUserStore()
+const settingStore = useSettingStore()
+
+// 获取用户信息和设置
+const userInfo = computed(() => userStore.userInfo)
+const settings = computed(() => settingStore.settings)
+
+// 页面加载动画状态
+const isLoading = ref(true)
+
+// 统计数据
+const stats = ref({
+  onlineUsers: 0,
+  totalUsers: 0,
+  todayVisits: 0,
+  serverStatus: 'online',
+})
+
+// 加载统计数据
+const loadStats = async () => {
+  try {
+    // 模拟API调用
+    await new Promise((resolve) => setTimeout(resolve, 800))
+
+    stats.value = {
+      onlineUsers: 142,
+      totalUsers: 5243,
+      todayVisits: 872,
+      serverStatus: 'online',
+    }
+
+    // 显示成功消息
+    ElMessage.success('数据加载成功')
+  } catch (error) {
+    ElMessage.error('数据加载失败，请重试')
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  loadStats()
+})
+
+// 卡片悬停效果状态
+const cardHoverStates = ref({
+  onlineStats: false,
+  overview: false,
+})
 </script>
 
 <template>
-  <el-row :gutter="24">
-    <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-      <el-card>
-        <div class="header">
-          <div>
-            <el-avatar :size="100" :src="userStore.userInfo?.avatar || settings.logoUrl" />
-          </div>
-          <div class="greeting">
-            <h3 class="title">
-              {{ loadGreetings() }}~
-              <span class="gradient">欢迎登录！每一天，都是您迈向卓越的新起点！</span>
-            </h3>
-            <p class="subtitle">当前登录账户：{{ userStore.userInfo?.username }}</p>
-          </div>
+  <div class="dashboard-container">
+    <!-- 欢迎区域 -->
+    <div class="welcome-card">
+      <div class="welcome-content">
+        <div class="avatar-container">
+          <el-avatar :size="120" :src="userInfo?.avatar || settings?.logoUrl" class="avatar" />
         </div>
-      </el-card>
-    </el-col>
-  </el-row>
+        <div class="greeting-container">
+          <h3 class="welcome-title">
+            {{ loadGreetings() }}~
+            <span class="gradient-text">欢迎回来，{{ userInfo?.username || '管理员' }}！</span>
+          </h3>
+          <p class="welcome-subtitle">
+            <el-icon><i class="fa fa-calendar-check-o"></i></el-icon>
+            今天是
+            {{
+              new Date().toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long',
+              })
+            }}
+          </p>
+          <p class="welcome-message">
+            <el-icon><i class="fa fa-line-chart"></i></el-icon>
+            每一天，都是您迈向卓越的新起点！
+          </p>
+        </div>
+      </div>
+    </div>
 
-  <el-row :gutter="24">
-    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-      <el-card>
+    <!-- 统计卡片区域 -->
+    <div class="stats-grid">
+      <!-- 在线统计卡片 -->
+      <el-card
+        class="stats-card"
+        :class="cardHoverStates.onlineStats ? 'card-hover' : ''"
+        @mouseenter="cardHoverStates.onlineStats = true"
+        @mouseleave="cardHoverStates.onlineStats = false"
+      >
         <template #header>
           <div class="card-header">
+            <el-icon><i class="fa fa-users"></i></el-icon>
             <span>在线统计</span>
           </div>
         </template>
-        <login-user-bar />
+        <div class="card-content">
+          <login-user-bar />
+        </div>
       </el-card>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-      <el-card>
+
+      <!-- 系统总览卡片 -->
+      <el-card
+        class="stats-card"
+        :class="cardHoverStates.overview ? 'card-hover' : ''"
+        @mouseenter="cardHoverStates.overview = true"
+        @mouseleave="cardHoverStates.overview = false"
+      >
         <template #header>
           <div class="card-header">
-            <span>总览</span>
+            <el-icon><i class="fa fa-dashboard"></i></el-icon>
+            <span>系统总览</span>
           </div>
         </template>
-        ing...
+        <div class="card-content">
+          <div v-if="isLoading" class="loading-content">
+            <el-skeleton animated />
+          </div>
+          <div v-else class="overview-stats">
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-value">{{ stats.onlineUsers }}</div>
+                <div class="stat-label">在线用户</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">{{ stats.totalUsers }}</div>
+                <div class="stat-label">总用户数</div>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-value">{{ stats.todayVisits }}</div>
+                <div class="stat-label">今日访问</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">
+                  <el-tag :type="stats.serverStatus === 'online' ? 'success' : 'danger'">
+                    {{ stats.serverStatus === 'online' ? '运行中' : '维护中' }}
+                  </el-tag>
+                </div>
+                <div class="stat-label">服务器状态</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </el-card>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.el-card {
-  margin: 5px !important;
+/* 基础样式 */
+.dashboard-container {
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+  background-color: #f5f7fa;
 }
-.el-row {
-  margin: 0 !important;
-  padding: 0 !important;
+
+/* 欢迎卡片样式 */
+.welcome-card {
+  margin-bottom: 24px;
+  color: white;
+  background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
+  }
 }
-.el-col {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.header {
+
+.welcome-content {
   display: flex;
   align-items: center;
-  justify-items: center;
+  padding: 30px;
 
-  .greeting {
-    margin-top: 15px;
-    margin-left: 20px;
+  @media (width <= 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
 
-    .title {
-      margin-bottom: 30px;
-      font-size: 1.2rem;
-      font-weight: 900;
+.avatar-container {
+  margin-right: 30px;
 
-      .gradient {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: transparent;
-        background: linear-gradient(to right, #001529, #001529, var(--el-color-primary));
-        /* 渐变方向是从左到右 */
-        background-clip: text;
-        /* 兼容WebKit浏览器（例如Chrome和Safari） */
-        -webkit-background-clip: text;
-      }
+  @media (width <= 768px) {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
+
+.avatar {
+  border: 3px solid rgb(255 255 255 / 20%);
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 10%);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.greeting-container {
+  flex: 1;
+}
+
+.welcome-title {
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+
+  .gradient-text {
+    font-weight: 700;
+    color: transparent;
+    background: linear-gradient(90deg, #fff, #bbdefb);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+.welcome-subtitle {
+  margin-bottom: 8px;
+  font-size: 1rem;
+  opacity: 0.9;
+
+  i {
+    margin-right: 8px;
+  }
+}
+
+.welcome-message {
+  font-size: 1rem;
+  opacity: 0.8;
+
+  i {
+    margin-right: 8px;
+  }
+}
+
+/* 统计卡片网格 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @media (width <= 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 统计卡片样式 */
+.stats-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
+  transition: all 0.3s ease;
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #303133;
+
+    i {
+      margin-right: 8px;
+      color: var(--el-color-primary);
+    }
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+}
+
+.card-hover {
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
+  transform: translateY(-5px);
+}
+
+/* 加载中样式 */
+.loading-content {
+  min-height: 200px;
+}
+
+/* 总览统计样式 */
+.overview-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .stat-item {
+    padding: 15px;
+    text-align: center;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #f0f2f5;
     }
 
-    .subtitle {
-      font-size: 0.8rem;
-      font-style: italic;
-      font-weight: 500;
-      color: #676767;
+    .stat-value {
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #303133;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #606266;
     }
   }
 }

@@ -305,6 +305,7 @@ function uniqueBy(extractor) {
   extractor = toExtractor(extractor)
   let grouped = {}
 
+  // eslint-disable-next-line no-var
   for (var _len = arguments.length, collections = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     collections[_key - 1] = arguments[_key]
   }
@@ -312,6 +313,7 @@ function uniqueBy(extractor) {
   forEach(collections, function (c) {
     return groupBy(c, extractor, grouped)
   })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let result = map(grouped, function (val, key) {
     return val[0]
   })
@@ -451,11 +453,13 @@ function debounce(fn, timeout) {
   function callback() {
     lastNow = Date.now()
 
+    // eslint-disable-next-line no-var
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key]
     }
 
     lastArgs = args
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     lastThis = this // ensure an execution is scheduled
 
     if (!timer) {
@@ -556,6 +560,7 @@ function assign(target) {
     others[_key - 1] = arguments[_key]
   }
 
+  // eslint-disable-next-line no-undef
   return _extends.apply(void 0, [target].concat(others))
 }
 /**
@@ -671,7 +676,6 @@ function omit(target, properties) {
  *
  * @return {Object} the target
  */
-
 function merge(target) {
   for (
     let _len2 = arguments.length, sources = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1;
@@ -681,10 +685,12 @@ function merge(target) {
     sources[_key2 - 1] = arguments[_key2]
   }
 
+  // eslint-disable-next-line no-undef
   if (!sources.length) {
     return target
   }
 
+  // eslint-disable-next-line no-undef
   forEach(sources, function (source) {
     // skip non-obj sources, i.e. null
     if (!source || !isObject(source)) {

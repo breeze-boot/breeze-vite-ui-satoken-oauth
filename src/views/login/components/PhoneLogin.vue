@@ -91,7 +91,6 @@ const phoneRegex: RegExp = /^1[3-9]\d{9}$/
  * 自定义手机号校验规则
  */
 const validatorPhone = (rule: any, value: any, callback: any) => {
-  debugger
   if (value.length === 0) {
     callback(new Error(t('login.phone.rules.phone')))
   } else if (!phoneRegex.test(value)) {

@@ -35,6 +35,7 @@ const queryParams = reactive<MenuQuery>({
 })
 
 let checkedRows = reactive<MenuRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<MenuRecords>([])
 
 const tableLoading = ref<boolean>(false)

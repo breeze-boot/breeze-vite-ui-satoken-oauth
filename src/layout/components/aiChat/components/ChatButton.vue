@@ -24,26 +24,26 @@ const toggleChat = () => {
 /* 聊天按钮样式 */
 .chat-button {
   position: fixed;
-  bottom: 20px;
   right: 20px;
+  bottom: 20px;
   z-index: 9999999;
-  background-color: var(--el-color-primary);
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: white;
+  background-color: var(--el-color-primary);
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
   transition:
     transform 0.3s ease,
     background-color 0.3s ease;
 }
 
 .chat-button.active {
-  transform: rotate(180deg);
   background-color: #dc3545;
+  transform: rotate(180deg);
 }
 </style>

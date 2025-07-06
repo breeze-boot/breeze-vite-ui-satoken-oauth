@@ -1,8 +1,8 @@
 *,
 *::after,
 *::before {
-    box-sizing: border-box;
-    outline: none;
+  box-sizing: border-box;
+  outline: none;
 }
 
 html,
@@ -86,12 +86,12 @@ time,
 mark,
 audio,
 video {
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    font-size: 100%;
-    vertical-align: baseline;
-    border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  border: 0;
 }
 
 article,
@@ -105,125 +105,121 @@ hgroup,
 menu,
 nav,
 section {
-    display: block;
+  display: block;
 }
 
 body {
-    line-height: 1;
+  box-sizing: border-box;
+  margin: 0;
+  overflow: hidden;
+  line-height: 1;
 }
 
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 blockquote,
 q {
-    quotes: none;
+  quotes: none;
 
-    &::before,
-    &::after {
-        content: '';
-        content: none;
-    }
+  &::before,
+  &::after {
+    content: '';
+    content: none;
+  }
 }
 
 sub,
 sup {
-    position: relative;
-    font-size: 75%;
-    line-height: 0;
-    vertical-align: baseline;
+  position: relative;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
 }
 
 sup {
-    top: -0.5em;
+  top: -0.5em;
 }
 
 sub {
-    bottom: -0.25em;
+  bottom: -0.25em;
 }
 
 table {
-    border-spacing: 0;
-    border-collapse: collapse;
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 input,
 textarea,
 button {
-    font-family: inhert;
-    font-size: inherit;
-    color: inherit;
+  font-size: inherit;
+  color: inherit;
 }
 
 select {
-    text-indent: 0.01px;
-    text-overflow: '';
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    border: 0;
-    border-radius: 0;
+  text-indent: 0.01px;
+  text-overflow: '';
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 0;
+  border-radius: 0;
 }
 
 select::-ms-expand {
-    display: none;
+  display: none;
 }
 
 code,
 pre {
-    font-family: monospace, monospace;
-    font-size: 1em;
-}
-
-body {
-    overflow: hidden;
-    margin: 0;
-    box-sizing: border-box;
+  font-family: 'Courier New', monospace;
+  font-size: 1em;
 }
 
 html {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 body,
 body * {
-    /* 滚动条 */
-    &::-webkit-scrollbar-track-piece {
-        background-color: #fff; /*滚动条的背景颜色*/
-        -webkit-border-radius: 0; /*滚动条的圆角宽度*/
-    }
+  /* 滚动条 */
+  &::-webkit-scrollbar-track-piece {
+    background-color: #fff; /* 滚动条的背景颜色 */
+    -webkit-border-radius: 0; /* 滚动条的圆角宽度 */
+  }
 
-    &::-webkit-scrollbar {
-        width: 0; /*滚动条的宽度*/
-        height: 8px; /*滚动条的高度*/
-    }
+  &::-webkit-scrollbar {
+    width: 0; /* 滚动条的宽度 */
+    height: 8px; /* 滚动条的高度 */
+  }
 
-    &::-webkit-scrollbar-thumb:vertical {
-        /*垂直滚动条的样式*/
-        height: 50px;
-        background-color: rgba(255, 255, 255, 0.5);
-        -webkit-border-radius: 4px;
-        outline: 0;
-        outline-offset: -2px;
-        border: 0;
-    }
+  &::-webkit-scrollbar-thumb:vertical {
+    /* 垂直滚动条的样式 */
+    height: 50px;
+    background-color: rgb(255 255 255 / 50%);
+    border: 0;
+    -webkit-border-radius: 4px;
+    outline: 0;
+    outline-offset: -2px;
+  }
 
-    &::-webkit-scrollbar-thumb {
-        /*滚动条的hover样式*/
-        background-color: rgba(159, 159, 159, 0.3);
-        -webkit-border-radius: 4px;
-    }
+  &::-webkit-scrollbar-thumb {
+    /* 滚动条的hover样式 */
+    background-color: rgb(159 159 159 / 30%);
+    -webkit-border-radius: 4px;
+  }
 
-    &::-webkit-scrollbar-thumb:hover {
-        /*滚动条的hover样式*/
-        background-color: rgba(159, 159, 159, 0.5);
-        -webkit-border-radius: 4px;
-    }
+  &::-webkit-scrollbar-thumb:hover {
+    /* 滚动条的hover样式 */
+    background-color: rgb(159 159 159 / 50%);
+    -webkit-border-radius: 4px;
+  }
 }
 
-.el-table thead  .cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.el-table thead .cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -179,9 +179,9 @@ defineExpose({
 
 <style scoped>
 .tree-filter-container {
-  width: 650px;
   display: flex;
   justify-content: flex-start;
+  width: 650px;
   margin: 0 auto;
 
   .input-line {
@@ -191,19 +191,19 @@ defineExpose({
 }
 
 .tree-container {
-  border: 1px solid #eee;
-  margin: 0 auto;
   width: auto;
   height: 500px;
+  margin: 0 auto;
   overflow-y: scroll;
+  border: 1px solid #eee;
 
   .custom-tree-node {
-    flex: 1;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: space-between;
-    font-size: 14px;
     padding-right: 8px;
+    font-size: 14px;
   }
 }
 </style>

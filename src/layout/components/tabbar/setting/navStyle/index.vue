@@ -95,10 +95,10 @@ const handleClickMenuStyle = (item: string) => {
 
 <style lang="scss" scoped>
 .layout-style {
-  width: 100%;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
 }
 
 .layout-vertical,
@@ -107,25 +107,25 @@ const handleClickMenuStyle = (item: string) => {
 .layout-columns {
   width: 65px;
   height: 60px;
-  border-radius: 5px;
-  cursor: pointer;
   margin: 1.5%;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .layout-vertical:hover,
 .layout-horizontal:hover,
 .layout-mix:hover,
 .layout-columns:hover {
-  box-shadow: 2px 2px 5px rgba(61, 61, 61, 0.5);
+  box-shadow: 2px 2px 5px rgb(61 61 61 / 50%);
 }
 
 .layout-vertical {
   display: flex;
 
   .aside {
-    background: rgba(64, 158, 255, 0.5);
     width: 30%;
     height: 100%;
+    background: rgb(64 158 255 / 50%);
     border-radius: 5px 0 0 5px;
   }
 
@@ -135,62 +135,64 @@ const handleClickMenuStyle = (item: string) => {
     border-radius: 0 5px 5px 0;
 
     div:first-child {
-      background: rgba(103, 194, 58, 0.5);
       width: 100%;
       height: 20%;
+      background: rgb(103 194 58 / 50%);
       border-radius: 0 5px 0 0;
     }
+
     div:last-child {
-      background: rgba(230, 162, 60, 0.5);
       width: 100%;
       height: 80%;
-      border-radius: 0 0 5px 0;
+      background: rgb(230 162 60 / 50%);
+      border-radius: 0 0 5px;
     }
   }
 }
 
 .layout-horizontal {
   .header {
-    background: rgba(64, 158, 255, 0.5);
     width: 100%;
     height: 20%;
+    background: rgb(64 158 255 / 50%);
     border-radius: 5px 5px 0 0;
   }
 
   .main {
-    background: rgba(103, 194, 58, 0.5);
     width: 100%;
     height: 80%;
+    background: rgb(103 194 58 / 50%);
     border-radius: 0 0 5px 5px;
   }
 }
 
 .layout-mix {
   .header {
-    background: rgba(64, 158, 255, 0.5);
     width: 100%;
     height: 20%;
+    background: rgb(64 158 255 / 50%);
     border-radius: 5px 5px 0 0;
   }
 
   .main {
-    background: #e6a23c;
+    display: flex;
     width: 100%;
     height: 80%;
+    background: #e6a23c;
     border-radius: 0 0 5px 5px;
-    display: flex;
 
     div:first-child {
-      background: rgba(103, 194, 58, 0.5);
       width: 20%;
       height: 100%;
+      background: rgb(103 194 58 / 50%);
       border-radius: 0 0 0 5px;
     }
+
     div:last-child {
-      background: rgba(255, 255, 255, 0.53);
       width: 80%;
       height: 100%;
-      border-radius: 0 0 5px 0;
+      background: rgb(255 255 255 / 53%);
+      border-radius: 0 0 5px;
     }
   }
 }
@@ -199,15 +201,15 @@ const handleClickMenuStyle = (item: string) => {
   display: flex;
 
   .aside {
-    background: rgba(4, 229, 52, 0.68);
     width: 22%;
     height: 100%;
+    background: rgb(4 229 52 / 68%);
   }
 
   .aside:first-child {
-    background: rgba(64, 158, 255, 0.5);
     width: 8%;
     height: 100%;
+    background: rgb(64 158 255 / 50%);
     border-radius: 5px 0 0 5px;
   }
 
@@ -217,16 +219,17 @@ const handleClickMenuStyle = (item: string) => {
     border-radius: 0 5px 5px 0;
 
     div:first-child {
-      background: rgba(103, 194, 58, 0.5);
       width: 100%;
       height: 20%;
+      background: rgb(103 194 58 / 50%);
       border-radius: 0 5px 0 0;
     }
+
     div:last-child {
-      background: rgba(230, 162, 60, 0.5);
       width: 100%;
       height: 80%;
-      border-radius: 0 0 5px 0;
+      background: rgb(230 162 60 / 50%);
+      border-radius: 0 0 5px;
     }
   }
 }

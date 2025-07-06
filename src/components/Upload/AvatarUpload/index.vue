@@ -82,7 +82,7 @@ const beforeAvatarUpload = (rawFile: UploadRawFile) => {
 </script>
 
 <template>
-  <div style="width: 100%; height: 100px; display: flex; justify-content: center; align-items: center">
+  <div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100px">
     <el-upload
       class="avatar-uploader"
       action="#"

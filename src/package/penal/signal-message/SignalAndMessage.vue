@@ -2,7 +2,7 @@
   <div class="panel-tab__content">
     <div class="panel-tab__content--title">
       <span>
-        <el-icon style="margin-right: 8px; color: #555555"><Menu /></el-icon>
+        <el-icon style="margin-right: 8px; color: #555"><Menu /></el-icon>
         消息列表
       </span>
       <el-button size="small" type="primary" :icon="Plus" @click="openModel('message')">创建新消息</el-button>
@@ -12,9 +12,9 @@
       <el-table-column label="消息ID" prop="id" max-width="300px" show-overflow-tooltip />
       <el-table-column label="消息名称" prop="name" max-width="300px" show-overflow-tooltip />
     </el-table>
-    <div class="panel-tab__content--title" style="padding-top: 8px; margin-top: 8px; border-top: 1px solid #eeeeee">
+    <div class="panel-tab__content--title" style="padding-top: 8px; margin-top: 8px; border-top: 1px solid #eee">
       <span>
-        <el-icon style="margin-right: 8px; color: #555555"><Menu /></el-icon>
+        <el-icon style="margin-right: 8px; color: #555"><Menu /></el-icon>
         信号列表
       </span>
       <el-button size="small" type="primary" :icon="Plus" @click="openModel('signal')">创建新信号</el-button>

@@ -108,7 +108,6 @@ export function checkTenantCode(tenantCode: string, tenantId?: number): AxiosPro
 
 /**
  * 租户下拉框
- *
  */
 export function selectTenant(): AxiosPromise<SelectResponseData> {
   return request({

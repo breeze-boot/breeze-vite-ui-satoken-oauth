@@ -38,6 +38,7 @@ const queryParams = reactive<PostQuery>({
 })
 
 let checkedRows = reactive<PostRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<PostRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

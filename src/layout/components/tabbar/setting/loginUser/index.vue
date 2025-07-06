@@ -106,6 +106,7 @@ const handleClose = (done: () => void) => {
 .el-dropdown-link {
   margin-right: 20px;
 }
+
 .avatar {
   width: 24px;
   height: 24px;

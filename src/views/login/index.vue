@@ -46,6 +46,7 @@
             <svg-button
               v-for="(item, index) in btns"
               :key="index"
+              :style="{ background: 'transparent !important' }"
               @svg-btn-click="handleSwitchLogin(item)"
               width="1.8rem"
               height="1.8rem"
@@ -238,26 +239,26 @@ const handleLogin = async (data: any) => {
   position: relative;
   overflow: hidden;
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 30% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 20%);
+    radial-gradient(circle at 10% 20%, rgb(59 130 246 / 10%) 0%, transparent 20%),
+    radial-gradient(circle at 80% 30%, rgb(59 130 246 / 10%) 0%, transparent 20%),
+    radial-gradient(circle at 30% 70%, rgb(59 130 246 / 10%) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgb(59 130 246 / 10%) 0%, transparent 20%);
 }
 
 /* 卡片样式优化 */
 .login-form-card {
   box-shadow:
-    0 15px 30px -10px rgba(0, 0, 0, 0.1),
-    0 10px 20px -5px rgba(0, 0, 0, 0.04);
+    0 15px 30px -10px rgb(0 0 0 / 10%),
+    0 10px 20px -5px rgb(0 0 0 / 4%);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: fadeIn 0.6s ease forwards;
 }
 
 .login-form-card:hover {
-  transform: translateY(-8px);
   box-shadow:
-    0 25px 40px -10px rgba(0, 0, 0, 0.15),
-    0 15px 30px -5px rgba(0, 0, 0, 0.06);
+    0 25px 40px -10px rgb(0 0 0 / 15%),
+    0 15px 30px -5px rgb(0 0 0 / 6%);
+  transform: translateY(-8px);
 }
 
 /* 底部图标式按钮样式 */
@@ -301,10 +302,10 @@ const handleLogin = async (data: any) => {
   margin: 1.5rem 0;
 
   .text-gray-400 {
-    background-color: #fff;
     padding: 0 1.2rem;
     font-size: 0.9rem;
     font-weight: 400;
+    background-color: #fff;
   }
 
   .flex-1 {
@@ -319,6 +320,7 @@ const handleLogin = async (data: any) => {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

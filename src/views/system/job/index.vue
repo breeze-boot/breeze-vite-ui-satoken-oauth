@@ -41,6 +41,7 @@ const queryParams = reactive<JobQuery>({
 })
 
 let checkedRows = reactive<JobRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<JobRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识

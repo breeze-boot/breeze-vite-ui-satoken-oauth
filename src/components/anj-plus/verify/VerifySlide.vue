@@ -2,7 +2,11 @@
   <div style="position: relative">
     <div v-if="type === '2'" class="verify-img-out" :style="{ height: parseInt(setSize.imgHeight) + vSpace + 'px' }">
       <div class="verify-img-panel" :style="{ width: setSize.imgWidth, height: setSize.imgHeight }">
-        <img :src="'data:image/png;base64,' + backImgBase" alt="" style="width: 100%; height: 100%; display: block" />
+        <img
+          :src="'data:image/png;base64,' + backImgBase"
+          alt="验证码背景图"
+          style="display: block; width: 100%; height: 100%"
+        />
         <div class="verify-refresh" @click="refresh" v-show="showRefresh"><i class="iconfont icon-refresh"></i></div>
         <transition name="tips">
           <span class="verify-tips" v-if="tipWords" :class="passFlag ? 'suc-bg' : 'err-bg'">{{ tipWords }}</span>
@@ -21,7 +25,7 @@
           width: leftBarWidth !== undefined ? leftBarWidth : barSize.height,
           height: barSize.height,
           'border-color': leftBarBorderColor,
-          transaction: transitionWidth,
+          transition: transitionWidth,
         }"
       >
         <span class="verify-msg" v-text="finishText"></span>
@@ -50,8 +54,8 @@
           >
             <img
               :src="'data:image/png;base64,' + blockBackImgBase"
-              alt=""
-              style="width: 100%; height: 100%; display: block; -webkit-user-drag: none"
+              alt="滑块图片"
+              style="display: block; width: 100%; height: 100%; -webkit-user-drag: none"
             />
           </div>
         </div>

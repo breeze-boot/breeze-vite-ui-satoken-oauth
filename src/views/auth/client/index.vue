@@ -37,6 +37,7 @@ const queryParams = reactive<ClientQuery>({
 })
 
 let checkedRows = reactive<ClientRecords>([])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<ClientRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
