@@ -556,6 +556,7 @@ function _extends() {
  */
 
 function assign(target) {
+  let others
   for (let _len = arguments.length, others = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     others[_key - 1] = arguments[_key]
   }

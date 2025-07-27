@@ -24,6 +24,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const mSubjectQueryFormRef = ref(ElForm)
 const mSubjectAddOrEditRef = ref()
 const setUserRef = ref()
@@ -273,10 +274,10 @@ const handleDelete = async (rows: MSubjectRecords) => {
   try {
     const mSubjectIds = rows.map((item: any) => item.id)
     await deleteMSubject(mSubjectIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

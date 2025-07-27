@@ -4,9 +4,6 @@
  * 使用 !important 确保自定义样式优先级高于其他样式
  */
 .el-dialog {
-  /* 定义自定义 CSS 变量，设置默认宽度为 35% */
-  --el-dialog-width: 35%;
-
   /* 使用 var() 函数获取自定义变量的值，若变量未定义则使用 50% 作为备用宽度 */
   width: var(--el-dialog-width, 50%) !important;
 
@@ -16,8 +13,14 @@
   /* 设置对话框的最大宽度，避免在超宽屏幕上过大 */
   max-width: 100% !important;
 
+  /* 其他样式保持不变 */
+  margin-top: 10vh !important; /* 距离顶部为视口高度的10% */
+
   /* 设置对话框的过渡效果，使宽度变化更平滑 */
   transition: width 0.3s ease;
+
+  /* 定义自定义 CSS 变量，设置默认宽度为 35% */
+  --el-dialog-width: 35%;
 }
 
 /*

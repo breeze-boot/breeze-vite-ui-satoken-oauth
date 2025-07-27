@@ -23,6 +23,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const logQueryFormRef = ref(ElForm)
 const { RESULT, LOG_TYPE, DO_TYPE } = useDict('RESULT', 'LOG_TYPE', 'DO_TYPE')
 
@@ -187,10 +188,10 @@ const handleDelete = async (rows: LoginLogRecords) => {
   try {
     const logIds = rows.map((item: any) => item.id)
     await deleteLog(logIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

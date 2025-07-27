@@ -5,7 +5,10 @@ export default {
       dictName: '字典名称',
       status: '状态',
     },
-    common: {},
+    common: {
+      treeTitle: '字典分组',
+      leafSelected: '字典分组被选择',
+    },
     rules: {},
   },
   dictItem: {

@@ -4,19 +4,28 @@
 -->
 <!-- 字典管理 -->
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { page, open, exportExcel, deleteDict } from '@/api/system/dict'
+import { reactive, ref, onMounted } from 'vue'
+import { ElTree } from 'element-plus'
+import { page, open, exportExcel, deleteDict } from '@/api/system/dict/dict'
+import { list as listDictGroup } from '@/api/system/dict/group'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/DictAddOrEdit.vue'
 import DictItem from './components/DictItem.vue'
-import { ElForm } from 'element-plus'
-import type { DictRecords } from '@/api/system/dict/type.ts'
-import { DictRecord, DictQuery } from '@/api/system/dict/type.ts'
+import type { DictRecords } from '@/api/system/dict/dict/type.ts'
+import { DictRecord, DictQuery } from '@/api/system/dict/dict/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
+import { ElForm } from 'element-plus'
 import { Refresh, Search } from '@element-plus/icons-vue'
-import { useI18n } from 'vue-i18n'
 import { useMessage } from '@/hooks/message'
+import { useI18n } from 'vue-i18n'
+
+interface Tree {
+  id: number
+  groupCode: string
+  groupName: string
+  children?: Tree[]
+}
 
 defineOptions({
   name: 'Dict',
@@ -24,9 +33,19 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const dictQueryFormRef = ref(ElForm)
 const dictAddOrEditRef = ref()
 const dictItemRef = ref()
+// 新增：树形组件相关
+const treeRef = ref<InstanceType<typeof ElTree>>()
+const treeData = ref<any[]>([])
+const treeLoading = ref<boolean>(false)
+const selectedTreeKey = ref<string | number>('')
+
+onMounted(() => {
+  loadDictTree()
+})
 
 /**
  * 查询条件
@@ -34,13 +53,13 @@ const dictItemRef = ref()
 const queryParams = reactive<DictQuery>({
   dictCode: '',
   dictName: '',
+  groupId: undefined,
   current: 1,
   size: 10,
   total: 0,
 })
 
 let checkedRows = reactive<DictRecords>([])
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let currentRows = reactive<DictRecords>([])
 const tableLoading = ref<boolean>(false)
 // 刷新标识
@@ -85,7 +104,6 @@ const tableInfo = reactive<TableInfo>({
       icon: 'excel',
     },
   ],
-  // 表格字段配置
   fieldList: [
     {
       prop: 'dictName',
@@ -165,6 +183,36 @@ const tableInfo = reactive<TableInfo>({
 })
 
 /**
+ * 新增：加载树形数据
+ */
+const loadDictTree = async () => {
+  try {
+    treeLoading.value = true
+    const response: any = await listDictGroup()
+    treeData.value = response.data || []
+  } catch (error) {
+    $message.error(t('common.fail'))
+  } finally {
+    treeLoading.value = false
+  }
+}
+
+/**
+ * 新增：树形叶子节点点击事件
+ * @param data 节点数据
+ */
+const handleTreeNodeClick = (data: Tree) => {
+  debugger
+  // 携带叶子节点ID作为查询条件
+  queryParams.groupId = data.id
+  // 刷新表格数据
+  reloadList()
+  // 高亮选中节点
+  selectedTreeKey.value = data.id
+  $message.success(`${t('dict.common.leafSelected')}: ${data.groupName}`)
+}
+
+/**
  * 刷新表格
  */
 const reloadList = () => {
@@ -176,6 +224,9 @@ const reloadList = () => {
  */
 const resetQuery = () => {
   dictQueryFormRef.value.resetFields()
+  // 重置树形选择
+  selectedTreeKey.value = ''
+  queryParams.groupId = undefined
   handleQuery()
 }
 
@@ -220,10 +271,10 @@ const handleDelete = async (rows: DictRecords) => {
   const dictIds = rows.map((item: any) => item.id)
   try {
     await deleteDict(dictIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -247,63 +298,86 @@ const handleUpdate = (row: any) => {
 
 /**
  * 选中行，设置当前行currentRow
- *
  * @param rows 选择的行数据
  */
 const handleSelectionChange = (rows: DictRecords) => {
   currentRows = rows
+  console.log(currentRows)
 }
 </script>
 
 <template>
-  <search-container-box>
-    <el-form ref="dictQueryFormRef" :model="queryParams" :inline="true">
-      <!-- 字典名称 -->
-      <el-form-item :label="t('dict.fields.dictName')" prop="dictName">
-        <el-input
-          style="width: 200px"
-          :placeholder="t('dict.fields.dictName')"
-          @keyup.enter="handleQuery"
-          v-model="queryParams.dictName"
-        />
-      </el-form-item>
+  <div class="dict-container" style="display: flex; gap: 16px; height: 100%">
+    <!-- 新增：左侧树形结构 -->
+    <div class="dict-tree" style="width: 260px; overflow: hidden; border: 1px solid #e5e7eb; border-radius: 4px">
+      <div class="tree-header" style="padding: 12px; font-weight: bold; border-bottom: 1px solid #e5e7eb">
+        {{ t('dict.common.treeTitle') }}
+      </div>
+      <el-tree
+        ref="treeRef"
+        :data="treeData"
+        :props="{ label: 'groupName', children: 'children' }"
+        :loading="treeLoading"
+        :highlight-current="true"
+        :current-node-key="selectedTreeKey"
+        @node-click="handleTreeNodeClick"
+        style=" height: calc(100% - 45px);padding: 10px; overflow-y: auto"
+      />
+    </div>
 
-      <!-- 字典编码 -->
-      <el-form-item :label="t('dict.fields.dictCode')" prop="dictCode">
-        <el-input
-          style="width: 200px"
-          :placeholder="t('dict.fields.dictCode')"
-          @keyup.enter="handleQuery"
-          v-model="queryParams.dictCode"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" :icon="Search" @click="handleQuery">
-          {{ t('common.search') }}
-        </el-button>
-        <el-button type="success" :icon="Refresh" @click="resetQuery">
-          {{ t('common.reset') }}
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </search-container-box>
+    <!-- 右侧原有表格区域 -->
+    <div class="dict-table" style=" display: flex;flex: 1; flex-direction: column; height: 100%">
+      <search-container-box>
+        <el-form ref="dictQueryFormRef" :model="queryParams" :inline="true">
+          <!-- 字典名称 -->
+          <el-form-item :label="t('dict.fields.dictName')" prop="dictName">
+            <el-input
+              style="width: 200px"
+              :placeholder="t('dict.fields.dictName')"
+              @keyup.enter="handleQuery"
+              v-model="queryParams.dictName"
+            />
+          </el-form-item>
 
-  <b-table
-    ref="dictTableRef"
-    :refresh="refresh"
-    :select="select"
-    :list-api="page"
-    :export-api="exportExcel"
-    v-model:loading="tableLoading"
-    :tableIndex="tableIndex"
-    :query="queryParams"
-    :checked-rows="checkedRows"
-    :dict="tableInfo.dict"
-    :field-list="tableInfo.fieldList"
-    :tb-header-btn="tableInfo.tbHeaderBtn"
-    :handle-btn="tableInfo.handleBtn"
-    @selection-change="handleSelectionChange"
-  />
+          <!-- 字典编码 -->
+          <el-form-item :label="t('dict.fields.dictCode')" prop="dictCode">
+            <el-input
+              style="width: 200px"
+              :placeholder="t('dict.fields.dictCode')"
+              @keyup.enter="handleQuery"
+              v-model="queryParams.dictCode"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :icon="Search" @click="handleQuery">
+              {{ t('common.search') }}
+            </el-button>
+            <el-button type="success" :icon="Refresh" @click="resetQuery">
+              {{ t('common.reset') }}
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </search-container-box>
+
+      <b-table
+        ref="dictTableRef"
+        :refresh="refresh"
+        :select="select"
+        :list-api="page"
+        :export-api="exportExcel"
+        v-model:loading="tableLoading"
+        :tableIndex="tableIndex"
+        :query="queryParams"
+        :checked-rows="checkedRows"
+        :dict="tableInfo.dict"
+        :field-list="tableInfo.fieldList"
+        :tb-header-btn="tableInfo.tbHeaderBtn"
+        :handle-btn="tableInfo.handleBtn"
+        @selection-change="handleSelectionChange"
+        style="flex: 1; min-height: 0"
+      />
+    </div>
+  </div>
 
   <!-- 新增 / 修改 Dialog -->
   <add-or-edit ref="dictAddOrEditRef" @reload-data-list="reloadList" />
@@ -311,3 +385,11 @@ const handleSelectionChange = (rows: DictRecords) => {
   <!-- 字典项抽屉 -->
   <dict-item ref="dictItemRef" />
 </template>
+
+<style scoped>
+.dict-container {
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 16px;
+}
+</style>

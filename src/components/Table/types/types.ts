@@ -11,7 +11,7 @@ import { FormItemRule } from 'element-plus/es/components/form'
  * 事件类型
  */
 export type Event = 'exportAll' | 'export' | 'delete' | 'add' | string
-export type SelectEvent = 'multi' | 'single'
+export type SelectEvent = 'multi' | 'single' | 'none'
 type ButtonType = 'default' | 'primary' | 'success' | 'warning' | 'info' | 'danger' | 'text' | ''
 
 /**
@@ -25,11 +25,11 @@ export interface Btn {
   label?: string
   disabled?: (event: string, row: any) => boolean
   hidden?: (event: string, row: any) => boolean
-  slot?: string
+  slot?: boolean
   slotName?: string
   permission?: string[]
   link?: boolean
-  event: Event
+  event?: Event
   eventHandle?: (row: any, $index?: number) => Promise<void> | void
 }
 

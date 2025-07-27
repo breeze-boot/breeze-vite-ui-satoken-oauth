@@ -29,6 +29,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const userQueryFormRef = ref(ElForm)
 const userAddOrEditRef = ref()
 const roleSettingsRef = ref()
@@ -408,10 +409,10 @@ const handleDelete = async (rows: UserRecords) => {
   try {
     const userIds = rows.map((item: any) => item.id)
     await deleteUser(userIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -428,7 +429,7 @@ const handleExport = async (currentPage: boolean) => {
     const response: any = await exportExcel(_queryParams)
     saveTypeFile(response, response.type, '用户数据')
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

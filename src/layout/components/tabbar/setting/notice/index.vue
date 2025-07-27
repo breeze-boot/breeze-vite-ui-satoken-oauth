@@ -12,7 +12,6 @@ import { useI18n } from 'vue-i18n'
 import { getMsg } from '@/api/system/messages/msg'
 import { MsgRecord } from '@/api/system/messages/msg/type.ts'
 import SvgButton from '@/components/SvgButton/index.vue'
-import { ClickOutside as vClickOutside } from 'element-plus'
 import { useMessage } from '@/hooks/message'
 
 const userStore = useUserStore()
@@ -22,9 +21,10 @@ const closeImage = ref(closePng)
 const { t } = useI18n()
 const visible = ref<boolean>(false)
 const currentMsgId = ref<number>(0)
+import { ClickOutside as vClickOutside } from 'element-plus'
 
 const buttonRef = ref()
-const popoverRef = ref()
+const popoverRef = ref() // 用于绑定el-popover的ref
 
 onMounted(() => {
   initNoticeMsg()
@@ -47,7 +47,7 @@ const initNoticeMsg = async () => {
  */
 const handleShowMsg = async () => {
   await initNoticeMsg()
-  unref(popoverRef).popperRef?.delayHide?.()
+  unref(popoverRef)?.popperRef?.delayHide?.()
 }
 
 /**
@@ -100,9 +100,7 @@ const handleCloseDialog = async () => {
   </el-badge>
 
   <el-popover
-    :popper-style="{
-      width: '400px',
-    }"
+    :popper-style="{ width: '400px' }"
     ref="popoverRef"
     :virtual-ref="buttonRef"
     trigger="click"
@@ -112,16 +110,8 @@ const handleCloseDialog = async () => {
     <div class="msg-box">
       <el-empty v-if="noticeMsg.length === 0" />
       <div v-else class="msg" v-for="(msg, index) in noticeMsg" :key="index">
-        <div
-          class="msg-content"
-          :style="{
-            boxShadow: `var(--el-box-shadow-lighter)`,
-          }"
-          @click="handleShowMsgInfo(msg)"
-        >
-          <span class="title-text">
-            {{ msg.title }}
-          </span>
+        <div class="msg-content" :style="{ boxShadow: `var(--el-box-shadow-lighter)` }" @click="handleShowMsgInfo(msg)">
+          <span class="title-text">{{ msg.title }}</span>
           <div
             @click.stop="handleCloseMsg(msg)"
             class="close"
@@ -137,13 +127,9 @@ const handleCloseDialog = async () => {
 
   <el-dialog v-model="visible">
     <div style="height: 600px; text-align: center">
-      <h1 class="title">
-        {{ noticeMsgInfo.title }}
-      </h1>
+      <h1 class="title">{{ noticeMsgInfo.title }}</h1>
       <div class="msg-content">
-        <el-text>
-          {{ noticeMsgInfo.content }}
-        </el-text>
+        <el-text>{{ noticeMsgInfo.content }}</el-text>
       </div>
     </div>
     <template #footer>
@@ -157,6 +143,7 @@ const handleCloseDialog = async () => {
 </template>
 
 <style lang="scss" scoped>
+/* 样式保持不变 */
 .title {
   margin: 30px 10px;
   font-family:

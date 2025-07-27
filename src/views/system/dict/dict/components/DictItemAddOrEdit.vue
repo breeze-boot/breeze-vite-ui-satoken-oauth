@@ -6,8 +6,8 @@
 <!-- 字典项添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { addDictItem, getDictItem, editDictItem } from '@/api/system/dictItem/index.ts'
-import { DictItemForm } from '@/api/system/dictItem/type.ts'
+import { addDictItem, getDictItem, editDictItem } from '@/api/system/dict/dictItem/index.ts'
+import { DictItemForm } from '@/api/system//dict/dictItem/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useMessage } from '@/hooks/message'
@@ -18,6 +18,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -86,7 +87,7 @@ const getInfo = async (id: number) => {
     const response: any = await getDictItem(JSONBigInt.parse(id))
     Object.assign(dictItemDataForm.value, response.data)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -99,13 +100,12 @@ const handleDictItemDataFormSubmit = async () => {
   const id = dictItemDataForm.value.id
   try {
     id ? await editDictItem(id, dictItemDataForm.value) : await addDictItem(dictItemDataForm.value)
-    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $message.success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

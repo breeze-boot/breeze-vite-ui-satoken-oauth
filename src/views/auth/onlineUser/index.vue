@@ -24,6 +24,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 
 // 查询条件
 const queryParams = reactive<OnlineUserQuery>({ current: 0, size: 0 })
@@ -107,10 +108,10 @@ const reloadList = () => {
 const handleKickOut = async (row: OnlineUserRecord) => {
   try {
     const response: any = await focusKickOut(row?.userId)
-    useMessage().success(response.message)
+    $message.success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -122,10 +123,10 @@ const handleKickOut = async (row: OnlineUserRecord) => {
 const handleLogout = async (row: OnlineUserRecord) => {
   try {
     const response: any = await focusLogout(row?.userId)
-    useMessage().success(response.message)
+    $message.success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -137,10 +138,10 @@ const handleLogout = async (row: OnlineUserRecord) => {
 const handleKickOutByToken = async (row: LoginDevice) => {
   try {
     const response: any = await focusKickOutByTokenValue(row?.value)
-    useMessage().success(response.message)
+    $message.success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -152,10 +153,10 @@ const handleKickOutByToken = async (row: LoginDevice) => {
 const handleLogoutByToken = async (row: LoginDevice) => {
   try {
     const response: any = await focusLogoutByTokenValue(row?.value)
-    useMessage().success(response.message)
+    $message.success(response.message)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

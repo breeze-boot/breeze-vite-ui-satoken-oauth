@@ -30,6 +30,7 @@ const defaultProps = {
 }
 
 const { t } = useI18n()
+const $message = useMessage()
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const rolePermissionTreeRef = ref<InstanceType<typeof ElTree>>()
@@ -71,7 +72,7 @@ const getInfo = async (id: number) => {
       rolePermissionTreeRef.value.setCheckedKeys(menuIds, true)
     }
   } catch (err: any) {
-    useMessage().warning(t('common.reloadFail'))
+    $message.error(`${t('common.reloadFail')} ${err.message}`)
   }
 }
 
@@ -90,12 +91,11 @@ const handleRoleDataFormSubmit = async () => {
       roleId: currentClickRoleId.value as number,
       permissionIds: checkedKeys,
     })
-    useMessage().success(`${t('common.success')}`)
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
+    $message.success(`${t('common.success')}`)
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

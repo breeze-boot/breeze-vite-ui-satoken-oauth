@@ -11,6 +11,7 @@ import { selectTenant } from '@/api/auth/tenant'
 import { useMessage } from '@/hooks/message'
 
 const { t } = useI18n()
+const $message = useMessage()
 
 const tenantOption = ref<SelectData[]>()
 
@@ -38,7 +39,7 @@ const initSelectTenant = async () => {
     const response: any = await selectTenant()
     tenantOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

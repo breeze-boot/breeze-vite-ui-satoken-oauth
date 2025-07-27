@@ -25,6 +25,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -129,7 +130,7 @@ const getInfo = async (id: number, column: string) => {
     checkedRows = response.data[column]
     refresh.value = Math.random()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

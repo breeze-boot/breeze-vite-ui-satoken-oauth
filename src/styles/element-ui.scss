@@ -18,27 +18,76 @@ body {
 /* 自定义表格样式 */
 .el-table {
   z-index: 0;
-  border-radius: 10px;
+  overflow: hidden;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  }
+
+  // 表头样式
+  .el-table__header {
+    th {
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+      text-align: left;
+      letter-spacing: 0.5px;
+      background: var(--el-fill-color-blank);
+
+      // 添加细微的渐变色背景
+      background: linear-gradient(to bottom, var(--el-fill-color-blank), var(--el-fill-color-light));
+      border-bottom: 2px solid var(--el-color-primary-light-7);
+
+      // 悬停效果增强
+      &:hover {
+        color: var(--el-color-primary);
+        background: linear-gradient(to bottom, var(--el-fill-color-light), var(--el-fill-color));
+        transition: all 0.2s ease;
+      }
+    }
+  }
+
+  // 表格内容样式
+  .el-table__body {
+    tr {
+      // 偶数行轻微背景色区分
+      &:nth-child(even) {
+        td {
+          background-color: var(--el-fill-color-blank);
+        }
+      }
+
+      // 悬停和选中状态增强
+      &:hover > td {
+        background-color: var(--el-color-primary-light-8);
+        transition: background-color 0.2s ease;
+      }
+
+      &.current-row > td {
+        background-color: var(--el-color-primary-light-7);
+        box-shadow: inset 0 0 0 1px var(--el-color-primary-light-5);
+      }
+    }
+
+    td {
+      // 单元格内容溢出处理
+      overflow: hidden;
+      font-size: 14px;
+      color: var(--el-text-color-primary);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--el-border-color-lighter);
+    }
+  }
 }
 
-.el-table__body-wrapper {
-  border-top: none;
-}
-
-.el-table__header th {
-  padding: 12px 16px;
-  font-weight: 500;
-  text-align: center;
-}
-
-.el-table__body td {
-  padding: 10px 16px;
-}
-
-.el-table__body-wrapper::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-}
-
+// =============
 .el-card {
   border-radius: 10px;
 }

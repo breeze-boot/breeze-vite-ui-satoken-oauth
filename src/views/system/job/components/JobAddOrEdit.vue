@@ -20,6 +20,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const { JOB_GROUP, MISFIRE_POLICY } = useDict('JOB_GROUP', 'MISFIRE_POLICY')
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
@@ -89,7 +90,7 @@ const getInfo = async (id: number) => {
     const response: any = await getJob(JSONBigInt.parse(id))
     Object.assign(jobDataForm.value, response.data)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -102,13 +103,12 @@ const handleJobDataFormSubmit = async () => {
   const id = jobDataForm.value.id
   try {
     id ? await editJob(id, jobDataForm.value) : await addJob(jobDataForm.value)
-    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $message.success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

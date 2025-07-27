@@ -164,17 +164,25 @@ const cardHoverStates = ref({
 </template>
 
 <style lang="scss" scoped>
-/* 基础样式 */
+// 引入Element Plus变量（确保已配置暗色模式）
+@use 'element-plus/theme-chalk/src/common/var.scss' as *;
+
+/* 基础样式 - 适配明暗模式 */
 .dashboard-container {
   min-height: calc(100vh - 60px);
   padding: 20px;
-  background-color: #f5f7fa;
+
+  // 使用Element Plus的背景色变量（自动适配明暗模式）
+  background-color: var(--el-bg-color);
+  transition: background-color 0.3s ease;
 }
 
 /* 欢迎卡片样式 */
 .welcome-card {
   margin-bottom: 24px;
-  color: white;
+  color: var(--el-color-white);
+
+  // 渐变背景在暗色模式下加深
   background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
@@ -182,6 +190,12 @@ const cardHoverStates = ref({
 
   &:hover {
     box-shadow: 0 8px 30px rgb(0 0 0 / 15%);
+  }
+
+  // 暗色模式下调整欢迎卡片对比度
+  :deep(.dark-mode) & {
+    background: linear-gradient(135deg, #165dff 0%, #0a2463 100%);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 30%);
   }
 }
 
@@ -234,19 +248,15 @@ const cardHoverStates = ref({
   }
 }
 
-.welcome-subtitle {
+.welcome-subtitle,
+.welcome-message {
+  display: flex;
+  align-items: center;
   margin-bottom: 8px;
   font-size: 1rem;
+
+  // 文字透明度适配暗色模式
   opacity: 0.9;
-
-  i {
-    margin-right: 8px;
-  }
-}
-
-.welcome-message {
-  font-size: 1rem;
-  opacity: 0.8;
 
   i {
     margin-right: 8px;
@@ -264,10 +274,13 @@ const cardHoverStates = ref({
   }
 }
 
-/* 统计卡片样式 */
+/* 统计卡片样式 - 核心适配逻辑 */
 .stats-card {
-  background-color: white;
+  // 使用Element Plus的卡片背景色（自动切换明暗模式）
+  background-color: var(--el-card-bg-color);
   border-radius: 12px;
+
+  // 阴影在暗色模式下更淡
   box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
   transition: all 0.3s ease;
 
@@ -276,7 +289,9 @@ const cardHoverStates = ref({
     align-items: center;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #303133;
+
+    // 标题颜色使用Element变量（明暗模式自动切换）
+    color: var(--el-text-color-primary);
 
     i {
       margin-right: 8px;
@@ -287,11 +302,21 @@ const cardHoverStates = ref({
   .card-content {
     padding: 20px;
   }
+
+  // 暗色模式下卡片样式调整
+  :deep(.dark-mode) & {
+    border: 1px solid var(--el-border-color-dark);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
+  }
 }
 
 .card-hover {
   box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
   transform: translateY(-5px);
+
+  :deep(.dark-mode) & {
+    box-shadow: 0 8px 25px rgb(0 0 0 / 30%);
+  }
 }
 
 /* 加载中样式 */
@@ -314,24 +339,43 @@ const cardHoverStates = ref({
   .stat-item {
     padding: 15px;
     text-align: center;
-    background-color: #f8fafc;
+
+    // 子项背景色使用Element变量
+    background-color: var(--el-fill-color);
     border-radius: 8px;
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #f0f2f5;
+      background-color: var(--el-fill-color-light);
     }
 
     .stat-value {
       margin-bottom: 5px;
       font-size: 1.8rem;
       font-weight: 700;
-      color: #303133;
+
+      // 数值颜色适配明暗模式
+      color: var(--el-text-color-primary);
     }
 
     .stat-label {
       font-size: 0.9rem;
-      color: #606266;
+
+      // 标签颜色使用次要文本色
+      color: var(--el-text-color-secondary);
+    }
+
+    // 暗色模式下子项样式
+    :deep(.dark-mode) & {
+      background-color: var(--el-fill-color-dark);
+
+      .stat-value {
+        color: var(--el-color-white);
+      }
+
+      .stat-label {
+        color: var(--el-text-color-placeholder);
+      }
     }
   }
 }

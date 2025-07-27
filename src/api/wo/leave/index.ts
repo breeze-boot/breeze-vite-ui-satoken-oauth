@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { LeaveResponseData, LeaveQuery, LeaveRecord } from './type'
+import { LeaveResponseData, LeaveQuery, LeaveRecord, LeaveForm } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {
@@ -41,7 +41,7 @@ export function getLeave(id: number): AxiosPromise<LeaveResponseData> {
  *
  * @param data
  */
-export function addLeave(data: LeaveRecord): AxiosPromise<ResponseData> {
+export function addLeave(data: LeaveForm): AxiosPromise<ResponseData> {
   return request({
     url: API.LEAVE_RESTFUL_URL,
     method: 'post',
@@ -52,11 +52,12 @@ export function addLeave(data: LeaveRecord): AxiosPromise<ResponseData> {
 /**
  * 编辑
  *
+ * @param id
  * @param data
  */
-export function editLeave(data: LeaveRecord): AxiosPromise<ResponseData> {
+export function editLeave(id: number, data: LeaveForm): AxiosPromise<ResponseData> {
   return request({
-    url: API.LEAVE_RESTFUL_URL,
+    url: `${API.LEAVE_RESTFUL_URL}/${id}`,
     method: 'put',
     data,
   })

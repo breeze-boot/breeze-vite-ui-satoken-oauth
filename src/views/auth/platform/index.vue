@@ -22,6 +22,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const platformQueryFormRef = ref(ElForm)
 const platformAddOrEditRef = ref()
 
@@ -185,10 +186,10 @@ const handleDelete = async (rows: PlatformRecords) => {
   try {
     const platformIds = rows.map((item: any) => item.id)
     await deletePlatform(platformIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

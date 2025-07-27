@@ -45,7 +45,7 @@ export interface LeaveQuery extends PageQuery {
  * 请假工单表单类型声明
  */
 export interface LeaveForm {
-  id: number
+  id?: number
   title: string
   code: string
   startDate: string

@@ -38,6 +38,7 @@ export interface DictResponseData extends ResponseData {
 export interface DictQuery extends PageQuery {
   dictCode: string
   dictName: string
+  groupId?: number
 }
 
 /**
@@ -53,6 +54,7 @@ export interface DictSwitchForm {
  */
 export interface DictForm {
   id?: number
+  groupId: number
   dictName: string
   dictCode: string
   status: number

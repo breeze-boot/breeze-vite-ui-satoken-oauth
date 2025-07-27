@@ -107,3 +107,9 @@ export const decrypt = (content: string, key: string) => {
   })
   return CryptoJS.enc.Utf8.stringify(decrypt).toString()
 }
+
+// 格式化金额
+export const formatCurrency = (value: number) => {
+  if (isNaN(value)) return '0.00'
+  return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}

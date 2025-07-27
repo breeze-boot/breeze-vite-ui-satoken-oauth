@@ -24,6 +24,7 @@ const columnListRef = ref(ElForm)
 const tableInfoTableRef = ref()
 
 const { t } = useI18n()
+const $message = useMessage()
 let currentRows = reactive<Table[]>([])
 
 // 刷新标识
@@ -107,7 +108,7 @@ const handleGen = async () => {
     const response: any = await genCode(currentRows.map((item: Table) => item.tableName))
     saveTypeFile(response, response.type, '代码生成.zip')
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 </script>

@@ -98,11 +98,10 @@ const handleUserRestPasswordDataFormSubmit = async () => {
     loading.value = true
     await userResetPassword(fromData)
     useMessage().success(`${t('common.success')}`)
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')}`)
   }
 }
 

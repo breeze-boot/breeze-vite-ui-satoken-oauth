@@ -8,7 +8,7 @@ export const loginRoutes = [
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: {
-      title: 'login',
+      title: '登录',
       hidden: true,
     },
   },

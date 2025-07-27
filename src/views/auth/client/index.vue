@@ -9,12 +9,13 @@ import { page, deleteClient } from '@/api/auth/client'
 import BTable from '@/components/Table/BTable/index.vue'
 import SearchContainerBox from '@/components/SearchContainerBox/index.vue'
 import AddOrEdit from './components/ClientAddOrEdit.vue'
-import { ElForm, ElMessage } from 'element-plus'
+import { ElForm } from 'element-plus'
 import type { ClientRecords } from '@/api/auth/client/type.ts'
 import { ClientRecord, ClientQuery } from '@/api/auth/client/type.ts'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
+import { useMessage } from '@/hooks/message'
 
 defineOptions({
   name: 'Client',
@@ -22,6 +23,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const clientQueryFormRef = ref(ElForm)
 const clientAddOrEditRef = ref()
 
@@ -219,15 +221,14 @@ const handleAdd = () => {
  * @param rows 行数据
  */
 const handleDelete = async (rows: ClientRecords) => {
-  const clientIds = rows.map((item: any) => item.id)
-  await deleteClient(clientIds)
-  ElMessage.success({
-    message: `${t('common.delete') + t('common.success')}`,
-    duration: 1000,
-    onClose: () => {
-      reloadList()
-    },
-  })
+  try {
+    const clientIds = rows.map((item: any) => item.id)
+    await deleteClient(clientIds)
+    $message.success(`${t('common.delete') + t('common.success')}`)
+    reloadList()
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
+  }
 }
 
 /**

@@ -25,6 +25,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const definitionQueryFormRef = ref(ElForm)
 const definitionAddOrEditRef = ref()
 
@@ -240,12 +241,12 @@ const handleDelete = async (rows: RoleRecords) => {
     })
     tableLoading.value = true
     await deleteDefinition(definitions)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     tableLoading.value = false
     reloadList()
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -264,11 +265,11 @@ const handleStart = async (row: BpmDefinitionRecord) => {
     }
     tableLoading.value = true
     await startInstance(startParam)
-    useMessage().success(`${t('common.start') + t('common.success')}`)
+    $message.success(`${t('common.start') + t('common.success')}`)
     tableLoading.value = false
   } catch (err: any) {
     tableLoading.value = false
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

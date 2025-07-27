@@ -23,6 +23,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const visible = ref<boolean>(false)
 const roleDialogVisible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -117,7 +118,7 @@ const getInfo = async (id: number) => {
     tableData.value = response.data
     refresh.value = Math.random()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -129,12 +130,11 @@ const handleUserRoleSettingsDataFormSubmit = async () => {
   userSetRoleDataForm.value.roleIds = tableData.value.map((item: any) => item.id)
   try {
     await userSetRole(userSetRoleDataForm.value)
-    useMessage().success(`${t('common.success')}`)
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
+    $message.success(`${t('common.success')}`)
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

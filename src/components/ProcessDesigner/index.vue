@@ -35,6 +35,7 @@ export default {
   emits: ['save'],
   data() {
     return {
+      direction: 'rtl',
       reloadIndex: 0,
       height: window.innerHeight - 50 + 'px',
       xmlString: this.bpmnXml,
@@ -119,7 +120,7 @@ export default {
 </script>
 
 <template>
-  <el-dialog v-model="this.showDialog" :fullscreen="true" width="100vw">
+  <el-drawer size="100%" append-to-body v-model="this.showDialog" :direction="direction">
     <div :style="'display: flex; height:' + height">
       <my-process-designer
         :options="{
@@ -204,7 +205,7 @@ export default {
         </el-form>
       </el-drawer>
     </div>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <style lang="scss">

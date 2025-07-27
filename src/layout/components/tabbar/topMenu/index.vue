@@ -20,6 +20,7 @@ let menuStore = useMenuStore()
 let $route = useRoute()
 let $router = useRouter()
 const { width } = useWindowSize()
+const menuRef = ref<HTMLDivElement | null>(null)
 
 /**
  * 菜单点击回调
@@ -37,7 +38,6 @@ const selectMenu = async (index: string) => {
   }
   tabsStore.setTab($route)
 }
-const menuRef = ref<HTMLDivElement | null>(null)
 
 // 处理鼠标滚轮事件，实现横向滚动
 const handleWheel = (e: WheelEvent) => {

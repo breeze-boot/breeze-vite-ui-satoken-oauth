@@ -106,11 +106,10 @@ const handleMsgDataFormSubmit = async () => {
     id ? await editMsg(id, msgDataForm.value) : await addMsg(msgDataForm.value)
     useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 

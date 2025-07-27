@@ -23,6 +23,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const postQueryFormRef = ref(ElForm)
 const postAddOrEditRef = ref()
 
@@ -187,10 +188,10 @@ const handleDelete = async (rows: PostRecords) => {
   try {
     const postIds = rows.map((item: any) => item.id)
     await deletePost(postIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

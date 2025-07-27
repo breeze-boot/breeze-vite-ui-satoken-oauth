@@ -3,7 +3,7 @@
  * @since: 2023-11-12
  */
 import pinia from '@/store'
-import { listDict } from '@/api/system/dict'
+import { listDict } from '@/api/system/dict/dict'
 import { Dict, DictItem, Dicts } from '@/types/types.ts'
 
 import useDictStore from '@/store/modules/dict.ts'

@@ -24,6 +24,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const instanceQueryFormRef = ref(ElForm)
 const bpmnXmlViewDialogRef = ref()
 const bpmnPngViewDialogRef = ref()
@@ -226,10 +227,10 @@ const handleDelete = async (rows: InstanceRecords) => {
   try {
     const instanceIds = rows.map((item: any) => item.id)
     await deleteInstance(instanceIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

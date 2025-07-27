@@ -6,8 +6,8 @@
 import Main from '@/layout/components/main/index.vue'
 import Setting from '@/layout/components/tabbar/setting/index.vue'
 import TopMenu from '@/layout/components/tabbar/topMenu/index.vue'
-import Tab from '@/layout/components/tabbar/tab/index.vue'
 import Logo from '@/layout/components/logo/index.vue'
+import Tabs from '@/layout/components/tabbar/tabs/index.vue'
 </script>
 
 <template>
@@ -25,9 +25,7 @@ import Logo from '@/layout/components/logo/index.vue'
         </div>
       </div>
 
-      <div class="tab-container">
-        <tab />
-      </div>
+      <div class="tab-container"><tabs /></div>
       <el-main>
         <Main />
       </el-main>

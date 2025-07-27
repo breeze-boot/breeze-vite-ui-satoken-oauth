@@ -76,7 +76,7 @@ const useSettingStore: StoreDefinition<'SettingStore', SettingState> = defineSto
   }
 
   const isDarkMode = () => {
-    return theme.value.themeModel === THEME.LIGHT
+    return theme.value.themeModel === THEME.DARK
   }
 
   // 设置设备类型
@@ -91,7 +91,7 @@ const useSettingStore: StoreDefinition<'SettingStore', SettingState> = defineSto
         setMenuLayout(LAYOUT.VERTICAL)
         break
       case DEVICE.PC:
-        settings.value.isCollapse = false
+        settings.value.isCollapse = setting.defaultIsCollapse
         setMenuLayout(theme.value.menuLayout) // 恢复原有布局
         break
       default:

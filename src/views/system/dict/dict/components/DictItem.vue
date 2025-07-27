@@ -7,11 +7,11 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
-import AddOrEdit from '@/views/system/dict/components/DictItemAddOrEdit.vue'
+import AddOrEdit from '@/views/system/dict/dict/components/DictItemAddOrEdit.vue'
 import { SelectEvent, TableInfo } from '@/components/Table/types/types.ts'
 import BTable from '@/components/Table/BTable/index.vue'
-import { list, deleteDictItem } from '@/api/system/dictItem/index.ts'
-import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dictItem/type.ts'
+import { list, deleteDictItem } from '@/api/system/dict/dictItem/index.ts'
+import { DictItemQuery, DictItemRecord, DictItemRecords } from '@/api/system/dict/dictItem/type.ts'
 import { useMessage } from '@/hooks/message'
 
 defineOptions({
@@ -21,6 +21,7 @@ defineOptions({
 
 const direction = ref('rtl')
 const { t } = useI18n()
+const $message = useMessage()
 const visible = ref<boolean>(false)
 const dictItemTableRef = ref()
 const dictItemAddOrEditRef = ref()
@@ -171,7 +172,7 @@ const handleDelete = async (rows: DictItemRecords) => {
   try {
     const dictIds = rows.map((item: any) => item.id)
     await deleteDictItem(dictIds)
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
     useMessage().error(`${t('common.fail')} ${err.message}`)

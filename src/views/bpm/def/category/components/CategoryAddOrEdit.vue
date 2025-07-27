@@ -19,6 +19,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -98,13 +99,12 @@ const handleCategoryDataFormSubmit = async () => {
   const id = categoryDataForm.value.id
   try {
     id ? await editCategory(id, categoryDataForm.value) : await addCategory(categoryDataForm.value)
-    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $message.success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

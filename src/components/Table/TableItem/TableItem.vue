@@ -41,6 +41,7 @@ const tabStore = useTabsStore()
 const props = defineProps(['tableField', 'scope', 'dict'])
 const $emit = defineEmits(['reloadDataList'])
 const { t } = useI18n()
+const $message = useMessage()
 
 /**
  * 表格字段
@@ -78,7 +79,7 @@ const inputBlur = (item: Field, row: any) => {
     tableField.value.formOptions?.handleBlur ? tableField.value.formOptions?.handleBlur(scope.value.row) : () => {}
     return
   }
-  useMessage().warning('请输入正确的值')
+  $message.warning('请输入正确的值')
 }
 
 const switchLoading = ref(false)
@@ -105,10 +106,10 @@ const handleChangeSwitch = async (row: any, switchOption: SwitchOption) => {
     try {
       const response: any = await switchOption.api(_data)
       switchLoading.value = false
-      useMessage().success(response.message || t('common.success'))
+      $message.success(response.message || t('common.success'))
       $emit('reloadDataList')
     } catch (err: any) {
-      useMessage().error(err.message || t('common.success'))
+      $message.error(err.message || t('common.success'))
     }
   }
 }
@@ -205,7 +206,7 @@ const handleUploadCallback = async (row: any, uploadOption: UploadOption) => {
       $emit('reloadDataList')
     }
   } catch (error: any) {
-    useMessage().error(error.message)
+    $message.error(error.message)
   }
 }
 </script>

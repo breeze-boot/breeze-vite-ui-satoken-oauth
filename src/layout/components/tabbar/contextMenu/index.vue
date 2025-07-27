@@ -9,7 +9,7 @@ import useTabsStore from '@/store/modules/tabs.ts'
 import { LocationQueryRaw, useRouter } from 'vue-router'
 
 const $router = useRouter()
-let tabsStore = useTabsStore()
+const tabsStore = useTabsStore()
 
 /**
  * 获取菜单状态
@@ -55,7 +55,6 @@ const handleMenuItemClick = async (event: string) => {
   })
 }
 </script>
-
 <template>
   <div class="context-menu-box" v-if="contextMenuStatus" @click="tabsStore.contextMenuStatus = false">
     <div class="context-menu" :style="contextMenuPositionStyle">
@@ -68,6 +67,8 @@ const handleMenuItemClick = async (event: string) => {
   </div>
 </template>
 <style lang="scss" scoped>
+@use 'element-plus/theme-chalk/src/common/var.scss' as *;
+
 .context-menu-box {
   position: absolute;
   top: 0;
@@ -78,23 +79,39 @@ const handleMenuItemClick = async (event: string) => {
 
   .context-menu {
     position: relative;
-    width: $base-context-menu-width;
+    width: 100px;
+
+    // 使用Element变量替换固定颜色值
+    background: var(--el-bg-color-overlay);
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 2px 8px var(--el-box-shadow-lighter);
 
     .context-menu-item {
       width: inherit;
       height: 30px;
       font-size: 80%;
       line-height: 30px;
-      color: rgb(50 50 50 / 90%);
+
+      // 使用Element文本变量
+      color: var(--el-text-color-primary);
       text-align: center;
       cursor: pointer;
-      background: rgb(255 255 255 / 80%);
-      border: 1px solid #eee;
+
+      // 使用Element填充色变量
+      background: var(--el-fill-color-blank);
+      border-bottom: 1px solid var(--el-border-color-lighter);
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     .context-menu-item:hover {
+      // 使用Element主色调变量
       color: var(--el-color-primary) !important;
-      background: rgb(255 255 255);
+
+      // 使用Element悬停背景变量
+      background: var(--el-fill-color-light);
     }
   }
 }

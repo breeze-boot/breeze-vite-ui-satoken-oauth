@@ -24,6 +24,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -181,7 +182,7 @@ const initSelectPost = async () => {
     const response: any = await selectPost()
     postOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -193,7 +194,7 @@ const initSelectRole = async () => {
     const response: any = await selectRole()
     roleOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -205,7 +206,7 @@ const initSelectDept = async () => {
     const response: any = await selectDept()
     deptOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -221,7 +222,7 @@ const getInfo = async (id: number) => {
     userDataForm.value.password = ''
     userDataForm.value.confirmPassword = ''
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -234,13 +235,12 @@ const handleUserDataFormSubmit = async () => {
   const id = userDataForm.value.id
   try {
     id ? await editUser(id, userDataForm.value) : await addUser(userDataForm.value)
-    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $message.success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

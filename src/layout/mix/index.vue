@@ -15,7 +15,7 @@ import Logo from '@/layout/components/logo/index.vue'
 import variables from '@/styles/variables.module.scss'
 import Setting from '@/layout/components/tabbar/setting/index.vue'
 import TopMenu from '@/layout/components/tabbar/topMenu/index.vue'
-import Tab from '@/layout/components/tabbar/tab/index.vue'
+import Tabs from '@/layout/components/tabbar/tabs/index.vue'
 
 const $router = useRouter()
 const $route = useRoute()
@@ -101,7 +101,7 @@ const sidebarWidth = computed(() => {
 
       <!-- 标签页容器 -->
       <div class="tab-container">
-        <Tab />
+        <tabs />
       </div>
 
       <!-- 内容区域 -->

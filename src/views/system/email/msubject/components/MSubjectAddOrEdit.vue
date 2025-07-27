@@ -18,6 +18,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -67,7 +68,7 @@ const getInfo = async (id: number) => {
     const response: any = await getMSubject(JSONBigInt.parse(id))
     Object.assign(mSubjectDataForm.value, response.data)
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -80,13 +81,12 @@ const handleDataFormSubmit = async () => {
   const id = mSubjectDataForm.value.id
   try {
     id ? await editMSubject(id, mSubjectDataForm.value) : await addMSubject(mSubjectDataForm.value)
-    useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
+    $message.success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

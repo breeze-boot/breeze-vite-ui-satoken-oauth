@@ -17,7 +17,7 @@ import variables from '@/styles/variables.module.scss'
 import { DEVICE } from '@/utils/common.ts'
 import Setting from '@/layout/components/tabbar/setting/index.vue'
 import BreadCrumb from '@/layout/components/tabbar/breadcrumb/index.vue'
-import Tab from '@/layout/components/tabbar/tab/index.vue'
+import Tabs from '@/layout/components/tabbar/tabs/index.vue'
 
 let $router = useRouter()
 let $route = useRoute()
@@ -80,7 +80,7 @@ const selectMenu = async (index: string) => {
       </div>
 
       <div class="tab-container">
-        <tab />
+        <tabs />
       </div>
       <el-main>
         <Main />

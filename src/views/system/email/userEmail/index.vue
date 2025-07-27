@@ -21,6 +21,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const userTableRef = ref()
 const userQueryFormRef = ref()
 
@@ -90,7 +91,7 @@ const getInfo = async (id: number, column: string) => {
       rows.value = response.data
       refresh.value = Math.random()
     } catch (err: any) {
-      useMessage().error(`${t('common.fail')} ${err.message}`)
+      $message.error(`${t('common.fail')} ${err.message}`)
     }
   } else if (column === 'ccEmail') {
     try {
@@ -98,7 +99,7 @@ const getInfo = async (id: number, column: string) => {
       rows.value = response.data
       refresh.value = Math.random()
     } catch (err: any) {
-      useMessage().error(`${t('common.fail')} ${err.message}`)
+      $message.error(`${t('common.fail')} ${err.message}`)
     }
   }
 }

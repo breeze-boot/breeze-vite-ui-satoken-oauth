@@ -14,7 +14,7 @@ const useDictStore: StoreDefinition<'Dict', DictState> = defineStore('Dict', () 
 
   // 获取字典
   const getDict = (code: string): Dict => {
-    return dict.value[code] || {}
+    return dict.value[code]
   }
 
   // 设置字典

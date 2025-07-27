@@ -25,6 +25,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const menuQueryFormRef = ref(ElForm)
 const menuAddOrEditRef = ref()
 
@@ -254,10 +255,10 @@ const handleAdd = (id: number | undefined, flag: DIALOG_FLAG) => {
 const handleDelete = async (row: MenuRecord) => {
   try {
     await deleteMenu(JSONBigInt.parse(row.id))
-    useMessage().success(`${t('common.delete')} ${t('common.success')}`)
+    $message.success(`${t('common.delete')} ${t('common.success')}`)
     reloadList()
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

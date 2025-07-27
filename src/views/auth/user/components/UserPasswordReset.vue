@@ -19,6 +19,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
 const restUserPasswordDataFormRef = ref()
@@ -97,12 +98,11 @@ const handleUserRestPasswordDataFormSubmit = async () => {
     }
     loading.value = true
     await userResetPassword(fromData)
-    useMessage().success(`${t('common.success')}`)
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
+    $message.success(`${t('common.success')}`)
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

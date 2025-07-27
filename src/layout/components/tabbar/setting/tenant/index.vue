@@ -15,8 +15,9 @@ import { useI18n } from 'vue-i18n'
 const tenantIdOption = ref<SelectData[]>()
 let { tenantId } = storeToRefs(useUserStore())
 let _tenantId = ref<number>()
-let { refresh } = storeToRefs(useSettingStore())
+const settingStore = useSettingStore()
 const { t } = useI18n()
+const $message = useMessage()
 
 onMounted(async () => {
   await initTenant()
@@ -31,7 +32,7 @@ const initTenant = async () => {
     tenantIdOption.value = response.data
     _tenantId.value = tenantId.value as any
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -44,7 +45,7 @@ const handleChangeTenant = () => {
  * 刷新
  */
 const updateRefresh = () => {
-  refresh.value = !refresh.value
+  settingStore.refresh = !settingStore.refresh
 }
 </script>
 

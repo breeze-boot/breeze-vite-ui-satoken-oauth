@@ -18,6 +18,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits(['reloadDataList'])
 const visible = ref<boolean>(false)
 const loading = ref<boolean>(false)
@@ -51,7 +52,7 @@ async function handleUploadFile(options: UploadRequestOptions): Promise<any> {
     fileList.value = currentFileList.value
     $emit('reloadDataList')
   } catch (err: any) {
-    useMessage().error(err.message)
+    $message.error(err.message)
   }
 }
 const baseUrl = import.meta.env.VITE_APP_MINIO_API_URL //文件地址
@@ -62,7 +63,7 @@ const handlePreview = (uploadFile: UploadUserFile) => {
 }
 
 const handleExceed = () => {
-  useMessage().warning(t('common.rules.fileLimit') + ' ' + fileLimit)
+  $message.warning(t('common.rules.fileLimit') + ' ' + fileLimit)
 }
 
 const beforeRemove = (uploadFile: UploadUserFile) => {

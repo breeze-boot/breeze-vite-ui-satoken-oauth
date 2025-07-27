@@ -4,7 +4,7 @@
  */
 import request from '@/utils/request'
 import { AxiosPromise } from 'axios'
-import { DictForm, DictQuery, DictResponseData, DictSwitchForm } from '@/api/system/dict/type.ts'
+import { DictForm, DictQuery, DictResponseData, DictSwitchForm } from './type'
 import { ResponseData } from '@/types/types.ts'
 
 enum API {

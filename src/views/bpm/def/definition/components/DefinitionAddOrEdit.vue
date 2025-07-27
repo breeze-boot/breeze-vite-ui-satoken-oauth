@@ -21,6 +21,7 @@ defineOptions({
 })
 
 const { t } = useI18n()
+const $message = useMessage()
 
 const visibleDesigner = ref<boolean>(false)
 const categoryOption = ref<SelectData[]>()
@@ -118,7 +119,7 @@ const onSaveDesigner = async (xml: string, procDefKey: string, procDefName: stri
       definitionDataForm.value.procDefName = procDefName
     })
     .catch(() => {
-      useMessage().info(`${t('common.cancel')}`)
+      $message.info(`${t('common.cancel')}`)
     })
 }
 
@@ -141,13 +142,12 @@ const handleDataFormSubmit = async () => {
   await definitionDataFormRef.value.validate()
   try {
     await deployDefinition(definitionDataForm.value)
-    useMessage().success(`${t('common.success')}`)
+    $message.success(`${t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 

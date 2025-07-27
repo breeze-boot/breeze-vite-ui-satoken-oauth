@@ -7,10 +7,17 @@ import { nextTick, onMounted, onUnmounted, ref, reactive, computed, watch } from
 import * as echarts from 'echarts'
 import { statisticLoginUserPie } from '@/api/home'
 import { ElMessage, ElLoading } from 'element-plus'
+import useSettingStore from '@/store/modules/setting.ts'
 
+const settingStore = useSettingStore()
 const chartContainer = ref<HTMLDivElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
 let loadingInstance: any = null
+
+const isDarkMode = computed(() => {
+  // 调用 store 中的 isDarkMode 函数，判断是否为暗色模式
+  return settingStore.isDarkMode()
+})
 
 // 组件状态
 const state = reactive({
@@ -20,15 +27,25 @@ const state = reactive({
   xAxisLabelRotate: 0, // x轴标签旋转角度
 })
 
-// 图表配置
+// 图表配置（根据主题动态生成）
 const chartOptions = computed(() => {
+  // 暗色模式配置
+  const isDark = isDarkMode.value
+  const textColorPrimary = isDark ? '#e5e6eb' : '#333'
+  const textColorSecondary = isDark ? '#86909c' : '#666'
+  const bgColor = isDark ? 'transparent' : 'rgba(255, 255, 255, 0.95)'
+  const axisLineColor = isDark ? '#4e5969' : '#ccc'
+  const splitLineColor = isDark ? 'rgba(255, 255, 255, 0.05)' : '#eee'
+  const tooltipBgColor = isDark ? 'rgba(30, 30, 30, 0.9)' : 'rgba(255, 255, 255, 0.9)'
+  const tooltipBorderColor = isDark ? '#4e5969' : '#eee'
+
   return {
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: bgColor,
     title: {
       text: '用户登录统计',
       left: 'center',
       textStyle: {
-        color: '#333',
+        color: textColorPrimary,
         fontSize: 18,
         fontWeight: 'bold',
       },
@@ -41,11 +58,11 @@ const chartOptions = computed(() => {
           opacity: 0.2,
         },
       },
-      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      backgroundColor: tooltipBgColor,
       textStyle: {
-        color: '#333',
+        color: textColorPrimary,
       },
-      borderColor: '#eee',
+      borderColor: tooltipBorderColor,
       borderWidth: 1,
       padding: 10,
       formatter: (params: any) => {
@@ -62,13 +79,13 @@ const chartOptions = computed(() => {
       left: 'center',
       data: ['用户登录'],
       textStyle: {
-        color: '#666',
+        color: textColorSecondary,
       },
     },
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '10%', // 增加底部边距，避免标签被遮挡
+      bottom: '10%',
       top: '15%',
       containLabel: true,
     },
@@ -77,21 +94,20 @@ const chartOptions = computed(() => {
       data: state.chartData.map((item) => item.name),
       axisLine: {
         lineStyle: {
-          color: '#ccc',
+          color: axisLineColor,
         },
       },
       axisTick: {
         show: false,
       },
       axisLabel: {
-        color: '#666',
-        rotate: state.xAxisLabelRotate, // 使用动态旋转角度
+        color: textColorSecondary,
+        rotate: state.xAxisLabelRotate,
         interval: 0,
         fontSize: 12,
-        // 标签超出处理
         formatter: (value: string) => {
           if (value.length > 8 && state.xAxisLabelRotate === 0) {
-            return value.substring(0, 6) + '...' // 长标签省略显示
+            return value.substring(0, 6) + '...'
           }
           return value
         },
@@ -106,12 +122,12 @@ const chartOptions = computed(() => {
         show: false,
       },
       axisLabel: {
-        color: '#666',
+        color: textColorSecondary,
         fontSize: 12,
       },
       splitLine: {
         lineStyle: {
-          color: '#eee',
+          color: splitLineColor,
         },
       },
     },
@@ -123,23 +139,33 @@ const chartOptions = computed(() => {
         barWidth: '40%',
         itemStyle: {
           borderRadius: [6, 6, 0, 0],
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#409eff' },
-            { offset: 1, color: '#66b1ff' },
-          ]),
+          color: isDark
+            ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#409eff' },
+                { offset: 1, color: '#096dd9' },
+              ])
+            : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: '#409eff' },
+                { offset: 1, color: '#66b1ff' },
+              ]),
         },
         emphasis: {
           itemStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#3a8ee6' },
-              { offset: 1, color: '#5cadff' },
-            ]),
+            color: isDark
+              ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#66b1ff' },
+                  { offset: 1, color: '#3a8ee6' },
+                ])
+              : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  { offset: 0, color: '#3a8ee6' },
+                  { offset: 1, color: '#5cadff' },
+                ]),
           },
         },
         label: {
           show: true,
           position: 'top',
-          color: '#333',
+          color: textColorPrimary,
           fontSize: 12,
           fontWeight: 'normal',
         },
@@ -153,8 +179,6 @@ const initChart = () => {
   if (chartContainer.value) {
     chartInstance = echarts.init(chartContainer.value)
     chartInstance.setOption(chartOptions.value)
-
-    // 监听窗口大小变化，调整图表
     window.addEventListener('resize', handleResize)
   }
 }
@@ -162,30 +186,26 @@ const initChart = () => {
 // 处理窗口大小变化
 const handleResize = () => {
   chartInstance?.resize()
-  adjustXAxisLabel() // 窗口变化时重新调整标签
+  adjustXAxisLabel()
 }
 
 // 调整x轴标签显示
 const adjustXAxisLabel = () => {
-  // 修复：增加更严格的检查，确保图表和数据都已准备好
   if (!chartInstance || state.chartData.length === 0) return
 
-  // 获取x轴组件，添加存在性检查
   const xAxisModel = chartInstance.getModel().getComponent('xAxis')[0]
   if (!xAxisModel) return
 
   const labelWidths = xAxisModel.axis.getLabelWidths()
-  const totalLabelWidth = labelWidths.reduce((sum: number, width: number) => sum + width + 10, 0) // 加上间距
-  const availableWidth = chartInstance.getWidth() * 0.94 // 可用宽度
+  const totalLabelWidth = labelWidths.reduce((sum: number, width: number) => sum + width + 10, 0)
+  const availableWidth = chartInstance.getWidth() * 0.94
 
-  // 如果标签总宽度超过可用宽度，自动旋转标签
   if (totalLabelWidth > availableWidth) {
-    state.xAxisLabelRotate = 45 // 旋转45度
+    state.xAxisLabelRotate = 45
   } else {
-    state.xAxisLabelRotate = 0 // 恢复水平显示
+    state.xAxisLabelRotate = 0
   }
 
-  // 更新图表配置
   chartInstance.setOption({
     xAxis: {
       axisLabel: {
@@ -201,17 +221,17 @@ const fetchData = async () => {
   loadingInstance = ElLoading.service({
     lock: true,
     text: '加载数据中...',
-    background: 'rgba(255, 255, 255, 0.7)',
+    // 加载背景根据主题动态调整
+    background: isDarkMode.value ? 'rgba(17, 17, 17, 0.7)' : 'rgba(255, 255, 255, 0.7)',
   })
 
   try {
     const response: any = await statisticLoginUserPie()
     state.chartData = response.data.series || []
 
-    // 更新图表
     if (chartInstance) {
       chartInstance.setOption(chartOptions.value)
-      adjustXAxisLabel() // 数据更新后调整标签
+      adjustXAxisLabel()
     }
 
     ElMessage.success('数据加载成功')
@@ -229,20 +249,18 @@ const refreshData = () => {
   fetchData()
 }
 
-// 监听数据变化，自动调整标签
-watch(
-  () => state.chartData,
-  () => {
-    if (chartInstance) {
-      adjustXAxisLabel()
-    }
-  },
-)
+// 监听数据和主题变化，更新图表
+watch([() => state.chartData, isDarkMode], () => {
+  if (chartInstance) {
+    chartInstance.setOption(chartOptions.value)
+    adjustXAxisLabel()
+  }
+})
 
 onMounted(async () => {
-  await nextTick() // 确保DOM已经渲染完毕
-  initChart() // 初始化图表
-  await fetchData() // 获取数据
+  await nextTick()
+  initChart()
+  await fetchData()
 })
 
 // 清理函数
@@ -256,7 +274,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="chart-wrapper">
+  <div class="chart-wrapper" :class="{ 'dark-mode': isDarkMode }">
     <div class="chart-header">
       <h3 class="chart-title">用户登录统计分析</h3>
       <div class="chart-actions">
@@ -276,10 +294,11 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
+// 基础样式
 .chart-wrapper {
   padding: 15px;
   margin-bottom: 20px;
-  background-color: white;
+  background-color: var(--el-card-bg-color);
   border-radius: 12px;
   box-shadow: 0 4px 15px rgb(0 0 0 / 5%);
   transition: all 0.3s ease;
@@ -287,29 +306,32 @@ onUnmounted(() => {
   &:hover {
     box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
   }
+
+  // 暗色模式样式
+  &.dark-mode {
+    border: 1px solid var(--el-border-color-dark);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
+  }
 }
 
+// 图表头部
 .chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 10px;
   margin-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--el-border-color); // 使用Element的边框色变量
 }
 
 .chart-title {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #303133;
+  color: var(--el-text-color-primary); // 主文本色，自动适配主题
 }
 
-.chart-actions {
-  display: flex;
-  gap: 10px;
-}
-
+// 图表容器
 .chart-container {
   width: 100%;
   height: 450px;
@@ -317,7 +339,24 @@ onUnmounted(() => {
   touch-action: none;
 }
 
+// 错误提示区域
 .chart-error {
   margin-top: 15px;
+
+  :deep(.el-alert) {
+    background-color: var(--el-bg-color); // 告警背景色适配主题
+    border-color: var(--el-border-color);
+  }
+}
+
+// 适配暗色模式的额外样式
+:deep(.dark-mode) {
+  .el-loading-mask .el-loading-text {
+    color: var(--el-color-white); // 加载文字颜色
+  }
+
+  .el-button--primary {
+    border-color: var(--el-color-primary-dark-2); // 按钮边框色
+  }
 }
 </style>

@@ -5,7 +5,10 @@ export default {
       dictName: 'dict name',
       status: 'status',
     },
-    common: {},
+    common: {
+      treeTitle: 'dict group',
+      leafSelected: 'dict group selected',
+    },
     rules: {},
   },
   dictItem: {

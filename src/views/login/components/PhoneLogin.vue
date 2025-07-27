@@ -14,6 +14,7 @@ import { sendPhoneCodeAPI } from '@/api/login'
 import { SmsEnum } from '@/enums/SmsEnum.ts'
 
 const { t } = useI18n()
+const $message = useMessage()
 
 const loginStore = useLoginStore()
 
@@ -78,7 +79,7 @@ const initSelectTenant = async () => {
     const response: any = await selectTenant()
     tenantOption.value = response.data
   } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
+    $message.error(`${t('common.fail')} ${err.message}`)
   }
 }
 
@@ -195,9 +196,9 @@ const sendVerificationCode = async () => {
     loginStore.storagePhoneCountDown(countdown.value)
 
     buttonText.value = `${countdown.value}s 后重新获取`
-    useMessage().success(response.message)
+    $message.success(response.message)
   } catch (err: any) {
-    useMessage().warning(err.message)
+    $message.warning(err.message)
     throw new Error(err.message)
   }
 }

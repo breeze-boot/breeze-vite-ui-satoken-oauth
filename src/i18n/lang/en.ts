@@ -18,6 +18,9 @@ export default {
     goodEvening: 'good evening',
   },
   common: {
+    refresh: 'Refresh',
+    loadFail: 'Load Fail',
+    none: 'None',
     cascadeCheck: 'Cascade Check',
     oneCheck: 'Check one by one',
     sureToLogOutExitSystem: 'Are you sure to log out and exit the system',

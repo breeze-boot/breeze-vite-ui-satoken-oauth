@@ -33,6 +33,10 @@ const props = defineProps({
      * 默认值为一个空数组，表示初始时表格顶部没有按钮
      */
   },
+  settingBtns: {
+    type: Boolean,
+    default: true,
+  },
   tableWidth: {
     type: String,
     default: '100%',
@@ -227,6 +231,7 @@ let $route = useRoute()
 const columnStore = useColumnStore()
 const { theme } = storeToRefs(useSettingStore())
 const { t } = useI18n()
+const $message = useMessage()
 const $emit = defineEmits([
   'handle-row-db-click',
   'selection-change',
@@ -492,33 +497,30 @@ const getTableList = async () => {
   currentRows.value = []
 
   // 父组件传入的数据，直接渲染
-  if (initTableData.value.length > 0) {
+  if (!props.listApi) {
     tableLoading.value = true
     tableData.value.rows = initTableData.value as any[]
     props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
     handleOnEnd()
     tableLoading.value = false
-    return
-  }
-
-  if (!props.listApi) return
-
-  try {
-    tableLoading.value = true
-    const response: any = await props.listApi(handleParams())
-    tableData.value.rows = []
-    if (props.pager) {
-      tableData.value.rows = response?.data.records
-      pagerQuery.value.total = Number(response?.data.total)
-    } else {
-      tableData.value.rows = response?.data
+  } else {
+    try {
+      tableLoading.value = true
+      const response: any = await props.listApi(handleParams())
+      tableData.value.rows = []
+      if (props.pager) {
+        tableData.value.rows = response?.data.records
+        pagerQuery.value.total = Number(response?.data.total)
+      } else {
+        tableData.value.rows = response?.data
+      }
+      props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
+    } catch (err: any) {
+      $message.warning(err.message)
+    } finally {
+      handleOnEnd()
+      tableLoading.value = false
     }
-    props.select === 'single' ? setSingleCheckedList() : setMultiCheckedList()
-  } catch (err: any) {
-    useMessage().warning(err.message)
-  } finally {
-    handleOnEnd()
-    tableLoading.value = false
   }
 }
 
@@ -638,11 +640,11 @@ const handleTableRowClick = (btn: Btn, row: any, index: number) => {
   switch (btn.event) {
     case 'delete':
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning(t('common.noHandle'))
+        btn.eventHandle ? btn.eventHandle(row, index) : $message.warning(t('common.noHandle'))
       })
       break
     default:
-      btn.eventHandle ? btn.eventHandle(row, index) : useMessage().warning(t('common.noHandle'))
+      btn.eventHandle ? btn.eventHandle(row, index) : $message.warning(t('common.noHandle'))
       break
   }
 }
@@ -658,23 +660,23 @@ const handleHeadBtnClick = (btn: Btn, rows: any, index: number) => {
   switch (btn.event) {
     case 'delete':
       if (!rows) {
-        useMessage().warning(t('common.delTip'))
+        $message.warning(t('common.delTip'))
         return
       }
       confirmBox(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
+        btn.eventHandle ? btn.eventHandle(rows, index) : $message.warning(t('common.noHandle'))
       })
       break
     case 'edit':
       handleCheckBeforeClickBtn().then(() => {
-        btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
+        btn.eventHandle ? btn.eventHandle(rows, index) : $message.warning(t('common.noHandle'))
       })
       break
     case 'export':
       handleExport(handleParams())
       break
     default:
-      btn.eventHandle ? btn.eventHandle(rows, index) : useMessage().warning(t('common.noHandle'))
+      btn.eventHandle ? btn.eventHandle(rows, index) : $message.warning(t('common.noHandle'))
       break
   }
 }
@@ -707,7 +709,7 @@ const confirmBox = (func: any) => {
 const handleCheckBeforeClickBtn = () => {
   return new Promise((resolve, reject) => {
     if (!currentRows.value || currentRows.value.length === 0) {
-      useMessage().warning(t('common.selectLineItem'))
+      $message.warning(t('common.selectLineItem'))
       reject()
       return
     }
@@ -722,7 +724,7 @@ const handleCheckBeforeClickBtn = () => {
  */
 const handleExport = (query: any) => {
   if (!props.exportApi) {
-    useMessage().warning('导出接口未配置')
+    $message.warning('导出接口未配置')
     return
   }
   console.debug(query)
@@ -919,7 +921,7 @@ defineExpose({
           </template>
           <slot name="tbHeaderBtn" />
         </div>
-        <div>
+        <div v-if="settingBtns">
           <svg-button
             ref="tableSettingButtonRef"
             v-click-outside="tableSettingsOnClickOutside"
@@ -1034,6 +1036,7 @@ defineExpose({
                 <svg-icon name="setting" />
               </div>
             </template>
+
             <template #default="scope">
               <template v-if="item.children">
                 <!-- 多级表头 -->
@@ -1103,7 +1106,7 @@ defineExpose({
             <template #default="scope">
               <template v-for="(item, index) in initHandleBtn.btList" :key="index">
                 <!-- 自定义操作类型 -->
-                <slot v-if="item.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
+                <slot v-if="item?.slot" :name="`${item.slotName}`" :data="{ item, row: scope.row }"></slot>
                 <!-- 操作按钮 -->
                 <svg-button
                   :key="index"

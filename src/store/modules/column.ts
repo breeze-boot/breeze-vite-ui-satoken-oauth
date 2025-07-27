@@ -24,8 +24,7 @@ const useColumnStore: StoreDefinition<'Column', ColumnState> = defineStore('Colu
       columns.value = response.data as ColumnCacheData[]
       SET_OBJ_ARRAY_STORAGE(StorageName.Columns, columns.value)
     } catch (err: any) {
-      const { t } = useI18n()
-      useMessage().error(`${t('common.fail')} ${err.message}`)
+      useMessage().error(`${useI18n().t('common.fail')} ${err.message}`)
     }
   }
 
@@ -35,8 +34,7 @@ const useColumnStore: StoreDefinition<'Column', ColumnState> = defineStore('Colu
       await saveMenuColumn(data)
       await fetchRolesMenuColumns()
     } catch (err: any) {
-      const { t } = useI18n()
-      useMessage().error(`${t('common.fail')} ${err.message}`)
+      useMessage().error(`${useI18n().t('common.fail')} ${err.message}`)
     }
   }
 

@@ -18,6 +18,9 @@ export default {
     goodEvening: '晚上好',
   },
   common: {
+    refresh: '刷新',
+    loadFail: '加载失败',
+    none: '无',
     cascadeCheck: '级联勾选',
     oneCheck: '逐个勾选',
     sureToLogOutExitSystem: '确定注销并退出系统吗',

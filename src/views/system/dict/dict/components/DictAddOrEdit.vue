@@ -6,8 +6,8 @@
 <!-- 字典添加修改弹出框 -->
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { addDict, getDict, editDict } from '@/api/system/dict'
-import { DictForm } from '@/api/system/dict/type.ts'
+import { addDict, getDict, editDict } from '@/api/system//dict/dict'
+import { DictForm } from '@/api/system/dict/dict/type.ts'
 import { useI18n } from 'vue-i18n'
 import JSONBigInt from 'json-bigint'
 import { useMessage } from '@/hooks/message'
@@ -83,11 +83,10 @@ const handleDictDataFormSubmit = async () => {
     id ? await editDict(id, dictDataForm.value) : await addDict(dictDataForm.value)
     useMessage().success(`${(id ? t('common.modify') : t('common.save')) + t('common.success')}`)
     $emit('reloadDataList')
-  } catch (err: any) {
-    useMessage().error(`${t('common.fail')} ${err.message}`)
-  } finally {
     visible.value = false
     loading.value = false
+  } catch (err: any) {
+    useMessage().error(`${t('common.fail')} ${err.message}`)
   }
 }
 
